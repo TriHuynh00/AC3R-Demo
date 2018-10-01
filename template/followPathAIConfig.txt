@@ -1,0 +1,9 @@
+	local arg$actorID = {vehicleName = 'scenario_player$actorID',
+				  waypoints = {$waypointNameList},
+				  routeSpeed = $speed,
+				  routeSpeedMode = "limit",
+				  aggression = 1, -- aggression here acts as a multiplier to the Ai default aggression i.e. 0.7.
+				  aggressionMode = 'normal' -- Aggression decreases with distance from opponent
+				  }
+
+	helper.setAiPath(arg$actorID)

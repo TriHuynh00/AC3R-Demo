@@ -1,0 +1,23 @@
+[
+{
+    "name": "$name",
+    "description": "$description",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player0": {"playerUsable": true},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["$name"],
+    "radiusMultiplierAI": 2
+},
+]

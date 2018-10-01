@@ -1,0 +1,27 @@
+	new DecalRoad($laneName) {
+		drivability = "$drivable";
+		oneWay = "0";
+		flipDirection = "0";
+		improvedSpline = "0";
+		startTangent = "0";
+		endTangent = "0";
+		looped = "0";
+		smoothness = "0.5";
+		detail = "0.100000001";
+		overObjects = "1";
+		Material = "$material";
+		textureLength = "5";
+		breakAngle = "3";
+		renderPriority = "$priority";
+		zBias = "0";
+		decalBias = "0.000500000024";
+		distanceFade = "0 0";
+		startEndFade = "0 0";
+		position = "$initCoord";
+		scale = "1 1 1";
+		rotationMatrix = "1 0 0 0 1 0 0 0 1";
+		canSave = "1";
+		canSaveDynamicFields = "1";
+
+		$nodeList
+   };

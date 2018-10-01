@@ -1,0 +1,6 @@
+	new PointLight(pointLight$ID){
+		position = "$pos";
+		brightness = "1.5";
+		radius = "100";
+		rotationMatrix = "1 0 0 0 0.999999762 -0.000690534245 0 0.000690534245 0.999999762";
+	};

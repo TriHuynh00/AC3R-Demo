@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
+        <uri id="Automatically generated entry, Timestamp=1537470951868" name="duplicate:TrafficAccidentOntology" uri="AccidentOntology%20-%20Copy%20(2).owl"/>
+        <uri id="Automatically generated entry, Timestamp=1537470951868" name="duplicate:TrafficAccidentOntology" uri="AccidentOntology.owl"/>
+    </group>
+</catalog>

@@ -1,0 +1,4 @@
+	new TSStatic(lamp$ID){
+		position = "$pos";
+		shapeName = "levels/smallgrid/art/shapes/objects/lamp1.dae";
+	};

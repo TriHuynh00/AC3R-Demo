@@ -1,0 +1,7 @@
+	new CloudLayer(cloud) {
+		position = "7.069139003753662,41.04708862304688,0";
+		Textures = "{},{},{}";
+		rotationMatrix = "1,0,0,0,0.9999997615814209,-0.0006905338959768414,0,0.0006905338959768414,0.9999997615814209";
+		texture = "art/skies/clouds/clouds_normal_displacement";
+		coverage = "0.5";
+	};

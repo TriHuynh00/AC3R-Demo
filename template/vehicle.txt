@@ -1,0 +1,19 @@
+	new BeamNGVehicle(scenario_player$actorID) {
+		JBeam = "$jbeam";
+		color = "$colorCode 1";
+		colorPalette0 = "White";
+		colorPalette1 = "White";
+		partConfig = "$partConfig";
+		renderDistance = "500";
+		renderFade = "0.100000001";
+		dataBlock = "default_vehicle";
+		position = "$position";
+		scale = "1 1 1";
+		rotationMatrix = "$rotationMat";
+		canSave = "1";
+		canSaveDynamicFields = "1";
+		 annotation = "CAR";
+		 isAIControlled = "$isAIControlled";
+		 licenseText = "Car$actorID";
+		 mode = "Ignore";
+	};
