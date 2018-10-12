@@ -1,0 +1,15 @@
+	new BeamNGVehicle(stopsign$ID) {
+      JBeam = "roadsigns";
+	  partConfig = "vehicles/roadsigns/stop.pc";
+      color = "White";
+      colorPalette0 = "White";
+      colorPalette1 = "White";
+      renderDistance = "500";
+      renderFade = "0.100000001";
+      dataBlock = "default_vehicle";
+      position = "$pos";
+      scale = "1 1 1";
+      rotationMatrix = "$rotationMatrix";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+   };

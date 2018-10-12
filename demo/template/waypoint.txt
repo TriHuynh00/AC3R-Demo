@@ -1,0 +1,9 @@
+	new BeamNGWaypoint($name) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "$coord";
+      scale = "$scale";
+      rotationMatrix = "1 0 0 0 0.999999523 -0.000976562209 0 0.000976562209 0.999999523";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+	};

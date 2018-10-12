@@ -260,8 +260,6 @@ local function deflateTire(wheelid, energy)
   wheelBrokenBeams[wheelid] = brokenBeams + 1
 end
 
-
-
 local function updateGFX(dt)
   M.damage = obj:getDissipatedEnergy() + M.damageExt
 
@@ -837,7 +835,6 @@ local function getBrokenData(vid, scenarioName, impactedComponentsTable)
 	print(carDamageRecord)
 	
 end
-
 
 -- public interface
 M.beamBroken  = beamBroken
