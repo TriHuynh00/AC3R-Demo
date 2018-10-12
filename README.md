@@ -10,7 +10,14 @@ AC3R requires the following dependencies to operate:
 2. Java 1.7 and above to run AC3R
 3. Windows 7, 8 or 10 to run BeamNG 
 
-To build AC3R, Maven >= 3.3.9 is required.
+## Build
+
+To build AC3R, Maven >= 3.3.9 is required. Run the following commands:
+
+cd path-to-AC3R-project/demo
+mvn package
+
+Then move the generated jar in target\out\AC3R-1.0-jar-with-dependencies.jar to demo folder, and rename the jar to AC3R.jar.
 
 ## Configuration
 
