@@ -30,6 +30,7 @@ Before executing AC3R:
 2. Overwrite [BeamNG-repo]\lua\ge\extensions\scenario\scenariohelper.lua by copying [AC3R-repo]\beamngBaseFile\scenariohelper.lua to [BeamNG-repo]\lua\ge\extensions\scenario
 3. Overwrite [BeamNG-repo]\lua\vehicle\beamstate.lua by copying [AC3R-repo]\beamngBaseFile\beamstate.lua to [BeamNG-repo]\lua\vehicle
 
+Since the BeamNG unlimited research only has one car model, the default AC3R built is configured to use only one model.
 
 ## Demo
 
