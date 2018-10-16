@@ -127,39 +127,44 @@ public class XMLAccidentCaseParser {
             vehicleInfoIterator = vehicleInfoIterator.getNextSibling().getNextSibling();
             if (vehicleInfoIterator.getNodeName().trim().equalsIgnoreCase("BODY_TYPE")) {
 
-                String defaultJBeamStyle = "hatch";
-                String defaultPartConfig = "vehicles/hatch/stock_M.pc";
-                String bodyType = vehicleInfoIterator.getTextContent().trim().replace(" ", "_").toLowerCase();
+                String defaultJBeamStyle = "etk800";
+                String defaultPartConfig = "vehicles/etk800/etk854t_A.pc";
+                
+                String useDefaultCarModel = System.getProperty("defaultCarModel", "true");
 
-                ConsoleLogger.print('d',"Found BODY_TYPE " + bodyType);
-                AccidentConcept bodyTypeConcept = parser.findExactConceptInKeyword(bodyType);
+                ConsoleLogger.print('r', "USE DEFAULT CAR MODEL " + useDefaultCarModel);
 
-                try {
+                if (useDefaultCarModel.equals("true")) {
+                    vehicle.setPartConfig(defaultPartConfig);
+                    vehicle.setVehicleType(defaultJBeamStyle);
+                }
+                else
+                {
+                    String bodyType = vehicleInfoIterator.getTextContent().trim().replace(" ", "_").toLowerCase();
+                    ConsoleLogger.print('d', "Found BODY_TYPE " + bodyType);
+                    AccidentConcept bodyTypeConcept = parser.findExactConceptInKeyword(bodyType);
+
+                    try {
 //                    // try until we find a body type concept
 //                    while (!bodyTypeConcept.getConceptGroup().equals("car_model"))
 //                    {
 //
 //                    }
-                    // Find if the body type is in the Ontology
-                    if (bodyTypeConcept.getConceptGroup().equals("car_model"))
-                    {
-                        if (bodyTypeConcept.getDataProperties() != null)
-                        {
-                            vehicle.setPartConfig(bodyTypeConcept.getDataProperties().get("partconfig"));
-                            vehicle.setVehicleType(bodyTypeConcept.getDataProperties().get("jbeam"));
+                        // Find if the body type is in the Ontology
+                        if (bodyTypeConcept.getConceptGroup().equals("car_model")) {
+                            if (bodyTypeConcept.getDataProperties() != null) {
+                                vehicle.setPartConfig(bodyTypeConcept.getDataProperties().get("partconfig"));
+                                vehicle.setVehicleType(bodyTypeConcept.getDataProperties().get("jbeam"));
+                            } else {
+                                vehicle.setPartConfig(defaultPartConfig);
+                                vehicle.setVehicleType(defaultJBeamStyle);
+                            }
                         }
-                        else
-                        {
-                            vehicle.setPartConfig(defaultPartConfig);
-                            vehicle.setVehicleType(defaultJBeamStyle);
-                        }
+                    } catch (Exception ex) {
+                        ConsoleLogger.print('d', "Exception at extracting body type \n" + ex.toString());
+                        vehicle.setPartConfig(defaultPartConfig);
+                        vehicle.setVehicleType(defaultJBeamStyle);
                     }
-                }
-                catch (Exception ex)
-                {
-                    ConsoleLogger.print('d',"Exception at extracting body type \n" + ex.toString());
-                    vehicle.setPartConfig(defaultPartConfig);
-                    vehicle.setVehicleType(defaultJBeamStyle);
                 }
 
             }

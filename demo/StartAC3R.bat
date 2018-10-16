@@ -1,1 +1,1 @@
-java -Xms2048m -Xmx6000m -d64 -jar AC3R.jar 
+java -Xms2048m -Xmx6000m -d64 -jar -DdefaultCarModel=true AC3R.jar 
