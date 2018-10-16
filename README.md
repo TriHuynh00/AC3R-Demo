@@ -2,7 +2,7 @@
 
 This project contains the implementation and demo of AC3R, a software that generate simulations from semi-structured crash reports i.e. a document recording crash elements and narratives using a schema like XML.
 
-The link to AC3R demo in YouTube is:
+The link to AC3R demo video in YouTube is:
 https://www.youtube.com/watch?v=V708fDG_ux8
 
 ## Requirements
