@@ -7,7 +7,7 @@ local M = {}
 local max = math.max
 local min = math.min
 
-M.wheels = {}
+local wheelsL = {}
 M.damage = 0
 M.damageExt = 0
 M.lowpressure = false
@@ -16,9 +16,6 @@ M.deformGroupDamage = {}
 local delayedPrecompBeams = {}
 local initTimer = 0
 
-local totalBreakEnergy = 0
-local breakNode = -1
-local maxEnergy = 0
 local collTriState = {}
 
 local wheelBrokenBeams = {}
@@ -51,13 +48,13 @@ local function breakMaterial(beam)
 end
 
 local function broadcastCouplerVisibility(visible)
-  BeamEngine:queueAllObjectLua('beamstate.setCouplerVisiblityExternal(' .. tostring(obj:getID()) .. ',' .. tostring(visible) .. ')')
+  BeamEngine:queueAllObjectLua("beamstate.setCouplerVisiblityExternal(" .. tostring(obj:getID()) .. "," .. tostring(visible) .. ")")
 end
 
 M.debugDraw = nop
 local function debugDraw(focusPos)
   -- highlight all coupling nodes
-  for _,c in pairs(couplerCache) do
+  for _, c in pairs(couplerCache) do
     obj.debugDrawProxy:drawSphere(0.15, obj:getPosition() + obj:getNodePosition(c.cid), c.couplerColor)
   end
 end
@@ -71,7 +68,9 @@ local function setCouplerVisiblityExternal(sourceObjectID, visible)
 end
 
 local function activateAutoCoupling(_nodetag)
-  if not hasActiveCoupler then return end
+  if not hasActiveCoupler then
+    return
+  end
   autoCouplingNodeTag = _nodetag
   autoCouplingActive = true
   autoCouplingTimeoutTimer = 0
@@ -88,23 +87,24 @@ local function disableAutoCoupling()
 end
 
 local function sendObjectCouplingChange()
-  obj:queueGameEngineLua(string.format('onObjectCouplingChange(%s,%s)', objectId, serialize(attachedCouplers)))
+  obj:queueGameEngineLua(string.format("onObjectCouplingChange(%s,%s)", objectId, serialize(attachedCouplers)))
 end
 
 local function attachCouplers(_nodetag)
-  local nodetag = _nodetag or ''
+  local nodetag = _nodetag or ""
   for _, val in pairs(couplerCache) do
     if (val.couplerWeld ~= true and val.couplerTag and (_nodetag == nil or val.couplerTag == nodetag)) and val.cid then
-      obj:attachCoupler(val.cid, val.couplerTag or '', val.couplerStrength or 1000000, val.couplerRadius or 0.2, val.couplerTargets or 0)
+      obj:attachCoupler(val.cid, val.couplerTag or "", val.couplerStrength or 1000000, val.couplerRadius or 0.2, val.couplerTargets or 0)
     end
   end
 end
 
 local function detachCouplers(_nodetag)
-  local nodetag = _nodetag or ''
+  local nodetag = _nodetag or ""
   for _, val in pairs(couplerCache) do
     if (val.couplerLock ~= true and val.couplerWeld ~= true and val.couplerTag and (_nodetag == nil or val.couplerTag == nodetag)) and val.cid then
       obj:detachCoupler(val.cid)
+      obj:queueGameEngineLua(string.format("onCouplerDetach(%s,%s)", obj:getID(), val.cid))
     end
   end
 end
@@ -144,13 +144,13 @@ local function couplerAttached(nodeId, obj2id, obj2nodeId)
   if node and (node.importElectrics or node.importInputs) then
     local data = {electrics = node.importElectrics, inputs = node.importInputs}
     --print("couplerAttached -> beamstate.exportCouplerData("..tostring(obj2nodeId)..", "..serialize(data)..")")
-    obj:queueObjectLuaCommand(obj2id, "beamstate.exportCouplerData("..tostring(obj2nodeId)..", "..serialize(data)..")")
+    obj:queueObjectLuaCommand(obj2id, "beamstate.exportCouplerData(" .. tostring(obj2nodeId) .. ", " .. serialize(data) .. ")")
     M.updateRemoteElectrics = updateRemoteElectrics
   end
 
   --print(string.format("coupler attached %s.%s->%s.%s", obj:getID(),nodeId,obj2id, obj2nodeId))
   if objectId <= obj2id then
-    obj:queueGameEngineLua(string.format('onCouplerAttached(%s,%s)', objectId, obj2id))
+    obj:queueGameEngineLua(string.format("onCouplerAttached(%s,%s,%s,%s)", objectId, obj2id, nodeId, obj2nodeId))
   end
 end
 
@@ -159,15 +159,30 @@ local function couplerDetached(nodeId, obj2id, obj2nodeId)
   attachedCouplers[nodeId] = nil
   transmitCouplers[nodeId] = nil
   if objectId <= obj2id then
-    obj:queueGameEngineLua(string.format('onCouplerDetached(%s,%s)', objectId, obj2id))
+    obj:queueGameEngineLua(string.format("onCouplerDetached(%s,%s)", objectId, obj2id))
   end
+end
+
+local function getCouplerOffset()
+  local couplerCacheSize = (couplerCache and #couplerCache) or 0
+  if couplerCacheSize == 0 then
+    return
+  end
+  local pos = v.data.nodes[couplerCache[couplerCacheSize].cid].pos --obj:getNodePosition(couplerCache[1].cid) this is live position
+  local ref = v.data.nodes[v.data.refNodes[0].ref].pos
+  local cOff = {}
+  for _, c in pairs(couplerCache) do
+    pos = v.data.nodes[c.cid].pos
+    cOff[c.cid] = {x = pos.x - ref.x, y = pos.y - ref.y, z = pos.z - ref.z}
+  end
+  obj:queueGameEngineLua(string.format("core_trailerRespawn.addCouplerOffset(%s,%s)", obj:getId(), dumps(cOff)))
 end
 
 -- called from the vehicle that wants to import electrics
 local function exportCouplerData(nodeid, dataList)
   --print(obj:getID().."<-exportCouplerData("..nodeid..','..dumps(dataList)..')')
   if attachedCouplers[nodeid] == nil then
-    log('E', 'beamstate.exportCouplerElectrics', 'unable to export electrics: known coupled node: ' .. tostring(nodeId))
+    log("E", "beamstate.exportCouplerElectrics", "unable to export electrics: known coupled node: " .. tostring(nodeId))
     return
   end
   transmitCouplers[nodeid] = attachedCouplers[nodeid]
@@ -190,21 +205,19 @@ end
 
 -- local helper function
 local function luaBreakBeam(id)
-  -- notify the rest
-  --drivetrain.beamBroke(id)
-  electrics.beamBroke(id)
-
   beamDamageTracker[id] = 1
   beamDamageTrackerDirty = true
 end
 
 local function sendUISkeletonState()
-  if not playerInfo.firstPlayerSeated then return end
+  if not playerInfo.firstPlayerSeated then
+    return
+  end
   guihooks.trigger("VehicleSkeletonState", beamDamageTracker)
 end
 
 local function deflateTire(wheelid, energy)
-  local wheel = M.wheels[wheelid]
+  local wheel = wheelsL[wheelid]
   M.lowpressure = true
 
   --local i, beam
@@ -226,32 +239,34 @@ local function deflateTire(wheelid, energy)
   end
 
   if brokenBeams == 1 then
-    wheels.wheels[wheelid].isTireDeflated = true
-    gui.message({txt="vehicle.beamstate.tireDeflated", context={wheelName=wheel.name}}, 5, "vehicle.damage.deflated."..wheel.name)
-    damageTracker.setDamage("wheels", "tire"..wheel.name, true)
+    if wheels.wheels[wheelid] then
+      wheels.wheels[wheelid].isTireDeflated = true
+    end
+    gui.message({txt = "vehicle.beamstate.tireDeflated", context = {wheelName = wheel.name}}, 5, "vehicle.damage.deflated." .. wheel.name)
+    damageTracker.setDamage("wheels", "tire" .. wheel.name, true)
 
     sounds.playSoundOnceAtNode("event:>Vehicle>Tire_Burst", wheel.node1, 1)
     M.damageExt = M.damageExt + 1000
     if wheel.treadBeams ~= nil then
-      for _, beam in pairs (wheel.treadBeams) do
+      for _, beam in pairs(wheel.treadBeams) do
         obj:setBeamSpringDamp(beam.cid, beam.beamSpring * 0.05, 0, -1, -1)
       end
     end
 
     if wheel.sideBeams ~= nil then
-      for _, beam in pairs (wheel.sideBeams) do
+      for _, beam in pairs(wheel.sideBeams) do
         obj:setBeamSpringDamp(beam.cid, beam.beamSpring * 0.05, 0, -1, -1)
       end
     end
 
     if wheel.reinfBeams ~= nil then
-      for _, beam in pairs (wheel.reinfBeams) do
+      for _, beam in pairs(wheel.reinfBeams) do
         obj:setBeamSpringDamp(beam.cid, 0, 0, 0, 0)
       end
     end
 
     if wheel.pressuredBeams ~= nil then
-      for _, beam in pairs (wheel.pressuredBeams) do
+      for _, beam in pairs(wheel.pressuredBeams) do
         obj:setBeamPressureRel(beam.cid, 0, math.huge, -1, -1)
       end
     end
@@ -263,16 +278,29 @@ end
 local function updateGFX(dt)
   M.damage = obj:getDissipatedEnergy() + M.damageExt
 
-
-  -- crash sounds
+  --crash sounds
   soundTimer = soundTimer + dt
-  if totalBreakEnergy ~= 0 and soundTimer > 0.05 then
-    if breakNode ~= -1 then
-      sounds.playSoundOnceAtNode("CrashTestSound", breakNode, totalBreakEnergy * 0.005)
+  if soundTimer > 0.05 then
+    local impactEnergy, breakEnergy, breakNode = obj:getImpactDeformEnergyNode()
+    if impactEnergy > breakEnergy then
+      if impactEnergy > 0.001 then
+        local vol = math.sqrt(impactEnergy) * 0.2
+		--print (math.sqrt(impactEnergy) * 0.2)
+        if vol > 0.01 then
+          sounds.playSoundOnceFollowNode("event:>Destruction>crash_generic", breakNode, vol)
+        end
+      end
+    else
+      if breakEnergy > 0.001 then
+        --local vol = (math.sqrt(math.sqrt(breakEnergy)) * 0.075)
+		--print (math.sqrt(math.sqrt(breakEnergy)) * 0.075)
+		local vol = math.log(breakEnergy + 1) * 0.08
+		--print (math.log(breakEnergy + 1) * 0.08)
+        if vol > 0.01 then
+          sounds.playSoundOnceFollowNode("event:>Destruction>Vehicle>impact_vehicle_generic", breakNode, vol)
+        end
+      end
     end
-    totalBreakEnergy = 0
-    breakNode = -1
-    maxEnergy = 0
     soundTimer = 0
   end
 
@@ -321,7 +349,9 @@ local function update(dtSim)
   initTimer = initTimer + dtSim
   for _, b in ipairs(delayedPrecompBeams) do
     local tratio = initTimer / b.beamPrecompressionTime
-    if tratio < 1 then finished_precomp = false end
+    if tratio < 1 then
+      finished_precomp = false
+    end
     obj:setPrecompressionRatio(b.cid, 1 + (b.beamPrecompression - 1) * min(tratio, 1))
   end
 
@@ -332,12 +362,6 @@ local function update(dtSim)
 end
 
 local function beamBroken(id, energy)
-  if energy > maxEnergy then
-    breakNode = v.data.beams[id].id1
-    maxEnergy = energy
-  end
-  totalBreakEnergy = totalBreakEnergy + energy
-
   beamDamageTracker[id] = 0
   beamDamageTrackerDirty = true
 
@@ -356,7 +380,7 @@ local function beamBroken(id, energy)
 
     -- Break coll tris
     if beam.collTris and not beam.disableTriangleBreaking then --allow beams to disable triangle breaking
-      for _,ctid in pairs(beam.collTris) do
+      for _, ctid in pairs(beam.collTris) do
         if collTriState[ctid] then
           collTriState[ctid] = collTriState[ctid] - 1
           if collTriState[ctid] <= 1 then
@@ -383,7 +407,7 @@ local function beamBroken(id, energy)
 
     -- breakgroup handling
     if beam.breakGroup then
-      if type(beam.breakGroup) ~= 'table' and breakGroupCache[beam.breakGroup] == nil then
+      if type(beam.breakGroup) ~= "table" and breakGroupCache[beam.breakGroup] == nil then
         -- shortcircuit in case of broken single breakGroup
       else
         local breakGroups = type(beam.breakGroup) == "table" and beam.breakGroup or {beam.breakGroup}
@@ -405,7 +429,7 @@ local function beamBroken(id, energy)
 
               --break triangle breakgroups matching the beam breakgroup
               if triangleBreakGroupCache[g] then
-                for _,ctid in ipairs(triangleBreakGroupCache[g]) do
+                for _, ctid in ipairs(triangleBreakGroupCache[g]) do
                   obj:breakCollisionTriangle(ctid)
                   collTriState[ctid] = nil
                 end
@@ -426,9 +450,6 @@ local function beamBroken(id, energy)
 end
 
 local function init()
-  totalBreakEnergy = 0
-  breakNode = -1
-  maxEnergy = 0
   M.damage = 0
   M.damageExt = 0
   wheelBrokenBeams = {}
@@ -438,8 +459,8 @@ local function init()
   beamDamageTrackerDirty = false
 
   if v.data.wheels then
-    M.wheels = deepcopy(v.data.wheels)
-    for _, wheel in pairs(M.wheels) do
+    wheelsL = v.data.wheels
+    for _, wheel in pairs(wheelsL) do
       wheel.pressureCoef = 1
     end
   end
@@ -457,14 +478,16 @@ local function init()
         if t.breakGroup then
           local breakGroups = type(t.breakGroup) == "table" and t.breakGroup or {t.breakGroup}
           for _, g in pairs(breakGroups) do
-            if not triangleBreakGroupCache[g] then triangleBreakGroupCache[g] = {} end
+            if not triangleBreakGroupCache[g] then
+              triangleBreakGroupCache[g] = {}
+            end
             table.insert(triangleBreakGroupCache[g], t.cid)
           end
         end
         if t.pressureGroup then
-          pressureBeams[min(t.id1, t.id2)..'\0'..max(t.id1, t.id2)] = t.pressureGroup
-          pressureBeams[min(t.id1, t.id3)..'\0'..max(t.id1, t.id3)] = t.pressureGroup
-          pressureBeams[min(t.id2, t.id3)..'\0'..max(t.id2, t.id3)] = t.pressureGroup
+          pressureBeams[min(t.id1, t.id2) .. "\0" .. max(t.id1, t.id2)] = t.pressureGroup
+          pressureBeams[min(t.id1, t.id3) .. "\0" .. max(t.id1, t.id3)] = t.pressureGroup
+          pressureBeams[min(t.id2, t.id3) .. "\0" .. max(t.id2, t.id3)] = t.pressureGroup
         end
       end
     end
@@ -502,13 +525,13 @@ local function init()
       local c = getContrastColor(stringHash(data.couplerTag or data.tag))
       data.couplerColor = color(c.r, c.g, c.b, 150)
       table.insert(couplerCache, data)
-      hasActiveCoupler = n.couplerTag ~=nil or hasActiveCoupler
+      hasActiveCoupler = n.couplerTag ~= nil or hasActiveCoupler
     end
   end
 
   for _, c in pairs(couplerCache) do
     if c.couplerStartRadius and c.cid then
-      obj:attachCoupler(c.cid, c.couplerTag or '', c.couplerStrength or 1000000, c.couplerStartRadius, c.couplerTargets or 0)
+      obj:attachCoupler(c.cid, c.couplerTag or "", c.couplerStrength or 1000000, c.couplerStartRadius, c.couplerTargets or 0)
     end
   end
 
@@ -526,7 +549,7 @@ local function init()
 
   if v.data.beams then
     for _, b in pairs(v.data.beams) do
-      local pid = min(b.id1, b.id2)..'\0'..max(b.id1, b.id2)
+      local pid = min(b.id1, b.id2) .. "\0" .. max(b.id1, b.id2)
       if pressureBeams[pid] and v.data.pressureGroups[pressureBeams[pid]] then
         b.pressureGroupId = pressureBeams[pid]
       end
@@ -534,7 +557,9 @@ local function init()
       if b.breakGroup then
         local breakGroups = type(b.breakGroup) == "table" and b.breakGroup or {b.breakGroup}
         for _, g in pairs(breakGroups) do
-          if not breakGroupCache[g] then breakGroupCache[g] = {} end
+          if not breakGroupCache[g] then
+            breakGroupCache[g] = {}
+          end
           table.insert(breakGroupCache[g], b.cid)
         end
       end
@@ -556,7 +581,7 @@ local function init()
         end
       end
 
-      if type(b.beamPrecompressionTime) == 'number' and b.beamPrecompressionTime > 0 then
+      if type(b.beamPrecompressionTime) == "number" and b.beamPrecompressionTime > 0 then
         table.insert(delayedPrecompBeams, b)
       end
 
@@ -569,7 +594,7 @@ local function init()
 
         if beamPosY <= yGroup1 then
           yChar = "F"
-        elseif beamPosY <= yGroup2  then
+        elseif beamPosY <= yGroup2 then
           yChar = "M"
         else
           yChar = "R"
@@ -581,14 +606,14 @@ local function init()
           xChar = "L"
         end
 
-        local bodyPart = yChar..xChar
+        local bodyPart = yChar .. xChar
         beamBodyPartLookup[b.cid] = bodyPart
         invBodyPartBeamCount[bodyPart] = invBodyPartBeamCount[bodyPart] + 1
       end
     end
   end
 
-  for k,v in pairs(invBodyPartBeamCount) do
+  for k, v in pairs(invBodyPartBeamCount) do
     invBodyPartBeamCount[k] = 1 / v
     damageTracker.setDamage("body", k, 0)
   end
@@ -650,43 +675,59 @@ local function breakHinges()
       local breakGroups = type(b.breakGroup) == "table" and b.breakGroup or {b.breakGroup}
       -- multiple break groups
       for _, g in pairs(breakGroups) do
-        if type(g) == 'string' and (string.find(g, "hinge") ~= nil or string.find(g, "latch") ~= nil) then
+        if type(g) == "string" and (string.find(g, "hinge") ~= nil or string.find(g, "latch") ~= nil) then
           --log('D', "beamstate.breakHinges","  breaking hinge beam "..k.. " as in breakgroup ".. b.breakGroup)
           obj:breakBeam(b.cid)
-          goto continue
+          break
         end
       end
     end
-    ::continue::
   end
 end
 
 local function deflateTires()
-  for i, _ in pairs(M.wheels) do
+  for i, _ in pairs(wheelsL) do
     deflateTire(i, 0)
   end
 end
 
 local function breakBreakGroup(group)
-  if group == nil then return end
-  for _,b in pairs(v.data.beams) do
+  if group == nil then
+    return
+  end
+  for _, b in pairs(v.data.beams) do
     if b.breakGroup ~= nil then
       local breakGroups = type(b.breakGroup) == "table" and b.breakGroup or {b.breakGroup}
       for _, g in pairs(breakGroups) do
         if g == group then
           obj:breakBeam(b.cid)
-          goto continue
+          break
         end
       end
     end
-    ::continue::
+  end
+end
+
+local function triggerDeformGroup(group)
+  if group == nil then
+    return
+  end
+  for _, b in pairs(v.data.beams) do
+    if b.deformSwitches ~= nil then
+      local deformSwitchesT = type(b.deformSwitches) == "table" and b.deformSwitches or {b.deformSwitches}
+      for _, g in pairs(deformSwitchesT) do
+        if g.deformGroup == group then
+          breakMaterial(b)
+          return
+        end
+      end
+    end
   end
 end
 
 local function addDamage(damage)
   M.damageExt = M.damageExt + damage
 end
-
 
 local function sendUISkeleton()
   local data = {}
@@ -695,10 +736,12 @@ local function sendUISkeleton()
     local n2 = v.data.nodes[beam.id2]
     -- only beams with deformationTriggerRatio will actually change ...
     --if beam.deformationTriggerRatio then
-    data[beam.cid + 1] =  {n1.pos, n2.pos}
+    data[beam.cid + 1] = {n1.pos, n2.pos}
     --end
   end
-  if not playerInfo.firstPlayerSeated then return end
+  if not playerInfo.firstPlayerSeated then
+    return
+  end
   guihooks.trigger("VehicleSkeleton", data)
   sendUISkeletonState()
 end
@@ -715,17 +758,19 @@ local function hasCouplers()
 end
 
 local function save(filename)
-  if filename == nil then filename = v.vehicleDirectory .. '/vehicle.save.json' end
+  if filename == nil then
+    filename = v.vehicleDirectory .. "/vehicle.save.json"
+  end
   -- TODO: color
   local save = {}
-  save.format = 'v2'
+  save.format = "v2"
   save.model = v.vehicleDirectory:gsub("vehicles/", ""):gsub("/", "")
   save.parts = v.userPartConfig
   save.vars = v.userVars
   save.vehicleDirectory = v.vehicleDirectory
   save.nodeCount = #v.data.nodes
   save.beamCount = #v.data.beams
-  save.luaState = serializePackages('save')
+  save.luaState = serializePackages("save")
   save.hydros = {}
   for _, h in pairs(hydros.hydros) do
     table.insert(save.hydros, h.state)
@@ -753,15 +798,16 @@ local function save(filename)
   writeJsonFile(filename, save, true)
 end
 
-
 local function load(filename)
-  if filename == nil then filename = v.vehicleDirectory .. '/vehicle.save.json' end
+  if filename == nil then
+    filename = v.vehicleDirectory .. "/vehicle.save.json"
+  end
 
   local save = readJsonFile(filename)
 
   -- satefy checks
-  if not save or save.nodeCount ~= #v.data.nodes or save.beamCount ~= #v.data.beams or save.vehicleDirectory ~= v.vehicleDirectory or save.format ~= 'v2' then
-    log('E', 'save', 'unable to load vehicle: invalid vehicle loaded?')
+  if not save or save.nodeCount ~= #v.data.nodes or save.beamCount ~= #v.data.beams or save.vehicleDirectory ~= v.vehicleDirectory or save.format ~= "v2" then
+    log("E", "save", "unable to load vehicle: invalid vehicle loaded?")
     return
   end
 
@@ -837,21 +883,23 @@ local function getBrokenData(vid, scenarioName, impactedComponentsTable)
 end
 
 -- public interface
-M.beamBroken  = beamBroken
-M.reset       = reset
-M.init          = init
+M.beamBroken = beamBroken
+M.reset = reset
+M.init = init
 M.deflateTire = deflateTire
-M.updateGFX   = updateGFX
+M.updateGFX = updateGFX
 M.beamDeformed = beamDeformed
 M.breakAllBreakgroups = breakAllBreakgroups
 M.breakHinges = breakHinges
 M.deflateTires = deflateTires
 M.breakBreakGroup = breakBreakGroup
+M.triggerDeformGroup = triggerDeformGroup
 M.addDamage = addDamage
 M.activateAutoCoupling = activateAutoCoupling
 M.couplerFound = couplerFound
 M.couplerAttached = couplerAttached
 M.couplerDetached = couplerDetached
+M.getCouplerOffset = getCouplerOffset
 M.setCouplerVisiblityExternal = setCouplerVisiblityExternal
 M.exportCouplerData = exportCouplerData
 M.importCouplerData = importCouplerData
@@ -867,8 +915,8 @@ M.attachCouplers = attachCouplers
 M.detachCouplers = detachCouplers
 
 -- for the UI
-M.requestSkeletonState  = sendUISkeletonState
-M.requestSkeleton  = sendUISkeleton
+M.requestSkeletonState = sendUISkeletonState
+M.requestSkeleton = sendUISkeleton
 
 -- Custom Func
 M.getBrokenData = getBrokenData

@@ -30,6 +30,11 @@ local function breakBreakGroup(vehicleName, group)
   queueLuaCommand(getVehicleByName(vehicleName), 'beamstate.breakBreakGroup("'..group..'")')
 end
 
+--trigger a deform group, switch to a broken material (ie:break a window)
+local function triggerDeformGroup(vehicleName, group)
+  queueLuaCommand(getVehicleByName(vehicleName), 'beamstate.triggerDeformGroup("'..group..'")')
+end
+
 --enables tracking for the specified vehicle with a custom tracking name
 local function trackVehicle(vehicleName, trackingName)
   queueLuaCommandByName(vehicleName, 'mapmgr.enableTracking("'..trackingName..'")')
@@ -174,6 +179,14 @@ local function realTimeUiDisplay (msg)
   guihooks.trigger('ScenarioRealtimeDisplay', {msg = msg} )
 end
 
+local function characterRealTimeUiDisplay(msg, img, context)
+  guihooks.trigger('CharacterRealtimeDisplay', {msg = msg, img = img, context = context})
+end
+
+local function clearCharacterRealTimeUiDisplay()
+  guihooks.trigger('CharacterRealtimeDisplay')
+end
+
 local function getDistanceBetweenSceneObjects(sceneObjectName1, sceneObjectName2)
   local sceneObject1 = scenetree.findObject(sceneObjectName1)
   local sceneObject2 = scenetree.findObject(sceneObjectName2)
@@ -195,20 +208,22 @@ M.queueLuaCommand = queueLuaCommand
 M.queueLuaCommandByName = queueLuaCommandByName
 M.getVehicleByName = getVehicleByName
 M.breakBreakGroup = breakBreakGroup
+M.triggerDeformGroup = triggerDeformGroup
 M.trackVehicle = trackVehicle
 M.setAiMode = setAiMode
 M.setAiAggression = setAiAggression
 M.setAiAggressionMode = setAiAggressionMode
-M.setAiTargetVehicle = setAiTargetVehicle
+--M.setAiTargetVehicle = setAiTargetVehicle
 M.setAiTarget = setAiTarget
 M.setAiRoute = setAiRoute
 M.setAiPath = setAiPath
 M.setCutOffDrivability = setCutOffDrivability
 M.flashUiMessage = flashUiMessage
 M.realTimeUiDisplay = realTimeUiDisplay
+M.characterRealTimeUiDisplay = characterRealTimeUiDisplay
+M.clearCharacterRealTimeUiDisplay = clearCharacterRealTimeUiDisplay
 M.getDistanceBetweenSceneObjects = getDistanceBetweenSceneObjects
 
 -- custom function
 M.recordNoCrash = recordNoCrash
-
 return M
