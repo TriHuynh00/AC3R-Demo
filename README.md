@@ -9,7 +9,7 @@ https://www.youtube.com/watch?v=V708fDG_ux8
 
 AC3R requires the following dependencies to operate: 
 
-1. BeamNG.research <b> unlimited edition </b> to simulate the generated crash scenarios. Please contact info@beamng.gmbh to request for the unlimited edition of BeamNG.research.
+1. BeamNG.research <b> unlimited edition </b> to simulate the generated crash scenarios. Please contact research@beamng.gmbh to request for the unlimited edition of BeamNG.research.
 2. Java 1.7 and above to run AC3R
 3. Windows 7, 8 or 10 to run BeamNG 
 
