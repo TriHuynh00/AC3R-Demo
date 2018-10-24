@@ -3,18 +3,20 @@ package org.saarland.configparam;
 import java.text.DecimalFormat;
 
 public class AccidentParam {
-    public static final boolean DEBUG = true;
-    public static final int simulationDuration = 2; // Duration in steps
-    public static final int distanceBetweenCars = 9;
+    public static final boolean DEBUG = false;
+    public static final int SIMULATION_DURATION = 2; // Duration in steps
+    public static final int DISTANCE_BETWEEN_CARS = 9;
+    public static final int BEAMNG_PORT = 64256;
 
     public static String[] cardinalDirectionPair = new String[] {"E/W", "N/S", "NE/SW", "NW/SE"};
 
     public static String userFolder = System.getProperty("user.home") + "\\Documents\\";
 
-    public static String environmentFile = userFolder + "BeamNG.drive\\levels\\smallgrid\\main\\MissionGroup\\items.level.json";
     public static String beamNGUserPath = userFolder + "BeamNG.drive";
-    public static String finalResultLocation = userFolder + "BeamNG.drive\\levels\\smallgrid";
-    public static String scenarioConfigFilePath  = userFolder + "BeamNG.drive\\levels\\smallgrid\\scenarios";
+    public static String environmentFile = beamNGUserPath + "\\levels\\smallgrid\\main\\MissionGroup\\items.level.json";
+
+    public static String finalResultLocation = beamNGUserPath + "\\levels\\smallgrid";
+    public static String scenarioConfigFilePath  = beamNGUserPath + "\\levels\\smallgrid\\scenarios";
 
     public static String templateFilePath  = "template";
 

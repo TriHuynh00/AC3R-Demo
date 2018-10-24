@@ -197,7 +197,7 @@ public class FrontCollisionConstructor {
 
             double yCoord = 0;
 
-            for (int i = 1; i <= AccidentParam.simulationDuration; i++)
+            for (int i = 1; i <= AccidentParam.SIMULATION_DURATION; i++)
             {
 
                 int estimateVehicleSpeed = AccidentConstructorUtil.getVelocityOfAction(vehicleAttr.getActionList().get(0), parser);

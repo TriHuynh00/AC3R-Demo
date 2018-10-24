@@ -3,11 +3,14 @@ package org.saarland.configparam;
 public class FilePathsConfig {
 
     public static String accidentFolderLocation = "accidentCases/";
-    public static String damageRecordLocation  = AccidentParam.userFolder + "BeamNG.drive\\levels\\smallgrid\\damageRecord\\";
-    public static String previousRecordLocation  =  AccidentParam.userFolder + "BeamNG.drive\\levels\\smallgrid\\previousRecord\\";
-    public static String allTestRecordLocation  =  AccidentParam.userFolder + "BeamNG.drive\\levels\\smallgrid\\verifiedCrashInfoRecord\\";
-    public static String prevCrashInfoRecordLocation  =  AccidentParam.userFolder + "BeamNG.drive\\levels\\smallgrid\\prevCrashInfoRecord\\";
-    public static String testResultSummary  =  AccidentParam.userFolder + "BeamNG.drive\\levels\\smallgrid\\testResultSummary\\";
+    private static String baseLevelPath = AccidentParam.beamNGUserPath + "\\levels\\smallgrid";
+//    private static String baseLevelPath = "D:\\Games\\trunk" + "\\levels\\smallgrid\\";
+
+    public static String damageRecordLocation  = baseLevelPath + "\\damageRecord\\";
+    public static String previousRecordLocation  =  baseLevelPath + "\\previousRecord\\";
+    public static String allTestRecordLocation  =  baseLevelPath + "\\verifiedCrashInfoRecord\\";
+    public static String prevCrashInfoRecordLocation  =  baseLevelPath + "\\prevCrashInfoRecord\\";
+    public static String testResultSummary  =  baseLevelPath + "\\testResultSummary\\";
     public static String absoluteScenarioFilePath = "levels/smallgrid/scenarios/";
     public static String BeamNGProgramPath = "BeamNG.research.x64.exe";
 }

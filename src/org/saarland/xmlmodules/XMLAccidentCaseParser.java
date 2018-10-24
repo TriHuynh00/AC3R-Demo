@@ -129,7 +129,7 @@ public class XMLAccidentCaseParser {
 
                 String defaultJBeamStyle = "etk800";
                 String defaultPartConfig = "vehicles/etk800/etk854t_A.pc";
-                
+
                 String useDefaultCarModel = System.getProperty("defaultCarModel", "true");
 
                 ConsoleLogger.print('r', "USE DEFAULT CAR MODEL " + useDefaultCarModel);
@@ -166,7 +166,6 @@ public class XMLAccidentCaseParser {
                         vehicle.setVehicleType(defaultJBeamStyle);
                     }
                 }
-
             }
 
             // Skip HIT_CLASS
@@ -175,37 +174,49 @@ public class XMLAccidentCaseParser {
 
             // Get Color
             vehicleInfoIterator = vehicleInfoIterator.getNextSibling().getNextSibling();
+            String chosenColorName = "white";
             if (vehicleInfoIterator.getNodeName().trim().equalsIgnoreCase("COLOR")) {
 
                 String defaultColorCode = "1 1 1"; // Set default as white
                 String colorName = vehicleInfoIterator.getTextContent().toLowerCase().trim().replace(" ", "_");
-                ConsoleLogger.print('d',"Found COLOR " + colorName);
-                AccidentConcept colorConcept = parser.findExactConcept(colorName);
-                // Find if the color is in the Ontology
-                try {
-                    if (colorConcept.getConceptGroup().equals("color"))
-                    {
+                ConsoleLogger.print('d', "Found COLOR " + colorName);
+                String colorCode = defaultColorCode;
 
-                        if (colorConcept.getDataProperties() != null)
-                        {
-                            vehicle.setColor(colorConcept.getDataProperties().get("rgb_code"));
-                        }
-                        else
-                        {
-                            vehicle.setColor(defaultColorCode);
-                        }
-                    }
-                    else
+                String[] colorVals = colorName.split("/");
+
+                for (String color : colorVals)
+                {
+
+                    colorCode = readColorValue(color, parser);
+                    if (!colorCode.equals("none"))
                     {
-                        vehicle.setColor(defaultColorCode);
+                        chosenColorName = color;
+                        vehicle.setColor(colorCode);
+                        break;
                     }
                 }
-
-                catch (Exception ex)
+                if (colorCode.equals("none"))
                 {
-                    ConsoleLogger.print('d',"Exception at extracting color \n" + ex.toString());
                     vehicle.setColor(defaultColorCode);
                 }
+
+//                AccidentConcept colorConcept = parser.findConcept(colorName);
+//                // Find if the color is in the Ontology
+//                try {
+//                    if (colorConcept.getConceptGroup().equals("color")) {
+//
+//                        if (colorConcept.getDataProperties() != null) {
+//                            vehicle.setColor(colorConcept.getDataProperties().get("rgb_code"));
+//                        } else {
+//                            vehicle.setColor(defaultColorCode);
+//                        }
+//                    } else {
+//                        vehicle.setColor(defaultColorCode);
+//                    }
+//                } catch (Exception ex) {
+//                    ConsoleLogger.print('d', "Exception at extracting color \n" + ex.toString());
+//                    vehicle.setColor(defaultColorCode);
+//                }
 
             }
 
@@ -226,17 +237,16 @@ public class XMLAccidentCaseParser {
             }
 
             ConsoleLogger.print('d',"-------------");
-            ConsoleLogger.print('r',String.format("Final Vehicle Info \n" +
-                            "ID: %d \n " +
+            ConsoleLogger.print('r',String.format("Vehicle %d Info \n" +
                             "YearMakeModel: %s \n " +
                             "Type: %s \n " +
-                            "Color: %s \n " +
-                            "On Street: %s \n ",
+                            "Color: %s \n ",
+                            //"On Street: %s \n ",
                     vehicle.getVehicleId(),
                     vehicle.getYearMakeModel(),
                     vehicle.getVehicleType(),
-                    vehicle.getColor(),
-                    vehicle.getOnStreet()));
+                    chosenColorName));
+                    //vehicle.getOnStreet()));
 
             accidentConstructor.getVehicleList().add(vehicle);
         }
@@ -326,7 +336,7 @@ public class XMLAccidentCaseParser {
         paragraphs[1] = paragraphs[1].replace("  ", " ").replace(" ,", ",");
         ConsoleLogger.print('d',"After: " + paragraphs[1]);
 
-        String[] accidentContext = {paragraphs[0].toLowerCase(), paragraphs[1].toLowerCase()};
+        String[] accidentContext = {paragraphs[0], paragraphs[1]};
         return accidentContext;
     }
 
@@ -383,5 +393,30 @@ public class XMLAccidentCaseParser {
 
 
         return AccidentConstructorUtil.transformWordNumIntoNum(tagInfoIterator.getTextContent().trim());
+    }
+
+    private String readColorValue(String colorName, OntologyHandler parser)
+    {
+        String colorCode = "none"; // Set default as none
+        AccidentConcept colorConcept = parser.findConcept(colorName);
+        // Find if the color is in the Ontology
+        try {
+            if (colorConcept.getConceptGroup().equals("color")) {
+
+                if (colorConcept.getDataProperties() != null) {
+                    return colorConcept.getDataProperties().get("rgb_code");
+                } else {
+                    return colorCode;
+                }
+            }
+            else
+            {
+                return colorCode;
+            }
+        } catch (Exception ex) {
+            ConsoleLogger.print('e', "Exception at extracting color \n" + ex.toString());
+            return colorCode;
+        }
+
     }
 }

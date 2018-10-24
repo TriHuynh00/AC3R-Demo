@@ -7,9 +7,7 @@ import org.saarland.configparam.AccidentParam;
 import org.saarland.ontologyparser.AccidentConcept;
 import org.saarland.ontologyparser.OntologyHandler;
 
-import javax.xml.bind.SchemaOutputResolver;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -1156,7 +1154,7 @@ public class RoadConstructor {
                         .replace("$speed", AccidentParam.df6Digit.format(AccidentConstructorUtil.appendExtraMeterPerSecSpeed(victimVehicle.getVelocity())))
                         .replace("$P1ID", strikerVehicle.getVehicleId() + "")
                         // TODO: COmpute Trigger Distance using equation
-                        .replace("$collisionDistance", AccidentParam.distanceBetweenCars + "");
+                        .replace("$collisionDistance", AccidentParam.DISTANCE_BETWEEN_CARS + "");
 
 
                 double leaveTriggerDistance = victimVehicle.getLeaveTriggerDistance();
@@ -1612,7 +1610,7 @@ public class RoadConstructor {
                         .replace("$P1ID", strikerVehicle.getVehicleId() + "")
                             // TODO: COmpute Trigger Distance using equation
                         .replace("$triggerDistance", (victimVehicle.getLeaveTriggerDistance()) + "")
-                        .replace("$collisionDistance", AccidentParam.distanceBetweenCars + "");
+                        .replace("$collisionDistance", AccidentParam.DISTANCE_BETWEEN_CARS + "");
 
                     ConsoleLogger.print('d',"Construct moving car logic for sideswipe, trigger distance " + victimVehicle.getLeaveTriggerDistance());
 

@@ -367,7 +367,7 @@ public class SideswipeConstructor {
                 desireSpeed = AccidentConstructorUtil.convertMPHToMS(estimateVehicleSpeed);
             }
 
-            for (int i = 1; i <= AccidentParam.simulationDuration; i++)
+            for (int i = 1; i <= AccidentParam.SIMULATION_DURATION; i++)
             {
                 double xCoord = -100;
                 xCoord = -1.0 * desireSpeed * i + Double.parseDouble(coordOfSelectedVehicle.get(i - 1).split(":")[0]);

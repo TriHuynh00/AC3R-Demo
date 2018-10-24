@@ -307,7 +307,7 @@ public class StraightPathConstructor {
                         ConsoleLogger.print('d',"Leave Trigger Distance " + leaveTriggerDistance);
 
                         // Construct the coords before the "prior crash" point
-                        for (int i = indexActionBeforeCrash - 1; i >= -1 * AccidentParam.simulationDuration; i--)
+                        for (int i = indexActionBeforeCrash - 1; i >= -1 * AccidentParam.SIMULATION_DURATION; i--)
                         {
                             if (travelDirection.equals("W"))
                             {
@@ -350,7 +350,7 @@ public class StraightPathConstructor {
                         if (currentVehicle.equals(strikerAndVictim[0]))
                         {
                             nearCrashDistance =  AccidentConstructorUtil.convertMPHToMS(currentVehicle.getVelocity())
-                                * AccidentParam.simulationDuration;
+                                * AccidentParam.SIMULATION_DURATION;
 
                         }
                         else if (currentVehicle.equals(strikerAndVictim[1]))
@@ -365,7 +365,7 @@ public class StraightPathConstructor {
                         int roadAngle =  Integer.parseInt(vehicleStandingStreet.getStreetPropertyValue("road_angle"));
 
                         double nearCrashDistance =  AccidentConstructorUtil.convertMPHToMS(currentVehicle.getVelocity())
-                                * AccidentParam.simulationDuration;
+                                * AccidentParam.SIMULATION_DURATION;
                         double totalDistance = currentVehDistanceAndTime.get(0) + nearCrashDistance; */
 
 
@@ -566,7 +566,7 @@ public class StraightPathConstructor {
 
             double yCoord = 0;
 
-            for (int i = 1; i <= AccidentParam.simulationDuration; i++)
+            for (int i = 1; i <= AccidentParam.SIMULATION_DURATION; i++)
             {
 
                 int estimateVehicleSpeed = AccidentConstructorUtil.getVelocityOfAction(vehicleAttr.getActionList().get(0), parser);
@@ -798,7 +798,7 @@ public class StraightPathConstructor {
 
 // Append the vehicle coord depending on the direction, we may not need to take acceleration into account now
 
-//                        for (int i = 1; i <= AccidentParam.simulationDuration; i++)
+//                        for (int i = 1; i <= AccidentParam.SIMULATION_DURATION; i++)
 //                                {
 //                                double vehicleCoordX = Double.parseDouble(crashXCoord);
 //                                double vehicleCoordY = Double.parseDouble(crashYCoord);

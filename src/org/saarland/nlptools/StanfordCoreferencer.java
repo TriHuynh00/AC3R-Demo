@@ -26,7 +26,9 @@ public class StanfordCoreferencer {
     private String modelPath = DependencyParser.DEFAULT_MODEL;
     private String taggerPath = "edu/stanford/nlp/models/pos-tagger/english-left3words/english-left3words-distsim.tagger";
 
+    Properties props = null;
 
+    StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
 
 
     final static String maxentTaggerModelStr = "models/wsj-0-18-left3words-distsim.tagger";
@@ -74,7 +76,13 @@ public class StanfordCoreferencer {
     public StanfordCoreferencer()
     {
         Collections.sort(dependencyList);
-
+        props = new Properties();
+        props.setProperty("annotators", "tokenize,ssplit,pos,lemma,ner,parse,mention,coref");
+        props.setProperty("tokenize.language", "en");
+        pipeline = new StanfordCoreNLP(props);
+        ConsoleLogger.print('d',"Coreference Loaded! Begin to load Stanford Dependencies Parser ");
+        tagger = new MaxentTagger(taggerPath);
+        parser = DependencyParser.loadFromModelFile(modelPath);
     }
 
 //    public void initParser()
@@ -122,11 +130,7 @@ public class StanfordCoreferencer {
             String vehicleID = "";
 
             Annotation document = new Annotation(text);
-            Properties props = new Properties();
-            props.setProperty("annotators", "tokenize,ssplit,pos,lemma,ner,parse,mention,coref");
-            props.setProperty("tokenize.language", "en");
-            ConsoleLogger.print('d',"Finish Setting Prop, constructing pipeline");
-            StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
+
             //        props.setProperty("coref.model", "edu/stanford/nlp/models/coref/neural/english-model-conll.ser.gz");
             pipeline.annotate(document);
             ConsoleLogger.print('d',"---");
@@ -298,12 +302,12 @@ public class StanfordCoreferencer {
 //        MaxentTagger tagger;
 //        DependencyParser parser;
 
-        if (tagger == null || parser == null)
-        {
-//            destroyCoref();
-            tagger = new MaxentTagger(taggerPath);
-            parser = DependencyParser.loadFromModelFile(modelPath);
-        }
+//        if (tagger == null || parser == null)
+//        {
+////            destroyCoref();
+//            tagger = new MaxentTagger(taggerPath);
+//            parser = DependencyParser.loadFromModelFile(modelPath);
+//        }
 
         DocumentPreprocessor tokenizer = new DocumentPreprocessor(new StringReader(text));
         for (List<HasWord> sente: tokenizer) {

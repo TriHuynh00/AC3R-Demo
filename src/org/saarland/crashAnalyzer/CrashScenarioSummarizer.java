@@ -82,7 +82,7 @@ public class CrashScenarioSummarizer {
 
             summaryStrBuilder.append("Unverified Crash Case: " + crashResultCounters[UNVERIFIED_MATCHED_INDEX] + "\n");
 
-            summaryStrBuilder.append("No Crash Case: " + crashResultCounters[NO_MATCH_INDEX] + "\n");
+            summaryStrBuilder.append("No Crash Case: " + crashResultCounters[NO_MATCH_INDEX] + "\n\n");
 
             summaryStrBuilder.append("Perfectly Matched Case Names " + allCasesName.get(ALL_MATCHED_INDEX) + "\n");
 

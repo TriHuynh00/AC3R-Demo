@@ -155,7 +155,7 @@ public class OntologyHandler {
     }
 
     // ***************** Ontology Extraction Functions *******************
-    public AccidentConcept findExactConcept1(String keyword)
+    public AccidentConcept findConcept(String keyword)
     {
         for (AccidentConcept concept : accidentConceptList)
         {

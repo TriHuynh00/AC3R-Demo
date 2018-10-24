@@ -202,7 +202,7 @@ public class RearEndConstructor {
                         {
                             // Set distance before impact for striker
 //                            if (estimateSpeedStriker == estimateSpeedVictim) {
-//                                for (int k = 1; k < simulationDuration + 1; k++) {
+//                                for (int k = 1; k < SIMULATION_DURATION + 1; k++) {
 
                             if (vehicleCoordVictim.size() < impactAtSteps.get(0) + 1)
                             {
@@ -343,7 +343,7 @@ public class RearEndConstructor {
                                                         + " victimCoord = " + victimCoord );
                                                 if (strikerCoord >= victimCoord)
                                                 {
-                                                    victimCoord = strikerCoord + AccidentParam.distanceBetweenCars;
+                                                    victimCoord = strikerCoord + AccidentParam.DISTANCE_BETWEEN_CARS;
                                                     vehicleCoordVictim.set(c, victimCoord + "");
                                                 }
                                                 ConsoleLogger.print('d',String.format("Construct coord for crash steps " +
@@ -358,7 +358,7 @@ public class RearEndConstructor {
                                                 int victimCoordInThisStep = Integer.parseInt(vehicleCoordVictim.get(c)) - estimateSpeedVictim * (impactAtSteps.get(0) - c);
                                                 if (victimCoordInThisStep <= strikerCoord)
                                                 {
-                                                    victimCoordInThisStep = strikerCoord + AccidentParam.distanceBetweenCars;
+                                                    victimCoordInThisStep = strikerCoord + AccidentParam.DISTANCE_BETWEEN_CARS;
                                                 }
                                                 ConsoleLogger.print('d',String.format("Construct coord before 1st crash at " +
                                                         "c = %d with victimCoord = %s\n", c, victimCoordInThisStep));
@@ -397,7 +397,7 @@ public class RearEndConstructor {
 //                    ArrayList<String> vehicleCoord = new ArrayList<String>();
 //                    if (vehicleVelocity >= 0 && vehicleVelocity != 1000) {
 //                        // Construct the path based on the simulation time
-//                        for (int d = simulationDuration; d >= 0; d--) {
+//                        for (int d = SIMULATION_DURATION; d >= 0; d--) {
 //                            if (vehicleVelocity > 0) {
 //                                vehicleCoord.add("" + vehicleVelocity * d * 1.0);
 //                            } else if (vehicleVelocity != 1000) {
@@ -498,7 +498,7 @@ public class RearEndConstructor {
             int vehicleIndexInCoordArr = vehicleAttr.getVehicleId() - 1;
             ArrayList<String> coordOfSelectedVehicle = vehicleCoordList.get(vehicleIndexInCoordArr);
 
-            for (int i = 1; i <= AccidentParam.simulationDuration; i++)
+            for (int i = 1; i <= AccidentParam.SIMULATION_DURATION; i++)
             {
                 int estimateVehicleSpeed = Integer.parseInt(parser.findExactConcept(vehicleAttr.getActionList().get(0))
                         .getDataProperties()
