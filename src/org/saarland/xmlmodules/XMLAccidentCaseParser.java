@@ -261,6 +261,8 @@ public class XMLAccidentCaseParser {
 
 //        ConsoleLogger.print('d',storyline);
 
+        storyline = normalizeSpecialChars(storyline);
+
         String[] paragraphs = storyline.split("\n\n");
 
         ConsoleLogger.print('d',"Para Len " + paragraphs.length);
@@ -418,5 +420,14 @@ public class XMLAccidentCaseParser {
             return colorCode;
         }
 
+    }
+
+    private String normalizeSpecialChars(String text)
+    {
+        text = text.replace("\\r\\r\\n", "\n");
+        text = text.replace("\\r\\n", "\n");
+        text = text.replace("\\t", "");
+        text = text.replace("\\'", "'");
+        return text;
     }
 }

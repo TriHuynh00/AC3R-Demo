@@ -121,6 +121,11 @@ public class CrashScenarioSummarizer {
         // PS - 0
         // P  - 1
         // S  - 2
+        if (record.split(":").length < 2)
+        {
+            return;
+        }
+
         int[] crashTypeInRecordCounter = new int[] {0,0};
 
         String[] recordElements = record.split(":");

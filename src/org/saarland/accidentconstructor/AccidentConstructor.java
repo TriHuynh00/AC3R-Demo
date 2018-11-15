@@ -77,11 +77,11 @@ public class AccidentConstructor {
     public static void main(String[] args) {
 
         // Move test and crash info verification files into another folders
-        AccidentConstructorUtil.moveFilesToAnotherFolder(FilePathsConfig.damageRecordLocation,
-                FilePathsConfig.previousRecordLocation, ".log");
-
-        AccidentConstructorUtil.moveFilesToAnotherFolder(FilePathsConfig.allTestRecordLocation,
-                FilePathsConfig.prevCrashInfoRecordLocation, ".vcr");
+//        AccidentConstructorUtil.moveFilesToAnotherFolder(FilePathsConfig.damageRecordLocation,
+//                FilePathsConfig.previousRecordLocation, ".log");
+//
+//        AccidentConstructorUtil.moveFilesToAnotherFolder(FilePathsConfig.allTestRecordLocation,
+//                FilePathsConfig.prevCrashInfoRecordLocation, ".vcr");
 
         //AccidentParam.userFolder = System.getProperty("user.home") + "\\Documents\\";
         ConsoleLogger.print('d', "User folder " + AccidentParam.userFolder);
@@ -370,6 +370,7 @@ public class AccidentConstructor {
                 crashAnalyzer.checkWhetherCrashOccur(false);
                 ConsoleLogger.print('r', "Error in generating case " + scenarioName);
                 e.printStackTrace();
+                continue;
             }
         }
         CrashScenarioSummarizer csr = new CrashScenarioSummarizer();

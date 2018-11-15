@@ -3,7 +3,7 @@ package org.saarland.configparam;
 import java.text.DecimalFormat;
 
 public class AccidentParam {
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
     public static final int SIMULATION_DURATION = 2; // Duration in steps
     public static final int DISTANCE_BETWEEN_CARS = 9;
     public static final int BEAMNG_PORT = 64256;
