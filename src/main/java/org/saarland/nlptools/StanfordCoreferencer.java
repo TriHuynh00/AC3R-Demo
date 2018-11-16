@@ -97,6 +97,8 @@ public class StanfordCoreferencer {
 //        props = null;
 //    }
 
+    // TODO Does this simply find or also replace the corerefences with the corresponding noun?
+    // TODO And how it does so sentence by sentence?
     public String findCoreference(String text)
     {
 

@@ -253,22 +253,21 @@ public class XMLAccidentCaseParser {
 
         // Find Summary
         NodeList summaryTag = rootElement.getElementsByTagName("SUMMARY");
-        ConsoleLogger.print('d',summaryTag.getLength());
 
-        String storyline = summaryTag.item(0).getTextContent().trim().replace("\t", "");
+        // Clean up the description
+        // TODO This might be incomplete (e.g., not sure about //xb and such)
+        String storyline = summaryTag.item(0).getTextContent()
+				.replace("\\t", "\t")
+				.replace("\\r","\r")
+				.replace("\\n","\n")
+				.replace("\\'", "'");
 
         storyline = AccidentConstructorUtil.transformWordNumIntoNum(storyline);
+        String[] paragraphs = AccidentConstructorUtil.getParagraphs(storyline);
 
 //        ConsoleLogger.print('d',storyline);
-
-        String[] paragraphs = storyline.split("\n\n");
-
-        ConsoleLogger.print('d',"Para Len " + paragraphs.length);
-
-        ConsoleLogger.print('d',"Para 0: " + paragraphs[0]);
-
-        // Replace Vehicle Model Name with Vehicle[ID]
-        ConsoleLogger.print('d',"Before: " + paragraphs[1]);
+        // TODO Do we really need this strict paragraph thingy, can't we simply process statements are they come?
+        // FIXME We definitively need a more robust way to identify paragraph
 
         for (VehicleAttr vehicleAttr : accidentConstructor.getVehicleList()) {
             ConsoleLogger.print('d',"vehicleAttr: " + vehicleAttr.getVehicleId());
