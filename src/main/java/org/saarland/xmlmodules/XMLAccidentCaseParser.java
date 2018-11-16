@@ -269,6 +269,17 @@ public class XMLAccidentCaseParser {
         // TODO Do we really need this strict paragraph thingy, can't we simply process statements are they come?
         // FIXME We definitively need a more robust way to identify paragraph
 
+//        storyline = normalizeSpecialChars(storyline);
+
+//        String[] paragraphs = storyline.split("\n\n");
+
+//        ConsoleLogger.print('d',"Para Len " + paragraphs.length);
+
+//        ConsoleLogger.print('d',"Para 0: " + paragraphs[0]);
+
+        // Replace Vehicle Model Name with Vehicle[ID]
+//        ConsoleLogger.print('d',"Before: " + paragraphs[1]);
+
         for (VehicleAttr vehicleAttr : accidentConstructor.getVehicleList()) {
             ConsoleLogger.print('d',"vehicleAttr: " + vehicleAttr.getVehicleId());
             String replacedModelNameStr = paragraphs[1].toLowerCase().replace(vehicleAttr.getYearMakeModel(), "vehicle" + vehicleAttr.getVehicleId());
@@ -417,5 +428,14 @@ public class XMLAccidentCaseParser {
             return colorCode;
         }
 
+    }
+
+    private String normalizeSpecialChars(String text)
+    {
+        text = text.replace("\\r\\r\\n", "\n");
+        text = text.replace("\\r\\n", "\n");
+        text = text.replace("\\t", "");
+        text = text.replace("\\'", "'");
+        return text;
     }
 }
