@@ -48,6 +48,9 @@ public class AccidentParam {
 
     public static boolean isGradingConcerned = false;
 
+    public static String defaultCoordDelimiter = ":";
+    public static String beamngCoordDelimiter = " ";
+
     public static String asphaltMaterial = "road_asphalt_2lane";
     public static String dirtMaterial = "road_dirt";
     public static String pavementMaterial = "sidewalk_concrete";

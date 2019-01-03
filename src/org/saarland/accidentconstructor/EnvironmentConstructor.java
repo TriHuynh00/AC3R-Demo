@@ -212,7 +212,7 @@ public class EnvironmentConstructor {
 
                         // Raise the lamp zCoord for +10 to place the point light
                         currentLampCoord = AccidentConstructorUtil.updateCoordElementAtDimension(2, currentLampCoord,
-                                Double.parseDouble(roadNodeCoord[2]) + 15 + "");
+                                Double.parseDouble(roadNodeCoord[2]) + 15 + "", AccidentParam.beamngCoordDelimiter);
 
                         ConsoleLogger.print('d',"Add light point " + currentLampCoord);
 
@@ -239,7 +239,7 @@ public class EnvironmentConstructor {
 
                         // Raise the lamp zCoord for +10 to place the point light
                         currentLampCoord = AccidentConstructorUtil.updateCoordElementAtDimension(2, currentLampCoord,
-                                Double.parseDouble(roadNodeCoord[2]) + 15 + "");
+                                Double.parseDouble(roadNodeCoord[2]) + 15 + "", AccidentParam.beamngCoordDelimiter);
 
                         ConsoleLogger.print('d',"Add light point " + currentLampCoord);
 

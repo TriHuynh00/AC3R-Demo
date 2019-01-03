@@ -14,7 +14,7 @@ import java.util.LinkedList;
 public class SideswipeConstructor {
     DecimalFormat df;
 
-    SideswipeConstructor()
+    public SideswipeConstructor()
     {
         df = AccidentParam.df6Digit;
     }
@@ -162,6 +162,12 @@ public class SideswipeConstructor {
                                     constructedCoordVeh.get(currentVehicle.getVehicleId() - 1).get(0),
                                     "0:0", strikerVehicle, currentVehicle));
                             ConsoleLogger.print('d',"Compute Leave Trigger distance = " + currentVehicle.getLeaveTriggerDistance());
+//                            ConsoleLogger.print('d', "victim travel direction " + currentVehicle.getTravellingDirection());
+//                            if (AccidentConstructorUtil.getNonCriticalDistance() > 0)
+//                            {
+//                                ConsoleLogger.print('d', "add 20m away wp");
+//                                constructedCoordVeh.get(currentVehicle.getVehicleId() - 1).add("20:0");
+//                            }
                         }
                     } // End checking if the car is parked
                 }
@@ -208,6 +214,7 @@ public class SideswipeConstructor {
                                 victimVehicle.setLeaveTriggerDistance(computeLeaveTriggerDistance(
                                         constructedCoordVeh.get(victimVehicle.getVehicleId() - 1).get(0), "0:0",
                                         currentVehicle, victimVehicle));
+
                             }
                         }
                     }
@@ -255,7 +262,7 @@ public class SideswipeConstructor {
             ConsoleLogger.print('d',"Before Remove");
             for (int i = 0; i < vehicleList.size(); i++)
             {
-                
+
                 ConsoleLogger.print('d',"Vehicle #" + (i + 1) + " coord list:");
                 for (String coord : constructedCoordVeh.get(i))
                 {
@@ -337,6 +344,10 @@ public class SideswipeConstructor {
         double triggerDistance = AccidentConstructorUtil.computeDistanceBetweenTwo2DPoints(
                 xCoordCrash - strikerTravelDistance, yCoordCrash, xCoordInitVictim, yCoordInitVictim);
 
+        // If extra distance to make the crash non-critical is given, add the distance to the computation
+        ConsoleLogger.print('d',"Trigger Distance before: " + triggerDistance);
+        triggerDistance += AccidentConstructorUtil.getNonCriticalDistance();
+        ConsoleLogger.print('d',"Trigger Distance after: " + triggerDistance);
         return triggerDistance;
     }
 

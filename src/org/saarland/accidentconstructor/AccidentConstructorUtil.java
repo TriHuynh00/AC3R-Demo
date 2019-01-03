@@ -114,12 +114,15 @@ public class AccidentConstructorUtil {
 
     public static double computeXCircleFunc(double radius, double yCoord) {
         ConsoleLogger.print('d',"X circle Func");
-        ConsoleLogger.print('d',"xCoord : " + yCoord + " radius " + radius);
-        ConsoleLogger.print('d',"computation result " + Math.abs( Math.abs(radius) - (Math.sqrt(Math.pow(radius, 2) - Math.pow(yCoord, 2)))));
+        ConsoleLogger.print('d',"yCoord : " + yCoord + " radius " + radius);
+        ConsoleLogger.print('d',"computation result " +
+                Math.abs( Math.abs(radius) - (Math.sqrt(Math.pow(radius, 2) - Math.pow(yCoord, 2)))));
         double curveDirectionCode = radius < 0 ? 1 : -1;
         return curveDirectionCode * Math.abs( Math.abs(radius) - (Math.sqrt(Math.pow(radius, 2) - Math.pow(yCoord, 2))));
     }
 
+    // Get all the words connected to a given word by searching the dependency list. Return a string of words connected to the
+    // given baseWord
     public static String findAllConnectedWords(LinkedList<String> dependencyList, String baseWord, String currentConnectedWordStr,
                                                int curDepth, int maxDepth) {
 
@@ -139,7 +142,8 @@ public class AccidentConstructorUtil {
                 else
                 {
                     currentConnectedWordStr += "," + otherWord;
-                    currentConnectedWordStr = findAllConnectedWords(dependencyList, otherWord, currentConnectedWordStr, curDepth + 1, maxDepth);
+                    currentConnectedWordStr = findAllConnectedWords(dependencyList, otherWord,
+                            currentConnectedWordStr, curDepth + 1, maxDepth);
                 }
 
             }
@@ -444,7 +448,7 @@ public class AccidentConstructorUtil {
 
     public static double appendExtraMeterPerSecSpeed(double currentVehicleSpeed) {
 
-    double meterPerSecSpeed = AccidentConstructorUtil.convertMPHToMS(currentVehicleSpeed);
+        double meterPerSecSpeed = AccidentConstructorUtil.convertMPHToMS(currentVehicleSpeed);
         // If the current speed <= 20, append + 1 m/s
         if(currentVehicleSpeed <= 20)
         {
@@ -586,11 +590,12 @@ public class AccidentConstructorUtil {
      *                   1 = y
      *                   2 = z
      */
-    public static String updateCoordElementAtDimension(int coordDimension, String baseCoord, String newValueAtCoordDimension)
+    public static String updateCoordElementAtDimension(int coordDimension, String baseCoord,
+                                                       String newValueAtCoordDimension, String delimiter)
     {
-        String[] coordElements = baseCoord.split(" ");
+        String[] coordElements = baseCoord.split(delimiter);
         coordElements[coordDimension] = newValueAtCoordDimension;
-        String updatedCoord = coordElements[0] + " " + coordElements[1] + " " + coordElements[2];
+        String updatedCoord = coordElements[0] + delimiter + coordElements[1] + delimiter + coordElements[2];
         return updatedCoord;
     }
 
@@ -688,6 +693,17 @@ public class AccidentConstructorUtil {
         else
         {
             return AccidentParam.asphaltMaterial;
+        }
+    }
+
+    public static double getNonCriticalDistance()
+    {
+        String extraDistance = System.getProperty("extraNonCriticalDistance", "0");
+        try {
+            return Double.parseDouble(extraDistance);
+        } catch (Exception ex) {
+            ConsoleLogger.print('e', "Error at getting extra non-critical distance \n" + ex);
+            return 0;
         }
     }
 

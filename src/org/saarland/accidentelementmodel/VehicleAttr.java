@@ -10,18 +10,25 @@ import java.util.LinkedList;
  */
 public class VehicleAttr {
     private int vehicleId = -1;
+
     private String travellingDirection = "";
 
     private int velocity = AccidentParam.defaultSpeed;
+
     // Onstreet Values:
     // -1: Car is on parking line
     // 0: Car is on curb or pavement
     // 1: Car is on the street
     // 2: Car is leaving from the side of the street
     private int onStreet = 1;
-    private String standingRoadSide = "";
+    private String standingRoadSide = ""; // traveling on left or right lane
     private Street standingStreet;
 
+    // The lane number which the vehicle travels on, counting from the lane next to the right pavement outward.
+    // By default, vehicle travels on lane #1, which is the lane closest to the right pavement
+    private int travelOnLaneNumber = 1;
+
+    // Vehicle appearance attributes
     private String yearMakeModel = "";
     private String vehicleType = "";
     private String partConfig = "";
@@ -44,7 +51,13 @@ public class VehicleAttr {
         this.leaveTriggerDistance = leaveTriggerDistance;
     }
 
+    public int getTravelOnLaneNumber() {
+        return travelOnLaneNumber;
+    }
 
+    public void setTravelOnLaneNumber(int travelOnLaneNumber) {
+        this.travelOnLaneNumber = travelOnLaneNumber;
+    }
 
     public Street getStandingStreet() {
         return standingStreet;

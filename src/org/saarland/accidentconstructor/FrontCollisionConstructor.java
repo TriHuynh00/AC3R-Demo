@@ -7,6 +7,7 @@ import org.saarland.accidentelementmodel.VehicleAttr;
 import org.saarland.configparam.AccidentParam;
 import org.saarland.ontologyparser.OntologyHandler;
 
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -30,8 +31,6 @@ public class FrontCollisionConstructor {
         boolean curvyRoad = false;
         double radius = 0;
 
-
-
         VehicleAttr[] strikerAndVictim = new VehicleAttr[2];
 
         for (VehicleAttr vehicle : vehicleList)
@@ -50,8 +49,6 @@ public class FrontCollisionConstructor {
         } else if (vehicleList.size() == 1) {
             strikerAndVictim = new VehicleAttr[]{vehicleList.get(0), null};
         }
-
-        // TODO: need to construct the striker car movement along the curvy road
 
         VehicleAttr strikerVehicle = strikerAndVictim[0];
         LinkedList<String> strikerVehicleActionList = strikerVehicle.getActionList();
@@ -161,17 +158,167 @@ public class FrontCollisionConstructor {
             }
         }
 
-
+        // Append 0 grade if grading is not concerned
         for (int i = 0; i < vehicleList.size(); i++)
         {
-            vehicleList.get(i).setMovementPath(constructedCoordVeh.get(i));
+
             ConsoleLogger.print('d',"Vehicle #" + (i + 1) + " coord list:");
-            for (String coord : constructedCoordVeh.get(i))
+            ArrayList<String> currentConstructedCoord = constructedCoordVeh.get(i);
+            for (int k = 0; k < currentConstructedCoord.size(); k++)
             {
-                ConsoleLogger.print('n',coord + " ");
+                if (!AccidentParam.isGradingConcerned)
+                    currentConstructedCoord.set(k, currentConstructedCoord.get(k) + ":0");
+                else
+                    currentConstructedCoord.set(k, currentConstructedCoord.get(k));
+                ConsoleLogger.print('n',currentConstructedCoord.get(k) + " ");
 
             }
+            constructedCoordVeh.set(i, currentConstructedCoord);
             ConsoleLogger.print('d', "");
+            vehicleList.get(i).setMovementPath(constructedCoordVeh.get(i));
+        }
+
+        // Final crash point adjustment depending on the scenario's story
+        ArrayList<String> strikerVehiclePath = strikerVehicle.getMovementPath();
+
+        for (VehicleAttr vehicleAttr : vehicleList) {
+            ArrayList<String> vehicleMovementPath = vehicleAttr.getMovementPath();
+
+            // If this is not the striker car, convert the coords in this waypointFilePath to BeamNG format
+            if (!vehicleMovementPath.get(0).equals(strikerVehiclePath.get(0))) {
+                // ConsoleLogger.print('d',"Not the processed coord list, vehicle is " + vehicleAttr.getVehicleId() +
+                //  " on street? " + vehicleAttr.getOnStreet() + " vehMovPath size " + vehicleMovementPath.size());
+
+                // If this is a static car, then check whether it is on the pavement or parking line, and set coord accordingly
+                if (vehicleMovementPath.size() == 1
+                        && (vehicleAttr.getOnStreet() == 0 || vehicleAttr.getOnStreet() == -1)) {
+
+                    String convertedCoord = vehicleMovementPath.get(0);
+                    Street currentStreet = vehicleAttr.getStandingStreet();
+                    int laneNumber = Integer.parseInt(currentStreet.getStreetPropertyValue("lane_num"));
+
+                    // Append zCoord (grading) to a non-zCoord coordinate
+                    if (convertedCoord.split(AccidentParam.defaultCoordDelimiter).length == 2) {
+//                        if (!AccidentParam.isGradingConcerned) {
+//                            convertedCoord += AccidentParam.defaultCoordDelimiter + "0";
+//                        }
+                    }
+
+                    String newYCoord = "";
+
+                    // For straight road, need to place the waypoint far away from the road a bit compared to curvy
+                    // road
+                    ConsoleLogger.print('d', "Standing Road side " + vehicleAttr.getStandingRoadSide());
+                    if (radius == 0.0) {
+
+                        double parkingLineExtraDistance = 0;
+
+                        if (!currentStreet.getStreetPropertyValue("road_park_line").equals("0")
+                                && !currentStreet.getStreetPropertyValue("road_park_line").equals("")) {
+                            ConsoleLogger.print('d', "Parking Line extra distance set to 2");
+                            parkingLineExtraDistance = AccidentParam.parkingLineWidth / 2;
+                        }
+
+                        if (vehicleAttr.getStandingRoadSide().equals("left")) {
+                            newYCoord = AccidentParam.df6Digit.format(Double.parseDouble(convertedCoord.split(AccidentParam.defaultCoordDelimiter)[1]) +
+                                    (int) (laneNumber / 2.0 * AccidentParam.laneWidth + parkingLineExtraDistance) + 0.5);
+                            //(int) (laneNumber / 2.0 * AccidentParam.laneWidth + AccidentParam.parkingLineWidth / 2 + parkingLineExtraDistance) - 0.5 );
+                        } else if (vehicleAttr.getStandingRoadSide().equals("right")) {
+                            newYCoord = AccidentParam.df6Digit.format(Double.parseDouble(convertedCoord.split(AccidentParam.defaultCoordDelimiter)[1]) -
+                                    (int) (laneNumber / 2.0 * AccidentParam.laneWidth - parkingLineExtraDistance) - 0.5);
+
+                        }
+
+                    } else {
+                        if (vehicleAttr.getStandingRoadSide().equals("left")) {
+                            newYCoord = AccidentParam.df6Digit.format(Double.parseDouble(convertedCoord.split(AccidentParam.defaultCoordDelimiter)[1]) +
+                                    (laneNumber / 2.0 * AccidentParam.laneWidth) + 2);
+                            //(laneNumber / 2.0 * AccidentParam.laneWidth + AccidentParam.parkingLineWidth + 1) + 1);
+                        } else if (vehicleAttr.getStandingRoadSide().equals("right")) {
+
+                            newYCoord = AccidentParam.df6Digit.format(Double.parseDouble(convertedCoord.split(AccidentParam.defaultCoordDelimiter)[1]) -
+                                    (laneNumber / 2.0 * AccidentParam.laneWidth) - 2);
+                            ConsoleLogger.print('d', "Right Curve Park " + Double.parseDouble(convertedCoord.split(AccidentParam.defaultCoordDelimiter)[1])
+                                    + " " + (laneNumber / 2.0 * AccidentParam.laneWidth) + " ");
+                        }
+//                            newYCoord = AccidentParam.df6Digit.format(Double.parseDouble(convertedCoord.split(AccidentParam.defaultCoordDelimiter)[1]) -
+//                                    (laneNumber / 2 * AccidentParam.laneWidth - 1))  ;
+                    }
+
+                    ConsoleLogger.print('d', "convert coord " + convertedCoord);
+                    ConsoleLogger.print('d', "newYCoord " + newYCoord);
+                    String newCoord = AccidentConstructorUtil.updateCoordElementAtDimension(
+                            1, convertedCoord, newYCoord, AccidentParam.defaultCoordDelimiter);
+                    ConsoleLogger.print('d', "newCoord  " + newCoord);
+
+                    // Set the updated impact point to the other car
+                    for (VehicleAttr otherVehicle : vehicleList) {
+                        ConsoleLogger.print('d', "other veh ID " + otherVehicle.getVehicleId());
+                        if (otherVehicle.getVehicleId() != vehicleAttr.getVehicleId()) {
+                            ArrayList<String> otherVehicleMovementPath = otherVehicle.getMovementPath();
+                            for (int j = 0; j < otherVehicleMovementPath.size(); j++) {
+                                String[] pathNodeElements = otherVehicleMovementPath.get(j).split(AccidentParam.defaultCoordDelimiter);
+                                String[] convertedCoordElements = convertedCoord.split(AccidentParam.defaultCoordDelimiter);
+
+                                // Check whether this is the crash points between the 2 cars
+                                if (pathNodeElements[0].equals(convertedCoordElements[0])
+                                        && pathNodeElements[1].equals(convertedCoordElements[1])) {
+                                    // Update the right grade value (zCoord)
+
+                                    if (!AccidentParam.isGradingConcerned)
+                                        newCoord = AccidentConstructorUtil.updateCoordElementAtDimension(
+                                            2, newCoord, pathNodeElements[2], AccidentParam.defaultCoordDelimiter);
+
+                                    // Adjust the car position far away a bit to ensure crash
+                                    String adjustedCoord = AccidentConstructorUtil.updateCoordElementAtDimension(0, newCoord,
+                                            (Double.parseDouble(convertedCoordElements[0]) + 3) + "",
+                                            AccidentParam.defaultCoordDelimiter);
+
+//                                    otherVehicleMovementPath.set(j, adjustedCoord);
+//                                    otherVehicle.setMovementPath(otherVehicleMovementPath);
+//
+//                                    vehicleMovementPath.set(0, newCoord);
+//                                    vehicleAttr.setMovementPath(vehicleMovementPath);
+
+                                    // For straight road, put the wp away the street a bit
+//                                    if (radius == 0.0) {
+//                                        if (vehicleAttr.getStandingRoadSide().equals("left")) {
+//                                            newYCoord = AccidentParam.df6Digit.format((Double.parseDouble(newYCoord)) - 1);
+//                                        } else if (vehicleAttr.getStandingRoadSide().equals("right")) {
+//                                            newYCoord = AccidentParam.df6Digit.format((Double.parseDouble(newYCoord)) + 1);
+//                                        }
+//                                        newCoord = AccidentConstructorUtil.updateCoordElementAtDimension(1,
+//                                                newCoord, newYCoord, AccidentParam.defaultCoordDelimiter);
+//
+//                                        ConsoleLogger.print('d', "new coord straight road update " + newCoord);
+//                                    }
+
+                                    adjustedCoord = AccidentConstructorUtil.updateCoordElementAtDimension(1, adjustedCoord, newYCoord,
+                                            AccidentParam.defaultCoordDelimiter);
+
+
+                                    ConsoleLogger.print('d', "Found same impact coord at " + j + " value " + adjustedCoord);
+                                    otherVehicleMovementPath.set(j, adjustedCoord);
+                                    otherVehicle.setMovementPath(otherVehicleMovementPath);
+
+                                    vehicleMovementPath.set(0, newCoord);
+                                    vehicleAttr.setMovementPath(vehicleMovementPath);
+
+                                    ConsoleLogger.print('d', "otherVehicle before beamNG path " + otherVehicleMovementPath.toString());
+                                    ConsoleLogger.print('d', "currVehicle before beamNG path " + vehicleMovementPath.toString());
+
+                                }
+                            }
+                        }
+                    } // End looping through other vehicles and set impact points
+                } // End checking vehicle is on parking line or pavement
+//                else {
+//                    for (int i = 0; i < vehicleMovementPath.size(); i++) {
+//                        String newCoord = AccconvertCoordToBeamNGFormat(vehicleMovementPath.get(i), radius);
+//                        vehicleMovementPath.set(i, newCoord);
+//                    }
+//                }
+            }
         }
         return constructedCoordVeh;
     }

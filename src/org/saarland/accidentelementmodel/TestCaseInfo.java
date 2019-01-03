@@ -120,6 +120,7 @@ public class TestCaseInfo {
         testCaseProp.put("weather"        , "normal"); // rainy, sunny, cloudy
         testCaseProp.put("lighting"       , "normal"); // dark, bright, light
         testCaseProp.put("lane_num"       , ""); // total number of lane
+        testCaseProp.put("need_trigger"   , "F");
         testCaseProp.put("road_division"  , "undivided");
         testCaseProp.put("road_park_line" , ""); // #parking_lines : 0 - none; 1 - left only, 2 - right only, 3 - both
         testCaseProp.put("road_park_line_fill" , "0"); // specify whether parking line(s) is filled with cars

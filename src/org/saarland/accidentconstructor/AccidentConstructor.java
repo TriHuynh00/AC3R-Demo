@@ -10,6 +10,7 @@ import org.saarland.configparam.AccidentParam;
 import org.saarland.configparam.FilePathsConfig;
 import org.saarland.crashAnalyzer.CrashScenarioSummarizer;
 import org.saarland.crashAnalyzer.DamagedComponentAnalyzer;
+import org.saarland.evaluation.UndefinedMMUCCGuidelineFilter;
 import org.saarland.nlptools.StanfordCoreferencer;
 import org.saarland.nlptools.Stemmer;
 import org.saarland.ontologyparser.AccidentConcept;
@@ -24,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 
 
 public class AccidentConstructor {
-
     private String[] actorKeywords = {"vehicle", "pedestrian"};
 
     private ArrayList<VehicleAttr> vehicleList;
@@ -75,13 +75,13 @@ public class AccidentConstructor {
     }
 
     public static void main(String[] args) {
-
+        boolean isCat5Filtered = false;
         // Move test and crash info verification files into another folders
-//        AccidentConstructorUtil.moveFilesToAnotherFolder(FilePathsConfig.damageRecordLocation,
-//                FilePathsConfig.previousRecordLocation, ".log");
-//
-//        AccidentConstructorUtil.moveFilesToAnotherFolder(FilePathsConfig.allTestRecordLocation,
-//                FilePathsConfig.prevCrashInfoRecordLocation, ".vcr");
+        AccidentConstructorUtil.moveFilesToAnotherFolder(FilePathsConfig.damageRecordLocation,
+                FilePathsConfig.previousRecordLocation, ".log");
+
+        AccidentConstructorUtil.moveFilesToAnotherFolder(FilePathsConfig.allTestRecordLocation,
+                FilePathsConfig.prevCrashInfoRecordLocation, ".vcr");
 
         //AccidentParam.userFolder = System.getProperty("user.home") + "\\Documents\\";
         ConsoleLogger.print('d', "User folder " + AccidentParam.userFolder);
@@ -100,9 +100,9 @@ public class AccidentConstructor {
             e.printStackTrace();
         }
 
-        ConsoleLogger.print('r', "Loading Coreferencer");
-        StanfordCoreferencer stanfordCoreferencer = new StanfordCoreferencer();
-        ConsoleLogger.print('r', "Coreferencer loaded");
+//        ConsoleLogger.print('r', "Loading Coreferencer");
+//        StanfordCoreferencer stanfordCoreferencer = new StanfordCoreferencer();
+//        ConsoleLogger.print('r', "Coreferencer loaded");
 
         long endTimeCoref = (System.nanoTime() - startTimeCoref);
         ConsoleLogger.print('r', String.format("Finish Loading Coreferencer after %d seconds", TimeUnit.NANOSECONDS.toSeconds(endTimeCoref)));
@@ -130,11 +130,24 @@ public class AccidentConstructor {
         for (File selectedFile : selectedFiles) {
             String scenarioName = "";
             try {
+
+
+
                 long startTime = System.nanoTime();
                 String accidentFilePath = selectedFile.getAbsolutePath().replace("\\", "/");//FilePathsConfig.accidentFolderLocation + "CustomSideSwipe_Case1.xml";
 
                 //TODO: check if the scenario actually exists
                 scenarioName = accidentFilePath.substring(accidentFilePath.lastIndexOf("/") + 1).replace(".xml", "");
+
+                if (isCat5Filtered) {
+                    UndefinedMMUCCGuidelineFilter cat5Filter = new UndefinedMMUCCGuidelineFilter();
+                    cat5Filter.filterCase(scenarioName);
+                    return;
+                }
+                ConsoleLogger.print('r', "Loading Coreferencer");
+                StanfordCoreferencer stanfordCoreferencer = new StanfordCoreferencer();
+                ConsoleLogger.print('r', "Coreferencer loaded");
+
                 ConsoleLogger.print('r', "\n Constructing Scenario " + scenarioName + "\n");
 
                 AccidentConstructor accidentConstructor = new AccidentConstructor(ontologyHandler, scenarioName);
@@ -277,6 +290,10 @@ public class AccidentConstructor {
                 long simulationConstructionStartTime = System.nanoTime();
                 // This part afterward, is to construct the scenario from the environment props and vehicle coordinates
                 if (foundAccidentType) {
+                    if (AccidentConstructorUtil.getNonCriticalDistance() > 0)
+                    {
+                        scenarioName = scenarioName + "_non-critical";
+                    }
                     //scenarioName = accidentConstructor.testCase.getName().split("/")[1].split("\\.")[0];
 
 //                ConsoleLogger.print('d', "Scenario Name Split for /: " + scenarioName.split("/")[1].split("\\.")[0]);

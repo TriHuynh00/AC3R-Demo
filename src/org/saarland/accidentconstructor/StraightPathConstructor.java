@@ -251,6 +251,10 @@ public class StraightPathConstructor {
                         // Add 5% more value to ensure crash due to uncertainty of the stopped car
 //                        distanceCurrVehicleAndCrashPoint += distanceCurrVehicleAndCrashPoint * 0.05;
 
+                        // If extra distance to make the crash non-critical is given, add the distance to the computation
+                        distanceCurrVehicleAndCrashPoint += AccidentConstructorUtil.getNonCriticalDistance();
+
+
                         ConsoleLogger.print('d',"distance between moving car and crash point is " + distanceCurrVehicleAndCrashPoint);
 
 
@@ -435,6 +439,12 @@ public class StraightPathConstructor {
 //                        }
 
                         AccidentConstructorUtil.removeMeaninglessCoord(constructedCoordVeh);
+
+                        // IF non critical param is specified, change the crash coord according to the distance
+                        if (AccidentConstructorUtil.getNonCriticalDistance() > 0 && currentVehicle.equals(strikerAndVictim[0]))
+                        {
+
+                        }
 
                         constructedCoordVeh.set(currentVehicle.getVehicleId() - 1, vehicleCoordList);
                     }
