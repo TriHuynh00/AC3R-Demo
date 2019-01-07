@@ -3,6 +3,7 @@ package org.saarland.accidentconstructor;
 import org.saarland.accidentelementmodel.RoadShape;
 import org.saarland.accidentelementmodel.Street;
 import org.saarland.accidentelementmodel.TestCaseInfo;
+import org.saarland.accidentelementmodel.VehicleAttr;
 import org.saarland.nlptools.Stemmer;
 import org.saarland.ontologyparser.AccidentConcept;
 import org.saarland.ontologyparser.OntologyHandler;
@@ -27,7 +28,7 @@ public class EnvironmentAnalyzer {
     public EnvironmentAnalyzer(){ connectedStreetDirections = new ArrayList<String>();   }
 
     public void extractEnvironmentProp(LinkedList<LinkedList<String>> environmenTaggedWordsAndDependencies,
-                                       OntologyHandler parser, TestCaseInfo testCase)
+                                       OntologyHandler parser, TestCaseInfo testCase, ArrayList<VehicleAttr> vehicleList)
     {
 
 
@@ -608,6 +609,39 @@ public class EnvironmentAnalyzer {
                         }
 
                     } // End process lighting
+                    else if (stemmedWord.equals("park")) // Check if a parked vehicle and its position is mentioned
+                    {
+                        String connectedWordList = AccidentConstructorUtil.findAllConnectedWords(dependencyList, stemmedWord, stemmedWord, 0, 5);
+                        ConsoleLogger.print('d', "Environment park found " + connectedWordList);
+
+                        // Find vehicle ID first
+                        if (connectedWordList.matches(".*vehicle\\d.*"))
+                        {
+                            ConsoleLogger.print('d', "A parked vehicle found");
+                        }
+                        else  // if a vehicle with ID cannot be found, check which vehicle is identified as park
+                        {
+                            ConsoleLogger.print('d', "Cannot find a parked vehicleID");
+
+                            for (VehicleAttr vehicleTemp : vehicleList)
+                            {
+                                ConsoleLogger.print('d', "Onstreet of vehicle " + vehicleTemp.getVehicleId() + " is " + vehicleTemp.getOnStreet());
+                                if (vehicleTemp.getOnStreet() != 1)
+                                {
+                                    vehicleTemp.setTravelOnLaneNumber(AccidentConstructorUtil.detectTravellingLane(connectedWordList));
+
+                                    ConsoleLogger.print('d', "Environment parked vehicle #" + vehicleTemp.getVehicleId() +
+                                            " at lane number " + vehicleTemp.getTravelOnLaneNumber());
+
+                                    // Since this vehicle parked on a lane, it is set to locate on the street instead of
+                                    // a pavement
+                                    vehicleTemp.setOnStreet(1);
+                                }
+                            }
+                        }
+
+
+                    }
                     else
                     {
                         testCase.putValToKey(exactWordConcept.getConceptGroup(), stemmedWord);

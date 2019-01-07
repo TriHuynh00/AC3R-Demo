@@ -34,7 +34,7 @@ public class TestCaseInfo {
 //    int curveRadiusInMeter = 500;
 //    String curveDirection = "left";
 
-    private LinkedList<VehicleAttr> vehicleList;
+    private ArrayList<VehicleAttr> vehicleList;
 
     private ArrayList<Obstacle> obstacleList;
 
@@ -66,11 +66,11 @@ public class TestCaseInfo {
         this.testCaseProp = testCaseProp;
     }
 
-    public LinkedList<VehicleAttr> getVehicleList() {
+    public ArrayList<VehicleAttr> getVehicleList() {
         return vehicleList;
     }
 
-    public void setVehicleList(LinkedList<VehicleAttr> vehicleList) {
+    public void setVehicleList(ArrayList<VehicleAttr> vehicleList) {
         this.vehicleList = vehicleList;
     }
 
@@ -135,7 +135,6 @@ public class TestCaseInfo {
         testCaseProp.put("junction_type"  , "none");
         testCaseProp.put("speed_limit"    , "");
 
-        vehicleList   = new LinkedList<VehicleAttr>();
         obstacleList  = new ArrayList<Obstacle>();
         accidentFlows = new LinkedList<String>();
         streetList    = new ArrayList<Street>();

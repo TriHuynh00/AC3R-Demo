@@ -1,14 +1,12 @@
 package org.saarland.accidentconstructor;
 
-import org.saarland.accidentelementmodel.RoadShape;
-import org.saarland.accidentelementmodel.Street;
-import org.saarland.accidentelementmodel.TestCaseInfo;
-import org.saarland.accidentelementmodel.VehicleAttr;
+import org.saarland.accidentelementmodel.*;
 import org.saarland.configparam.AccidentParam;
 import org.saarland.ontologyparser.OntologyHandler;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class StraightPathConstructor {
@@ -304,6 +302,7 @@ public class StraightPathConstructor {
                             Double.parseDouble(currentVehicleXCoord), Double.parseDouble(currentVehicleYCoord),
                             otherCarInitXCoord, otherCarInitYCoord
                         );
+                        testCase.putValToKey("need_trigger", "T");
 
                         // Set Leave trigger distance for the stopped car
                         AccidentConstructorUtil.findVehicleBasedOnId(stoppedCarID, vehicleList).setLeaveTriggerDistance(leaveTriggerDistance);
@@ -392,7 +391,7 @@ public class StraightPathConstructor {
                                 newCoord[0] = AccidentConstructorUtil.computeXCircleFunc(radius, newCoord[1]);
                             }
 
-                            vehicleCoordList.add(0, df.format(newCoord[0] - AccidentParam.laneWidth + 2)
+                            vehicleCoordList.add(0, df.format(newCoord[0] - (AccidentParam.laneWidth + 2))
                                     + ":" + df.format(newCoord[1]));
 
                             if (radius != 0)
@@ -403,10 +402,16 @@ public class StraightPathConstructor {
                             newCoord = AccidentConstructorUtil.computeNewCoordOfRotatedLine(
                                 Double.parseDouble(crashYCoord) + totalDistance, roadAngle);
 
+                            ConsoleLogger.print('d', String.format("Southwestbound car rotated first coord %.2f %.2f ",
+                                    newCoord[0], newCoord[1]));
+
                             newCoord[0] = AccidentConstructorUtil.computeCurveCoordIfRadiusGiven(radius, newCoord[0], newCoord[1]);
 
                             vehicleCoordList.add(0, df.format(newCoord[0])
                                     + ":" + df.format(newCoord[1]));
+                            ConsoleLogger.print('d', String.format("Southwestbound car final first coord %.2f %.2f ",
+                                    newCoord[0], newCoord[1]));
+
                         } // End setting init and near crash coord for diagonal directions
                         else if (travelDirection.equals("S"))
                         {
@@ -429,6 +434,7 @@ public class StraightPathConstructor {
 
                             vehicleCoordList.add(0, df.format(currentVehicleXCoord ) + ":"
                                     + df.format(currentVehicleYCoord));
+
                         }
 
 //                        distanceAndTime.set(currentVehicle.getVehicleId() - 1, computeDistanceAndTimeWithAcceleration(currentVehicle.getVelocity()));
@@ -440,20 +446,14 @@ public class StraightPathConstructor {
 
                         AccidentConstructorUtil.removeMeaninglessCoord(constructedCoordVeh);
 
-                        // IF non critical param is specified, change the crash coord according to the distance
-                        if (AccidentConstructorUtil.getNonCriticalDistance() > 0 && currentVehicle.equals(strikerAndVictim[0]))
-                        {
-
-                        }
-
                         constructedCoordVeh.set(currentVehicle.getVehicleId() - 1, vehicleCoordList);
                     }
                 } // End processing vehicles
 
-                // Append an extra distance to ensure crash happens. extra distance shows the intention moving direction
+                // Append an extra distance to ensure crash happens. extra distance shows the intended moving direction
                 // of the car
-                for (int v = 0; v < vehicleList.size(); v++)
-                {
+
+                for (int v = 0; v < vehicleList.size(); v++) {
                     VehicleAttr currentVehicle = vehicleList.get(v);
 
                     Street vehicleStandingStreet = currentVehicle.getStandingStreet();
@@ -464,86 +464,123 @@ public class StraightPathConstructor {
 
                     ArrayList<String> vehicleCoordAtI = constructedCoordVeh.get(currentVehicle.getVehicleId() - 1);
 
-                    if (vehicleCoordAtI.get(vehicleCoordAtI.size() - 1).equals(crashCoord))
-                    {
-                        String travelDirection = currentVehicle.getTravellingDirection();
+                    if (!testCase.getCrashType().contains("turn into")) {
+                        if (vehicleCoordAtI.get(vehicleCoordAtI.size() - 1).equals(crashCoord)) {
+                            // IF non critical param is specified, change the crash coord of the victim to a point before crash point
 
-                        if (travelDirection.equals("W"))
-                        {
-                            double extraXCoord = Double.parseDouble(crashXCoord) - extraDistance;
-                            double extraYCoord = Double.parseDouble(crashYCoord);
 
-                            vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
-                        } // End processing westbound direction
+                            String travelDirection = currentVehicle.getTravellingDirection();
 
-                        else if (travelDirection.equals("N"))
-                        {
-                            double extraXCoord = Double.parseDouble(crashXCoord);
-                            double extraYCoord = Double.parseDouble(crashYCoord) +  extraDistance;
+                            if (travelDirection.equals("W")) {
+                                double extraXCoord = Double.parseDouble(crashXCoord) - extraDistance;
+                                double extraYCoord = Double.parseDouble(crashYCoord);
 
-                            vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
-                        } // End processing N direction
-                        else if (travelDirection.equals("S"))
-                        {
-                            double extraXCoord = Double.parseDouble(crashXCoord);
-                            double extraYCoord = Double.parseDouble(crashYCoord) - extraDistance;
+                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
+                            } // End processing westbound direction
 
-                            // If this is a single road piece, append the road based on other road direction
-                            if (isSingleRoad.equals("T"))
-                            {
-                                for (Street otherStreet : testCase.getStreetList())
-                                {
-                                    // skip if see the same road
-                                    if (otherStreet.getStreetPropertyValue("road_ID")
-                                            .equals(vehicleStandingStreet.getStreetPropertyValue("road_ID")))
-                                    {
-                                        continue;
+                            else if (travelDirection.equals("N")) {
+                                double extraXCoord = Double.parseDouble(crashXCoord);
+                                double extraYCoord = Double.parseDouble(crashYCoord) + extraDistance;
+
+                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
+                            } // End processing N direction
+                            else if (travelDirection.equals("S")) {
+                                double extraXCoord = Double.parseDouble(crashXCoord);
+                                double extraYCoord = Double.parseDouble(crashYCoord) - extraDistance;
+
+                                // If this is a single road piece, append the road based on other road direction
+                                if (isSingleRoad.equals("T")) {
+                                    for (Street otherStreet : testCase.getStreetList()) {
+                                        // skip if see the same road
+                                        if (otherStreet.getStreetPropertyValue("road_ID")
+                                                .equals(vehicleStandingStreet.getStreetPropertyValue("road_ID"))) {
+                                            continue;
+                                        }
+                                        int otherStreetRoadAngle = Integer.parseInt(otherStreet.getStreetPropertyValue("road_angle"));
+                                        int oppositeAngle = AccidentConstructorUtil.computeOppositeAngle(otherStreetRoadAngle);
+                                        ConsoleLogger.print('d', "opposite angle of other street " + oppositeAngle);
+
+                                        // Make the new crash coord further to avoid waypoint conflict
+                                        double newCoord[] = AccidentConstructorUtil.computeNewCoordOfRotatedLine(Math.abs(extraYCoord),
+                                                oppositeAngle);
+
+                                        extraXCoord = newCoord[0];
+                                        extraYCoord = newCoord[1];
                                     }
-                                    int otherStreetRoadAngle = Integer.parseInt(otherStreet.getStreetPropertyValue("road_angle"));
-                                    int oppositeAngle = AccidentConstructorUtil.computeOppositeAngle(otherStreetRoadAngle);
-                                    ConsoleLogger.print('d',"opposite angle of other street " + oppositeAngle);
+                                }
 
-                                    // Make the new crash coord further to avoid waypoint conflict
-                                    double newCoord[] = AccidentConstructorUtil.computeNewCoordOfRotatedLine(Math.abs(extraYCoord),
+                                vehicleCoordAtI.add(vehicleCoordAtI.size(), df.format(extraXCoord) + ":" + df.format(extraYCoord));
+                            } // End processing N direction
+                            else {
+                                // check direction of other road to determine the
+
+                                double extraXCoord = Double.parseDouble(crashXCoord);
+                                double extraYCoord = Double.parseDouble(crashYCoord) + extraDistance;
+
+                                // If this road is a continuous road, then keep going on the opposite direction
+                                if (vehicleStandingStreet.getStreetPropertyValue("is_single_road_piece").equals("F")) {
+
+                                    int oppositeAngle = AccidentConstructorUtil.computeOppositeAngle(streetRotateAngle + extraDistance);
+                                    double newCoord[] = AccidentConstructorUtil.computeNewCoordOfRotatedLine(extraYCoord,
                                             oppositeAngle);
-
                                     extraXCoord = newCoord[0];
                                     extraYCoord = newCoord[1];
+                                } else // TODO: Compute based on other road if this is a single_road_piece
+                                {
+
                                 }
-                            }
-
-                            vehicleCoordAtI.add(vehicleCoordAtI.size(), df.format(extraXCoord) + ":" + df.format(extraYCoord));
-                        } // End processing N direction
-                        else
-                        {
-                            // check direction of other road to determine the
-
-                            double extraXCoord = Double.parseDouble(crashXCoord);
-                            double extraYCoord = Double.parseDouble(crashYCoord) +  extraDistance;
-
-                            // If this road is a continuous road, then keep going on the opposite direction
-                            if (vehicleStandingStreet.getStreetPropertyValue("is_single_road_piece").equals("F"))
-                            {
-
-                                int oppositeAngle = AccidentConstructorUtil.computeOppositeAngle(streetRotateAngle + extraDistance);
-                                double newCoord[] = AccidentConstructorUtil.computeNewCoordOfRotatedLine(extraYCoord,
-                                        oppositeAngle);
-                                extraXCoord = newCoord[0];
-                                extraYCoord = newCoord[1];
-                            }
-                            else // TODO: Compute based on other road if this is a single_road_piece
-                            {
-
-                            }
 
 
-                            vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
-                        }
-                    } // End checking last coord is crash coord
+                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
+                            } // End appending extra crash point to ensure crash happens
+                        } // End checking last coord is crash coord
+                    } // End add extra point for turn into path case.
+
+                    // Append grade (zCoord) value into the coords
+                    for (int z = 0; z < vehicleCoordAtI.size(); z++)
+                    {
+                        String currentCoord = vehicleCoordAtI.get(z);
+                        // If grading is not concerned, zCoord = 0.
+                        if (!AccidentParam.isGradingConcerned)
+                            vehicleCoordAtI.set(z, currentCoord + AccidentParam.defaultCoordDelimiter + "0");
+                    }
+
+                    // If non-critical is specified, and there is no stopped car, modify the crash wp to create a
+                    // near-crash wp
+                    if (AccidentConstructorUtil.getNonCriticalDistance() > 0 && stoppedCarID == -1 &&
+                            currentVehicle.getVehicleId() == strikerAndVictim[1].getVehicleId()) {
+
+                        ConsoleLogger.print('d', "curr vehicle lane number " + currentVehicle.getTravelOnLaneNumber());
+
+                        String currVehicleCrashCoord = vehicleCoordAtI.get(vehicleCoordAtI.size() - 1);
+                        String[] currVehicleCrashCoordElems = currVehicleCrashCoord.split(AccidentParam.defaultCoordDelimiter);
+
+                        HashMap<String, String> victimVehicleNavDict = NavigationDictionary.selectDictionaryFromTravelingDirection(
+                                currentVehicle.getTravellingDirection());
+
+                        String[] xyCoordBackwardNavigation = victimVehicleNavDict.get("backward").split(";");
+
+                        currVehicleCrashCoord = AccidentConstructorUtil.updateCoordElementAtDimension(
+                                0,
+                                currVehicleCrashCoord,
+                                Double.parseDouble(currVehicleCrashCoordElems[0]) +
+                                        NavigationDictionary.setCoordValue(AccidentConstructorUtil.getNonCriticalDistance(),
+                                                xyCoordBackwardNavigation[0]) + "",
+                                AccidentParam.defaultCoordDelimiter);
+
+                        currVehicleCrashCoord = AccidentConstructorUtil.updateCoordElementAtDimension(
+                                1,
+                                currVehicleCrashCoord,
+                                Double.parseDouble(currVehicleCrashCoordElems[1]) +
+                                        NavigationDictionary.setCoordValue(AccidentConstructorUtil.getNonCriticalDistance(),
+                                                xyCoordBackwardNavigation[1]) + "",
+                                AccidentParam.defaultCoordDelimiter);
+
+                        vehicleCoordAtI.set(vehicleCoordAtI.size() - 1, currVehicleCrashCoord);
+                    }
 
                     currentVehicle.setMovementPath(vehicleCoordAtI);
-                } // End appending extra crash point to ensure crash happens
-
+                } // End looping through vehicles
             } // End checking if impactAtSteps >= 1
         } // End checking if there are only 2 vehicles
 

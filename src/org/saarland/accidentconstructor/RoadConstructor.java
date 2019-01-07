@@ -116,7 +116,6 @@ public class RoadConstructor {
 
             // Road Construction
 
-            NavigationDictionary navDict = new NavigationDictionary();
             HashMap<String, String> navigationDict;
 
             String roadCardinalDirection = road.getStreetPropertyValue("road_navigation");
@@ -125,36 +124,36 @@ public class RoadConstructor {
 
             if (streetList.size() == 1)
             {
-                navigationDict = navDict.EastNavDict;
+                navigationDict = NavigationDictionary.EastNavDict;
             }
             else {
                 switch (roadCardinalDirection) {
                     case "N":
-                        navigationDict = navDict.NorthNavDict;
+                        navigationDict = NavigationDictionary.NorthNavDict;
                         break;
                     case "S":
-                        navigationDict = navDict.SouthNavDict;
+                        navigationDict = NavigationDictionary.SouthNavDict;
                         break;
                     case "E":
-                        navigationDict = navDict.EastNavDict;
+                        navigationDict = NavigationDictionary.EastNavDict;
                         break;
                     case "W":
-                        navigationDict = navDict.WestNavDict;
+                        navigationDict = NavigationDictionary.WestNavDict;
                         break;
                     case "NE":
-                        navigationDict = navDict.NorthEastNavDict;
+                        navigationDict = NavigationDictionary.NorthEastNavDict;
                         break;
                     case "NW":
-                        navigationDict = navDict.NorthWestNavDict;
+                        navigationDict = NavigationDictionary.NorthWestNavDict;
                         break;
                     case "SE":
-                        navigationDict = navDict.SouthEastNavDict;
+                        navigationDict = NavigationDictionary.SouthEastNavDict;
                         break;
                     case "SW":
-                        navigationDict = navDict.SouthWestNavDict;
+                        navigationDict = NavigationDictionary.SouthWestNavDict;
                         break;
                     default:
-                        navigationDict = navDict.EastNavDict;
+                        navigationDict = NavigationDictionary.EastNavDict;
                         break;
                 }
             }
@@ -166,15 +165,13 @@ public class RoadConstructor {
                 roadCoordList.add("0 0 0");
 
             // Add nodes to construct the road, if the road is a single road piece i.e. the road ends at an intersection,
-            // then construct a long road. Otherwise construct until the intersection
+            // then construct a short road. Otherwise construct a road spanning across the intersection
             for (int i = 1; i <= 4; i++)
             {
                 double segmentLength = i * distanceBetweenBaseRoadNodes;
 
-                String finalCoord = navDict.createCoordBasedOnNavigation(segmentLength, radius,
-                        "forward", navigationDict);
-
-                // TODO: Compute grading coord (zCoord) when grading is concerned.
+                String finalCoord = constructRoadNodeByDirection(navigationDict, segmentLength, radius, roadCardinalDirection,
+                        Integer.parseInt(road.getStreetPropertyValue("road_angle")), "backward");
 
                 ConsoleLogger.print('d', "finalCoord is " + finalCoord);
 
@@ -183,8 +180,9 @@ public class RoadConstructor {
                 // If this road extends beyond the intersection, add more nodes to it
                 if (!isSingleRoadPiece)
                 {
-                    String extendedCoord = navDict.createCoordBasedOnNavigation(segmentLength, radius,
-                            "backward", navigationDict);
+                    String extendedCoord = constructRoadNodeByDirection(navigationDict, segmentLength, radius, roadCardinalDirection,
+                        Integer.parseInt(road.getStreetPropertyValue("road_angle")), "forward");
+
 
                     roadCoordList.add(roadCoordList.size(), extendedCoord);
                 }
@@ -221,6 +219,27 @@ public class RoadConstructor {
 
 
         }
+
+        // Construct waypoints and trajectory of vehicles
+        try {
+            ConsoleLogger.print('d', "Crash type is " + testCaseInfo.getCrashType());
+            if (testCaseInfo.getCrashType().contains("forward impact") || testCaseInfo.getCrashType().contains("sideswipe"))
+            {
+                environmentFileStrBuilder.append(constructWaypointsAndVehicles(scenarioName));
+            }
+            else
+            {
+                ConsoleLogger.print('d', "General Accident Construction");
+                for (int v = 0; v < vehicleList.size(); v++) {
+                    environmentFileStrBuilder.append(constructWaypointsAndVehiclesFor2Roads(vehicleList.get(v), scenarioName));
+                }
+            }
+        } catch (Exception ex) {
+            environmentFileStrBuilder.append("Error at construction wp and paths \n" + ex.toString());
+        }
+
+        ConsoleLogger.print('d', "Final Road Str Builder Obj " + environmentFileStrBuilder.toString());
+        return environmentFileStrBuilder.toString();
 
             // If this is a straight path, construct the road coords differently
 
@@ -575,9 +594,7 @@ public class RoadConstructor {
 //
 //            }
 
-        environmentFileStrBuilder.append(constructWaypointsAndVehicles(scenarioName));
-        ConsoleLogger.print('d', "Final Road Str Builder Obj " + environmentFileStrBuilder.toString());
-        return environmentFileStrBuilder.toString();
+
 
 //        environmentFileStrBuilder.append("Error in constructing Waypoints and Vehiles " + ex);
 //        return environmentFileStrBuilder.toString();
@@ -786,7 +803,7 @@ public class RoadConstructor {
                         ConsoleLogger.print('d',"Vehicle Path size " + vehiclePath.size());
 
                         // Add the parking line to the side of the main road
-                        int[] parkingLineXYZOffset = new int[]{0,
+                        double[] parkingLineXYZOffset = new double[]{0,
                                 r * (laneNumber * AccidentParam.laneWidth / 2 + AccidentParam.parkingLineWidth / 2), 0};
 
                         // Update the parking line coords and construct the node list string
@@ -816,76 +833,76 @@ public class RoadConstructor {
 
 
 
-            // Construct Deco pavement for both sides of the road
-            for (int r = -1; r < 2; r += 2)
-            {
-                ArrayList<String> pavementPath = new ArrayList<String>();
-                pavementPath.addAll(vehiclePath);
-
-                int[] pavementXYZOffset = new int[] {0, 0, 0};
-
-                // If we have parking line, take the parking line width into account
-                if (hasParkingLine)
+                // Construct Deco pavement for both sides of the road
+                for (int r = -1; r < 2; r += 2)
                 {
-                    // If this is a E/W road, adjust the offset on the Y direction
-                    if (roadNavigation.equals("E") || roadNavigation.equals("W"))
+                    ArrayList<String> pavementPath = new ArrayList<String>();
+                    pavementPath.addAll(vehiclePath);
+
+                    double[] pavementXYZOffset = new double[] {0, 0, 0};
+
+                    // If we have parking line, take the parking line width into account
+                    if (hasParkingLine)
                     {
-                        pavementXYZOffset = new int[] {0,
-                                r * (laneNumber * AccidentParam.laneWidth / 2 + AccidentParam.parkingLineWidth + 2), 0};
+                        // If this is a E/W road, adjust the offset on the Y direction
+                        if (roadNavigation.equals("E") || roadNavigation.equals("W"))
+                        {
+                            pavementXYZOffset = new double[] {0,
+                                    r * (laneNumber * AccidentParam.laneWidth / 2 + AccidentParam.parkingLineWidth + 2), 0};
+                        }
+                        // If this is a N/S road, adjust the offset on the X direction
+                        else if (roadNavigation.equals("S") || roadNavigation.equals("N"))
+                        {
+                            pavementXYZOffset = new double[] {
+                                    r * (laneNumber * AccidentParam.laneWidth / 2 + AccidentParam.parkingLineWidth + 2),
+                                    0, 0};
+                        }
                     }
-                    // If this is a N/S road, adjust the offset on the X direction
-                    else if (roadNavigation.equals("S") || roadNavigation.equals("N"))
+                    else // Exclude the parking line width in the pavement construction
                     {
-                        pavementXYZOffset = new int[] {
-                                r * (laneNumber * AccidentParam.laneWidth / 2 + AccidentParam.parkingLineWidth + 2),
-                                0, 0};
+                        // If this is a E/W road, adjust the offset on the Y direction
+                        if (roadNavigation.equals("E") || roadNavigation.equals("W"))
+                        {
+                            pavementXYZOffset = new double[] {0, r * (laneNumber * AccidentParam.laneWidth / 2 + 2), 0};
+                        }
+                        // If this is a N/S road, adjust the offset on the X direction
+                        else if (roadNavigation.equals("S") || roadNavigation.equals("N"))
+                        {
+                            pavementXYZOffset = new double[]{r * (laneNumber * AccidentParam.laneWidth / 2 + 2), 0, 0};
+                        }
+                        else
+                        {
+                            pavementXYZOffset = new double[]{r * (laneNumber * AccidentParam.laneWidth - 4), 0, 0};
+                        }
                     }
+
+
+                    updateCoordElementForNodeList(pavementPath, pavementXYZOffset);
+                    String pavementRoadNodeListStr = appendWidthToNodeList(AccidentParam.laneWidth -1, pavementPath);
+
+                    String sideIndicator = r == -1 ? "right" : "left";
+
+                    // Construct BeamNG pavement road
+    //                String pavementRoadStr = roadStrBuilder.toString();
+    //                pavementRoadStr = pavementRoadStr.replace("$laneName", "pavement" + sideIndicator);
+    //                pavementRoadStr = pavementRoadStr.replace("$priority", "9");
+    //                pavementRoadStr = pavementRoadStr.replace("$material", AccidentParam.pavementMaterial);
+    //                pavementRoadStr = pavementRoadStr.replace("$initCoord", pavementPath.get(0));
+    //                pavementRoadStr = pavementRoadStr.replace("$nodeList", pavementRoadNodeListStr);
+    //                pavementRoadStr = pavementRoadStr.replace("drivability = \"1\"", "drivability = \"-1\"");
+
+                    String pavementRoadStr = constructRoadObject("pavement" + sideIndicator + "_" + roadID, basePriority + 1 + "",
+                            processingRoad, pavementPath.get(0), "-1", pavementRoadNodeListStr);
+
+                    // Update the node coords into the corresponding pavement side of the road
+                    processingRoad.putValToKey(sideIndicator + "_pavement_node_list", pavementRoadNodeListStr.replace("\n", "")
+                            .replace("\t", "")
+                            .replace("Node = \"", "")
+                            .replace("\"", ""));
+
+                    ConsoleLogger.print('d',"lane1RoadStr Deco Pavement" + r + ": \n" + lane1RoadStr);
+                    lane1RoadStr = lane1RoadStr + "\n\n" + pavementRoadStr;
                 }
-                else // Exclude the parking line width in the pavement construction
-                {
-                    // If this is a E/W road, adjust the offset on the Y direction
-                    if (roadNavigation.equals("E") || roadNavigation.equals("W"))
-                    {
-                        pavementXYZOffset = new int[] {0, r * (laneNumber * AccidentParam.laneWidth / 2 + 2), 0};
-                    }
-                    // If this is a N/S road, adjust the offset on the X direction
-                    else if (roadNavigation.equals("S") || roadNavigation.equals("N"))
-                    {
-                        pavementXYZOffset = new int[]{r * (laneNumber * AccidentParam.laneWidth / 2 + 2), 0, 0};
-                    }
-                    else
-                    {
-                        pavementXYZOffset = new int[]{r * (laneNumber * AccidentParam.laneWidth - 4), 0, 0};
-                    }
-                }
-
-
-                updateCoordElementForNodeList(pavementPath, pavementXYZOffset);
-                String pavementRoadNodeListStr = appendWidthToNodeList(AccidentParam.laneWidth -1, pavementPath);
-
-                String sideIndicator = r == -1 ? "right" : "left";
-
-                // Construct BeamNG pavement road
-//                String pavementRoadStr = roadStrBuilder.toString();
-//                pavementRoadStr = pavementRoadStr.replace("$laneName", "pavement" + sideIndicator);
-//                pavementRoadStr = pavementRoadStr.replace("$priority", "9");
-//                pavementRoadStr = pavementRoadStr.replace("$material", AccidentParam.pavementMaterial);
-//                pavementRoadStr = pavementRoadStr.replace("$initCoord", pavementPath.get(0));
-//                pavementRoadStr = pavementRoadStr.replace("$nodeList", pavementRoadNodeListStr);
-//                pavementRoadStr = pavementRoadStr.replace("drivability = \"1\"", "drivability = \"-1\"");
-
-                String pavementRoadStr = constructRoadObject("pavement" + sideIndicator + "_" + roadID, basePriority + 1 + "",
-                        processingRoad, pavementPath.get(0), "-1", pavementRoadNodeListStr);
-
-                // Update the node coords into the corresponding pavement side of the road
-                processingRoad.putValToKey(sideIndicator + "_pavement_node_list", pavementRoadNodeListStr.replace("\n", "")
-                        .replace("\t", "")
-                        .replace("Node = \"", "")
-                        .replace("\"", ""));
-
-                ConsoleLogger.print('d',"lane1RoadStr Deco Pavement" + r + ": \n" + lane1RoadStr);
-                lane1RoadStr = lane1RoadStr + "\n\n" + pavementRoadStr;
-            }
 
             // TODO: CONSIDER THIS BRACKET when running multiple streets cases
             } // End construct pavement as deco
@@ -1086,70 +1103,75 @@ public class RoadConstructor {
 
 
 
-        double baseGradeHeight = 0;
-
-        // Find the grade degree at point O
-        for (String roadCoord : roadNodeArr)
-        {
-            if (roadCoord.startsWith("0 0"))
-            {
-                baseGradeHeight = Double.parseDouble(roadCoord.split(" ")[2]);
-            }
-        }
-
+//        double baseGradeHeight = 0;
+//
+//        // Find the grade degree at point O
+//        for (String roadCoord : roadNodeArr)
+//        {
+//            if (roadCoord.startsWith("0 0"))
+//            {
+//                baseGradeHeight = Double.parseDouble(roadCoord.split(" ")[2]);
+//            }
+//        }
+//
         // Compute the grade for each coord in the vehicle path
         ArrayList<String> currentVehiclePath = currentVehicle.getMovementPath();
 
         for (int n = 0; n < currentVehiclePath.size(); n++)
         {
-            String currentCoord = currentVehiclePath.get(n).replace(":", " ");
-            double selectedCoord = 0;
-            // If the road is on N/S direction, get the yCoord
-            if (currentStreet.getStreetPropertyValue("road_navigation").equals("N")
-                || currentStreet.getStreetPropertyValue("road_navigation").equals("S"))
-            {
-                selectedCoord = Double.parseDouble(currentVehiclePath.get(n).split(":")[1]);
-            }
-            // If the road is on E/W direction, get the xCoord
-            else if (currentStreet.getStreetPropertyValue("road_navigation").equals("E")
-                    || currentStreet.getStreetPropertyValue("road_navigation").equals("W"))
-            {
-                selectedCoord = Double.parseDouble(currentVehiclePath.get(n).split(":")[0]);
-            }
-
-            double gradeChange = AccidentConstructorUtil.computeGradeIncrement(selectedCoord, 0, roadGradePercent);
-
-            // Adjust the grade depending on whether this coord is before or after the O point
-
-            if (roadGradePercent > 0) // decrease the grade
-            {
-                if (selectedCoord > 0) // Before O point (N or E side)
-                {
-                    currentVehiclePath.set(n, currentCoord + " " + AccidentParam.df6Digit.format(baseGradeHeight - gradeChange));
-                }
-                else if (selectedCoord <= 0) // After O point (S or W side)
-                {
-                    currentVehiclePath.set(n, currentCoord + " " + AccidentParam.df6Digit.format(baseGradeHeight + gradeChange));
-                }
-            }
-            else if (roadGradePercent < 0) // Increase the grade
-            {
-                if (selectedCoord > 0) // Before O point (N or E side)
-                {
-                    currentVehiclePath.set(n, currentCoord + " " + AccidentParam.df6Digit.format(baseGradeHeight + gradeChange));
-                }
-                else if (roadGradePercent <= 0) // increase the grade
-                {
-                    currentVehiclePath.set(n, currentCoord + " " + AccidentParam.df6Digit.format(baseGradeHeight - gradeChange));
-                }
-            }
-            else  // Level road, append 0
-            {
-                currentVehiclePath.set(n, currentCoord + " " + baseGradeHeight);
-            }
-
+            currentVehiclePath.set(n, convertCoordToBeamNGFormat(currentVehiclePath.get(n)));
         }
-        currentVehicle.setMovementPath(currentVehiclePath);
+//
+//        for (int n = 0; n < currentVehiclePath.size(); n++)
+//        {
+//            String currentCoord = currentVehiclePath.get(n).replace(":", " ");
+//            double selectedCoord = 0;
+//            // If the road is on N/S direction, get the yCoord
+//            if (currentStreet.getStreetPropertyValue("road_navigation").equals("N")
+//                || currentStreet.getStreetPropertyValue("road_navigation").equals("S"))
+//            {
+//                selectedCoord = Double.parseDouble(currentVehiclePath.get(n).split(":")[1]);
+//            }
+//            // If the road is on E/W direction, get the xCoord
+//            else if (currentStreet.getStreetPropertyValue("road_navigation").equals("E")
+//                    || currentStreet.getStreetPropertyValue("road_navigation").equals("W"))
+//            {
+//                selectedCoord = Double.parseDouble(currentVehiclePath.get(n).split(":")[0]);
+//            }
+//
+//            double gradeChange = AccidentConstructorUtil.computeGradeIncrement(selectedCoord, 0, roadGradePercent);
+//
+//            // Adjust the grade depending on whether this coord is before or after the O point
+//
+//            if (roadGradePercent > 0) // decrease the grade
+//            {
+//                if (selectedCoord > 0) // Before O point (N or E side)
+//                {
+//                    currentVehiclePath.set(n, currentCoord + " " + AccidentParam.df6Digit.format(baseGradeHeight - gradeChange));
+//                }
+//                else if (selectedCoord <= 0) // After O point (S or W side)
+//                {
+//                    currentVehiclePath.set(n, currentCoord + " " + AccidentParam.df6Digit.format(baseGradeHeight + gradeChange));
+//                }
+//            }
+//            else if (roadGradePercent < 0) // Increase the grade
+//            {
+//                if (selectedCoord > 0) // Before O point (N or E side)
+//                {
+//                    currentVehiclePath.set(n, currentCoord + " " + AccidentParam.df6Digit.format(baseGradeHeight + gradeChange));
+//                }
+//                else if (roadGradePercent <= 0) // increase the grade
+//                {
+//                    currentVehiclePath.set(n, currentCoord + " " + AccidentParam.df6Digit.format(baseGradeHeight - gradeChange));
+//                }
+//            }
+//            else  // Level road, append 0
+//            {
+//                currentVehiclePath.set(n, currentCoord + " " + baseGradeHeight);
+//            }
+//
+//        }
+//        currentVehicle.setMovementPath(currentVehiclePath);
         ConsoleLogger.print('d',"Waypoints of Vehicle " + currentVehicle.getVehicleId() + " is " + currentVehicle.getMovementPath());
 
         // Construct waypoint obj lists
@@ -1160,43 +1182,56 @@ public class RoadConstructor {
 
         // Add the impact coord to the impact coord set so we can make the crash waypoints not overlap when constructing waypoint path
         vehicleListStrBuilder = constructVehicleObject("" + currentVehicle.getVehicleId(),
-                currentVehiclePath.get(0), currentVehicle.getColor(), currentVehicle.getVehicleType(),
+                currentVehiclePath.get(0), currentVehicle.getColor(), currentVehicle.getBeamngVehicleModel(),
                 currentVehicle.getPartConfig(),"1", vehicleListStrBuilder);
 
         int maxLength = currentVehiclePath.size();
 
         // For turn into path, dont take the last coord because the turn of the car is unpredictable, crash point is enof
-        if (testCaseInfo.getCrashType().contains("turn into") || testCaseInfo.getCrashType().contains("rear-end"))
-        {
-            maxLength -= 1;
-        }
-
+//        if (testCaseInfo.getCrashType().contains("turn into") || testCaseInfo.getCrashType().contains("rear-end"))
+//        {
+//            maxLength -= 1;
+//        }
+        int strikerID = AccidentConstructorUtil.findStrikerAndVictim(vehicleList.get(0), vehicleList.get(1))[0].getVehicleId();
         for (int i = 1; i < maxLength; i++) {
 
             String waypointName = "wp" + i + "_" + currentVehicle.getVehicleId();
             String waypointInfoStr = waypointTemplate.replace("$coord", currentVehiclePath.get(i));
 
+            String scaleValue = "1 1 1";
 
-            String scaleValue = "5 5 5";
+
             // Set the impact point name as "wp_crash" and only 1 vehicle set this
-            if (i == currentVehiclePath.size() - 2)
+            if ( (i == currentVehiclePath.size() - 2 && testCaseInfo.getCrashType().contains("straight path"))
+                    || (i == currentVehiclePath.size() - 1 && !testCaseInfo.getCrashType().contains("straight path")))
             {
+
                 waypointName = "wp_crash";
 
-                if (currentVehicle.getVehicleId() != 1)
+                if (currentVehicle.getVehicleId() != strikerID)
+                {
+                    if (AccidentConstructorUtil.getNonCriticalDistance() > 0
+                            && !testCaseInfo.getCrashType().contains("straight path"))
+                        waypointName = "wp_near_crash";
+                }
+
+                else if (currentVehicle.getVehicleId() == strikerID)
                 {
                     waypointPathLuaStrBuilder.append("\'" + waypointName + "\'" + ",");
-                    continue;
+                    if (AccidentConstructorUtil.getNonCriticalDistance() == 0)
+                        continue;
                 }
 
-                if (currentVehicle.getVehicleId() == 1)
-                {
-                    scaleValue = "";
 
-                    for (int j = 0; j < 3; j++)
-                        scaleValue += 3 + " ";//laneNumber * AccidentParam.laneWidth + " ";
 
-                }
+//                else if (currentVehicle.getVehicleId() == 1)
+//                {
+//                    scaleValue = "";
+//
+//                    for (int j = 0; j < 3; j++)
+//                        scaleValue += 3 + " ";//laneNumber * AccidentParam.laneWidth + " ";
+//
+//                }
             }
 
             waypointPathLuaStrBuilder.append("\'" + waypointName + "\'" + ",");
@@ -1207,6 +1242,10 @@ public class RoadConstructor {
 
             waypointListStrBuilder.append(waypointInfoStr);
         }
+
+        // Construct the vehicle path that goes through these wps
+        vehicleListStrBuilder.append(constructInvisibleTrajectory(currentVehicle.getVehicleId(),
+                currentVehiclePath.get(0), constructRoadNodeString(currentVehiclePath, AccidentParam.laneWidth)));
 
         currentVehicle.setWaypointPathNodeName(waypointPathLuaStrBuilder.
                 deleteCharAt(waypointPathLuaStrBuilder.length() - 1).toString());
@@ -1569,13 +1608,13 @@ public class RoadConstructor {
 //                        "" + currentVehicle.getVehicleId());
 //                vehicleInfoStr = vehicleInfoStr.replace("$position", currentVehiclePath.get(0));
 //                vehicleInfoStr = vehicleInfoStr.replace("$colorCode", currentVehicle.getColor());
-//                vehicleInfoStr = vehicleInfoStr.replace("$jbeam", currentVehicle.getVehicleType());
+//                vehicleInfoStr = vehicleInfoStr.replace("$jbeam", currentVehicle.getBeamngVehicleModel());
 //                vehicleInfoStr = vehicleInfoStr.replace("$partConfig", currentVehicle.getPartConfig());
 //                vehicleInfoStr = vehicleInfoStr.replace("$isAIControlled", "1");
 //                vehicleListStrBuilder.append(vehicleInfoStr);
                 ConsoleLogger.print('d',"Construct vehicle obj for vehicle#" + currentVehicle.getVehicleId());
                 vehicleListStrBuilder = constructVehicleObject("" + currentVehicle.getVehicleId(),
-                        currentVehiclePath.get(0), currentVehicle.getColor(), currentVehicle.getVehicleType(),
+                        currentVehiclePath.get(0), currentVehicle.getColor(), currentVehicle.getBeamngVehicleModel(),
                         currentVehicle.getPartConfig(),"1", vehicleListStrBuilder);
 
                 // Construct the waypoints for mobile car
@@ -1836,9 +1875,20 @@ public class RoadConstructor {
 
                 ConsoleLogger.print('d',"Construct vehicle obj for vehicle#" + currentVehicle.getVehicleId());
                 vehicleListStrBuilder = constructVehicleObject("" + currentVehicle.getVehicleId(),
-                        currentVehiclePath.get(0), currentVehicle.getColor(), currentVehicle.getVehicleType(),
+                        currentVehiclePath.get(0), currentVehicle.getColor(), currentVehicle.getBeamngVehicleModel(),
                         currentVehicle.getPartConfig(),"1", vehicleListStrBuilder);
 
+
+                // if this is a parked car, check if we need to construct a lane filled of parked cars
+                if ((currentVehiclePath.size() == 1 || currentVehicle.getOnStreet() < 1))
+                {
+                    if (!currentStreet.getStreetPropertyValue("road_park_line_fill").equals(""))
+                    {
+                        ConsoleLogger.print('d', "Construct parked vehicle vehicle#" + currentVehicle.getVehicleId());
+                        vehicleListStrBuilder.append(constructLaneFilledOfParkedCar(currentVehiclePath, currentStreet,
+                                currentVehicle, laneNumber, vehicleTemplate, vehicleListStrBuilder));
+                    }
+                }
                 // Construct the waypoints for mobile car
                 if (currentVehiclePath.size() > 1)
                 {
@@ -1867,16 +1917,6 @@ public class RoadConstructor {
                     // Add the waypoint list into the current vehicle waypointNodeNameList
                     currentVehicle.setWaypointPathNodeName(waypointPathLuaStrBuilder.
                             deleteCharAt(waypointPathLuaStrBuilder.length() - 1).toString());
-                }
-                // if this is a parked car, check if we need to construct a lane filled of parked cars
-                else if ((currentVehiclePath.size() == 1 || currentVehicle.getOnStreet() < 1))
-                {
-                    if (!currentStreet.getStreetPropertyValue("road_park_line_fill").equals(""))
-                    {
-                        ConsoleLogger.print('d', "Construct parked vehicle vehicle#" + currentVehicle.getVehicleId());
-                        vehicleListStrBuilder.append(constructLaneFilledOfParkedCar(currentVehiclePath, currentStreet,
-                                currentVehicle, laneNumber, vehicleTemplate, vehicleListStrBuilder));
-                    }
                 }
 
             } // End constructing Vehicle List and Waypoint list
@@ -1919,6 +1959,7 @@ public class RoadConstructor {
             }
 
             // If trigger distance is required to create a crash, create a trigger function in the scenario's Lua file
+            ConsoleLogger.print('d', "need trigger is " + testCaseInfo.getEnvPropertyValue("need_trigger"));
             if (testCaseInfo.getEnvPropertyValue("need_trigger").equals("T"))
             {
                 // If there are 2 vehicles, construct the ID and waypoints based on the vehicle
@@ -1929,10 +1970,9 @@ public class RoadConstructor {
                     for (int i = 0; i < vehicleList.size(); i++) {
                         // Select the first car moving on the road as striker, and other as victim
                         VehicleAttr currVehicle = vehicleList.get(i);
-                        if (currVehicle.getVehicleId() == 1 && currVehicle.getOnStreet() >= 1) {
-                            strikerVehicle = currVehicle;
-                            victimVehicle = vehicleList.get(vehicleList.size() - 1 - i);
-                        }
+                        VehicleAttr[] strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictim(vehicleList.get(0), vehicleList.get(1));
+                        strikerVehicle = strikerAndVictim[0];
+                        victimVehicle = strikerAndVictim[1];
     //                        else if (vehicleAttr.getVehicleId() == 2 && vehicleAttr.getOnStreet() < 1)
     //                        {
     //                            victimVehicle = vehicleAttr;
@@ -2009,7 +2049,7 @@ public class RoadConstructor {
     }
 
     // Update the x, y, or z value for each coord in a given nodes list
-    private void updateCoordElementForNodeList(ArrayList<String> baseNodeList, int[] xyzOffSet)
+    private void updateCoordElementForNodeList(ArrayList<String> baseNodeList, double[] xyzOffSet)
     {
         for (int n = 0; n < baseNodeList.size(); n++)
         {
@@ -2095,7 +2135,7 @@ public class RoadConstructor {
                             (Double.parseDouble(baseParkedCarElem[0]) - c * distanceBetweenCars - 2) + "") ;
 
                     vehicleListStrBuilder = constructVehicleObject("leftLineParkedCarF" + c, updatedXPos,
-                            "0 0 0", currentVehicle.getVehicleType(), currentVehicle.getPartConfig(),
+                            "0 0 0", currentVehicle.getBeamngVehicleModel(), currentVehicle.getPartConfig(),
                             "1", vehicleListStrBuilder);
 
                     // Construct car behind anchor car
@@ -2104,7 +2144,7 @@ public class RoadConstructor {
                             (Double.parseDouble(baseParkedCarElem[0]) + c * distanceBetweenCars + 2) + "") ;
 
                     vehicleListStrBuilder = constructVehicleObject("leftLineParkedCarB" + c, updatedXPos,
-                            "0 0 0", currentVehicle.getVehicleType(), currentVehicle.getPartConfig(),
+                            "0 0 0", currentVehicle.getBeamngVehicleModel(), currentVehicle.getPartConfig(),
                             "1", vehicleListStrBuilder);
                 }
 
@@ -2132,14 +2172,14 @@ public class RoadConstructor {
 //                            "rightLineParkedCarF" + c);
 
                     basePos = updateCoordElementAtDimension(1, basePos,
-                            (Double.parseDouble(basePos.split(" ")[1]) - 1) + "") ;
+                            (Double.parseDouble(basePos.split(" ")[1]) - 2) + "") ;
 
                     String updatedXPos = updateCoordElementAtDimension(0, basePos,
                             (Double.parseDouble(baseParkedCarElem[0]) - c * distanceBetweenCars - 2) + "") ;
 
 
                     vehicleListStrBuilder = constructVehicleObject("rightLineParkedCarF" + c, updatedXPos,
-                            "0 0 0", currentVehicle.getVehicleType(), currentVehicle.getPartConfig(),
+                            "0 0 0", currentVehicle.getBeamngVehicleModel(), currentVehicle.getPartConfig(),
                             "1", vehicleListStrBuilder);
 
 //                    parkedVehicleInfoStr = vehicleTemplate.replace("$actorID",
@@ -2150,13 +2190,13 @@ public class RoadConstructor {
 
 //                    parkedVehicleInfoStr = parkedVehicleInfoStr.replace("$position", updatedXPos);
 //                    parkedVehicleInfoStr = parkedVehicleInfoStr.replace("$colorCode", "0 0 0");
-//                    parkedVehicleInfoStr = parkedVehicleInfoStr.replace("$jbeam", currentVehicle.getVehicleType());
+//                    parkedVehicleInfoStr = parkedVehicleInfoStr.replace("$jbeam", currentVehicle.getBeamngVehicleModel());
 //                    parkedVehicleInfoStr = parkedVehicleInfoStr.replace("$partConfig", currentVehicle.getPartConfig());
 //                    parkedVehicleInfoStr = parkedVehicleInfoStr.replace("$isAIControlled", "0");
 //                    vehicleListStrBuilder.append(parkedVehicleInfoStr);
 
                     vehicleListStrBuilder = constructVehicleObject("rightLineParkedCarB" + c, updatedXPos,
-                            "0 0 0", currentVehicle.getVehicleType(), currentVehicle.getPartConfig(),
+                            "0 0 0", currentVehicle.getBeamngVehicleModel(), currentVehicle.getPartConfig(),
                             "1", vehicleListStrBuilder);
                 }
 
@@ -2409,6 +2449,37 @@ public class RoadConstructor {
 
         nodeListStr.append("\n");
         return nodeListStr.toString();
+    }
+
+    private String constructRoadNodeByDirection(HashMap<String, String> navigationDict, double segmentLength,
+                                                double radius, String roadCardinalDirection, int roadAngle,
+                                                String navigation)
+    {
+        String finalCoord = "";
+        if (navigationDict.equals(NavigationDictionary.EastNavDict)
+                || navigationDict.equals(NavigationDictionary.WestNavDict)
+                || navigationDict.equals(NavigationDictionary.NorthNavDict)
+                || navigationDict.equals(NavigationDictionary.SouthNavDict) )
+        {
+            finalCoord = NavigationDictionary.createCoordBasedOnNavigation(segmentLength, radius,
+                    navigation, navigationDict);
+        }
+        else
+        {
+            double[] finalXYCoord = AccidentConstructorUtil.computeNewCoordOfRotatedLine((double)segmentLength, roadAngle);
+
+            String[] backwardNavigation = NavigationDictionary.selectDictionaryFromTravelingDirection
+                    (roadCardinalDirection).get(navigation).split(";");
+
+            finalCoord = NavigationDictionary.setCoordValue(finalXYCoord[0], backwardNavigation[0])
+                    + " " + NavigationDictionary.setCoordValue(finalXYCoord[1], backwardNavigation[1]);
+
+            if (!AccidentParam.isGradingConcerned)
+            {
+                finalCoord += AccidentParam.beamngCoordDelimiter + "0";
+            }
+        }
+        return finalCoord;
     }
 
 }

@@ -25,11 +25,11 @@ import java.util.Map;
 
 public class NavigationDictionary {
     public static HashMap<String, String> NorthNavDict = new HashMap<String, String>();
-    
+
     public static HashMap<String, String> SouthNavDict = new HashMap<String, String>();
-    
+
     public static HashMap<String, String> EastNavDict = new HashMap<String, String>();
-    
+
     public static HashMap<String, String> WestNavDict = new HashMap<String, String>();
 
     public static HashMap<String, String> NorthEastNavDict = new HashMap<String, String>();
@@ -39,8 +39,13 @@ public class NavigationDictionary {
     public static HashMap<String, String> SouthEastNavDict = new HashMap<String, String>();
 
     public static HashMap<String, String> SouthWestNavDict = new HashMap<String, String>();
-    
+
     public NavigationDictionary()
+    {
+
+    }
+
+    public static void init()
     {
         NorthNavDict.put("forward", "0;+");
         NorthNavDict.put("backward", "0;-");
@@ -83,7 +88,7 @@ public class NavigationDictionary {
         SouthWestNavDict.put("right", "+;-");
     }
 
-    public double setCoordValue(double value, String sign)
+    public static double setCoordValue(double value, String sign)
     {
         double adjustedValue = 0;
         ConsoleLogger.print('d', "sign is " + sign);
@@ -106,7 +111,7 @@ public class NavigationDictionary {
         return adjustedValue;
     }
 
-    public String createCoordBasedOnNavigation(double segmentLength, double radius, String navigationDirection,
+    public static String createCoordBasedOnNavigation(double segmentLength, double radius, String navigationDirection,
                                                HashMap<String, String> navigationDict)
     {
         String[] directionCoordConfig = navigationDict.get(navigationDirection).split(";");
@@ -137,5 +142,39 @@ public class NavigationDictionary {
             finalCoord += " 0";
         return finalCoord;
     }
-
+    
+    public static HashMap<String, String> selectDictionaryFromTravelingDirection(String roadCardinalDirection)
+    {
+        HashMap<String, String> navigationDict = null;
+        switch (roadCardinalDirection) {
+            case "N":
+                navigationDict = NorthNavDict;
+                break;
+            case "S":
+                navigationDict = SouthNavDict;
+                break;
+            case "E":
+                navigationDict = EastNavDict;
+                break;
+            case "W":
+                navigationDict = WestNavDict;
+                break;
+            case "NE":
+                navigationDict = NorthEastNavDict;
+                break;
+            case "NW":
+                navigationDict = NorthWestNavDict;
+                break;
+            case "SE":
+                navigationDict = SouthEastNavDict;
+                break;
+            case "SW":
+                navigationDict = SouthWestNavDict;
+                break;
+            default:
+                navigationDict = EastNavDict;
+                break;
+        }
+        return navigationDict;
+    }
 }

@@ -7,6 +7,7 @@ import org.saarland.accidentelementmodel.VehicleAttr;
 import org.saarland.configparam.AccidentParam;
 import org.saarland.ontologyparser.OntologyHandler;
 
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -42,9 +43,7 @@ public class SideswipeConstructor {
             constructedCoordVeh.get(1).add("0:0");
         }
 
-
-//        VehicleAttr strikerVehicle = strikerAndVictim[0];
-//        LinkedList<String> strikerVehicleActionList = strikerVehicle.getActionList();
+        VehicleAttr[] strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictim(vehicleList.get(0), vehicleList.get(1));
 
         // Find the impact point
         AccidentConstructorUtil.findImpactedStepsAndVehicles(impactAtSteps, impactedVehiclesAtSteps, vehicleList);
@@ -76,6 +75,7 @@ public class SideswipeConstructor {
             ConsoleLogger.print('d',"Curvy Road? " + curvyRoad);
             ConsoleLogger.print('d',"Road Shape " + currentStreet.getStreetPropertyValue("road_shape"));
             // Construct coord before crash
+
             for (int v = 0; v < vehicleList.size(); v++)
             {
                 VehicleAttr currentVehicle = vehicleList.get(v);
@@ -143,7 +143,7 @@ public class SideswipeConstructor {
                                         + AccidentParam.parkingLineWidth / 2.0;
                                 if (currentVehicle.getStandingRoadSide().equals("left")) {
                                     //yCoord += 1;
-                                    yCoord += 1;
+                                    yCoord += 0;
                                 } else if (currentVehicle.getStandingRoadSide().equals("right")) {
                                     yCoord = -1.0 * yCoord + 1;
                                 }
@@ -154,20 +154,17 @@ public class SideswipeConstructor {
                         } // End checking if currentStreet is null
                         // Check if other car is parked initially, then leave trigger distance is needed. Only do this
                         // when the current vehicle is the last item in the vehicle list
-                        if (v == vehicleList.size() - 1)
+                        if (v == strikerAndVictim[1].getVehicleId() - 1)
                         {
-                            VehicleAttr strikerVehicle = vehicleList.get(0);
+                            VehicleAttr strikerVehicle = strikerAndVictim[0];
 
+                            testCase.putValToKey("need_trigger", "T");
                             currentVehicle.setLeaveTriggerDistance(computeLeaveTriggerDistance(
                                     constructedCoordVeh.get(currentVehicle.getVehicleId() - 1).get(0),
                                     "0:0", strikerVehicle, currentVehicle));
                             ConsoleLogger.print('d',"Compute Leave Trigger distance = " + currentVehicle.getLeaveTriggerDistance());
-//                            ConsoleLogger.print('d', "victim travel direction " + currentVehicle.getTravellingDirection());
-//                            if (AccidentConstructorUtil.getNonCriticalDistance() > 0)
-//                            {
-//                                ConsoleLogger.print('d', "add 20m away wp");
-//                                constructedCoordVeh.get(currentVehicle.getVehicleId() - 1).add("20:0");
-//                            }
+                            ConsoleLogger.print('d', "victim travel direction " + currentVehicle.getTravellingDirection());
+
                         }
                     } // End checking if the car is parked
                 }
@@ -206,15 +203,22 @@ public class SideswipeConstructor {
 
                         // Check if other car is parked initially, then leave trigger distance is needed. Only do this
                         // when the current vehicle is the last item in the vehicle list
-                        if (v == vehicleList.size() - 1)
+                        if (v == strikerAndVictim[1].getVehicleId() - 1)
                         {
-                            VehicleAttr victimVehicle = vehicleList.get(0);
-                            if (victimVehicle.getActionList().get(0).startsWith("park")) {
+//                            VehicleAttr victimVehicle = strikerAndVictim[1];
+//                            if (victimVehicle.getActionList().get(0).startsWith("park")) {
+//                                ConsoleLogger.print('d',"Found other vehicle parks initially");
+//                                victimVehicle.setLeaveTriggerDistance(computeLeaveTriggerDistance(
+//                                        constructedCoordVeh.get(victimVehicle.getVehicleId() - 1).get(0), "0:0",
+//                                        currentVehicle, victimVehicle));
+//                                testCase.putValToKey("need_trigger", "T");
+//                            }
+                            if (currentVehicle.getActionList().get(0).startsWith("park")) {
                                 ConsoleLogger.print('d',"Found other vehicle parks initially");
-                                victimVehicle.setLeaveTriggerDistance(computeLeaveTriggerDistance(
-                                        constructedCoordVeh.get(victimVehicle.getVehicleId() - 1).get(0), "0:0",
-                                        currentVehicle, victimVehicle));
-
+                                currentVehicle.setLeaveTriggerDistance(computeLeaveTriggerDistance(
+                                        constructedCoordVeh.get(currentVehicle.getVehicleId() - 1).get(0), "0:0",
+                                        strikerAndVictim[0], strikerAndVictim[1]));
+                                testCase.putValToKey("need_trigger", "T");
                             }
                         }
                     }
@@ -304,8 +308,30 @@ public class SideswipeConstructor {
 
 //        appendPrecrashMovementsForVehicle(constructedCoordVeh, vehicleList, parser, curvyRoad, radius);
 
+        ConsoleLogger.print('d', "add far away wp");
+        double extraDistanceX = AccidentConstructorUtil.getNonCriticalDistance() == 0 ?
+                3 : AccidentConstructorUtil.getNonCriticalDistance();
+        double extraDistanceY = AccidentConstructorUtil.getNonCriticalDistance() == 0 ?
+                -3 : 0;
+//        double extraDistanceStriker = AccidentConstructorUtil.getNonCriticalDistance() == 0 ?
+//                6 : 0;
+
+        constructedCoordVeh.get(strikerAndVictim[1].getVehicleId() - 1).add
+                (extraDistanceX + AccidentParam.defaultCoordDelimiter + extraDistanceY);
+
+
         for (int i = 0; i < vehicleList.size(); i++)
         {
+            // Append grading
+            for (int j = 0; j < constructedCoordVeh.get(i).size(); j++)
+            {
+                ArrayList<String> currentCoordList = constructedCoordVeh.get(i);
+                if (!AccidentParam.isGradingConcerned)
+                {
+                    currentCoordList.set(j, currentCoordList.get(j) + AccidentParam.defaultCoordDelimiter + "0");
+                }
+            }
+
             vehicleList.get(i).setMovementPath(constructedCoordVeh.get(i));
             ConsoleLogger.print('d',"Vehicle #" + (i + 1) + " coord list:");
             for (String coord : constructedCoordVeh.get(i))

@@ -368,17 +368,17 @@ public class RearEndConstructor {
                                     }
                                 }
                                 // If this is a rest action, set the vehicle to the previous positiont
-                                else if (actionAtI.equals("endHit"))
-                                {
-                                    if (processedVehicle.equals(strikerVehicle))
-                                    {
-                                        vehicleCoordStriker.add( vehicleCoordStriker.get(vehicleCoordStriker.size() - 1));
-                                    }
-                                    else if (processedVehicle.equals(victimVehicle))
-                                    {
-                                        vehicleCoordVictim.add( vehicleCoordVictim.get(vehicleCoordVictim.size() - 1));
-                                    }
-                                }
+//                                else if (actionAtI.equals("endHit"))
+//                                {
+//                                    if (processedVehicle.equals(strikerVehicle))
+//                                    {
+//                                        vehicleCoordStriker.add( vehicleCoordStriker.get(vehicleCoordStriker.size() - 1));
+//                                    }
+//                                    else if (processedVehicle.equals(victimVehicle))
+//                                    {
+//                                        vehicleCoordVictim.add( vehicleCoordVictim.get(vehicleCoordVictim.size() - 1));
+//                                    }
+//                                }
                                 ConsoleLogger.print('d',"Vehicle Coord Victim at i " + actionListIndex + " " + vehicleCoordVictim);
                                 ConsoleLogger.print('d',"Vehicle Coord Striker at i " + actionListIndex + " " + vehicleCoordStriker);
                             } // End processing an impact step
@@ -387,6 +387,12 @@ public class RearEndConstructor {
                     } // End looping through striker and victim
 
                     constructedCoordVeh.set(victimVehicle.getVehicleId() - 1, vehicleCoordVictim);
+
+                    if (AccidentConstructorUtil.getNonCriticalDistance() > 0)
+                    {
+                        vehicleCoordStriker.remove(vehicleCoordStriker.get(vehicleCoordStriker.size() - 1));
+                    }
+
                     constructedCoordVeh.set(strikerVehicle.getVehicleId() - 1, vehicleCoordStriker);
                 }
                 // Construct movement points if the vehicle velocity is more than 0

@@ -134,16 +134,20 @@ public class XMLAccidentCaseParser {
 
                 ConsoleLogger.print('r', "USE DEFAULT CAR MODEL " + useDefaultCarModel);
 
+                String bodyType = vehicleInfoIterator.getTextContent().trim().replace(" ", "_").toLowerCase();
+                ConsoleLogger.print('d', "Found BODY_TYPE " + bodyType);
+                AccidentConcept bodyTypeConcept = parser.findExactConceptInKeyword(bodyType);
+
+                if (bodyTypeConcept != null && bodyTypeConcept.getConceptGroup().equals("car_model")) {
+                    vehicle.setVehicleType(bodyType);
+                }
+
                 if (useDefaultCarModel.equals("true")) {
                     vehicle.setPartConfig(defaultPartConfig);
-                    vehicle.setVehicleType(defaultJBeamStyle);
+                    vehicle.setBeamngVehicleModel(defaultJBeamStyle);
                 }
                 else
                 {
-                    String bodyType = vehicleInfoIterator.getTextContent().trim().replace(" ", "_").toLowerCase();
-                    ConsoleLogger.print('d', "Found BODY_TYPE " + bodyType);
-                    AccidentConcept bodyTypeConcept = parser.findExactConceptInKeyword(bodyType);
-
                     try {
 //                    // try until we find a body type concept
 //                    while (!bodyTypeConcept.getConceptGroup().equals("car_model"))
@@ -152,18 +156,19 @@ public class XMLAccidentCaseParser {
 //                    }
                         // Find if the body type is in the Ontology
                         if (bodyTypeConcept.getConceptGroup().equals("car_model")) {
+
                             if (bodyTypeConcept.getDataProperties() != null) {
                                 vehicle.setPartConfig(bodyTypeConcept.getDataProperties().get("partconfig"));
-                                vehicle.setVehicleType(bodyTypeConcept.getDataProperties().get("jbeam"));
+                                vehicle.setBeamngVehicleModel(bodyTypeConcept.getDataProperties().get("jbeam"));
                             } else {
                                 vehicle.setPartConfig(defaultPartConfig);
-                                vehicle.setVehicleType(defaultJBeamStyle);
+                                vehicle.setBeamngVehicleModel(defaultJBeamStyle);
                             }
                         }
                     } catch (Exception ex) {
                         ConsoleLogger.print('d', "Exception at extracting body type \n" + ex.toString());
                         vehicle.setPartConfig(defaultPartConfig);
-                        vehicle.setVehicleType(defaultJBeamStyle);
+                        vehicle.setBeamngVehicleModel(defaultJBeamStyle);
                     }
                 }
             }
@@ -224,8 +229,8 @@ public class XMLAccidentCaseParser {
             vehicleInfoIterator = vehicleInfoIterator.getNextSibling().getNextSibling();
             if (vehicleInfoIterator.getNodeName().trim().equalsIgnoreCase("TRANSPORT")) {
                 ConsoleLogger.print('d',"Found TRANSPORT");
-                String transportStatus = vehicleInfoIterator.getTextContent().trim();
-                if (transportStatus.equalsIgnoreCase("Not In Transport"))
+                String transportStatus = vehicleInfoIterator.getTextContent().trim().toLowerCase();
+                if (transportStatus.equalsIgnoreCase("not in transport"))
                 {
                     vehicle.setOnStreet(0);
                 }
@@ -240,12 +245,14 @@ public class XMLAccidentCaseParser {
             ConsoleLogger.print('r',String.format("Vehicle %d Info \n" +
                             "YearMakeModel: %s \n " +
                             "Type: %s \n " +
-                            "Color: %s \n ",
+                            "Color: %s \n " +
+                            "Onstreet %d \n",
                             //"On Street: %s \n ",
                     vehicle.getVehicleId(),
                     vehicle.getYearMakeModel(),
-                    vehicle.getVehicleType(),
-                    chosenColorName));
+                    vehicle.getBeamngVehicleModel(),
+                    chosenColorName,
+                    vehicle.getOnStreet()));
                     //vehicle.getOnStreet()));
 
             accidentConstructor.getVehicleList().add(vehicle);

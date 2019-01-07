@@ -2,10 +2,7 @@ package org.saarland.accidentconstructor;
 
 //import org.jdom2.Element;
 
-import org.saarland.accidentelementmodel.ActionDescription;
-import org.saarland.accidentelementmodel.Street;
-import org.saarland.accidentelementmodel.TestCaseInfo;
-import org.saarland.accidentelementmodel.VehicleAttr;
+import org.saarland.accidentelementmodel.*;
 import org.saarland.configparam.AccidentParam;
 import org.saarland.configparam.FilePathsConfig;
 import org.saarland.crashAnalyzer.CrashScenarioSummarizer;
@@ -100,6 +97,8 @@ public class AccidentConstructor {
             e.printStackTrace();
         }
 
+
+
 //        ConsoleLogger.print('r', "Loading Coreferencer");
 //        StanfordCoreferencer stanfordCoreferencer = new StanfordCoreferencer();
 //        ConsoleLogger.print('r', "Coreferencer loaded");
@@ -130,9 +129,6 @@ public class AccidentConstructor {
         for (File selectedFile : selectedFiles) {
             String scenarioName = "";
             try {
-
-
-
                 long startTime = System.nanoTime();
                 String accidentFilePath = selectedFile.getAbsolutePath().replace("\\", "/");//FilePathsConfig.accidentFolderLocation + "CustomSideSwipe_Case1.xml";
 
@@ -166,12 +162,15 @@ public class AccidentConstructor {
 
 
                 long startParsingFileTime = System.nanoTime();
+
                 String[] accidentContext = xmlAccidentCaseParser.parseAccidentXmlFile(accidentConstructor, ontologyHandler);
 
                 String[] storyline = accidentConstructor.replacePhrases(accidentContext[1]).split("\\.");
 
                 long endParsingFileTime = System.nanoTime() - startParsingFileTime;
                 ConsoleLogger.print('d', String.format("Finish Processing report after %d milliseconds", TimeUnit.NANOSECONDS.toMillis(endParsingFileTime)));
+
+
 
                 long startCorefTime = System.nanoTime();
                 for (int i = 0; i < storyline.length; i++) {
@@ -190,7 +189,8 @@ public class AccidentConstructor {
                             stanfordCoreferencer.findDependencies(environmentParagraph[i]);
 
                     environmentAnalyzer.extractEnvironmentProp
-                            (environmenTaggedWordsAndDependencies, ontologyHandler, accidentConstructor.testCase);
+                            (environmenTaggedWordsAndDependencies, ontologyHandler, accidentConstructor.testCase,
+                                    accidentConstructor.vehicleList);
                 }
 
                 environmentAnalyzer.checkMissingEnvironmentProperties(accidentConstructor.testCase);
@@ -257,6 +257,10 @@ public class AccidentConstructor {
 //                continue;
 
                 long simulationGenStartTime = System.nanoTime();
+
+                NavigationDictionary.init();
+                ConsoleLogger.print('r', "Navigation Dictionary initialized!");
+
                 // Analyze the action list of each vehicle, then create the Crash Scenario
                 if (accidentConstructor.accidentType.toLowerCase().contains("rear-end")
                         || accidentConstructor.accidentType.toLowerCase().contains("rearend")
@@ -335,9 +339,39 @@ public class AccidentConstructor {
                     String scenarioTemplateFile = AccidentConstructorUtil.loadTemplateContent
                             (AccidentParam.scenarioJsonFilePath);
 
+                    VehicleAttr[] strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictim(
+                            accidentConstructor.vehicleList.get(0),
+                            accidentConstructor.vehicleList.get(1));
+
                     scenarioTemplateFile = scenarioTemplateFile.replace("$name", scenarioName);
+
+                    int strikerLaneNum = Integer.parseInt(
+                            strikerAndVictim[0].getStandingStreet().getStreetPropertyValue("lane_num"));
+
+                    String roadDirection =
+                            strikerAndVictim[0].getStandingStreet().getStreetPropertyValue("road_direction");
+
+                    // if roadDirection is 2-way, divide the total lane number by 2 and get the ceiling
+                    ConsoleLogger.print('d', String.format("roadDirection of %d is null ? %s, if false it is %s",
+                            strikerAndVictim[0].getVehicleId(), (roadDirection.equals("")), roadDirection));
+                    if (roadDirection.equals("2-way") || roadDirection.equals(""))
+                    {
+                        strikerLaneNum = (int) Math.ceil(strikerLaneNum / 2.0);
+                    }
+
+                    ConsoleLogger.print('d', String.format("strikerLaneNum is %d ",
+                            (int) Math.ceil(strikerLaneNum / 2.0)));
+
                     scenarioTemplateFile = scenarioTemplateFile.replace("$description", accidentContext[0]
-                            + "\n" + accidentContext[1]);
+                            + "\n" + accidentContext[1])
+                            .replace("$strikerID", strikerAndVictim[0].getVehicleId() + "")
+                            .replace("$NLanes", strikerLaneNum + "")
+                            .replace("$speedLimit", "" +
+                                    AccidentConstructorUtil.convertMPHToKMPH(
+                                            Double.parseDouble(strikerAndVictim[0].getStandingStreet()
+                                                    .getStreetPropertyValue("speed_limit"))));
+
+
 
                     String scenarioPath = AccidentParam.scenarioConfigFilePath + "\\" + scenarioName + ".json";
 
@@ -524,6 +558,22 @@ public class AccidentConstructor {
                         // If it is a travel action, find direction
                         if (stemmedAction.equals("travel")) {
 
+                            // Find the lane number which this vehicle is travelling on
+                            VehicleAttr actorVehicleObj = findVehicle(actor);
+                            if (actorVehicleObj != null
+                                && actorVehicleObj.getTravelOnLaneNumber() == AccidentParam.RIGHTMOSTLANE) {
+
+                                String actConnectedWords = AccidentConstructorUtil.findAllConnectedWords(dependencyList, action, action, 0, 5);
+
+                                ConsoleLogger.print('d', "Connected words of " + action + " is " + actConnectedWords);
+
+                                actorVehicleObj.setTravelOnLaneNumber(
+                                        AccidentConstructorUtil.detectTravellingLane(actConnectedWords));
+
+                                ConsoleLogger.print('d', "Travelling lane of vehicle " + actorVehicleObj.getVehicleId() + " is " +
+                                        actorVehicleObj.getTravelOnLaneNumber());
+                            }// End Finding Travelling lane
+
                             LinkedList<String> directionDependencies = AccidentConstructorUtil.findConnectedDependencies(dependencyList,
                                     tagWordList, stemmedAction, "", 0);
 
@@ -647,8 +697,6 @@ public class AccidentConstructor {
                         for (String dependencyOfAction : dependencyList) {
 
                             // If the supposed action is not an action, replace with an action
-
-
                             if (dependencyOfAction.contains(actionAndActor[0])) {
                                 // Skip the same nsub dependency
                                 if (dependencyOfAction.equalsIgnoreCase(dependency)) {
@@ -670,6 +718,7 @@ public class AccidentConstructor {
 
                                     // Attempt to detect the side of the parking action
                                     if (stemmedAction.equals("park")) {
+                                        ConsoleLogger.print('d', "Found park action ");
                                         // Find from related word the park location (left or right of the road)
                                         LinkedList<String> relatedWordDependencies =
                                                 AccidentConstructorUtil.findConnectedDependencies(dependencyList,
@@ -1212,6 +1261,11 @@ public class AccidentConstructor {
             }
 
             HashMap<String, String> actionDataProp = parser.findExactConcept(verb).getDataProperties();
+            if (actionDataProp == null)
+            {
+                continue;
+            }
+
             Set<Map.Entry<String, String>> actionDataPropEntry = actionDataProp.entrySet();
             for (Map.Entry<String, String> dataProp : actionDataPropEntry) {
                 ConsoleLogger.print('d', dataProp.getKey() + " : " + dataProp.getValue());
@@ -1389,6 +1443,235 @@ public class AccidentConstructor {
                     if (processedVehicles.indexOf("vehicle" + remainingVehicle.getVehicleId()) > -1) {
                         continue;
                     } else // Mark this one as not impacted
+                    {
+                        String previousAction = remainingVehicle.getActionList().getLast();
+                        if (previousAction.startsWith("hit")) {
+                            remainingVehicle.getActionList().add("endHit");
+                        } else {
+                            remainingVehicle.getActionList().add(previousAction);
+                        }
+
+                    }
+                }
+
+            }
+            ConsoleLogger.print('d', "--------------------------");
+
+        }
+        return "";
+    }
+
+    private String constructVehicleActionList2(LinkedList<ActionDescription> storylineActionList, OntologyHandler parser) {
+        for (ActionDescription actDes : storylineActionList) {
+            ConsoleLogger.print('d', "--------------------------");
+            ConsoleLogger.print('d', "Actor " + actDes.getSubject() + " Action " + actDes.getVerb() + " Verb Prop List " + actDes.getVerbProps());
+            ConsoleLogger.print('d', "Action Data Properties:");
+
+            String verb = actDes.getVerb().split("-")[0];
+            AccidentConcept verbConcept = parser.findExactConcept(verb);
+
+            if (verbConcept == null || !verbConcept.getConceptGroup().equals("vehicle_action") || !verbConcept.getConceptGroup().equals("vehicle_direction"))
+            {
+                continue;
+            }
+
+            // If the verb has no actor or object, skip it
+            if (actDes.getSubject().equals("")) {
+                continue;
+            }
+
+            // If the verb concept is a vehicle direction, it implies that this is the travel action
+            if (verbConcept.getConceptGroup().equals("vehicle_direction")) {
+                // add the direction to the prop list
+                actDes.getVerbProps().add(verb);
+
+                actDes.setVerb("travel");
+                ConsoleLogger.print('d', "------------Updated Actdes--------------");
+                ConsoleLogger.print('d', "Actor " + actDes.getSubject() + " Action " + actDes.getVerb() + " Verb Prop List " + actDes.getVerbProps());
+                ConsoleLogger.print('d', "Action Data Properties:");
+
+                verb = "travel";
+            }
+            HashMap<String, String> actionDataProp = parser.findExactConcept(verb).getDataProperties();
+
+            Set<Map.Entry<String, String>> actionDataPropEntry = actionDataProp.entrySet();
+            for (Map.Entry<String, String> dataProp : actionDataPropEntry) {
+                ConsoleLogger.print('d', dataProp.getKey() + " : " + dataProp.getValue());
+            }
+
+            // This action is made only for single vehicle because no object is collided
+            if (actionDataProp.get("is_collision_verb") != null && actionDataProp.get("is_collision_verb").equalsIgnoreCase("false")) {
+                if (actDes.getSubject().split(" ")[0].startsWith("vehicle")) {
+                    for (VehicleAttr vehicleAttr : vehicleList) {
+                        VehicleAttr modifiedVehicleAttr = vehicleAttr;
+                        if (actDes.getSubject().contains("vehicle" + modifiedVehicleAttr.getVehicleId())) {
+                            modifiedVehicleAttr.getActionList().add(actDes.getVerb());
+                            // Set velocity
+                            int velocity = Integer.parseInt(actionDataProp.get("velocity"));
+                            if (modifiedVehicleAttr.getVelocity() == -1) {
+                                modifiedVehicleAttr.setVelocity(velocity);
+                            }
+//                            modifiedVehicleAttr.setVelocity(velocity);
+
+                            // Set Initial Positions and direction of movement if velocity does not indicate stop
+                            // or impact movement
+                            if (velocity > 0 && velocity < 1000) {
+                                // Loop through the verb properties to find the direction of movement
+                                for (String verbProp : actDes.getVerbProps()) {
+                                    // Check if this indicates the direction of vehicle
+                                    String movementDirection = "";
+                                    if (verbProp.contains("-")) {
+                                        movementDirection = verbProp.split("-")[0];
+                                    }
+                                    // TODO : If MPH found, set speed to travel action
+                                    if (movementDirection != "" && parser.findExactConcept(movementDirection).getConceptGroup().contains("vehicle_direction")) {
+                                        String direction = AccidentConstructorUtil.convertDirectionWordToDirectionLetter(movementDirection);
+                                        modifiedVehicleAttr.setTravellingDirection(direction);
+                                    }
+                                }
+                            } else if (velocity == 0) {
+                                // Check if the action is park and the location is on the pavement
+                                if (actDes.getVerb().equals("park")) {
+                                    Street modifiedVehicleStandingStreet = modifiedVehicleAttr.getStandingStreet();
+
+                                    // If can't find the standing street of a vehicle, but there is only 1 road being
+                                    // described in the first paragraph, take that road
+                                    if (modifiedVehicleStandingStreet == null && testCase.getStreetList().size() == 1) {
+                                        modifiedVehicleStandingStreet = testCase.getStreetList().get(0);
+                                        modifiedVehicleAttr.setStandingStreet(modifiedVehicleStandingStreet);
+                                        ConsoleLogger.print('d', "Set standing street for modified vehicle " + modifiedVehicleAttr.getVehicleId());
+                                    }
+
+                                    if (actDes.getVerbProps().size() == 0) {
+                                        // If there is no park line, but we can't find a pavement, so this car is on the line
+                                        if (!modifiedVehicleStandingStreet.getStreetPropertyValue("road_park_line").equals("0")) {
+                                            ConsoleLogger.print('d', "Set car " + modifiedVehicleAttr.getVehicleId() + " on park line");
+                                            modifiedVehicleAttr.setOnStreet(-1);
+                                        }
+                                    }
+                                    for (String verbProp : actDes.getVerbProps()) {
+                                        AccidentConcept verbPropConcept = parser.findExactConcept(
+                                                AccidentConstructorUtil.getWordFromToken(verbProp));
+                                        // If the car is park on the pavement, set the onStreet prop of the vehicle to 0
+                                        ConsoleLogger.print('d', "Verb prop is pavement " + verbProp);
+
+                                        if (verbPropConcept.getConceptGroup().contains("pavement")
+                                                || verbPropConcept.getConceptGroup().contains("curb")) {
+                                            modifiedVehicleAttr.setOnStreet(0);
+                                            modifiedVehicleStandingStreet.putValToKey("road_park_line", "0");
+                                        }
+                                    }
+
+                                    // If there is no sign indicating that the car is parking on the street, it is parking
+                                    // on a parking line
+                                    if (!modifiedVehicleStandingStreet.getStreetPropertyValue("road_park_line").equals("0")) {
+                                        ConsoleLogger.print('d', "No sign that vehicle " + modifiedVehicleAttr.getVehicleId() + " is parking on curb");
+                                        modifiedVehicleAttr.setOnStreet(-1);
+                                    }
+                                }
+                            }
+
+                            ConsoleLogger.print('d', "V = " + modifiedVehicleAttr.getVelocity());
+                            ConsoleLogger.print('d', "MD = " + modifiedVehicleAttr.getTravellingDirection());
+                            ConsoleLogger.print('d', "Onstreet = " + modifiedVehicleAttr.getOnStreet());
+                        } else // Assign N/A or passive action to other vehicles
+                        {
+                            // Check if the vehicle is somehow contained in the object list
+                            if (actDes.getVerbProps().size() > 0) {
+                                for (String verbProp : actDes.getVerbProps()) {
+                                    String firstWord = verbProp;
+                                    if (verbProp.contains(" ")) {
+                                        firstWord = verbProp.split(" ")[0];
+                                    }
+
+
+                                    if (("vehicle" + modifiedVehicleAttr.getVehicleId()).equalsIgnoreCase(firstWord)) {
+                                        modifiedVehicleAttr.getActionList().add(actDes.getVerb() + "/pasiv");
+                                    } else {
+                                        // Append the last action in the list, if not avail, add "N/A"
+                                        if (modifiedVehicleAttr.getActionList().size() > 0) {
+                                            modifiedVehicleAttr.getActionList().add(modifiedVehicleAttr.getActionList().getLast());
+                                        } else {
+                                            modifiedVehicleAttr.getActionList().add("N/A");
+                                        }
+                                        break;
+                                    }
+                                }
+                            } else {
+                                // Append the last action in the list, if not avail, add "N/A"
+                                if (modifiedVehicleAttr.getActionList().size() > 0) {
+                                    if (modifiedVehicleAttr.getActionList().getLast().startsWith("hit")) {
+                                        modifiedVehicleAttr.getActionList().add("endHit");
+                                    } else {
+                                        modifiedVehicleAttr.getActionList().add(modifiedVehicleAttr.getActionList().getLast());
+                                    }
+
+                                } else {
+                                    modifiedVehicleAttr.getActionList().add("N/A");
+                                }
+                            }
+                        }
+
+                        vehicleList.set(vehicleList.indexOf(vehicleAttr), modifiedVehicleAttr);
+                    } // End assign action for each vehicle
+                } // End checking vehicle subjects
+            } // End checking non-collision verb
+            else // Set the action of impacted vehicles to be impacted
+            {
+                ConsoleLogger.print('d', "Collision indicator verb " + actDes.getVerb());
+                ArrayList<String> impactedVehicles = new ArrayList<String>();
+                ArrayList<String> processedVehicles = new ArrayList<String>();
+                String impactIndicatorVerb = "hit";
+
+                for (String verbProp : actDes.getVerbProps()) {
+
+                    String firstWord = verbProp;
+                    if (verbProp.contains(" ")) {
+                        firstWord = verbProp.split(" ")[0];
+                    }
+                    if (firstWord.startsWith("vehicle")) {
+                        impactedVehicles.add(firstWord.split("<>")[0]);
+                    }
+                }
+
+                // Append actions to the vehicle(s) in the subject list
+                if (actDes.getSubject().contains("/")) {
+                    ArrayList<String> vehiclesInSubjects = new ArrayList<String>();
+                    for (String vehicleName : vehiclesInSubjects) {
+                        VehicleAttr foundVehicle = findVehicle(vehicleName.split(" ")[0]);
+                        if (foundVehicle != null) {
+                            foundVehicle.getActionList().add(impactIndicatorVerb);
+                            processedVehicles.add(vehicleName);
+                        }
+                    }
+                } else {
+                    VehicleAttr foundVehicle = findVehicle(actDes.getSubject().split(" ")[0]);
+                    ConsoleLogger.print('d', "Found Subject vehicle? " + foundVehicle == null ? "No" : "Yes, found vehicle" + foundVehicle.getVehicleId());
+                    if (foundVehicle != null) {
+                        foundVehicle.getActionList().add(impactIndicatorVerb);
+                        processedVehicles.add("vehicle" + foundVehicle.getVehicleId());
+                    }
+                }
+
+
+                // Append action to the vehicle(s) in the object list
+                for (String vehicleName : impactedVehicles) {
+                    VehicleAttr foundVehicle = findVehicle(vehicleName);
+                    if (foundVehicle != null) {
+                        foundVehicle.getActionList().add(impactIndicatorVerb + "*");
+                        processedVehicles.add(vehicleName);
+                    }
+                }
+
+                ConsoleLogger.print('d', "Processed Veh list " + processedVehicles);
+
+                for (VehicleAttr remainingVehicle : vehicleList) {
+                    // Skip the vehicle if found
+                    ConsoleLogger.print('d', "index of " + ("vehicle" + remainingVehicle.getVehicleId()) + " is " + processedVehicles.indexOf("vehicle" + remainingVehicle.getVehicleId()));
+                    if (processedVehicles.indexOf("vehicle" + remainingVehicle.getVehicleId()) > -1) {
+                        continue;
+                    }
+                    else // Mark this one as not impacted
                     {
                         String previousAction = remainingVehicle.getActionList().getLast();
                         if (previousAction.startsWith("hit")) {
@@ -1699,6 +1982,11 @@ public class AccidentConstructor {
 
             } // End processing single street case
 
+            // If no parking side is specified, set the vehicle to park on the right
+            if (vehicle.getStandingRoadSide().equals(""))
+            {
+                vehicle.setStandingRoadSide("right");
+            }
 
         } // End looping through all vehicles
 
@@ -1894,39 +2182,3 @@ public class AccidentConstructor {
 
 
 }
-
-
-
-
-// DEAD CODE
-
-// Recursively find the relation of second word in the dependency
-
-//for (String relatedWordDependency : dependencyList)
-//{
-//    if (relatedWordDependency.contains(relatedWordWithIndex))
-//    {
-//        if (dependencyOfAction.equalsIgnoreCase(dependencyOfAction))
-//        {
-//            continue;
-//        }
-//        else
-//        {
-//            verbPropList.add(relatedWordWithIndex);
-//            dependencyNameAndWordPair = dependencyOfAction.split("\\(");
-//            dependencyNameAndWordPair[1] = dependencyNameAndWordPair[1].replace(")", "");
-//
-//            wordPair = dependencyNameAndWordPair[1].split(",");
-//            relatedWordWithIndex = wordPair[1];
-//            // If the first word in the pair is not the action, set it as related word
-//            if (!wordPair[0].equalsIgnoreCase(action))
-//            {
-//                relatedWordWithIndex = wordPair[0];
-//            }
-//            if (parser.isExactConceptExist(relatedWord))
-//            {
-//                verbPropList.add(relatedWordWithIndex);
-//            }
-//        }
-//    }
-//}

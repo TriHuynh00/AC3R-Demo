@@ -43,7 +43,9 @@ public class AccidentConstructorUtil {
         VehicleAttr[] strikerAndVictim = new VehicleAttr[2];
         ConsoleLogger.print('d',"Find Striker and Victim 2, hit* in vehicle0 at " + vehicle0.getActionList().indexOf("hit*"));
 
-        if (vehicle0.getActionList().indexOf("hit*") > -1) {
+        String firstVehicleAction = vehicle0.getActionList().get(0);
+        if (vehicle0.getActionList().indexOf("hit*") > -1
+                || firstVehicleAction.startsWith("park") || firstVehicleAction.startsWith("stop")) {
 
             strikerAndVictim[0] = vehicle1;
             strikerAndVictim[1] = vehicle0;
@@ -446,6 +448,11 @@ public class AccidentConstructorUtil {
         return mph * 0.447;
     }
 
+    // Convert miles/h to km/h
+    public static double convertMPHToKMPH(double mph) {
+        return mph * 1.6092;
+    }
+
     public static double appendExtraMeterPerSecSpeed(double currentVehicleSpeed) {
 
         double meterPerSecSpeed = AccidentConstructorUtil.convertMPHToMS(currentVehicleSpeed);
@@ -705,6 +712,38 @@ public class AccidentConstructorUtil {
             ConsoleLogger.print('e', "Error at getting extra non-critical distance \n" + ex);
             return 0;
         }
+    }
+
+    // Find the lane which a vehicle travels on
+    public static int detectTravellingLane(String connectedWordChain)
+    {
+        String[] connectedWords = connectedWordChain.split(",");
+
+        // Find the word contain "lane" string, get the index of the word, and find a number in the previous or next 2
+        // connected words (detect these words by looking at the index attached to each word)
+        for (int i = 0; i < connectedWords.length; i++)
+        {
+            String currentWord = connectedWords[i];
+            if (currentWord.startsWith("lane"))
+            {
+                // Get index of the "lane" word
+                int laneWordIndex = Integer.parseInt(currentWord.split("-")[1]);
+
+                // Find the words adjacent to lane with index = laneWordIndex +- 2
+                for (int k = connectedWords.length - 1; k >= 0; k--)
+                {
+                    String[] wordAndIndex = connectedWords[k].split("-");
+                    // If the word is a number, and it is at most 2 positions next to the lane word, then this should
+                    // be the lane number
+                    if (wordAndIndex[0].matches("\\d*")
+                            && Math.abs(laneWordIndex - Integer.parseInt(wordAndIndex[1])) <= 2)
+                    {
+                        return Integer.parseInt(wordAndIndex[0]);
+                    }
+                } // End reversed looping through connectedWordString
+            } // End "lane" word detection
+        } // End looping through connectedWordString
+        return AccidentParam.RIGHTMOSTLANE; // If the lane is not found, set the vehicle at the right most lane
     }
 
 }

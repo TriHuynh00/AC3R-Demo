@@ -25,12 +25,17 @@ public class VehicleAttr {
     private Street standingStreet;
 
     // The lane number which the vehicle travels on, counting from the lane next to the right pavement outward.
-    // By default, vehicle travels on lane #1, which is the lane closest to the right pavement
-    private int travelOnLaneNumber = 1;
+    // By default, vehicle is set to travel on the lane closest to the right pavement
+
+    // Lane number is count from the middle of the lane to the pavement, i.e. the lane closest to the road median is
+    // lane #1. For example, if a road is 2-way, and has 2 lanes on each side (total 4 lanes). Then for each side,
+    // lane #1 is nearest to the median, and lane #2 is nearest to the pavement.
+    private int travelOnLaneNumber = AccidentParam.RIGHTMOSTLANE;
 
     // Vehicle appearance attributes
     private String yearMakeModel = "";
-    private String vehicleType = "";
+    private String vehicleType = ""; // truck, sedan, etc.
+    private String beamngVehicleModel = "";
     private String partConfig = "";
     private String color = "";
 
@@ -129,6 +134,14 @@ public class VehicleAttr {
 
     public void setYearMakeModel(String yearMakeModel) {
         this.yearMakeModel = yearMakeModel;
+    }
+
+    public String getBeamngVehicleModel() {
+        return beamngVehicleModel;
+    }
+
+    public void setBeamngVehicleModel(String vehicleType) {
+        this.beamngVehicleModel = vehicleType;
     }
 
     public String getVehicleType() {

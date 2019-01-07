@@ -38,7 +38,7 @@ public class AccidentParam {
     public static DecimalFormat df2Digit = new DecimalFormat("####.##");
     public static DecimalFormat df6Digit = new DecimalFormat("####.######");
 
-    public static int laneWidth = 5;  // Width unit in Beamng
+    public static double laneWidth = 5;  // Width unit in Beamng
     public static int parkingLineWidth = 2;  // Width unit in Beamng
 
     public static int defaultSpeed  = 20; // mph
@@ -55,6 +55,8 @@ public class AccidentParam {
     public static String dirtMaterial = "road_dirt";
     public static String pavementMaterial = "sidewalk_concrete";
     public static String laneDivisionMaterial = "line_yellow";
+
+    public static int RIGHTMOSTLANE = 100;
 
     // Rotation Matrix (heading toward certain direction)
     public static String headEast = "0.000197529793 0.999126077 0.041796688 -0.997556925 0.00311672688 -0.0697889775 -0.069858253 -0.0416807905 0.996685803";
