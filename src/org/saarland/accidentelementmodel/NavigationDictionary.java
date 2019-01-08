@@ -111,8 +111,9 @@ public class NavigationDictionary {
         return adjustedValue;
     }
 
-    public static String createCoordBasedOnNavigation(double segmentLength, double radius, String navigationDirection,
-                                               HashMap<String, String> navigationDict)
+    // Construct an XYZ coord given the length of the segment, radius, and moving direction
+    public static String createNESWCoordBasedOnNavigation(double segmentLength, double radius, String navigationDirection,
+                                                          HashMap<String, String> navigationDict, String delimiter)
     {
         String[] directionCoordConfig = navigationDict.get(navigationDirection).split(";");
         double currXCoord = 0;
@@ -135,11 +136,11 @@ public class NavigationDictionary {
         ConsoleLogger.print('d', "currXCoord is " + currXCoord);
         ConsoleLogger.print('d', "currYCoord is " + currYCoord);
 
-        String finalCoord = currXCoord + " " + currYCoord;
+        String finalCoord = currXCoord + delimiter + currYCoord;
 
         // If grade is NOT considered, append 0 into the final coord
         if (!AccidentParam.isGradingConcerned)
-            finalCoord += " 0";
+            finalCoord += delimiter + "0";
         return finalCoord;
     }
     

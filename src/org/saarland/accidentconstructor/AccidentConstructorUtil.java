@@ -24,6 +24,8 @@ public class AccidentConstructorUtil {
 
     private static String[] wordNumber = new String[]{"zero", "one", "two", "three", "four", "five", "six"};
 
+
+
     public static VehicleAttr[] findStrikerAndVictim(int actionWordIndex, VehicleAttr vehicle0, VehicleAttr vehicle1,
                                                         ArrayList<Integer> impactAtSteps) {
         VehicleAttr[] strikerAndVictim = new VehicleAttr[2];
@@ -42,6 +44,7 @@ public class AccidentConstructorUtil {
     public static VehicleAttr[] findStrikerAndVictim(VehicleAttr vehicle0, VehicleAttr vehicle1) {
         VehicleAttr[] strikerAndVictim = new VehicleAttr[2];
         ConsoleLogger.print('d',"Find Striker and Victim 2, hit* in vehicle0 at " + vehicle0.getActionList().indexOf("hit*"));
+        ConsoleLogger.print('d',"vehicle0 action " + vehicle0.getActionList().toString());
 
         String firstVehicleAction = vehicle0.getActionList().get(0);
         if (vehicle0.getActionList().indexOf("hit*") > -1
@@ -53,6 +56,32 @@ public class AccidentConstructorUtil {
             strikerAndVictim[0] = vehicle0;
             strikerAndVictim[1] = vehicle1;
         }
+
+        // If this a rear-end case, make sure that the striker has the xCoord before the victim
+
+        return strikerAndVictim;
+    }
+
+    // Find Striker victim based only on the action list
+    // If this a rear-end case, make sure that the striker has the xCoord before the victim
+    public static VehicleAttr[] findStrikerAndVictimForRearEnd(VehicleAttr vehicle0, VehicleAttr vehicle1, String delimiter) {
+        VehicleAttr[] strikerAndVictim = new VehicleAttr[2];
+//        if (accidentType.contains("rear-end") || accidentType.contains("rearend") || accidentType.contains("rear end"))
+//
+//        {
+            double v0XCoord = Double.parseDouble(vehicle0.getMovementPath().get(0).split(delimiter)[0]);
+            double v1XCoord = Double.parseDouble(vehicle1.getMovementPath().get(0).split(delimiter)[0]);
+            if (v0XCoord < v1XCoord)
+            {
+                strikerAndVictim[0] = vehicle0;
+                strikerAndVictim[1] = vehicle1;
+            }
+            else
+            {
+                strikerAndVictim[1] = vehicle0;
+                strikerAndVictim[0] = vehicle1;
+            }
+//        }
         return strikerAndVictim;
     }
 

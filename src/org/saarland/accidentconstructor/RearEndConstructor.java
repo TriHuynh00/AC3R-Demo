@@ -58,22 +58,20 @@ public class RearEndConstructor {
                 impactedVehiclesAtSteps.add(impactedVehicleInThisStep);
             }
         }
-
+        VehicleAttr[] strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictim(vehicleList.get(0), vehicleList.get(1));
         // Start from the first impact point, construct the movement of the actor based on the action
         for (int l = 0; l < impactedVehiclesAtSteps.size(); l++)
         {
-            ArrayList<VehicleAttr> impactedVehicles = impactedVehiclesAtSteps.get(l);
-            for (VehicleAttr veh : impactedVehicles) {
-                ConsoleLogger.print('d',"Veh ID in impacted at l=" + l + " VID: " + veh.getVehicleId());
-            }
+//            ArrayList<VehicleAttr> impactedVehicles = impactedVehiclesAtSteps.get(l);
+//            for (VehicleAttr veh : impactedVehicles) {
+//                ConsoleLogger.print('d',"Veh ID in impacted at l=" + l + " VID: " + veh.getVehicleId());
+//            }
             // Check if 2 cars can hit GIVEN REAR END COLLISION
 
             boolean stableMovement = false;
 
 
-            if (impactedVehicles.size() == 2) {
-                VehicleAttr vehicle0 = impactedVehicles.get(0);
-                VehicleAttr vehicle1 = impactedVehicles.get(1);
+            if (vehicleList.size() == 2) {
 
                 VehicleAttr strikerVehicle = null;
                 VehicleAttr victimVehicle = null;
@@ -83,19 +81,20 @@ public class RearEndConstructor {
                 int pushAwayDistance = 0;
                 // Check if this vehicle is a victim or striker
 
-                VehicleAttr[] strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictim(l, vehicle0, vehicle1, impactAtSteps);
+
+                ConsoleLogger.print('d', "Striker is v" + strikerAndVictim[0].getVehicleId());
                 strikerVehicle = strikerAndVictim[0];
                 victimVehicle = strikerAndVictim[1];
 
                 int estimateSpeedOfStriker = -1000;
                 int estimateSpeedOfVictim = -1000;
 
-                estimateSpeedOfStriker = Integer.parseInt(parser.findExactConcept(vehicle0.getActionList()
+                estimateSpeedOfStriker = Integer.parseInt(parser.findExactConcept(strikerVehicle.getActionList()
                         .get(impactAtSteps.get(0) - 1))
                         .getDataProperties()
                         .get("velocity"));
 
-                estimateSpeedOfVictim = Integer.parseInt(parser.findExactConcept(vehicle1.getActionList()
+                estimateSpeedOfVictim = Integer.parseInt(parser.findExactConcept(victimVehicle.getActionList()
                         .get(impactAtSteps.get(0) - 1))
                         .getDataProperties()
                         .get("velocity"));
@@ -111,8 +110,8 @@ public class RearEndConstructor {
                     // TODO: NEED A RANDOM GENERATOR to determine velocity
                     strikerVehicle.setVelocity(strikerVehicle.getVelocity() + 10);
                     // Construct corrdination
-                    for (int i = 0; i < impactedVehicles.size(); i++) {
-                        int vehicleVelocity = impactedVehicles.get(i).getVelocity();
+                    for (int i = 0; i < vehicleList.size(); i++) {
+                        int vehicleVelocity = vehicleList.get(i).getVelocity();
                         ArrayList<String> vehicleCoord = new ArrayList<String>();
                         if (vehicleVelocity >= 0 && vehicleVelocity != 1000) {
                             // Construct the path from the first step to the current impact point
@@ -128,7 +127,7 @@ public class RearEndConstructor {
                             }
 
                         }
-                        constructedCoordVeh.set(impactedVehicles.get(i).getVehicleId() - 1, vehicleCoord);
+                        constructedCoordVeh.set(vehicleList.get(i).getVehicleId() - 1, vehicleCoord);
                     }
 
                 }
@@ -223,168 +222,168 @@ public class RearEndConstructor {
                         }
                     } // End construct crash points before 1st impact
 
-                    int actionListSize = victimVehicle.getActionList().size();
-                    // TODO: Construct after crash movements
-                    for (VehicleAttr processedVehicle : strikerAndVictim) {
-
-                        if (impactAtSteps.get(0) + 1 < actionListSize) {
-                            for (int actionListIndex = impactAtSteps.get(0) + 1; actionListIndex < actionListSize; actionListIndex++) {
-                                // If this is not a hit, get the velocity of the next word * (len - i)
-                                String actionAtI = processedVehicle.getActionList().get(actionListIndex);
-
-                                if (!actionAtI.startsWith("hit") && !actionAtI.equalsIgnoreCase("endHit")) {
-
-                                    int estimateActionVelocity = Integer.parseInt(parser.findExactConcept(actionAtI)
-                                            .getDataProperties().get("velocity"));
-
-                                    if (estimateActionVelocity > 0) {
-                                        if (processedVehicle.equals(strikerVehicle))
-                                        {
-                                            ConsoleLogger.print('d',"Set after impact coord for Striker " + estimateActionVelocity);
-                                            vehicleCoordStriker.add( (estimateActionVelocity * (actionListSize - actionListIndex)) + "");
-                                        }
-                                        else if (processedVehicle.equals(victimVehicle))
-                                        {
-                                            ConsoleLogger.print('d',"Set after impact coord for Victim " + estimateActionVelocity);
-                                            vehicleCoordVictim.add( (estimateActionVelocity * (actionListSize - actionListIndex)) + "");
-                                        }
-                                        else
-                                        {
-                                            ConsoleLogger.print('d',"CANNOT Set after impact coord for Victim or Striker at i = " + actionListIndex + " vehID " + (processedVehicle.getVehicleId()  - 1));
-                                        }
-                                    }
-                                    else if (estimateActionVelocity == 0)
-                                    {
-                                        if (processedVehicle.equals(strikerVehicle))
-                                        {
-                                            ConsoleLogger.print('d',"Set after impact coord for Striker stop " + estimateActionVelocity);
-                                            vehicleCoordStriker.add( vehicleCoordStriker.get(vehicleCoordStriker.size() - 1) + "");
-                                        }
+//                    int actionListSize = victimVehicle.getActionList().size();
+//                    // TODO: Construct after crash movements
+//                    for (VehicleAttr processedVehicle : strikerAndVictim) {
+//
+//                        if (impactAtSteps.get(0) + 1 < actionListSize) {
+//                            for (int actionListIndex = impactAtSteps.get(0) + 1; actionListIndex < actionListSize; actionListIndex++) {
+//                                // If this is not a hit, get the velocity of the next word * (len - i)
+//                                String actionAtI = processedVehicle.getActionList().get(actionListIndex);
+//
+//                                if (!actionAtI.startsWith("hit") && !actionAtI.equalsIgnoreCase("endHit")) {
+//
+//                                    int estimateActionVelocity = Integer.parseInt(parser.findExactConcept(actionAtI)
+//                                            .getDataProperties().get("velocity"));
+//
+//                                    if (estimateActionVelocity > 0) {
+//                                        if (processedVehicle.equals(strikerVehicle))
+//                                        {
+//                                            ConsoleLogger.print('d',"Set after impact coord for Striker " + estimateActionVelocity);
+//                                            vehicleCoordStriker.add( (estimateActionVelocity * (actionListSize - actionListIndex)) + "");
+//                                        }
 //                                        else if (processedVehicle.equals(victimVehicle))
 //                                        {
-//                                            ConsoleLogger.print('d',"Set after impact coord for Victim stop " + estimateActionVelocity);
-//                                            vehicleCoordVictim.add( pushAwayDistance + "");
+//                                            ConsoleLogger.print('d',"Set after impact coord for Victim " + estimateActionVelocity);
+//                                            vehicleCoordVictim.add( (estimateActionVelocity * (actionListSize - actionListIndex)) + "");
 //                                        }
-                                    }
-                                } // End process non-impact aftermath action
-                                else if (actionAtI.equals("hit"))
-                                {
-                                    // Add the estimate distance after impact
-                                    ConsoleLogger.print('d',"PushAwayDistance "  + pushAwayDistance);
-
-                                    int nextStepEstimateSpeed = -1000;
-                                    if (actionListIndex + 1 < actionListSize)
-                                    {
-                                        nextStepEstimateSpeed = Integer.parseInt(parser.findExactConcept(
-                                                strikerVehicle.getActionList()
-                                                        .get(actionListIndex + 1)).getDataProperties().get("velocity"));
-                                    }
-
-//                                    if (pushAwayDistance > 0
-//                                            && (nextStepEstimateSpeed == 1000 || nextStepEstimateSpeed == -1000)
-//                                            && vehicleCoordStriker.size() < actionListSize)
-//                                    {
-//                                        vehicleCoordStriker.add((pushAwayDistance * (actionListSize - actionListIndex)) + "");
-//                                    }
-                                }
-                                else if (actionAtI.equals("hit*"))
-                                {
-                                    ConsoleLogger.print('d',"VehCoordStriker size " + vehicleCoordStriker.size());
-                                    ConsoleLogger.print('d',"VehCoordVictim size " + vehicleCoordVictim.size());
-                                    if (pushAwayDistance > 0)
-                                    {
-//                                        if (vehicleCoordVictim.size() == 2) // Fresh coordination
+//                                        else
 //                                        {
-
-                                            if (vehicleCoordStriker.size() - vehicleCoordVictim.size() > 0)
-                                            {
-                                                int diffSizeStrikerVictim = Math.abs(vehicleCoordStriker.size() - vehicleCoordVictim.size());
-                                                for (int c = 0; c < diffSizeStrikerVictim; c++)
-                                                {
-                                                    ConsoleLogger.print('d',"Add 0 to victim coord with c = " + c);
-                                                    vehicleCoordVictim.add("0");
-                                                }
-                                            }
-                                            else if (vehicleCoordStriker.size() - vehicleCoordVictim.size() < 0)
-                                            {
-                                                int diffSizeStrikerVictim = Math.abs(vehicleCoordStriker.size() - vehicleCoordVictim.size());
-                                                for (int c = 0; c < diffSizeStrikerVictim ; c++)
-                                                {
-                                                    vehicleCoordStriker.add("0");
-                                                }
-                                            }
-
-                                            // Justify push away distance
-                                            //int modifiedPushAwayDistance = (int)(pushAwayDistance * (actionListSize - actionListIndex) * 0.75);
-                                            //vehicleCoordVictim.set(actionListIndex, modifiedPushAwayDistance + "");
-                                            int estimateSpeedVictim = Integer.parseInt(parser.findExactConcept(victimVehicle.getActionList().get(actionListIndex - 1))
-                                                    .getDataProperties()
-                                                    .get("velocity"));
-
-                                            // Detect Deceleration
-                                            if (estimateSpeedVictim != -1 && estimateSpeedVictim < 0) {
-                                                estimateSpeedVictim = Integer.parseInt(parser.findExactConcept(victimVehicle.getActionList().get(actionListIndex - 2))
-                                                        .getDataProperties()
-                                                        .get("velocity")) - estimateSpeedVictim;
-                                            }
-
-                                            // Construct coord at crash point
-//                                            if (Integer.parseInt(vehicleCoordStriker.get(actionListIndex)) > modifiedPushAwayDistance)
-//                                            {
-//                                                vehicleCoordStriker.set(actionListIndex, modifiedPushAwayDistance + "");
-//                                            }
-
-                                            // Construct coord for victim at from current to first crash points
-                                            for (int c = actionListIndex - 1; c >= impactAtSteps.get(0); c--)
-                                            {
-                                                int strikerCoord = Integer.parseInt(vehicleCoordStriker.get(c));
-                                                int victimCoord = Integer.parseInt(vehicleCoordVictim.get(c));
-                                                ConsoleLogger.print('d',"Before construct coord: strikerCoord = " + strikerCoord
-                                                        + " victimCoord = " + victimCoord );
-                                                if (strikerCoord >= victimCoord)
-                                                {
-                                                    victimCoord = strikerCoord + AccidentParam.DISTANCE_BETWEEN_CARS;
-                                                    vehicleCoordVictim.set(c, victimCoord + "");
-                                                }
-                                                ConsoleLogger.print('d',String.format("Construct coord for crash steps " +
-                                                                "at c = %d with victimCoord = %s; strikerCoord = %d\n",
-                                                        c, victimCoord, strikerCoord));
-                                            }
-
-                                            // Construct ccord for victim before the first crash
-                                            for (int c = impactAtSteps.get(0) - 1; c >= 0; c--)
-                                            {
-                                                int strikerCoord = Integer.parseInt(vehicleCoordStriker.get(c));
-                                                int victimCoordInThisStep = Integer.parseInt(vehicleCoordVictim.get(c)) - estimateSpeedVictim * (impactAtSteps.get(0) - c);
-                                                if (victimCoordInThisStep <= strikerCoord)
-                                                {
-                                                    victimCoordInThisStep = strikerCoord + AccidentParam.DISTANCE_BETWEEN_CARS;
-                                                }
-                                                ConsoleLogger.print('d',String.format("Construct coord before 1st crash at " +
-                                                        "c = %d with victimCoord = %s\n", c, victimCoordInThisStep));
-                                                vehicleCoordVictim.set(c, victimCoordInThisStep + "");
-                                            }
+//                                            ConsoleLogger.print('d',"CANNOT Set after impact coord for Victim or Striker at i = " + actionListIndex + " vehID " + (processedVehicle.getVehicleId()  - 1));
 //                                        }
-                                    }
-                                }
-                                // If this is a rest action, set the vehicle to the previous positiont
-//                                else if (actionAtI.equals("endHit"))
-//                                {
-//                                    if (processedVehicle.equals(strikerVehicle))
-//                                    {
-//                                        vehicleCoordStriker.add( vehicleCoordStriker.get(vehicleCoordStriker.size() - 1));
 //                                    }
-//                                    else if (processedVehicle.equals(victimVehicle))
+//                                    else if (estimateActionVelocity == 0)
 //                                    {
-//                                        vehicleCoordVictim.add( vehicleCoordVictim.get(vehicleCoordVictim.size() - 1));
+//                                        if (processedVehicle.equals(strikerVehicle))
+//                                        {
+//                                            ConsoleLogger.print('d',"Set after impact coord for Striker stop " + estimateActionVelocity);
+//                                            vehicleCoordStriker.add( vehicleCoordStriker.get(vehicleCoordStriker.size() - 1) + "");
+//                                        }
+////                                        else if (processedVehicle.equals(victimVehicle))
+////                                        {
+////                                            ConsoleLogger.print('d',"Set after impact coord for Victim stop " + estimateActionVelocity);
+////                                            vehicleCoordVictim.add( pushAwayDistance + "");
+////                                        }
+//                                    }
+//                                } // End process non-impact aftermath action
+//                                else if (actionAtI.equals("hit"))
+//                                {
+//                                    // Add the estimate distance after impact
+//                                    ConsoleLogger.print('d',"PushAwayDistance "  + pushAwayDistance);
+//
+//                                    int nextStepEstimateSpeed = -1000;
+//                                    if (actionListIndex + 1 < actionListSize)
+//                                    {
+//                                        nextStepEstimateSpeed = Integer.parseInt(parser.findExactConcept(
+//                                                strikerVehicle.getActionList()
+//                                                        .get(actionListIndex + 1)).getDataProperties().get("velocity"));
+//                                    }
+//
+////                                    if (pushAwayDistance > 0
+////                                            && (nextStepEstimateSpeed == 1000 || nextStepEstimateSpeed == -1000)
+////                                            && vehicleCoordStriker.size() < actionListSize)
+////                                    {
+////                                        vehicleCoordStriker.add((pushAwayDistance * (actionListSize - actionListIndex)) + "");
+////                                    }
+//                                }
+//                                else if (actionAtI.equals("hit*"))
+//                                {
+//                                    ConsoleLogger.print('d',"VehCoordStriker size " + vehicleCoordStriker.size());
+//                                    ConsoleLogger.print('d',"VehCoordVictim size " + vehicleCoordVictim.size());
+//                                    if (pushAwayDistance > 0)
+//                                    {
+////                                        if (vehicleCoordVictim.size() == 2) // Fresh coordination
+////                                        {
+//
+//                                            if (vehicleCoordStriker.size() - vehicleCoordVictim.size() > 0)
+//                                            {
+//                                                int diffSizeStrikerVictim = Math.abs(vehicleCoordStriker.size() - vehicleCoordVictim.size());
+//                                                for (int c = 0; c < diffSizeStrikerVictim; c++)
+//                                                {
+//                                                    ConsoleLogger.print('d',"Add 0 to victim coord with c = " + c);
+//                                                    vehicleCoordVictim.add("0");
+//                                                }
+//                                            }
+//                                            else if (vehicleCoordStriker.size() - vehicleCoordVictim.size() < 0)
+//                                            {
+//                                                int diffSizeStrikerVictim = Math.abs(vehicleCoordStriker.size() - vehicleCoordVictim.size());
+//                                                for (int c = 0; c < diffSizeStrikerVictim ; c++)
+//                                                {
+//                                                    vehicleCoordStriker.add("0");
+//                                                }
+//                                            }
+//
+//                                            // Justify push away distance
+//                                            //int modifiedPushAwayDistance = (int)(pushAwayDistance * (actionListSize - actionListIndex) * 0.75);
+//                                            //vehicleCoordVictim.set(actionListIndex, modifiedPushAwayDistance + "");
+//                                            int estimateSpeedVictim = Integer.parseInt(parser.findExactConcept(victimVehicle.getActionList().get(actionListIndex - 1))
+//                                                    .getDataProperties()
+//                                                    .get("velocity"));
+//
+//                                            // Detect Deceleration
+//                                            if (estimateSpeedVictim != -1 && estimateSpeedVictim < 0) {
+//                                                estimateSpeedVictim = Integer.parseInt(parser.findExactConcept(victimVehicle.getActionList().get(actionListIndex - 2))
+//                                                        .getDataProperties()
+//                                                        .get("velocity")) - estimateSpeedVictim;
+//                                            }
+//
+//                                            // Construct coord at crash point
+////                                            if (Integer.parseInt(vehicleCoordStriker.get(actionListIndex)) > modifiedPushAwayDistance)
+////                                            {
+////                                                vehicleCoordStriker.set(actionListIndex, modifiedPushAwayDistance + "");
+////                                            }
+//
+//                                            // Construct coord for victim at from current to first crash points
+//                                            for (int c = actionListIndex - 1; c >= impactAtSteps.get(0); c--)
+//                                            {
+//                                                int strikerCoord = Integer.parseInt(vehicleCoordStriker.get(c));
+//                                                int victimCoord = Integer.parseInt(vehicleCoordVictim.get(c));
+//                                                ConsoleLogger.print('d',"Before construct coord: strikerCoord = " + strikerCoord
+//                                                        + " victimCoord = " + victimCoord );
+//                                                if (strikerCoord >= victimCoord)
+//                                                {
+//                                                    victimCoord = strikerCoord + AccidentParam.DISTANCE_BETWEEN_CARS;
+//                                                    vehicleCoordVictim.set(c, victimCoord + "");
+//                                                }
+//                                                ConsoleLogger.print('d',String.format("Construct coord for crash steps " +
+//                                                                "at c = %d with victimCoord = %s; strikerCoord = %d\n",
+//                                                        c, victimCoord, strikerCoord));
+//                                            }
+//
+//                                            // Construct ccord for victim before the first crash
+//                                            for (int c = impactAtSteps.get(0) - 1; c >= 0; c--)
+//                                            {
+//                                                int strikerCoord = Integer.parseInt(vehicleCoordStriker.get(c));
+//                                                int victimCoordInThisStep = Integer.parseInt(vehicleCoordVictim.get(c)) - estimateSpeedVictim * (impactAtSteps.get(0) - c);
+//                                                if (victimCoordInThisStep <= strikerCoord)
+//                                                {
+//                                                    victimCoordInThisStep = strikerCoord + AccidentParam.DISTANCE_BETWEEN_CARS;
+//                                                }
+//                                                ConsoleLogger.print('d',String.format("Construct coord before 1st crash at " +
+//                                                        "c = %d with victimCoord = %s\n", c, victimCoordInThisStep));
+//                                                vehicleCoordVictim.set(c, victimCoordInThisStep + "");
+//                                            }
+////                                        }
 //                                    }
 //                                }
-                                ConsoleLogger.print('d',"Vehicle Coord Victim at i " + actionListIndex + " " + vehicleCoordVictim);
-                                ConsoleLogger.print('d',"Vehicle Coord Striker at i " + actionListIndex + " " + vehicleCoordStriker);
-                            } // End processing an impact step
-                        } // End checking if there is valid impact step to process
-
-                    } // End looping through striker and victim
+//                                // If this is a rest action, set the vehicle to the previous positiont
+////                                else if (actionAtI.equals("endHit"))
+////                                {
+////                                    if (processedVehicle.equals(strikerVehicle))
+////                                    {
+////                                        vehicleCoordStriker.add( vehicleCoordStriker.get(vehicleCoordStriker.size() - 1));
+////                                    }
+////                                    else if (processedVehicle.equals(victimVehicle))
+////                                    {
+////                                        vehicleCoordVictim.add( vehicleCoordVictim.get(vehicleCoordVictim.size() - 1));
+////                                    }
+////                                }
+//                                ConsoleLogger.print('d',"Vehicle Coord Victim at i " + actionListIndex + " " + vehicleCoordVictim);
+//                                ConsoleLogger.print('d',"Vehicle Coord Striker at i " + actionListIndex + " " + vehicleCoordStriker);
+//                            } // End processing an impact step
+//                        } // End checking if there is valid impact step to process
+//
+//                    } // End looping through striker and victim
 
                     constructedCoordVeh.set(victimVehicle.getVehicleId() - 1, vehicleCoordVictim);
 
@@ -469,16 +468,26 @@ public class RearEndConstructor {
                     vehicleCoord.set(i, vehicleCoord.get(i) + ":0");
                 ConsoleLogger.print('n',vehicleCoord.get(i) + " ");
             }
-            for (VehicleAttr suspectVehicle : vehicleList)
-            {
-                if (suspectVehicle.getVehicleId() - 1 == constructedCoordVeh.indexOf(vehicleCoord))
-                {
-                    suspectVehicle.setMovementPath(vehicleCoord);
-                    break;
-                }
-            }
+
 
             ConsoleLogger.print('d', "");
+        }
+
+        // Set the right coord for striker and victim i.e. the first coord of striker is behind the first coord of victim
+        double v0XCoord = Double.parseDouble(constructedCoordVeh.get(0).get(0).split(AccidentParam.defaultCoordDelimiter)[0]);
+        double v1XCoord = Double.parseDouble(constructedCoordVeh.get(1).get(0).split(AccidentParam.defaultCoordDelimiter)[0]);
+
+        // Striker sign
+
+        if (v0XCoord < v1XCoord)
+        {
+            strikerAndVictim[0].setMovementPath(constructedCoordVeh.get(0));
+            strikerAndVictim[1].setMovementPath(constructedCoordVeh.get(1));
+        }
+        else
+        {
+            strikerAndVictim[1].setMovementPath(constructedCoordVeh.get(0));
+            strikerAndVictim[0].setMovementPath(constructedCoordVeh.get(1));
         }
 
         for (VehicleAttr vehicleAttr1 : vehicleList) {

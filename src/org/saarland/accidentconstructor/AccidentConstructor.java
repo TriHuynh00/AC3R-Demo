@@ -306,6 +306,12 @@ public class AccidentConstructor {
 
                     // Construct the road, vehicle, and waypoints objects
                     String scenarioInfo = roadConstructor.constructRoadNodes(scenarioName);
+                    if (scenarioInfo.equals("fail"))
+                    {
+                        ConsoleLogger.print('d', "Fail to construct road due to same first coord");
+
+                        throw new Exception("Fail constructing road due to same first coord");
+                    }
 
                     // Construct environment props
                     EnvironmentConstructor environmentConstructor = new EnvironmentConstructor(accidentConstructor.testCase, ontologyHandler);
@@ -339,10 +345,21 @@ public class AccidentConstructor {
                     String scenarioTemplateFile = AccidentConstructorUtil.loadTemplateContent
                             (AccidentParam.scenarioJsonFilePath);
 
-                    VehicleAttr[] strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictim(
-                            accidentConstructor.vehicleList.get(0),
-                            accidentConstructor.vehicleList.get(1));
+                    VehicleAttr[] strikerAndVictim = new VehicleAttr[2];
 
+                    if (accidentConstructor.accidentType.contains("rear-end")
+                            || accidentConstructor.accidentType.contains("rearend")
+                            || accidentConstructor.accidentType.contains("rear end")) {
+                        strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictimForRearEnd(
+                                accidentConstructor.vehicleList.get(0),
+                                accidentConstructor.vehicleList.get(1), AccidentParam.beamngCoordDelimiter);
+                    }
+                    else
+                    {
+                        strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictim(
+                                accidentConstructor.vehicleList.get(0),
+                                accidentConstructor.vehicleList.get(1));
+                    }
                     scenarioTemplateFile = scenarioTemplateFile.replace("$name", scenarioName);
 
                     int strikerLaneNum = Integer.parseInt(
@@ -450,776 +467,770 @@ public class AccidentConstructor {
         String mainActorInSentence = "";
 
         for (String dependency : dependencyList) {
-            ConsoleLogger.print('d', "Analyze Accident Dependency " + dependency);
+            try {
+                ConsoleLogger.print('d', "Analyze Accident Dependency " + dependency);
 
-            // Looking at nsubj to find action of actor
-            if (dependency.startsWith("nsubj")) {
+                // Looking at nsubj to find action of actor
+                if (dependency.startsWith("nsubj")) {
 
-                // Get actor and action pair, then put it in ActionDescription
-                String[] actionAndActor = AccidentConstructorUtil.getWordPairFromDependency(dependency);
+                    // Get actor and action pair, then put it in ActionDescription
+                    String[] actionAndActor = AccidentConstructorUtil.getWordPairFromDependency(dependency);
 
-                ActionDescription actionDescription = new ActionDescription();
+                    ActionDescription actionDescription = new ActionDescription();
 
-                String action = AccidentConstructorUtil.getWordFromToken(actionAndActor[0]);
-                String actor = AccidentConstructorUtil.getWordFromToken(actionAndActor[1]);
-                ConsoleLogger.print('d', "First found Actor is " + actor);
-                // If the actor does not follow "vehicle\d" pattern, then try to find whether this actor is a vehicle
-                if (!actor.startsWith("vehicle") || !actor.startsWith("pedestrian")) {
-                    // Perhaps this is a vehicle name, find in the yearMakeModel value to determine the right vehicle
-                    boolean hiddenVehicleFound = false;
-                    for (VehicleAttr vehicleAttr : vehicleList) {
-                        if (vehicleAttr.getYearMakeModel().toLowerCase().contains(actor.toLowerCase())) {
-                            actor = "vehicle" + vehicleAttr.getVehicleId();
-                            hiddenVehicleFound = true;
-                            break;
+                    String action = AccidentConstructorUtil.getWordFromToken(actionAndActor[0]);
+                    String actor = AccidentConstructorUtil.getWordFromToken(actionAndActor[1]);
+                    ConsoleLogger.print('d', "First found Actor is " + actor);
+                    // If the actor does not follow "vehicle\d" pattern, then try to find whether this actor is a vehicle
+                    if (!actor.startsWith("vehicle") || !actor.startsWith("pedestrian")) {
+                        // Perhaps this is a vehicle name, find in the yearMakeModel value to determine the right vehicle
+                        boolean hiddenVehicleFound = false;
+                        for (VehicleAttr vehicleAttr : vehicleList) {
+                            if (vehicleAttr.getYearMakeModel().toLowerCase().contains(actor.toLowerCase())) {
+                                actor = "vehicle" + vehicleAttr.getVehicleId();
+                                hiddenVehicleFound = true;
+                                break;
+                            }
                         }
-                    }
 
-                    // If not a vehicle name, // Find the real actor behind the subject
-                    if (!hiddenVehicleFound) {
-                        for (String actorDependency : dependencyList) {
-                            if (actorDependency.startsWith("nmod:of") && actorDependency.contains(actionAndActor[1])
-                                    && (actorDependency.contains("vehicle") || actorDependency.contains("pedestrian"))) {
-                                String[] actorWordPair = AccidentConstructorUtil.getWordPairFromDependency(actorDependency);
-                                if (actorWordPair[1].startsWith("vehicle")) {
-                                    actor = AccidentConstructorUtil.getWordFromToken(actorWordPair[1]);
-                                    break;
+                        // If not a vehicle name, // Find the real actor behind the subject
+                        if (!hiddenVehicleFound) {
+                            for (String actorDependency : dependencyList) {
+                                if (actorDependency.startsWith("nmod:of") && actorDependency.contains(actionAndActor[1])
+                                        && (actorDependency.contains("vehicle") || actorDependency.contains("pedestrian"))) {
+                                    String[] actorWordPair = AccidentConstructorUtil.getWordPairFromDependency(actorDependency);
+                                    if (actorWordPair[1].startsWith("vehicle")) {
+                                        actor = AccidentConstructorUtil.getWordFromToken(actorWordPair[1]);
+                                        break;
+                                    }
                                 }
                             }
-                        }
-                    } // End process not a vehicle name
-                }
-
-                // Only proceed this relationship if we have a valid actor, for now.
-                ConsoleLogger.print('d', "Actor is " + actor);
-                if (actor.startsWith("vehicle") || actor.startsWith("pedestrian")) {
-                    mainActorInSentence = actor;
-                    actionDescription.setSubject(actor);
-
-                    int actionWordIndex = AccidentConstructorUtil.getPositionFromToken(actionAndActor[0]);
-                    //int actionWordIndex = Integer.parseInt(actionAndActor[0].split("-")[1]);
-
-
-                    ConsoleLogger.print('d', "ActionWordIndex of " + actionAndActor[0] + " : " + actionWordIndex);
-
-                    ConsoleLogger.print('d', "TagWordList get " + (actionWordIndex - 1) + " : " + tagWordList.get(actionWordIndex - 1));
-
-                    // If the assumed action is not a verb, then find a verb from the connected dependencies
-                    if (!tagWordList.get(actionWordIndex - 1).split("/")[1].startsWith("VB")) {
-                        LinkedList<String> connectedDependencies = AccidentConstructorUtil.findConnectedDependencies(
-                                dependencyList,
-                                tagWordList,
-                                actionAndActor[0],
-                                dependency,
-                                1);
-                        ConsoleLogger.print('d', "Connected Dependencies: ");
-                        for (String connectedDependency : connectedDependencies) {
-                            ConsoleLogger.print('d', connectedDependencies);
-
-                            // Check if the second word is not the assumed action
-                            String[] wordPair = AccidentConstructorUtil.getWordPairFromDependency(connectedDependency);
-
-                            if (!wordPair[1].equalsIgnoreCase(actionAndActor[0])) {
-                                action = wordPair[1].split("-")[0];
-                            }
-
-                            // Try to see if we can infer direction from misinterpreted action
-                            String direction = AccidentConstructorUtil.getWordFromToken(actionAndActor[0]);
-                            ConsoleLogger.print('d', "direction " + direction);
-                            ConsoleLogger.print('d', "Direction concept " + parser.findExactConcept(direction));
-
-                            AccidentConcept directionConcept = parser.findExactConcept(direction);
-                            if (directionConcept != null && directionConcept.getConceptGroup().equals("vehicle_direction")) {
-                                VehicleAttr travellingVehicle = findVehicle(actor);
-                                if (travellingVehicle != null) {
-                                    assignDirectionToRoad(direction, travellingVehicle);
-//                                    travellingVehicle.setStandingStreet(rightDirectionStreet);
-
-                                } // End checking if the actor can be found
-                            } // End processing travelling direction
-                        } // End looping through indirect dependencies
-                        ConsoleLogger.print('d', "End Connected Dependencies: ");
+                        } // End process not a vehicle name
                     }
 
-                    String stemmedAction = stemmer.stem(action).trim();
+                    // Only proceed this relationship if we have a valid actor, for now.
+                    ConsoleLogger.print('d', "Actor is " + actor);
+                    if (actor.startsWith("vehicle") || actor.startsWith("pedestrian")) {
+                        mainActorInSentence = actor;
+                        actionDescription.setSubject(actor);
 
-                    ConsoleLogger.print('d', "Stem of " + action + " is " + stemmedAction);
+                        int actionWordIndex = AccidentConstructorUtil.getPositionFromToken(actionAndActor[0]);
+                        //int actionWordIndex = Integer.parseInt(actionAndActor[0].split("-")[1]);
 
-                    actionDescription.setVerb(stemmedAction);
 
-                    ConsoleLogger.print('d', "Find Concept of " + action + " is " + parser.isExactConceptExist(stemmedAction));
+                        ConsoleLogger.print('d', "ActionWordIndex of " + actionAndActor[0] + " : " + actionWordIndex);
 
-                    // If the action exists, find (possible adverb) and objects
-                    if (parser.isExactConceptExist(stemmedAction)) {
-                        //actionList.add(actionDescription);
+                        ConsoleLogger.print('d', "TagWordList get " + (actionWordIndex - 1) + " : " + tagWordList.get(actionWordIndex - 1));
 
-                        LinkedList<String> verbPropList = new LinkedList<String>();
+                        // If the assumed action is not a verb, then find a verb from the connected dependencies
+                        if (!tagWordList.get(actionWordIndex - 1).split("/")[1].startsWith("VB")) {
+                            LinkedList<String> connectedDependencies = AccidentConstructorUtil.findConnectedDependencies(
+                                    dependencyList,
+                                    tagWordList,
+                                    actionAndActor[0],
+                                    dependency,
+                                    1);
+                            ConsoleLogger.print('d', "Connected Dependencies: ");
+                            for (String connectedDependency : connectedDependencies) {
+                                ConsoleLogger.print('d', connectedDependencies);
 
-                        // If it is a travel action, find direction
-                        if (stemmedAction.equals("travel")) {
+                                // Check if the second word is not the assumed action
+                                String[] wordPair = AccidentConstructorUtil.getWordPairFromDependency(connectedDependency);
 
-                            // Find the lane number which this vehicle is travelling on
-                            VehicleAttr actorVehicleObj = findVehicle(actor);
-                            if (actorVehicleObj != null
-                                && actorVehicleObj.getTravelOnLaneNumber() == AccidentParam.RIGHTMOSTLANE) {
+                                if (!wordPair[1].equalsIgnoreCase(actionAndActor[0])) {
+                                    action = wordPair[1].split("-")[0];
+                                }
 
-                                String actConnectedWords = AccidentConstructorUtil.findAllConnectedWords(dependencyList, action, action, 0, 5);
+                                // Try to see if we can infer direction from misinterpreted action
+                                String direction = AccidentConstructorUtil.getWordFromToken(actionAndActor[0]);
+                                ConsoleLogger.print('d', "direction " + direction);
+                                ConsoleLogger.print('d', "Direction concept " + parser.findExactConcept(direction));
 
-                                ConsoleLogger.print('d', "Connected words of " + action + " is " + actConnectedWords);
+                                AccidentConcept directionConcept = parser.findExactConcept(direction);
+                                if (directionConcept != null && directionConcept.getConceptGroup().equals("vehicle_direction")) {
+                                    VehicleAttr travellingVehicle = findVehicle(actor);
+                                    if (travellingVehicle != null) {
+                                        assignDirectionToRoad(direction, travellingVehicle);
+//                                    travellingVehicle.setStandingStreet(rightDirectionStreet);
 
-                                actorVehicleObj.setTravelOnLaneNumber(
-                                        AccidentConstructorUtil.detectTravellingLane(actConnectedWords));
+                                    } // End checking if the actor can be found
+                                } // End processing travelling direction
+                            } // End looping through indirect dependencies
+                            ConsoleLogger.print('d', "End Connected Dependencies: ");
+                        }
 
-                                ConsoleLogger.print('d', "Travelling lane of vehicle " + actorVehicleObj.getVehicleId() + " is " +
-                                        actorVehicleObj.getTravelOnLaneNumber());
-                            }// End Finding Travelling lane
+                        String stemmedAction = stemmer.stem(action).trim();
 
-                            LinkedList<String> directionDependencies = AccidentConstructorUtil.findConnectedDependencies(dependencyList,
-                                    tagWordList, stemmedAction, "", 0);
+                        ConsoleLogger.print('d', "Stem of " + action + " is " + stemmedAction);
 
-                            for (String directionDependency : directionDependencies) {
+                        actionDescription.setVerb(stemmedAction);
 
-                                String[] directionWordPair = AccidentConstructorUtil.getWordPairFromDependency(directionDependency);
+                        ConsoleLogger.print('d', "Find Concept of " + action + " is " + parser.isExactConceptExist(stemmedAction));
 
-                                String word0 = AccidentConstructorUtil.getWordFromToken(directionWordPair[0]);
-                                String word1 = AccidentConstructorUtil.getWordFromToken(directionWordPair[1]);
+                        // If the action exists, find (possible adverb) and objects
+                        if (parser.isExactConceptExist(stemmedAction)) {
+                            //actionList.add(actionDescription);
 
-                                ConsoleLogger.print('d', "Direction dependency " + directionDependency + " word0 " + word0 + " word1 " + word1);
+                            LinkedList<String> verbPropList = new LinkedList<String>();
 
-                                AccidentConcept word0Concept = parser.findExactConcept(stemmer.stem(word0));
-                                AccidentConcept word1Concept = parser.findExactConcept(stemmer.stem(word1));
+                            // If it is a travel action, find direction
+                            if (stemmedAction.equals("travel")) {
 
-                                // Check if the dependency contains moving direction
-                                if (word0Concept != null && word1Concept != null) {
-                                    String directionWord = "";
-                                    // Find the dependency
-                                    if (word0Concept.getConceptGroup().equals("vehicle_direction")) {
-                                        directionWord = word0;
-                                    } else if (word1Concept.getConceptGroup().equals("vehicle_direction")) {
-                                        directionWord = word1;
-                                    }
-                                    ConsoleLogger.print('d', "Found direction word attached to travel " + directionWord);
+                                // Find the lane number which this vehicle is travelling on
+                                VehicleAttr actorVehicleObj = findVehicle(actor);
+                                if (actorVehicleObj != null
+                                        && actorVehicleObj.getTravelOnLaneNumber() == AccidentParam.RIGHTMOSTLANE) {
 
-                                    ConsoleLogger.print('d', "Actor is " + actor);
+                                    String actConnectedWords = AccidentConstructorUtil.findAllConnectedWords(dependencyList, action, action, 0, 5);
 
-                                    // If the actor contains vehicle number, set the travelling action to that vehicle
-                                    if (actor.matches("vehicle\\d") && !directionWord.equals("")) {
-                                        VehicleAttr vehicleRef = findVehicle(actor.replace("vehicle", ""));
+                                    ConsoleLogger.print('d', "Connected words of " + action + " is " + actConnectedWords);
 
-                                        String direction = AccidentConstructorUtil
-                                                .convertDirectionWordToDirectionLetter(directionWord);
-                                        vehicleRef.setTravellingDirection(direction);
-                                        // Set standing street based on direction
+                                    actorVehicleObj.setTravelOnLaneNumber(
+                                            AccidentConstructorUtil.detectTravellingLane(actConnectedWords));
 
-                                        // If there is only 1 street found, assign the direction of the vehicle to the
-                                        // road, if the street has no specified direction
-                                        if (testCase.getStreetList().size() == 1) {
-                                            Street onlyStreet = testCase.getStreetList().get(0);
+                                    ConsoleLogger.print('d', "Travelling lane of vehicle " + actorVehicleObj.getVehicleId() + " is " +
+                                            actorVehicleObj.getTravelOnLaneNumber());
+                                }// End Finding Travelling lane
 
-                                            if (onlyStreet.getStreetPropertyValue("road_navigation").equals("")) {
-                                                onlyStreet.putValToKey("road_navigation", direction);
-                                                vehicleRef.setStandingStreet(onlyStreet);
-                                            }
+                                LinkedList<String> directionDependencies = AccidentConstructorUtil.findConnectedDependencies(dependencyList,
+                                        tagWordList, stemmedAction, "", 0);
+
+                                for (String directionDependency : directionDependencies) {
+
+                                    String[] directionWordPair = AccidentConstructorUtil.getWordPairFromDependency(directionDependency);
+
+                                    String word0 = AccidentConstructorUtil.getWordFromToken(directionWordPair[0]);
+                                    String word1 = AccidentConstructorUtil.getWordFromToken(directionWordPair[1]);
+
+                                    ConsoleLogger.print('d', "Direction dependency " + directionDependency + " word0 " + word0 + " word1 " + word1);
+
+                                    AccidentConcept word0Concept = parser.findExactConcept(stemmer.stem(word0));
+                                    AccidentConcept word1Concept = parser.findExactConcept(stemmer.stem(word1));
+
+                                    // Check if the dependency contains moving direction
+                                    if (word0Concept != null && word1Concept != null) {
+                                        String directionWord = "";
+                                        // Find the dependency
+                                        if (word0Concept.getConceptGroup().equals("vehicle_direction")) {
+                                            directionWord = word0;
+                                        } else if (word1Concept.getConceptGroup().equals("vehicle_direction")) {
+                                            directionWord = word1;
                                         }
+                                        ConsoleLogger.print('d', "Found direction word attached to travel " + directionWord);
 
-                                        // Else, loop through the road and hopefully we got the right road assigned to
-                                        // the right car in the end
-                                        else {
-                                            for (Street street : testCase.getStreetList()) {
-                                                if (street.getStreetPropertyValue("road_navigation").equals(direction)) {
-                                                    vehicleRef.setStandingStreet(street);
-                                                    break;
+                                        ConsoleLogger.print('d', "Actor is " + actor);
+
+                                        // If the actor contains vehicle number, set the travelling action to that vehicle
+                                        if (actor.matches("vehicle\\d") && !directionWord.equals("")) {
+                                            VehicleAttr vehicleRef = findVehicle(actor.replace("vehicle", ""));
+
+                                            String direction = AccidentConstructorUtil
+                                                    .convertDirectionWordToDirectionLetter(directionWord);
+                                            vehicleRef.setTravellingDirection(direction);
+                                            // Set standing street based on direction
+
+                                            // If there is only 1 street found, assign the direction of the vehicle to the
+                                            // road, if the street has no specified direction
+                                            if (testCase.getStreetList().size() == 1) {
+                                                Street onlyStreet = testCase.getStreetList().get(0);
+
+                                                if (onlyStreet.getStreetPropertyValue("road_navigation").equals("")) {
+                                                    onlyStreet.putValToKey("road_navigation", direction);
+                                                    vehicleRef.setStandingStreet(onlyStreet);
                                                 }
                                             }
-                                        }
 
-                                    } // End assign direction to actor
-                                } // End checking if both concepts are null or not
-
-                            } // End looping through the direction dependency
-
-                        }
-                        // Processing direction + "bound" travel word
-                        else if (stemmedAction.matches("\\w+bound")) {
-                            ConsoleLogger.print('d', "Processing [direction]bound travel action " + stemmedAction);
-                            // If the actor contains vehicle number, set the travelling action to that vehicle
-                            if (actor.matches("vehicle\\d") && !stemmedAction.equals("")) {
-                                VehicleAttr vehicleRef = findVehicle(actor);
-                                assignDirectionToRoad(stemmedAction, vehicleRef);
-                            }
-                        }
-
-                        // Process impact action, attempt to infer the damaged side of involved vehicle
-                        else {
-                            AccidentConcept actionConcept = parser.findExactConcept(stemmedAction);
-                            // Check if action is a vehicle action
-                            if (actionConcept != null && actionConcept.getConceptGroup().equals("vehicle_action"))
-                            {
-                                HashMap<String, String> actionDataProp = actionConcept.getDataProperties();
-                                // Check if the action is a collision action
-                                if (actionDataProp.get("is_collision_verb").equalsIgnoreCase("true"))
-                                {
-
-                                    // Find the vehicle name, attempt to find the damaged sidde
-                                    if (actor.matches("vehicle\\d+") ) {
-                                        String wordChain = AccidentConstructorUtil.findAllConnectedWords
-                                                (dependencyList, actor, actor, 0, 2);
-
-                                        for (String elem : wordChain.split(","))
-                                        {
-                                            AccidentConcept elemConcept = ontoParser.findExactConcept(AccidentConstructorUtil.getWordFromToken(elem));
-
-                                            if (elemConcept != null && elemConcept.getConceptGroup().equals("vehicle_impact_side"))
-                                            {
-                                                String finalVictimDmgSide = damagedComponentAnalyzer.findSideOfCrashedComponents(
-                                                        dependencyList, elem, actor, tagWordList);
-
-                                                ConsoleLogger.print('d', "Final victim damaged side in nsubjpass " + finalVictimDmgSide);
-                                            }
-                                        }
-
-                                    }
-                                    else  {
-                                        // Check if this is a vehicle impact side
-                                        AccidentConcept actorConcept = parser.findExactConcept(actor);
-                                        if (actorConcept != null &&
-                                            actorConcept.getConceptGroup().equalsIgnoreCase("vehicle_impact_side"))
-                                        {
-                                            ConsoleLogger.print('d', "In subjpass known actor damaged side " + actor);
-                                        }
-
-                                    }
-                                } // end checking action is a collision verb
-                            }
-                        }
-
-                        // Find dependencies that contain the verb
-                        for (String dependencyOfAction : dependencyList) {
-
-                            // If the supposed action is not an action, replace with an action
-                            if (dependencyOfAction.contains(actionAndActor[0])) {
-                                // Skip the same nsub dependency
-                                if (dependencyOfAction.equalsIgnoreCase(dependency)) {
-                                    continue;
-                                } else // Process the dependency
-                                {
-
-                                    String[] wordPair = AccidentConstructorUtil.getWordPairFromDependency(dependencyOfAction);
-                                    String relatedWordWithIndex = wordPair[1].trim();
-                                    // If the first word in the pair is not the action, set it as related word
-                                    if (wordPair[1].split("-")[0].equalsIgnoreCase(action)) {
-                                        relatedWordWithIndex = wordPair[0];
-                                    }
-
-                                    String relatedWord = relatedWordWithIndex.split("-")[0];
-                                    ConsoleLogger.print('d', "Related Word " + relatedWord);
-
-                                    AccidentConcept relatedWordConcept = ontoParser.findExactConcept(relatedWord);
-
-                                    // Attempt to detect the side of the parking action
-                                    if (stemmedAction.equals("park")) {
-                                        ConsoleLogger.print('d', "Found park action ");
-                                        // Find from related word the park location (left or right of the road)
-                                        LinkedList<String> relatedWordDependencies =
-                                                AccidentConstructorUtil.findConnectedDependencies(dependencyList,
-                                                        tagWordList, relatedWordWithIndex, dependencyOfAction, 0);
-
-                                        VehicleAttr actingVehicle = findVehicle(actor);
-
-                                        // If the related word is a pavement type, record the data
-                                        if (relatedWordConcept != null &&
-                                                relatedWordConcept.getConceptGroup().equals("pavement"))
-                                        {
-                                            ConsoleLogger.print('d', "Found pavement type " + relatedWord);
-
-                                            if (actingVehicle.getStandingStreet() != null)
-                                            {
-                                                actingVehicle.getStandingStreet().putValToKey("pavement_type", relatedWord);
-                                            }
-                                            // If there is only 1 road, assign the pavement type to that road
-                                            else if (testCase.getStreetList().size() == 1)
-                                            {
-                                                testCase.getStreetList().get(0).putValToKey("pavement_type", relatedWord);
-                                            }
-                                        }
-                                        // Find the word "left" or "right"
-                                        for (String relatedWordDependency : relatedWordDependencies) {
-                                            String[] relatedWordDepWordPair =
-                                                    AccidentConstructorUtil.getWordPairFromDependency(relatedWordDependency);
-
-                                            String word1 = AccidentConstructorUtil.getWordFromToken(relatedWordDepWordPair[0]);
-                                            String word2 = AccidentConstructorUtil.getWordFromToken(relatedWordDepWordPair[1]);
-
-                                            if (word1.equals("left") || word2.equals("left")) {
-                                                actingVehicle.setStandingRoadSide("left");
-                                            } else if (word1.equals("right") || word2.equals("right")) {
-                                                actingVehicle.setStandingRoadSide("right");
-                                            }
-
-                                            ConsoleLogger.print('d', "Determined standing road side: " + actingVehicle.getStandingRoadSide());
-
-                                        }
-
-
-                                    } // End analyzing park action
-
-                                    // Detect travelling distance
-                                    if (relatedWord.matches("\\d*m")) {
-                                        verbPropList.add(relatedWord);
-                                        ConsoleLogger.print('d', "Found traveling distance = " + relatedWord);
-                                    }
-
-                                    // Scan at most three times
-                                    if (parser.isExactConceptExist(relatedWord)) {
-                                        if (!verbPropList.contains(relatedWordWithIndex)) {
-                                            verbPropList.add(relatedWordWithIndex);
-                                        }
-                                        for (String dependencyOfRelatedWord : dependencyList) {
-
-                                            if (dependencyOfRelatedWord.equalsIgnoreCase(dependencyOfAction) ||
-                                                    dependencyOfRelatedWord.equalsIgnoreCase(dependency)) {
-                                                continue;
-                                            }
-
-                                            if (dependencyOfRelatedWord.contains(relatedWordWithIndex)) {
-
-                                                String[] wordPairOfRelatedWord = AccidentConstructorUtil.getWordPairFromDependency(dependencyOfRelatedWord);
-                                                //wordPairOfRelatedWord = wordPairOfRelatedWord[1].replace(")", "").split(",");
-                                                ConsoleLogger.print('d', "Word Pair Related Word 0 " + wordPairOfRelatedWord[0]);
-                                                ConsoleLogger.print('d', "Word Pair Related Word 1 " + wordPairOfRelatedWord[1].trim());
-                                                String otherWord = "";
-
-                                                // Find if there is a speed being attached to this action
-                                                if (relatedWordWithIndex.startsWith("mph") && dependencyOfRelatedWord.startsWith("nummod")) {
-                                                    // Extract mph speed
-                                                    String[] measureUnitAndVelocity = AccidentConstructorUtil.getWordPairFromDependency(dependencyOfRelatedWord);
-                                                    String travelingVelocity = AccidentConstructorUtil.getWordFromToken(measureUnitAndVelocity[1]);
-                                                    if (travelingVelocity.contains("-")) {
-                                                        travelingVelocity = travelingVelocity.split("-")[1];
+                                            // Else, loop through the road and hopefully we got the right road assigned to
+                                            // the right car in the end
+                                            else {
+                                                for (Street street : testCase.getStreetList()) {
+                                                    if (street.getStreetPropertyValue("road_navigation").equals(direction)) {
+                                                        vehicleRef.setStandingStreet(street);
+                                                        break;
                                                     }
-                                                    verbPropList.add("mph:" + travelingVelocity);
-                                                    ConsoleLogger.print('d', "Found traveling velocity = " + travelingVelocity + " mph");
-                                                    // if the actor is a vehicle, extract the ID and set the speed to the vehicle
-                                                    if (actor.matches("vehicle\\d*")) {
-                                                        int actorID = Integer.parseInt(actor.replace("vehicle", ""));
-                                                        VehicleAttr actorObject = AccidentConstructorUtil.findVehicleBasedOnId(actorID, vehicleList);
-                                                        actorObject.setVelocity(Integer.parseInt(travelingVelocity));
-                                                        ConsoleLogger.print('d', "Add speed " + travelingVelocity + " to vehicle#" + actorObject.getVehicleId());
-                                                    }
+                                                }
+                                            }
 
+                                        } // End assign direction to actor
+                                    } // End checking if both concepts are null or not
+
+                                } // End looping through the direction dependency
+
+                            }
+                            // Processing direction + "bound" travel word
+                            else if (stemmedAction.matches("\\w+bound")) {
+                                ConsoleLogger.print('d', "Processing [direction]bound travel action " + stemmedAction);
+                                // If the actor contains vehicle number, set the travelling action to that vehicle
+                                if (actor.matches("vehicle\\d") && !stemmedAction.equals("")) {
+                                    VehicleAttr vehicleRef = findVehicle(actor);
+                                    assignDirectionToRoad(stemmedAction, vehicleRef);
+                                }
+                            }
+
+                            // Process impact action, attempt to infer the damaged side of involved vehicle
+                            else {
+                                AccidentConcept actionConcept = parser.findExactConcept(stemmedAction);
+                                // Check if action is a vehicle action
+                                if (actionConcept != null && actionConcept.getConceptGroup().equals("vehicle_action")) {
+                                    HashMap<String, String> actionDataProp = actionConcept.getDataProperties();
+                                    // Check if the action is a collision action
+                                    if (actionDataProp.get("is_collision_verb").equalsIgnoreCase("true")) {
+
+                                        // Find the vehicle name, attempt to find the damaged sidde
+                                        if (actor.matches("vehicle\\d+")) {
+                                            String wordChain = AccidentConstructorUtil.findAllConnectedWords
+                                                    (dependencyList, actor, actor, 0, 2);
+
+                                            for (String elem : wordChain.split(",")) {
+                                                AccidentConcept elemConcept = ontoParser.findExactConcept(AccidentConstructorUtil.getWordFromToken(elem));
+
+                                                if (elemConcept != null && elemConcept.getConceptGroup().equals("vehicle_impact_side")) {
+                                                    String finalVictimDmgSide = damagedComponentAnalyzer.findSideOfCrashedComponents(
+                                                            dependencyList, elem, actor, tagWordList);
+
+                                                    ConsoleLogger.print('d', "Final victim damaged side in nsubjpass " + finalVictimDmgSide);
+                                                }
+                                            }
+
+                                        } else {
+                                            // Check if this is a vehicle impact side
+                                            AccidentConcept actorConcept = parser.findExactConcept(actor);
+                                            if (actorConcept != null &&
+                                                    actorConcept.getConceptGroup().equalsIgnoreCase("vehicle_impact_side")) {
+                                                ConsoleLogger.print('d', "In subjpass known actor damaged side " + actor);
+                                            }
+
+                                        }
+                                    } // end checking action is a collision verb
+                                }
+                            }
+
+                            // Find dependencies that contain the verb
+                            for (String dependencyOfAction : dependencyList) {
+
+                                // If the supposed action is not an action, replace with an action
+                                if (dependencyOfAction.contains(actionAndActor[0])) {
+                                    // Skip the same nsub dependency
+                                    if (dependencyOfAction.equalsIgnoreCase(dependency)) {
+                                        continue;
+                                    } else // Process the dependency
+                                    {
+
+                                        String[] wordPair = AccidentConstructorUtil.getWordPairFromDependency(dependencyOfAction);
+                                        String relatedWordWithIndex = wordPair[1].trim();
+                                        // If the first word in the pair is not the action, set it as related word
+                                        if (wordPair[1].split("-")[0].equalsIgnoreCase(action)) {
+                                            relatedWordWithIndex = wordPair[0];
+                                        }
+
+                                        String relatedWord = relatedWordWithIndex.split("-")[0];
+                                        ConsoleLogger.print('d', "Related Word " + relatedWord);
+
+                                        AccidentConcept relatedWordConcept = ontoParser.findExactConcept(relatedWord);
+
+                                        // Attempt to detect the side of the parking action
+                                        if (stemmedAction.equals("park")) {
+                                            ConsoleLogger.print('d', "Found park action ");
+                                            // Find from related word the park location (left or right of the road)
+                                            LinkedList<String> relatedWordDependencies =
+                                                    AccidentConstructorUtil.findConnectedDependencies(dependencyList,
+                                                            tagWordList, relatedWordWithIndex, dependencyOfAction, 0);
+
+                                            VehicleAttr actingVehicle = findVehicle(actor);
+
+                                            // If the related word is a pavement type, record the data
+                                            if (relatedWordConcept != null &&
+                                                    relatedWordConcept.getConceptGroup().equals("pavement")) {
+                                                ConsoleLogger.print('d', "Found pavement type " + relatedWord);
+
+                                                if (actingVehicle.getStandingStreet() != null) {
+                                                    actingVehicle.getStandingStreet().putValToKey("pavement_type", relatedWord);
+                                                }
+                                                // If there is only 1 road, assign the pavement type to that road
+                                                else if (testCase.getStreetList().size() == 1) {
+                                                    testCase.getStreetList().get(0).putValToKey("pavement_type", relatedWord);
+                                                }
+                                            }
+                                            // Find the word "left" or "right"
+                                            for (String relatedWordDependency : relatedWordDependencies) {
+                                                String[] relatedWordDepWordPair =
+                                                        AccidentConstructorUtil.getWordPairFromDependency(relatedWordDependency);
+
+                                                String word1 = AccidentConstructorUtil.getWordFromToken(relatedWordDepWordPair[0]);
+                                                String word2 = AccidentConstructorUtil.getWordFromToken(relatedWordDepWordPair[1]);
+
+                                                if (word1.equals("left") || word2.equals("left")) {
+                                                    actingVehicle.setStandingRoadSide("left");
+                                                } else if (word1.equals("right") || word2.equals("right")) {
+                                                    actingVehicle.setStandingRoadSide("right");
                                                 }
 
-                                                // Find the otherWord
-                                                otherWord = AccidentConstructorUtil.getOtherWordInDep(wordPairOfRelatedWord[0], wordPairOfRelatedWord);
-                                                otherWord = AccidentConstructorUtil.getWordFromToken(otherWord);
+                                                ConsoleLogger.print('d', "Determined standing road side: " + actingVehicle.getStandingRoadSide());
+
+                                            }
+
+
+                                        } // End analyzing park action
+
+                                        // Detect travelling distance
+                                        if (relatedWord.matches("\\d*m")) {
+                                            verbPropList.add(relatedWord);
+                                            ConsoleLogger.print('d', "Found traveling distance = " + relatedWord);
+                                        }
+
+                                        // Scan at most three times
+                                        if (parser.isExactConceptExist(relatedWord)) {
+                                            if (!verbPropList.contains(relatedWordWithIndex)) {
+                                                verbPropList.add(relatedWordWithIndex);
+                                            }
+                                            for (String dependencyOfRelatedWord : dependencyList) {
+
+                                                if (dependencyOfRelatedWord.equalsIgnoreCase(dependencyOfAction) ||
+                                                        dependencyOfRelatedWord.equalsIgnoreCase(dependency)) {
+                                                    continue;
+                                                }
+
+                                                if (dependencyOfRelatedWord.contains(relatedWordWithIndex)) {
+
+                                                    String[] wordPairOfRelatedWord = AccidentConstructorUtil.getWordPairFromDependency(dependencyOfRelatedWord);
+                                                    //wordPairOfRelatedWord = wordPairOfRelatedWord[1].replace(")", "").split(",");
+                                                    ConsoleLogger.print('d', "Word Pair Related Word 0 " + wordPairOfRelatedWord[0]);
+                                                    ConsoleLogger.print('d', "Word Pair Related Word 1 " + wordPairOfRelatedWord[1].trim());
+                                                    String otherWord = "";
+
+                                                    // Find if there is a speed being attached to this action
+                                                    if (relatedWordWithIndex.startsWith("mph") && dependencyOfRelatedWord.startsWith("nummod")) {
+                                                        // Extract mph speed
+                                                        String[] measureUnitAndVelocity = AccidentConstructorUtil.getWordPairFromDependency(dependencyOfRelatedWord);
+                                                        String travelingVelocity = AccidentConstructorUtil.getWordFromToken(measureUnitAndVelocity[1]);
+                                                        if (travelingVelocity.contains("-")) {
+                                                            travelingVelocity = travelingVelocity.split("-")[1];
+                                                        }
+                                                        verbPropList.add("mph:" + travelingVelocity);
+                                                        ConsoleLogger.print('d', "Found traveling velocity = " + travelingVelocity + " mph");
+                                                        // if the actor is a vehicle, extract the ID and set the speed to the vehicle
+                                                        if (actor.matches("vehicle\\d*")) {
+                                                            int actorID = Integer.parseInt(actor.replace("vehicle", ""));
+                                                            VehicleAttr actorObject = AccidentConstructorUtil.findVehicleBasedOnId(actorID, vehicleList);
+                                                            actorObject.setVelocity(Integer.parseInt(travelingVelocity));
+                                                            ConsoleLogger.print('d', "Add speed " + travelingVelocity + " to vehicle#" + actorObject.getVehicleId());
+                                                        }
+
+                                                    }
+
+                                                    // Find the otherWord
+                                                    otherWord = AccidentConstructorUtil.getOtherWordInDep(wordPairOfRelatedWord[0], wordPairOfRelatedWord);
+                                                    otherWord = AccidentConstructorUtil.getWordFromToken(otherWord);
 //                                                if (wordPairOfRelatedWord[0].equalsIgnoreCase(relatedWordWithIndex)) {
 //                                                    otherWord = wordPairOfRelatedWord[1].trim();
 //                                                } else {
 //                                                    otherWord = wordPairOfRelatedWord[0];
 //                                                }
-                                                // TODO: May need to add pedestrian here
-                                                ConsoleLogger.print('d', "Other word is " + otherWord);
-                                                if (otherWord.startsWith("vehicle")) {
-                                                    for (VehicleAttr vehicleAttr : vehicleList) {
-                                                        String vehicleName = "vehicle" + vehicleAttr.getVehicleId();
-                                                        if (otherWord.split("-")[0].equalsIgnoreCase(vehicleName)) {
-                                                            ConsoleLogger.print('d', "Vehicle Name " + vehicleName);
-                                                            // If the Second word is the subject, append to the subject section
-                                                            if (vehicleName.equalsIgnoreCase(actionDescription.getSubject())) {
-                                                                actionDescription.setSubject(
-                                                                        actionDescription.getSubject()
-                                                                                + " " + relatedWordWithIndex);
-                                                            } else // Add the vehicle into obj list
-                                                            {
-                                                                verbPropList.add(vehicleName + "<>" + relatedWord);
-                                                                verbPropList.remove(relatedWordWithIndex);
+                                                    // TODO: May need to add pedestrian here
+                                                    ConsoleLogger.print('d', "Other word is " + otherWord);
+                                                    if (otherWord.startsWith("vehicle")) {
+                                                        for (VehicleAttr vehicleAttr : vehicleList) {
+                                                            String vehicleName = "vehicle" + vehicleAttr.getVehicleId();
+                                                            if (otherWord.split("-")[0].equalsIgnoreCase(vehicleName)) {
+                                                                ConsoleLogger.print('d', "Vehicle Name " + vehicleName);
+                                                                // If the Second word is the subject, append to the subject section
+                                                                if (vehicleName.equalsIgnoreCase(actionDescription.getSubject())) {
+                                                                    actionDescription.setSubject(
+                                                                            actionDescription.getSubject()
+                                                                                    + " " + relatedWordWithIndex);
+                                                                } else // Add the vehicle into obj list
+                                                                {
+                                                                    verbPropList.add(vehicleName + "<>" + relatedWord);
+                                                                    verbPropList.remove(relatedWordWithIndex);
+                                                                }
+                                                                break;
                                                             }
-                                                            break;
                                                         }
                                                     }
-                                                }
-                                                // Processing other filtering here
-                                                else if (parser.isExactConceptExist(otherWord)) {
-                                                    AccidentConcept conceptOfOtherWord = parser.findExactConcept(otherWord);
+                                                    // Processing other filtering here
+                                                    else if (parser.isExactConceptExist(otherWord)) {
+                                                        AccidentConcept conceptOfOtherWord = parser.findExactConcept(otherWord);
 
-                                                    // If this is a vehicle direction, infer the road the vehicle stands
-                                                    if (conceptOfOtherWord.getConceptGroup().equals("vehicle_direction")) {
-                                                        VehicleAttr travellingVehicle = findVehicle(actor);
+                                                        // If this is a vehicle direction, infer the road the vehicle stands
+                                                        if (conceptOfOtherWord.getConceptGroup().equals("vehicle_direction")) {
+                                                            VehicleAttr travellingVehicle = findVehicle(actor);
 
-                                                        if (travellingVehicle != null) {
-                                                            assignDirectionToRoad(otherWord, travellingVehicle);
-                                                        } // End checking if a vehicle is detected
-                                                    } // End checking vehicle direction
-                                                    else if (!otherWord.startsWith("mph")) {
-                                                        verbPropList.add(otherWord);
+                                                            if (travellingVehicle != null) {
+                                                                assignDirectionToRoad(otherWord, travellingVehicle);
+                                                            } // End checking if a vehicle is detected
+                                                        } // End checking vehicle direction
+                                                        else if (!otherWord.startsWith("mph")) {
+                                                            verbPropList.add(otherWord);
+                                                        }
+
                                                     }
+                                                } // End checking if this dependency contains the related word
+                                            } // End looping through dependencies of related word
 
-                                                }
-                                            } // End checking if this dependency contains the related word
-                                        } // End looping through dependencies of related word
+                                        } // End checking the relation of a word to a verb
+                                    } // End else of processing the depedencies
+                                } // End checking dependency has target action
+                            } // End for dependency loop
+                            actionDescription.setVerbProps(verbPropList);
+                            // If the vehicle ID is not specified, when there are less than 2 vehicles, assume vehicle1 is the striker
+                            if (actor.equalsIgnoreCase("vehicle")) {
+                                if (vehicleList.size() <= 2) {
+                                    actor = actor + "1";
+                                    actionDescription.setSubject(actor);
+                                }
+                            } else if (actor.equalsIgnoreCase("vehicles")) {
+                                if (vehicleList.size() <= 2) {
+                                    ConsoleLogger.print('d', "Handle Both Vehicles case");
 
-                                    } // End checking the relation of a word to a verb
-                                } // End else of processing the depedencies
-                            } // End checking dependency has target action
-                        } // End for dependency loop
-                        actionDescription.setVerbProps(verbPropList);
-                        // If the vehicle ID is not specified, when there are less than 2 vehicles, assume vehicle1 is the striker
-                        if (actor.equalsIgnoreCase("vehicle")) {
-                            if (vehicleList.size() <= 2) {
-                                actor = actor + "1";
-                                actionDescription.setSubject(actor);
+                                    actionDescription.setSubject("vehicle1 vehicle2");
+                                }
                             }
-                        } else if (actor.equalsIgnoreCase("vehicles")) {
-                            if (vehicleList.size() <= 2) {
-                                ConsoleLogger.print('d', "Handle Both Vehicles case");
+                            actionList.add(actionDescription);
 
-                                actionDescription.setSubject("vehicle1 vehicle2");
-                            }
-                        }
-                        actionList.add(actionDescription);
-
-                    } // End checking if the action exists in the Ontology
-                } // End Check if the actor is pedestrian or vehicle
-                else {
+                        } // End checking if the action exists in the Ontology
+                    } // End Check if the actor is pedestrian or vehicle
+                    else {
 //                    EnvironmentAnalyzer environmentAnalyzer = new EnvironmentAnalyzer();
-                    AccidentConcept actorConcept = parser.findExactConcept(actor);
-                    Street currentStreet = null;
+                        AccidentConcept actorConcept = parser.findExactConcept(actor);
+                        Street currentStreet = null;
 
-                    boolean roadTypeDetected = false;
-                    String roadWordInThisSentence = "";
+                        boolean roadTypeDetected = false;
+                        String roadWordInThisSentence = "";
 
-                    // Check the entire string to see if road word exists
-                    for (int k = 0; k < roadWords.length; k++) {
-                        String roadTypeStr = roadWords[k];
-                        if (tagWordList.contains(roadTypeStr)) {
-                            ConsoleLogger.print('d', "Found road_type word " + roadTypeStr);
-                            roadWordInThisSentence = roadTypeStr;
-                            roadTypeDetected = true;
-                            break;
-                        }
-                    }
-
-
-                    // Find the determinant of the road_type word, a = new street, the = last street
-                    if (roadTypeDetected) {
-                        for (int k = 0; k < tagWordList.size(); k++) {
-                            // Locate the road word
-                            if (tagWordList.get(k).startsWith(roadWordInThisSentence)) {
-                                // Find the determinant by scanning the last 7 words
-                                for (int s = k; s > k - 7 || s == 0; s--) {
-                                    String tagWord = tagWordList.get(s);
-                                    if (tagWord.endsWith("/DT")) {
-                                        if (tagWord.startsWith("a")) {
-                                            ConsoleLogger.print('d', "Find a DT ");
-                                            currentStreet = testCase.createNewStreet();
-                                        } else if (tagWord.startsWith("the")) {
-                                            // TODO: Need to find street property to determine the right road
-                                            currentStreet = testCase.getStreetList()
-                                                    .get(testCase.getStreetList().size());
-                                        }
-                                    }
-                                } // End finding DT
+                        // Check the entire string to see if road word exists
+                        for (int k = 0; k < roadWords.length; k++) {
+                            String roadTypeStr = roadWords[k];
+                            if (tagWordList.contains(roadTypeStr)) {
+                                ConsoleLogger.print('d', "Found road_type word " + roadTypeStr);
+                                roadWordInThisSentence = roadTypeStr;
+                                roadTypeDetected = true;
                                 break;
-                            } // End finding road_type word
-                        } // End looping through tagWordList
-                    } // End identifying street if road word exists
-
-
-                    // Check if this actor is an environment property
-                    if (actorConcept != null && actorConcept.getInputGroup().equals("environment_properties")) {
-                        if (actorConcept.getConceptGroup().equals("road_shape")) {
-                            // If there is no street avail, create a new one
-                            if (!roadTypeDetected) {
-                                if (testCase.getStreetList().size() == 0) {
-                                    currentStreet = testCase.createNewStreet();
-                                } else {
-                                    currentStreet = environmentAnalyzer.getPreviousStreet();
-                                }
                             }
+                        }
 
 
-                            environmentAnalyzer.analyzeRoadShape(actor, testCase, dependencyList, parser, currentStreet);
+                        // Find the determinant of the road_type word, a = new street, the = last street
+                        if (roadTypeDetected) {
+                            for (int k = 0; k < tagWordList.size(); k++) {
+                                // Locate the road word
+                                if (tagWordList.get(k).startsWith(roadWordInThisSentence)) {
+                                    // Find the determinant by scanning the last 7 words
+                                    for (int s = k; s > k - 7 || s == 0; s--) {
+                                        String tagWord = tagWordList.get(s);
+                                        if (tagWord.endsWith("/DT")) {
+                                            if (tagWord.startsWith("a")) {
+                                                ConsoleLogger.print('d', "Find a DT ");
+                                                currentStreet = testCase.createNewStreet();
+                                            } else if (tagWord.startsWith("the")) {
+                                                // TODO: Need to find street property to determine the right road
+                                                currentStreet = testCase.getStreetList()
+                                                        .get(testCase.getStreetList().size());
+                                            }
+                                        }
+                                    } // End finding DT
+                                    break;
+                                } // End finding road_type word
+                            } // End looping through tagWordList
+                        } // End identifying street if road word exists
+
+
+                        // Check if this actor is an environment property
+                        if (actorConcept != null && actorConcept.getInputGroup().equals("environment_properties")) {
+                            if (actorConcept.getConceptGroup().equals("road_shape")) {
+                                // If there is no street avail, create a new one
+                                if (!roadTypeDetected) {
+                                    if (testCase.getStreetList().size() == 0) {
+                                        currentStreet = testCase.createNewStreet();
+                                    } else {
+                                        currentStreet = environmentAnalyzer.getPreviousStreet();
+                                    }
+                                }
+
+
+                                environmentAnalyzer.analyzeRoadShape(actor, testCase, dependencyList, parser, currentStreet);
+                            }
                         }
                     }
-                }
-            } // End check if dependency starts with nsubj
-            // If we cannot find the impact from the actor, try to search from the collided object
-            // TODO: Check if the impact action is already found in this sentence
-            else if (dependency.startsWith("dobj")) {
-                String[] wordPair = AccidentConstructorUtil.getWordPairFromDependency(dependency);
+                } // End check if dependency starts with nsubj
+                // If we cannot find the impact from the actor, try to search from the collided object
+                // TODO: Check if the impact action is already found in this sentence
+                else if (dependency.startsWith("dobj")) {
+                    String[] wordPair = AccidentConstructorUtil.getWordPairFromDependency(dependency);
 
 
-                // Check if there is a vehicle action in this dependency
+                    // Check if there is a vehicle action in this dependency
 
-                for (int m = 0; m < wordPair.length; m++) {
-                    String word = wordPair[m];
-                    String stemmedWord = stemmer.stem(AccidentConstructorUtil.getWordFromToken(word));
-                    AccidentConcept wordConcept = parser.findExactConcept(stemmedWord);
+                    for (int m = 0; m < wordPair.length; m++) {
+                        String word = wordPair[m];
+                        String stemmedWord = stemmer.stem(AccidentConstructorUtil.getWordFromToken(word));
+                        AccidentConcept wordConcept = parser.findExactConcept(stemmedWord);
 
-                    // Found action word
-                    if (wordConcept != null && wordConcept.getConceptGroup().equals("vehicle_action")) {
-                        wordPair[m] = word.replace(AccidentConstructorUtil.getWordFromToken(word), stemmedWord);
-                    }
-                    else // Find any possible relation between this word and the name of a vehicle
-                    {
-                        ConsoleLogger.print('d', "Checking Names of word " + word);
-                        String suspectVehicleName = AccidentConstructorUtil.getWordFromToken(word);
-                        for (VehicleAttr anyVehicle : vehicleList) {
-                            if (anyVehicle.getYearMakeModel().contains(suspectVehicleName)) {
-                                // Check apostrophe to ensure that this is indeed the name of a car
-                                LinkedList<String> relatedDeps = AccidentConstructorUtil.
-                                        findConnectedDependencies(dependencyList, tagWordList, word, dependency, 0);
+                        // Found action word
+                        if (wordConcept != null && wordConcept.getConceptGroup().equals("vehicle_action")) {
+                            wordPair[m] = word.replace(AccidentConstructorUtil.getWordFromToken(word), stemmedWord);
+                        } else // Find any possible relation between this word and the name of a vehicle
+                        {
+                            ConsoleLogger.print('d', "Checking Names of word " + word);
+                            String suspectVehicleName = AccidentConstructorUtil.getWordFromToken(word);
+                            for (VehicleAttr anyVehicle : vehicleList) {
+                                if (anyVehicle.getYearMakeModel().contains(suspectVehicleName)) {
+                                    // Check apostrophe to ensure that this is indeed the name of a car
+                                    LinkedList<String> relatedDeps = AccidentConstructorUtil.
+                                            findConnectedDependencies(dependencyList, tagWordList, word, dependency, 0);
 
-                                for (String dep : relatedDeps) {
+                                    for (String dep : relatedDeps) {
 
-                                    if (dep.contains("appos") && dep.contains("vehicle")) {
-                                        String vehicleWord = AccidentConstructorUtil.getOtherWordInDep(word,
-                                                AccidentConstructorUtil.getWordPairFromDependency(dep));
+                                        if (dep.contains("appos") && dep.contains("vehicle")) {
+                                            String vehicleWord = AccidentConstructorUtil.getOtherWordInDep(word,
+                                                    AccidentConstructorUtil.getWordPairFromDependency(dep));
 
-                                        ConsoleLogger.print('d', "Vehicle word appos is " + vehicleWord);
+                                            ConsoleLogger.print('d', "Vehicle word appos is " + vehicleWord);
 
-                                        if (vehicleWord.matches("vehicle\\d+-\\d+")) {
-                                            wordPair[m] = vehicleWord;
+                                            if (vehicleWord.matches("vehicle\\d+-\\d+")) {
+                                                wordPair[m] = vehicleWord;
 
-                                            // Find the attacker
-                                            String attacker = findSuspectedVehicle(dependencyList, tagWordList, suspectVehicleName, damagedComponentAnalyzer);
-                                            VehicleAttr attackerVehAttr = findVehicle(attacker);
-                                            if (attackerVehAttr.getDamagedComponents().size() == 0) {
-                                                ConsoleLogger.print('d', "Find all connected words " + attacker);
-                                                String wordChain = AccidentConstructorUtil.findAllConnectedWords(dependencyList, attacker, attacker, 0, 2);
-                                                ConsoleLogger.print('d', "Word chain " + wordChain);
+                                                // Find the attacker
+                                                String attacker = findSuspectedVehicle(dependencyList, tagWordList, suspectVehicleName, damagedComponentAnalyzer);
+                                                VehicleAttr attackerVehAttr = findVehicle(attacker);
+                                                if (attackerVehAttr.getDamagedComponents().size() == 0) {
+                                                    ConsoleLogger.print('d', "Find all connected words " + attacker);
+                                                    String wordChain = AccidentConstructorUtil.findAllConnectedWords(dependencyList, attacker, attacker, 0, 2);
+                                                    ConsoleLogger.print('d', "Word chain " + wordChain);
 
-                                                // Attempt to guess the damaged side and components
-                                                for (String elem : wordChain.split(","))
-                                                {
-                                                    AccidentConcept elemConcept = ontoParser.findExactConcept(AccidentConstructorUtil.getWordFromToken(elem));
+                                                    // Attempt to guess the damaged side and components
+                                                    for (String elem : wordChain.split(",")) {
+                                                        AccidentConcept elemConcept = ontoParser.findExactConcept(AccidentConstructorUtil.getWordFromToken(elem));
 
-                                                    if (elemConcept != null && elemConcept.getConceptGroup().equals("vehicle_impact_side"))
-                                                    {
-                                                        String finalAttackerDmgSide = damagedComponentAnalyzer.findSideOfCrashedComponents(
-                                                                dependencyList, elem, attacker, tagWordList);
+                                                        if (elemConcept != null && elemConcept.getConceptGroup().equals("vehicle_impact_side")) {
+                                                            String finalAttackerDmgSide = damagedComponentAnalyzer.findSideOfCrashedComponents(
+                                                                    dependencyList, elem, attacker, tagWordList);
 
-                                                        ConsoleLogger.print('d', "Final attacker damaged side " + finalAttackerDmgSide);
+                                                            ConsoleLogger.print('d', "Final attacker damaged side " + finalAttackerDmgSide);
+                                                        }
                                                     }
                                                 }
-                                            }
 
+                                            }
                                         }
                                     }
                                 }
-                            }
-                        } // end looping through vehicle
-                    }
-                    ConsoleLogger.print('d', "Word " + m + " is " + wordPair[m]);
-                }
-
-                AccidentConcept conceptWord0 = parser.findExactConcept(AccidentConstructorUtil.getWordFromToken(wordPair[0]));
-                AccidentConcept conceptWord1 = parser.findExactConcept(AccidentConstructorUtil.getWordFromToken(wordPair[1]));
-
-                // Check if both word is in the concept
-                if ((conceptWord0 != null) && // || wordPair[0].matches("vehicle\\d+-\\d+")) &&
-                        (conceptWord1 != null)) { // || wordPair[1].matches("vehicle\\d+-\\d+")) ) {
-                    String action = "";
-                    String objectWord = "";
-                    String impactedVehicle = "";
-
-                    HashMap<String, String> actionDataProp = conceptWord0.getDataProperties();
-
-                    // Check if the first word is a vehicle_action
-                    if (conceptWord0.getConceptGroup().equalsIgnoreCase("vehicle_action") &&
-                            actionDataProp.get("is_collision_verb").equalsIgnoreCase("true")) {
-                        action = wordPair[0];
-                    } else if (conceptWord1.getConceptGroup().equalsIgnoreCase("vehicle_action") &&
-                            actionDataProp.get("is_collision_verb").equalsIgnoreCase("true")) {
-                        action = wordPair[1];
+                            } // end looping through vehicle
+                        }
+                        ConsoleLogger.print('d', "Word " + m + " is " + wordPair[m]);
                     }
 
-                    // Check if the second word describes the impact side
-                    if (!action.equals("") && conceptWord1 != null && conceptWord1.getConceptGroup() != null) {
-                        conceptWord1 = parser.findExactConcept(AccidentConstructorUtil.getWordFromToken(wordPair[1]));
-                        if (conceptWord1 != null && conceptWord1.getConceptGroup() != null)
-                            ConsoleLogger.print('d', "Concept of " + wordPair[1].split("-")[0] + " is " + conceptWord1.getConceptGroup());
-                    }
+                    AccidentConcept conceptWord0 = parser.findExactConcept(AccidentConstructorUtil.getWordFromToken(wordPair[0]));
+                    AccidentConcept conceptWord1 = parser.findExactConcept(AccidentConstructorUtil.getWordFromToken(wordPair[1]));
 
-                    if (//wordPair[1].matches("vehicle\\d+-\\d+") ||
-                            (conceptWord1 != null && conceptWord1.getConceptGroup().equalsIgnoreCase("vehicle_impact_side"))) {
-                        objectWord = wordPair[1];
-                    } else if (//wordPair[1].matches("vehicle\\d+-\\d+") ||
-                            (conceptWord0.getConceptGroup().equalsIgnoreCase("vehicle_impact_side"))) {
-                        objectWord = wordPair[0];
-                    }
+                    // Check if both word is in the concept
+                    if ((conceptWord0 != null) && // || wordPair[0].matches("vehicle\\d+-\\d+")) &&
+                            (conceptWord1 != null)) { // || wordPair[1].matches("vehicle\\d+-\\d+")) ) {
+                        String action = "";
+                        String objectWord = "";
+                        String impactedVehicle = "";
 
-                    ConsoleLogger.print('d', "dobj Action Word: " + action);
-                    ConsoleLogger.print('d', "Obj Word: " + objectWord);
+                        HashMap<String, String> actionDataProp = conceptWord0.getDataProperties();
 
-                    // Find affected vehicle by looking at nmod:of
-                    for (String objWordDependency : dependencyList) {
-                        // look at nmod:of to find possession of actor
+                        // Check if the first word is a vehicle_action
+                        if (conceptWord0.getConceptGroup().equalsIgnoreCase("vehicle_action") &&
+                                actionDataProp.get("is_collision_verb").equalsIgnoreCase("true")) {
+                            action = wordPair[0];
+                        } else if (conceptWord1.getConceptGroup().equalsIgnoreCase("vehicle_action") &&
+                                actionDataProp.get("is_collision_verb").equalsIgnoreCase("true")) {
+                            action = wordPair[1];
+                        }
 
-                        if (objectWord.matches("vehicle\\d+-\\d+")) {
-                            impactedVehicle = AccidentConstructorUtil.getWordFromToken(objectWord);
-                            //damagedComponentAnalyzer.findSideOfCrashedComponents(dependencyList, objectWord, impactedVehicle, tagWordList);
-                        } else if (objWordDependency.startsWith("nmod:of") &&
-                                objWordDependency.contains(objectWord) &&
-                                objWordDependency.contains("vehicle")) {
-                            String[] hitVehicleWordPair = AccidentConstructorUtil.getWordPairFromDependency(objWordDependency);
-                            String vehicleName = AccidentConstructorUtil.getOtherWordInDep(objectWord, hitVehicleWordPair);
-                            ConsoleLogger.print('d', "OBJ vehicle " + vehicleName);
+                        // Check if the second word describes the impact side
+                        if (!action.equals("") && conceptWord1 != null && conceptWord1.getConceptGroup() != null) {
+                            conceptWord1 = parser.findExactConcept(AccidentConstructorUtil.getWordFromToken(wordPair[1]));
+                            if (conceptWord1 != null && conceptWord1.getConceptGroup() != null)
+                                ConsoleLogger.print('d', "Concept of " + wordPair[1].split("-")[0] + " is " + conceptWord1.getConceptGroup());
+                        }
 
-                            // Find the impacted vehicle by looking at the vehicle ID
-                            if (vehicleName.matches("vehicle\\d+-\\d+")) {
+                        if (//wordPair[1].matches("vehicle\\d+-\\d+") ||
+                                (conceptWord1 != null && conceptWord1.getConceptGroup().equalsIgnoreCase("vehicle_impact_side"))) {
+                            objectWord = wordPair[1];
+                        } else if (//wordPair[1].matches("vehicle\\d+-\\d+") ||
+                                (conceptWord0.getConceptGroup().equalsIgnoreCase("vehicle_impact_side"))) {
+                            objectWord = wordPair[0];
+                        }
 
-                                impactedVehicle = AccidentConstructorUtil.getWordFromToken(vehicleName);
-                                ConsoleLogger.print('d', "Found impacted vehicle " + impactedVehicle + " object word " + objectWord);
+                        ConsoleLogger.print('d', "dobj Action Word: " + action);
+                        ConsoleLogger.print('d', "Obj Word: " + objectWord);
 
-                                // record the crashed components for the victim vehicle
-                                if (!objectWord.equals("")) {
-                                    damagedComponentAnalyzer.findSideOfCrashedComponents(dependencyList, objectWord, impactedVehicle, tagWordList);
-                                }
-                            } else {
-                                // A vehicle with no number, attempt to find the right car based on what we know
-                                if (vehicleName.startsWith("vehicle-")) {
-                                    ConsoleLogger.print('d', "No specific impacted vehicle, attempt to find");
-                                    LinkedList<String> anonVehicleDeps = AccidentConstructorUtil.findConnectedDependencies(
-                                            dependencyList, tagWordList, vehicleName, objWordDependency, 0);
+                        // Find affected vehicle by looking at nmod:of
+                        for (String objWordDependency : dependencyList) {
+                            // look at nmod:of to find possession of actor
 
-                                    for (String anonVehicleDep : anonVehicleDeps) {
-                                        // Found a parked car
-                                        if (anonVehicleDep.contains("park")) {
-                                            // Scan our vehicle list to find a parked car
-                                            for (VehicleAttr vehicle : vehicleList) {
-                                                if (vehicle.getOnStreet() < 1) {
-                                                    ConsoleLogger.print('d', "Found parked vehicle " + vehicle.getVehicleId());
-                                                    impactedVehicle = "vehicle" + vehicle.getVehicleId();
+                            if (objectWord.matches("vehicle\\d+-\\d+")) {
+                                impactedVehicle = AccidentConstructorUtil.getWordFromToken(objectWord);
+                                //damagedComponentAnalyzer.findSideOfCrashedComponents(dependencyList, objectWord, impactedVehicle, tagWordList);
+                            } else if (objWordDependency.startsWith("nmod:of") &&
+                                    objWordDependency.contains(objectWord) &&
+                                    objWordDependency.contains("vehicle")) {
+                                String[] hitVehicleWordPair = AccidentConstructorUtil.getWordPairFromDependency(objWordDependency);
+                                String vehicleName = AccidentConstructorUtil.getOtherWordInDep(objectWord, hitVehicleWordPair);
+                                ConsoleLogger.print('d', "OBJ vehicle " + vehicleName);
 
-                                                    // Find the damaged side of the vehicle based on whether the obj
-                                                    // word is a damaged side word or a vehicle ID
-                                                    if (!objectWord.startsWith("vehicle-")) {
-                                                        AccidentConcept objectWordConcept = parser.findExactConcept(
-                                                                AccidentConstructorUtil.getWordFromToken(objectWord));
+                                // Find the impacted vehicle by looking at the vehicle ID
+                                if (vehicleName.matches("vehicle\\d+-\\d+")) {
 
-                                                        if (objectWordConcept != null && objectWordConcept.getConceptGroup().equals("vehicle_impact_side")) {
-                                                            String finalVictimDmgSide = damagedComponentAnalyzer.findSideOfCrashedComponents(
-                                                                    dependencyList, objectWord, impactedVehicle, tagWordList);
+                                    impactedVehicle = AccidentConstructorUtil.getWordFromToken(vehicleName);
+                                    ConsoleLogger.print('d', "Found impacted vehicle " + impactedVehicle + " object word " + objectWord);
 
-                                                            ConsoleLogger.print('d', "Final victim damaged side " + finalVictimDmgSide);
+                                    // record the crashed components for the victim vehicle
+                                    if (!objectWord.equals("")) {
+                                        damagedComponentAnalyzer.findSideOfCrashedComponents(dependencyList, objectWord, impactedVehicle, tagWordList);
+                                    }
+                                } else {
+                                    // A vehicle with no number, attempt to find the right car based on what we know
+                                    if (vehicleName.startsWith("vehicle-")) {
+                                        ConsoleLogger.print('d', "No specific impacted vehicle, attempt to find");
+                                        LinkedList<String> anonVehicleDeps = AccidentConstructorUtil.findConnectedDependencies(
+                                                dependencyList, tagWordList, vehicleName, objWordDependency, 0);
+
+                                        for (String anonVehicleDep : anonVehicleDeps) {
+                                            // Found a parked car
+                                            if (anonVehicleDep.contains("park")) {
+                                                // Scan our vehicle list to find a parked car
+                                                for (VehicleAttr vehicle : vehicleList) {
+                                                    if (vehicle.getOnStreet() < 1) {
+                                                        ConsoleLogger.print('d', "Found parked vehicle " + vehicle.getVehicleId());
+                                                        impactedVehicle = "vehicle" + vehicle.getVehicleId();
+
+                                                        // Find the damaged side of the vehicle based on whether the obj
+                                                        // word is a damaged side word or a vehicle ID
+                                                        if (!objectWord.startsWith("vehicle-")) {
+                                                            AccidentConcept objectWordConcept = parser.findExactConcept(
+                                                                    AccidentConstructorUtil.getWordFromToken(objectWord));
+
+                                                            if (objectWordConcept != null && objectWordConcept.getConceptGroup().equals("vehicle_impact_side")) {
+                                                                String finalVictimDmgSide = damagedComponentAnalyzer.findSideOfCrashedComponents(
+                                                                        dependencyList, objectWord, impactedVehicle, tagWordList);
+
+                                                                ConsoleLogger.print('d', "Final victim damaged side " + finalVictimDmgSide);
+                                                            }
                                                         }
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                            } // End infering anonymous vehicle
+                                } // End infering anonymous vehicle
+                            }
                         }
-                    }
 
-                    // TODO: Trace the action word to find the subject USING RECURSIVE FUNC
+                        // TODO: Trace the action word to find the subject USING RECURSIVE FUNC
 
-                    // Get other vehicle except the impacted vehicle in the sentence, set this one as subject vehicle
-                    HashSet<String> suspectedVehicles = new HashSet<String>();
-                    String subjectVehicle = "";
-                    for (String suspectedDependency : dependencyList) {
+                        // Get other vehicle except the impacted vehicle in the sentence, set this one as subject vehicle
+                        HashSet<String> suspectedVehicles = new HashSet<String>();
+                        String subjectVehicle = "";
+                        for (String suspectedDependency : dependencyList) {
 
-                        String otherWord = "";
-                        String suspectedActor = "";
+                            String otherWord = "";
+                            String suspectedActor = "";
 
-                        if (suspectedDependency.contains("vehicle") &&
-                                !suspectedDependency.contains(AccidentConstructorUtil.getWordFromToken(impactedVehicle) + "-")) {
+                            if (suspectedDependency.contains("vehicle") &&
+                                    !suspectedDependency.contains(AccidentConstructorUtil.getWordFromToken(impactedVehicle) + "-")) {
 
-                            ConsoleLogger.print('d', "suspected Dep with veh " + suspectedDependency);
-                            String[] suspectedWordPair = AccidentConstructorUtil.getWordPairFromDependency(suspectedDependency);
-                            if (suspectedWordPair[0].contains("vehicle") && !suspectedWordPair[0].startsWith("vehicle-")) {
-                                ConsoleLogger.print('d', "suspected Dep get word 0: " + suspectedWordPair[0]);
-                                suspectedActor = AccidentConstructorUtil.getWordFromToken(suspectedWordPair[0]);
+                                ConsoleLogger.print('d', "suspected Dep with veh " + suspectedDependency);
+                                String[] suspectedWordPair = AccidentConstructorUtil.getWordPairFromDependency(suspectedDependency);
+                                if (suspectedWordPair[0].contains("vehicle") && !suspectedWordPair[0].startsWith("vehicle-")) {
+                                    ConsoleLogger.print('d', "suspected Dep get word 0: " + suspectedWordPair[0]);
+                                    suspectedActor = AccidentConstructorUtil.getWordFromToken(suspectedWordPair[0]);
 
-                                suspectedVehicles.add(suspectedActor);
-                                otherWord = suspectedWordPair[1];
-                            } else {
-                                // If this is not an anonymous vehicle, set it as suspected vehicle
-                                if (!suspectedWordPair[1].startsWith("vehicle-")) {
-                                    ConsoleLogger.print('d', "suspected Dep get word 1: " + suspectedWordPair[1]);
-                                    suspectedActor = AccidentConstructorUtil.getWordFromToken(suspectedWordPair[1]);
                                     suspectedVehicles.add(suspectedActor);
-                                    otherWord = suspectedWordPair[0];
-                                }
-                            }
-                        }
-
-                        // Find the concept of other word that describe the crash component
-                        String otherWordStr = AccidentConstructorUtil.getWordFromToken(otherWord);
-                        AccidentConcept otherWordConcept = parser.findExactConcept(otherWordStr);
-                        if (!impactedVehicle.equals("") && otherWordConcept != null
-                                && otherWordConcept.getConceptGroup().equals("vehicle_impact_side")) {
-                            ConsoleLogger.print('d', "Found impacted vehicle side " + otherWordStr);
-
-                            // Find whether a left or right key word are assigned to the impacted side
-                            String damagedSide = damagedComponentAnalyzer.findSideOfCrashedComponents(dependencyList,
-                                    otherWord, suspectedActor, tagWordList);
-                            ConsoleLogger.print('d', "Final damaged Side " + damagedSide);
-
-                        }
-                    }
-
-                    Iterator<String> susVehicleIter = suspectedVehicles.iterator();
-                    while (susVehicleIter.hasNext()) {
-
-                        String susVeh = susVehicleIter.next();
-                        ConsoleLogger.print('d', "Sus vehicle: " + susVeh);
-                        if (susVeh.equals("vehicle") || !susVeh.startsWith("vehicle")) {
-                            susVehicleIter.remove();
-                            ConsoleLogger.print('d', suspectedVehicles);
-                        }
-                    }
-
-                    if (suspectedVehicles.size() == 1) {
-                        subjectVehicle = suspectedVehicles.iterator().next();
-                    }
-
-                    ConsoleLogger.print('d', "Suspected Vehicle Len: " + suspectedVehicles.size() + " Subject Vehicle " + subjectVehicle);
-
-                    for (VehicleAttr vehicle : vehicleList) {
-                        ConsoleLogger.print('d', "Damaged side of vehicle#" + vehicle.getVehicleId());
-                        ConsoleLogger.print('d', vehicle.getDamagedComponents());
-                    }
-
-                    // If Subject vehicle and action is found, check whether there is any action description the same as this
-                    boolean foundSameAction = false;
-                    for (ActionDescription actDes : actionList) {
-                        if (!actDes.getSubject().equals("")
-                                && actDes.getSubject().equals(subjectVehicle)
-                                && actDes.getVerb().equals(action.split("-")[0])) {
-
-                            for (String verbProp : actDes.getVerbProps()) {
-                                if (verbProp.contains(impactedVehicle)) {
-                                    foundSameAction = true;
-                                    break; // Found the exact same action description
+                                    otherWord = suspectedWordPair[1];
+                                } else {
+                                    // If this is not an anonymous vehicle, set it as suspected vehicle
+                                    if (!suspectedWordPair[1].startsWith("vehicle-")) {
+                                        ConsoleLogger.print('d', "suspected Dep get word 1: " + suspectedWordPair[1]);
+                                        suspectedActor = AccidentConstructorUtil.getWordFromToken(suspectedWordPair[1]);
+                                        suspectedVehicles.add(suspectedActor);
+                                        otherWord = suspectedWordPair[0];
+                                    }
                                 }
                             }
 
+                            // Find the concept of other word that describe the crash component
+                            String otherWordStr = AccidentConstructorUtil.getWordFromToken(otherWord);
+                            AccidentConcept otherWordConcept = parser.findExactConcept(otherWordStr);
+                            if (!impactedVehicle.equals("") && otherWordConcept != null
+                                    && otherWordConcept.getConceptGroup().equals("vehicle_impact_side")) {
+                                ConsoleLogger.print('d', "Found impacted vehicle side " + otherWordStr);
+
+                                // Find whether a left or right key word are assigned to the impacted side
+                                String damagedSide = damagedComponentAnalyzer.findSideOfCrashedComponents(dependencyList,
+                                        otherWord, suspectedActor, tagWordList);
+                                ConsoleLogger.print('d', "Final damaged Side " + damagedSide);
+
+                            }
                         }
+
+                        Iterator<String> susVehicleIter = suspectedVehicles.iterator();
+                        while (susVehicleIter.hasNext()) {
+
+                            String susVeh = susVehicleIter.next();
+                            ConsoleLogger.print('d', "Sus vehicle: " + susVeh);
+                            if (susVeh.equals("vehicle") || !susVeh.startsWith("vehicle")) {
+                                susVehicleIter.remove();
+                                ConsoleLogger.print('d', suspectedVehicles);
+                            }
+                        }
+
+                        if (suspectedVehicles.size() == 1) {
+                            subjectVehicle = suspectedVehicles.iterator().next();
+                        }
+
+                        ConsoleLogger.print('d', "Suspected Vehicle Len: " + suspectedVehicles.size() + " Subject Vehicle " + subjectVehicle);
+
+                        for (VehicleAttr vehicle : vehicleList) {
+                            ConsoleLogger.print('d', "Damaged side of vehicle#" + vehicle.getVehicleId());
+                            ConsoleLogger.print('d', vehicle.getDamagedComponents());
+                        }
+
+                        // If Subject vehicle and action is found, check whether there is any action description the same as this
+                        boolean foundSameAction = false;
+                        for (ActionDescription actDes : actionList) {
+                            if (!actDes.getSubject().equals("")
+                                    && actDes.getSubject().equals(subjectVehicle)
+                                    && actDes.getVerb().equals(action.split("-")[0])) {
+
+                                for (String verbProp : actDes.getVerbProps()) {
+                                    if (verbProp.contains(impactedVehicle)) {
+                                        foundSameAction = true;
+                                        break; // Found the exact same action description
+                                    }
+                                }
+
+                            }
+                        }
+                        ConsoleLogger.print('d', "Found Same Action? " + foundSameAction);
+                        if (!foundSameAction) {
+                            ActionDescription crashActDes = new ActionDescription();
+                            crashActDes.setSubject(subjectVehicle);
+                            crashActDes.setVerb(action.split("-")[0]);
+                            LinkedList<String> crashVerbProp = new LinkedList<String>();
+                            crashVerbProp.add(impactedVehicle);
+                            crashActDes.setVerbProps(crashVerbProp);
+                            actionList.add(crashActDes);
+                            ConsoleLogger.print('d', "add Crash Act Des: Subject: " + crashActDes.getSubject() + " Verb " + crashActDes.getVerb() + " Obj " + crashActDes.getVerbProps().get(0));
+                        }
+
+                    } // End check if both words exists in the Ontology
+                } // End checking dobj dependency
+                else {
+                    if (dependency.contains("park")) {
+                        inferParkingPosition(dependency, dependencyList, tagWordList);
                     }
-                    ConsoleLogger.print('d', "Found Same Action? " + foundSameAction);
-                    if (!foundSameAction) {
-                        ActionDescription crashActDes = new ActionDescription();
-                        crashActDes.setSubject(subjectVehicle);
-                        crashActDes.setVerb(action.split("-")[0]);
-                        LinkedList<String> crashVerbProp = new LinkedList<String>();
-                        crashVerbProp.add(impactedVehicle);
-                        crashActDes.setVerbProps(crashVerbProp);
-                        actionList.add(crashActDes);
-                        ConsoleLogger.print('d', "add Crash Act Des: Subject: " + crashActDes.getSubject() + " Verb " + crashActDes.getVerb() + " Obj " + crashActDes.getVerbProps().get(0));
-                    }
+                } // End checking other dependencies type other than nsubj and dobj
 
-                } // End check if both words exists in the Ontology
-            } // End checking dobj dependency
-            else {
-                if (dependency.contains("park")) {
-                    inferParkingPosition(dependency, dependencyList, tagWordList);
-                }
-            } // End checking other dependencies type other than nsubj and dobj
-
-
+            }
+            catch (Exception ex)
+            {
+                ConsoleLogger.print('e', "Error at extract Action chain " + ex.toString());
+                continue;
+            }
         }
 //        for (ActionDescription actDes : actionList)
 //            ConsoleLogger.print('d', "Actor " + actDes.getSubject() + " Action " + actDes.getVerb() + " Verb Prop List " + actDes.getVerbProps());
@@ -1967,6 +1978,24 @@ public class AccidentConstructor {
                 street.putValToKey("curve_radius",
                         (Double.parseDouble(street.getStreetPropertyValue("curve_radius")) * -1) + "");
             }
+
+//            if (street.getStreetPropertyValue("road_angle").equals("0")
+//                && !street.getStreetPropertyValue("road_navigation").equals("S") )
+//            {
+//                switch (street.getStreetPropertyValue("road_navigation")){
+//                    case "W":
+//                        street.putValToKey("road_angle", "90");
+//                        break;
+//                    case "N":
+//                        street.putValToKey("road_angle", "180");
+//                        break;
+//                    case "E":
+//                        street.putValToKey("road_angle", "270");
+//                        break;
+//                    default:
+//                        break;
+//                }
+//            }
         }
 
         for (VehicleAttr vehicle : vehicleList) {

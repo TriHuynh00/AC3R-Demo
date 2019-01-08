@@ -61,6 +61,24 @@ public class RoadConstructor {
 //    public void constructRoadNodes(String roadGradeDirection, String roadGradeDeg, int laneNumber, String radiusStr, String scenarioName) {
     public String constructRoadNodes(String scenarioName) {
 
+        // if the init coord of two cars are the same, this is a fail construction, exit right away
+        String[] v1FirstCoord = vehicleList.get(0).getMovementPath().get(0).split(AccidentParam.defaultCoordDelimiter);
+        String[] v2FirstCoord = vehicleList.get(1).getMovementPath().get(0).split(AccidentParam.defaultCoordDelimiter);
+        ConsoleLogger.print('d', "FirstXCoord V1 " + AccidentParam.df2Digit.format(Double.parseDouble(v1FirstCoord[0])));
+        ConsoleLogger.print('d', "FirstXCoord V2 " + AccidentParam.df2Digit.format(Double.parseDouble(v2FirstCoord[0])));
+
+        ConsoleLogger.print('d', "FirstYCoord V1 " + AccidentParam.df2Digit.format(Double.parseDouble(v1FirstCoord[1])));
+        ConsoleLogger.print('d', "FirstYCoord V2 " + AccidentParam.df2Digit.format(Double.parseDouble(v2FirstCoord[1])));
+        String v1FirstCoordX = AccidentParam.df2Digit.format(Double.parseDouble(v1FirstCoord[0]));
+        String v1FirstCoordY = AccidentParam.df2Digit.format(Double.parseDouble(v1FirstCoord[1]));
+        String v2FirstCoordX = AccidentParam.df2Digit.format(Double.parseDouble(v2FirstCoord[0]));
+        String v2FirstCoordY = AccidentParam.df2Digit.format(Double.parseDouble(v1FirstCoord[1]));
+        if (v1FirstCoordX.equals(v2FirstCoordX) && v1FirstCoordY.equals(v2FirstCoordY))
+        {
+
+            return "fail";
+        }
+
         ArrayList<Street> streetList = testCaseInfo.getStreetList();
         StringBuilder environmentFileStrBuilder = new StringBuilder();
         //        StringBuilder environmentFileTemplate = new StringBuilder();
@@ -220,6 +238,94 @@ public class RoadConstructor {
 
         }
 
+        if (!testCaseInfo.getCrashType().toLowerCase().contains("rear-end") &&
+            !testCaseInfo.getCrashType().toLowerCase().contains("rearend")) {
+            // Set the vehicle at the right lane position
+            for (VehicleAttr vehicleAttr : vehicleList) {
+                ArrayList<String> movementPath = vehicleAttr.getMovementPath();
+
+                int lastCoordIndex = movementPath.size();
+
+                // Fon turn into path, leave the crash coord alone
+                if (testCaseInfo.getCrashType().toLowerCase().contains("turn into"))
+                {
+                    lastCoordIndex -= 1;
+                }
+
+                for (int z = 0; z < lastCoordIndex; z++) {
+                    double xCoord = Double.parseDouble(movementPath.get(z).split(":")[0]);
+                    double yCoord = Double.parseDouble(movementPath.get(z).split(":")[1]);
+                    // Find the right lane of the vehicle
+                    boolean is1WayLane = false;
+
+                    Street currentStreet = vehicleAttr.getStandingStreet();
+
+                    if (vehicleAttr.getStandingStreet().getStreetPropertyValue("road_direction").equals("1-way")) {
+                        ConsoleLogger.print('d', "street of vehicle #" + vehicleAttr.getVehicleId() + " is 1 way");
+                        is1WayLane = true;
+                    }
+
+                    int totalLaneNumber = Integer.parseInt(currentStreet.getStreetPropertyValue("lane_num"));
+                    int maxLaneNumber = totalLaneNumber;
+                    if (!is1WayLane) {
+                        maxLaneNumber /= 2;
+                    }
+
+                    ConsoleLogger.print('d', "MaxLaneNum = " + maxLaneNumber);
+
+                    // If vehicle's lane number is set as RIGHTMOSTLANE, set it back to the maximum lane number
+                    if (vehicleAttr.getTravelOnLaneNumber() == AccidentParam.RIGHTMOSTLANE) {
+                        vehicleAttr.setTravelOnLaneNumber(maxLaneNumber);
+                    }
+
+                    HashMap<String, String> navDict =
+                            NavigationDictionary.selectDictionaryFromTravelingDirection(vehicleAttr.getTravellingDirection());
+
+                    String[] rightCoordConfig = navDict.get("right").split(";");
+                    String[] leftCoordConfig = navDict.get("left").split(";");
+
+                    // anchorPoint is the base position to locate the coord of a specifc lane number. For example, if
+                    // there is a 2-way road, the vehicle is at lane number 1, then the anchor point is set at 0, so that
+                    // lane number 1 is (0 + vehicleLaneNumber * laneWidth - laneWidth / 2).
+
+                    // Given this formula, lane 1 is at (0 + 2.5) and lane 2 is set as (0 + 7.5)
+                    double anchorPointX = xCoord;
+                    double anchorPointY = yCoord;
+
+                    // For 1-way road, set the anchor point at the left most position i.e. at (0 - laneWidth / 2)
+                    if (is1WayLane && totalLaneNumber > 1) {
+                        // Config xCoord
+                        anchorPointX += NavigationDictionary.setCoordValue(maxLaneNumber / 2 * AccidentParam.laneWidth, leftCoordConfig[0]);
+
+                        // Config yCoord
+                        anchorPointY += NavigationDictionary.setCoordValue(maxLaneNumber / 2 * AccidentParam.laneWidth, leftCoordConfig[1]);
+                    }
+
+                    // ====== Locate the coord of the vehicle's lane number ========
+
+                    // Set xCoord / yCoord along the right and left configuration for road with >1 lane
+                    if (totalLaneNumber > 1) {
+                        xCoord = anchorPointX
+                                + NavigationDictionary.setCoordValue(
+                                vehicleAttr.getTravelOnLaneNumber() * AccidentParam.laneWidth, rightCoordConfig[0])
+                                + NavigationDictionary.setCoordValue(AccidentParam.laneWidth / 2, leftCoordConfig[0]);
+
+                        yCoord = anchorPointY
+                                + NavigationDictionary.setCoordValue(
+                                vehicleAttr.getTravelOnLaneNumber() * AccidentParam.laneWidth, rightCoordConfig[1])
+                                + NavigationDictionary.setCoordValue(AccidentParam.laneWidth / 2, leftCoordConfig[1]);
+                    }
+
+                    ConsoleLogger.print('d', String.format("anchorX = %.2f \n anchorY = %.2f \n xCoord = %.2f \n yCoord = %.2f \n",
+                            anchorPointX, anchorPointY, xCoord, yCoord));
+
+                    String finalCoord = xCoord + AccidentParam.defaultCoordDelimiter + yCoord;
+                    if (!AccidentParam.isGradingConcerned)
+                        finalCoord += AccidentParam.defaultCoordDelimiter + 0;
+                    movementPath.set(z, finalCoord);
+                }
+            }
+        }
         // Construct waypoints and trajectory of vehicles
         try {
             ConsoleLogger.print('d', "Crash type is " + testCaseInfo.getCrashType());
@@ -2461,8 +2567,8 @@ public class RoadConstructor {
                 || navigationDict.equals(NavigationDictionary.NorthNavDict)
                 || navigationDict.equals(NavigationDictionary.SouthNavDict) )
         {
-            finalCoord = NavigationDictionary.createCoordBasedOnNavigation(segmentLength, radius,
-                    navigation, navigationDict);
+            finalCoord = NavigationDictionary.createNESWCoordBasedOnNavigation(segmentLength, radius,
+                    navigation, navigationDict, AccidentParam.beamngCoordDelimiter);
         }
         else
         {
