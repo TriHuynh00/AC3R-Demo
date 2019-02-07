@@ -525,11 +525,12 @@ public class RearEndConstructor {
                     coordOfSelectedVehicle.add(0, "" +
                             ( (-1 * estimateVehicleSpeed * i) + Integer.parseInt(coordOfSelectedVehicle.get(i - 1)) ) );
                 }
-                else if (estimateVehicleSpeed <= 0)
+                else if (estimateVehicleSpeed < 0)
                 {
 //                    ConsoleLogger.print('d',"Vehicle " + vehicleIndexInCoordArr + " Stop 1st act : computedCoord:" + (-1 * estimateVehicleSpeed * i) + " first coord:" + Integer.parseInt(coordOfSelectedVehicle.get(0)));
                     coordOfSelectedVehicle.add(0, "" +
                             ( (-1 * defaultSpeed * i) + Integer.parseInt(coordOfSelectedVehicle.get(i - 1)) ) );
+
                 }
             } // End appending precrash coord
 

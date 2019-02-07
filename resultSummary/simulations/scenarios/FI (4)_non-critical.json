@@ -1,0 +1,27 @@
+[
+{
+    "name": "FI (4)_non-critical",
+    "description": "This 2-vehicle crash occurred mid-afternoon on a dry, straight, undivided, 2-lane, bituminous, urban road.  The road runs east/west and has 1 through lane in each direction.  There are no painted lines to divide the roadway and there is implied parking for both sides of the street.  The posted speed limit is 40 mph (25 mph).  There were no traffic control devices at the scene and there were no adverse conditions present at the time.
+vehicle1, a vehicle1 sedan, driven by a 51 year-old female was traveling westbound in lane 1. vehicle2, a vehicle2 cj-7, was legally parked along the north curb facing westbound. the front of vehicle1 contacted the back of vehicle2 . both vehicles came to rest at impact, facing west. vehicle1 was partially in westbound lane 1 and the implied parking lane. vehicle1 was towed due to moderate frontal damage.",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player1": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":1,
+							 "maxSpeed":40.23},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["FI (4)_non-critical"],
+    "radiusMultiplierAI": 2
+},
+]

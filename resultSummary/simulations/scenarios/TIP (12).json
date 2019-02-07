@@ -1,0 +1,27 @@
+[
+{
+    "name": "TIP (12)",
+    "description": "The crash occurred at the intersection of an urban east/west 2-lane residential arterial road and a north/south residential 2-lane side street.  The side street was controlled by stop signs.  Parking is permitted on the side of the street on the arterial, which had 5.5m wide lanes.  Conditions were daylight and dry on a weekday afternoon.  The posted speed limit on both roads was 48kmph (30mph). 
+vehicle1 was a vehicle1 northbound on the side street.  vehicle2, a vehicle2, was eastbound on the arterial road.  vehicle1 attempted to turn left and go west on the arterial and was struck in the front by the front of vehicle2.  both vehicles came to rest near impact and were towed due to damage.",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player1": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":1,
+							 "maxSpeed":48.275999999999996},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["TIP (12)"],
+    "radiusMultiplierAI": 2
+},
+]

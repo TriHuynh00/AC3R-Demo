@@ -1,4 +1,4 @@
-package org.saarland.crashAnalyzer;
+package org.saarland.crashanalyzer;
 
 import org.saarland.accidentconstructor.AccidentConstructorUtil;
 import org.saarland.accidentconstructor.ConsoleLogger;

@@ -37,11 +37,12 @@ public class StanfordCoreferencer {
     private final static String[] dependencyArr = {
             "compound",
             "acl",
-            //"acl:relcl",
+            "acl:relcl",
             "amod", 
             "advmod",
             "appos",
             "case",
+            "conj",
             "csubj",
             "dep",
             "neg",

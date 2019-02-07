@@ -46,11 +46,11 @@ public class AccidentConcept {
         this.conceptName = conceptName;
     }
 
-    public String getConceptGroup() {
+    public String getLeafLevelName() {
         return conceptGroup;
     }
 
-    public void setConceptGroup(String conceptGroup) {
+    public void setLeafLevelName(String conceptGroup) {
         this.conceptGroup = conceptGroup;
     }
 

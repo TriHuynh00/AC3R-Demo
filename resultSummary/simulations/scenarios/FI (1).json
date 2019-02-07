@@ -1,0 +1,27 @@
+[
+{
+    "name": "FI (1)",
+    "description": "This crash occurred on a weekday night on a 4-lane undivided roadway. The roadway was a downhill grade of 2 percent. The posted speed limit was 72 kmph (45 mph). It was dark out at the time of the crash, but the roadway was illuminated. There was a city dump truck parked in lane 2 on the westbound side with its 4-way flashers on. Workers were in front of the truck doing water main repairs. There was no driver in the truck at the time of the crash. 
+vehicle1, a vehicle1 rivera, was driven by a 58vehicle2year old male who was reported to have been intoxicated at the time of the crash. vehicle2 was a vehicle2 dump truck that was parked and unoccupied. the driver of vehicle1 was traveling west in lane 2. the front of vehicle1 contacted the rear of vehicle2. the final rest for both vehicles was at point of impact. the driver of the vehicle1 was to have stated to police and paramedics that he had had a few drinks with his friends and he did not see any 4 4vehicle2way flashers on the truck. the driver could not be reached for an interview.",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player1": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":2,
+							 "maxSpeed":72.414},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["FI (1)"],
+    "radiusMultiplierAI": 2
+},
+]

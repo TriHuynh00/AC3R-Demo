@@ -1,0 +1,28 @@
+[
+{
+    "name": "RE (1)_non-critical",
+    "description": "
+This crash occurred in the left lane of a 1-way roadway.  The roadway was straight and level, and it was clear with no adverse conditions.  It was dark but lighted and the roadway had a speed limit of 48kmph (30mph).
+vehicle2 was a vehicle2 that was traveling northbound approaching the intersection and slowed down for an emergency fire truck with the emergency lights and sirens attempting to go eastbound on a 2-way roadway. vehicle1 was a vehicle1 that was traveling northbound behind vehicle2 . the front of vehicle1 impacted the rear of vehicle2 . vehicle2 then continued forward and impacted a fence that was located on the northwest corner.",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player1": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":3,
+							 "maxSpeed":48.275999999999996},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["RE (1)_non-critical"],
+    "radiusMultiplierAI": 2
+},
+]

@@ -1,0 +1,27 @@
+[
+{
+    "name": "FI (14)",
+    "description": "This single-vehicle crash occurred on an undivided, straight, level roadway that consists of 1 lane in each direction. The speed limit for this roadway is 40 kmph (25 mph). It was dark with streetlights on at the time of the crash with no adverse atmospheric conditions.
+vehicle1 (vehicle1), a vehicle1, was westbound in lane 1. vehicle2 (vehicle2), a vehicle2, was parked (unoccupied) facing eastbound on the south side of the roadway. vehicle1 traveled to the left and the front struck the front of vehicle2. vehicle1 then rotated counterclockwise and rolled over to the right 2 quarter-turns. vehicle1 was towed due to damage.",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player1": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":1,
+							 "maxSpeed":64.368},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["FI (14)"],
+    "radiusMultiplierAI": 2
+},
+]

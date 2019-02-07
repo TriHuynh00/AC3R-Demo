@@ -1,4 +1,4 @@
-package org.saarland.crashAnalyzer;
+package org.saarland.crashanalyzer;
 
 public class CrashResultCode {
     public final static String ALL_MATCHED = "PS";

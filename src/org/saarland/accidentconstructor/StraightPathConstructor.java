@@ -81,7 +81,7 @@ public class StraightPathConstructor {
 
                     ConsoleLogger.print('d',"Current vehicle ID is " + currentVehicle.getVehicleId());
 
-                    ConsoleLogger.print('d',"Standing Street is " + vehicleStandingStreet);
+                    ConsoleLogger.print('d',"Standing Street is " + vehicleStandingStreet.getStreetPropertyValue("road_ID"));
 
                     int laneNum = Integer.parseInt(vehicleStandingStreet.getStreetPropertyValue("lane_num"));
 
@@ -454,7 +454,7 @@ public class StraightPathConstructor {
                             VehicleAttr striker = strikerAndVictim[0];
                             ArrayList<Double> strikerDistanceAndTime = computeDistanceAndTimeWithAcceleration(striker.getVelocity());
                             nearCrashDistance = AccidentConstructorUtil.convertMPHToMS(currentVehicle.getVelocity())
-                                    * (strikerDistanceAndTime.get(1) + 2 - currentVehDistanceAndTime.get(1));
+                                    * (strikerDistanceAndTime.get(1) + 2.0 - currentVehDistanceAndTime.get(1));
                         }
                         totalDistance = currentVehDistanceAndTime.get(0) + nearCrashDistance;
                         /* Old implementation
@@ -463,8 +463,6 @@ public class StraightPathConstructor {
                         double nearCrashDistance =  AccidentConstructorUtil.convertMPHToMS(currentVehicle.getVelocity())
                                 * AccidentParam.SIMULATION_DURATION;
                         double totalDistance = currentVehDistanceAndTime.get(0) + nearCrashDistance; */
-
-
 
                         ConsoleLogger.print('d',"nearCrashDistance = " + nearCrashDistance);
                         ConsoleLogger.print('d',"totalDistance = " + totalDistance);
@@ -511,39 +509,57 @@ public class StraightPathConstructor {
                         {
                             // Compute near crash distance, for S, it is crashYcoord + nearCrashDistance
                             double segmentLength = nearCrashDistance;
-                            // For east and west direction, the segment length counts from the crashXCoord + nearCrashDistance
-                            if (travelDirection.equals("E") || travelDirection.equals("W"))
-                            {
-                                segmentLength += Double.parseDouble(crashXCoord);
-                            }
-                            else // For north and south, it is nearCrashDistance + crashYCoord
-                            {
-                                segmentLength += Double.parseDouble(crashYCoord);
-                            }
+
                             String nearCrashCoord = NavigationDictionary.createNESWCoordBasedOnNavigation(
                                     segmentLength, radius, "backward",
                                     NavigationDictionary.selectDictionaryFromTravelingDirection(travelDirection),
                                     AccidentParam.defaultCoordDelimiter
                             );
 
+                            String[] nearCrashCoordElem = nearCrashCoord.split(AccidentParam.defaultCoordDelimiter);
+                            // For east and west direction, the segment length counts from the crashXCoord + nearCrashDistance
+                            if (travelDirection.equals("E") || travelDirection.equals("W"))
+                            {
+                                AccidentConstructorUtil.updateCoordElementAtDimension(0, nearCrashCoord,
+                                        Double.parseDouble(nearCrashCoordElem[0]) + crashXCoord,
+                                        AccidentParam.defaultCoordDelimiter);
+//                                segmentLength += Double.parseDouble(crashXCoord);
+                            }
+                            else // For north and south, it is nearCrashDistance + crashYCoord
+                            {
+                                AccidentConstructorUtil.updateCoordElementAtDimension(1, nearCrashCoord,
+                                        Double.parseDouble(nearCrashCoordElem[1]) + crashYCoord,
+                                        AccidentParam.defaultCoordDelimiter);
+//                                segmentLength += Double.parseDouble(crashYCoord);
+                            }
 
                             vehicleCoordList.add(0, nearCrashCoord.substring(0, nearCrashCoord.length() - 2));
 
                             segmentLength = totalDistance;
-                            if (travelDirection.equals("E") || travelDirection.equals("W"))
-                            {
-                                segmentLength += Double.parseDouble(crashXCoord);
-                            }
-                            else // For north and south, it is nearCrashDistance + crashYCoord
-                            {
-                                segmentLength += Double.parseDouble(crashYCoord);
-                            }
+
 
                             String totalDistanceCoord = NavigationDictionary.createNESWCoordBasedOnNavigation(
                                     segmentLength, radius, "backward",
                                     NavigationDictionary.selectDictionaryFromTravelingDirection(travelDirection),
                                     AccidentParam.defaultCoordDelimiter
                             );
+
+                            String[] totalDistanceCoordElem = totalDistanceCoord.split(AccidentParam.defaultCoordDelimiter);
+                            if (travelDirection.equals("E") || travelDirection.equals("W"))
+                            {
+                                AccidentConstructorUtil.updateCoordElementAtDimension(0, totalDistanceCoord,
+                                        Double.parseDouble(totalDistanceCoordElem[0]) + crashXCoord,
+                                        AccidentParam.defaultCoordDelimiter);
+//                                segmentLength += Double.parseDouble(crashXCoord);
+                            }
+                            else // For north and south, it is nearCrashDistance + crashYCoord
+                            {
+                                AccidentConstructorUtil.updateCoordElementAtDimension(1, totalDistanceCoord,
+                                        Double.parseDouble(totalDistanceCoordElem[1]) + crashYCoord,
+                                        AccidentParam.defaultCoordDelimiter);
+//                                segmentLength += Double.parseDouble(crashYCoord);
+                            }
+
                             ConsoleLogger.print('d', "Total Distance Coord  " + totalDistanceCoord);
                             vehicleCoordList.add(0, totalDistanceCoord.substring(0, totalDistanceCoord.length() - 2));
                             ConsoleLogger.print('d', "VehicleCoordList of V #" + currentVehicle.getVehicleId()
@@ -602,23 +618,29 @@ public class StraightPathConstructor {
 
 
                             String travelDirection = currentVehicle.getTravellingDirection();
-
+                            double extraXCoord = 0;
+                            double extraYCoord = 0;
                             if (travelDirection.equals("W")) {
-                                double extraXCoord = Double.parseDouble(crashXCoord) - extraDistance;
-                                double extraYCoord = Double.parseDouble(crashYCoord);
+                                extraXCoord = Double.parseDouble(crashXCoord) - extraDistance;
+                                extraYCoord = Double.parseDouble(crashYCoord);
 
-                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
+//                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
                             } // End processing westbound direction
+                            else if (travelDirection.equals("E")) {
+                                extraXCoord = Double.parseDouble(crashXCoord) + extraDistance;
+                                extraYCoord = Double.parseDouble(crashYCoord);
 
+//                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
+                            } // End processing westbound direction
                             else if (travelDirection.equals("N")) {
-                                double extraXCoord = Double.parseDouble(crashXCoord);
-                                double extraYCoord = Double.parseDouble(crashYCoord) + extraDistance;
+                                extraXCoord = Double.parseDouble(crashXCoord);
+                                extraYCoord = Double.parseDouble(crashYCoord) + extraDistance;
 
-                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
+//                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
                             } // End processing N direction
                             else if (travelDirection.equals("S")) {
-                                double extraXCoord = Double.parseDouble(crashXCoord);
-                                double extraYCoord = Double.parseDouble(crashYCoord) - extraDistance;
+                                extraXCoord = Double.parseDouble(crashXCoord);
+                                extraYCoord = Double.parseDouble(crashYCoord) - extraDistance;
 
                                 // If this is a single road piece, append the road based on other road direction
                                 if (isSingleRoad.equals("T")) {
@@ -641,13 +663,13 @@ public class StraightPathConstructor {
                                     }
                                 }
 
-                                vehicleCoordAtI.add(vehicleCoordAtI.size(), df.format(extraXCoord) + ":" + df.format(extraYCoord));
+//                                vehicleCoordAtI.add(vehicleCoordAtI.size(), df.format(extraXCoord) + ":" + df.format(extraYCoord));
                             } // End processing N direction
                             else {
                                 // check direction of other road to determine the
 
-                                double extraXCoord = Double.parseDouble(crashXCoord);
-                                double extraYCoord = Double.parseDouble(crashYCoord) + extraDistance;
+                                extraXCoord = Double.parseDouble(crashXCoord);
+                                extraYCoord = Double.parseDouble(crashYCoord) + extraDistance;
 
                                 // If this road is a continuous road, then keep going on the opposite direction
                                 if (vehicleStandingStreet.getStreetPropertyValue("is_single_road_piece").equals("F")) {
@@ -661,11 +683,13 @@ public class StraightPathConstructor {
                                 {
 
                                 }
-
-
-                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
                             } // End appending extra crash point to ensure crash happens
+
+                            if (vehicleCoordAtI.size() > 0
+                                    && !vehicleCoordAtI.get(vehicleCoordAtI.size() - 1).equals(extraXCoord + ":" + extraYCoord))
+                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
                         } // End checking last coord is crash coord
+
                     } // End add extra point for turn into path case.
 
                     // Append grade (zCoord) value into the coords
@@ -684,29 +708,57 @@ public class StraightPathConstructor {
 
                         ConsoleLogger.print('d', "curr vehicle lane number " + currentVehicle.getTravelOnLaneNumber());
 
-                        String currVehicleCrashCoord = vehicleCoordAtI.get(vehicleCoordAtI.size() - 1);
+                        String currVehicleCrashCoord = "";
+
+                        // If the current coord contains the crash coord, modify this crash coord
+                        if (testCase.getCrashType().contains("straight path"))
+                        {
+                            vehicleCoordAtI.remove(vehicleCoordAtI.size() - 1);
+                        }
+                        currVehicleCrashCoord = vehicleCoordAtI.get(vehicleCoordAtI.size() - 1);
+
                         String[] currVehicleCrashCoordElems = currVehicleCrashCoord.split(AccidentParam.defaultCoordDelimiter);
 
                         HashMap<String, String> victimVehicleNavDict = NavigationDictionary.selectDictionaryFromTravelingDirection(
                                 currentVehicle.getTravellingDirection());
 
+                        ConsoleLogger.print('d', "victim travel direction = " + currentVehicle.getTravellingDirection());
+                        ConsoleLogger.print('d', "victim vehicle path = " + vehicleCoordAtI.toString());
+
                         String[] xyCoordBackwardNavigation = victimVehicleNavDict.get("backward").split(";");
+
+                        double xCoordNonCritical = Double.parseDouble(currVehicleCrashCoordElems[0]) +
+                                NavigationDictionary.setCoordValue(AccidentConstructorUtil.getNonCriticalDistance(),
+                                        xyCoordBackwardNavigation[0]);
+
+                        double yCoordNonCritical = Double.parseDouble(currVehicleCrashCoordElems[1]) +
+                                NavigationDictionary.setCoordValue(AccidentConstructorUtil.getNonCriticalDistance(),
+                                        xyCoordBackwardNavigation[1]);
+
+                        // If the near crash coord is ahead of the non-critical distance coord, fix it
+                        if (Double.parseDouble(currVehicleCrashCoordElems[0]) > xCoordNonCritical)
+                        {
+                            xCoordNonCritical += 3;
+                        }
+
+                        else if (Double.parseDouble(currVehicleCrashCoordElems[1]) > yCoordNonCritical)
+                        {
+                            yCoordNonCritical += 3;
+                        }
 
                         currVehicleCrashCoord = AccidentConstructorUtil.updateCoordElementAtDimension(
                                 0,
                                 currVehicleCrashCoord,
-                                Double.parseDouble(currVehicleCrashCoordElems[0]) +
-                                        NavigationDictionary.setCoordValue(AccidentConstructorUtil.getNonCriticalDistance(),
-                                                xyCoordBackwardNavigation[0]) + "",
+                                xCoordNonCritical + "",
                                 AccidentParam.defaultCoordDelimiter);
 
                         currVehicleCrashCoord = AccidentConstructorUtil.updateCoordElementAtDimension(
                                 1,
                                 currVehicleCrashCoord,
-                                Double.parseDouble(currVehicleCrashCoordElems[1]) +
-                                        NavigationDictionary.setCoordValue(AccidentConstructorUtil.getNonCriticalDistance(),
-                                                xyCoordBackwardNavigation[1]) + "",
+                                yCoordNonCritical + "",
                                 AccidentParam.defaultCoordDelimiter);
+
+
 
                         vehicleCoordAtI.set(vehicleCoordAtI.size() - 1, currVehicleCrashCoord);
                     }

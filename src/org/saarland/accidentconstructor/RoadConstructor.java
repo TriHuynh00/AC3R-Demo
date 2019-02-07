@@ -79,6 +79,16 @@ public class RoadConstructor {
             return "fail";
         }
 
+        // Remove last 2 duplicate coords, if any
+        for (VehicleAttr vehicleAttr : vehicleList) {
+            ArrayList<String> movementPath = vehicleAttr.getMovementPath();
+            if (movementPath.get(movementPath.size() - 1).equals(movementPath.get(movementPath.size() - 2)))
+            {
+                movementPath.remove(movementPath.size() - 1);
+                vehicleAttr.setMovementPath(movementPath);
+            }
+        }
+
         ArrayList<Street> streetList = testCaseInfo.getStreetList();
         StringBuilder environmentFileStrBuilder = new StringBuilder();
         //        StringBuilder environmentFileTemplate = new StringBuilder();
@@ -251,6 +261,10 @@ public class RoadConstructor {
                 {
                     lastCoordIndex -= 1;
                 }
+                else if (testCaseInfo.getCrashType().toLowerCase().contains("straight path") )
+                {
+                    lastCoordIndex -= 2;
+                }
 
                 for (int z = 0; z < lastCoordIndex; z++) {
                     double xCoord = Double.parseDouble(movementPath.get(z).split(":")[0]);
@@ -341,7 +355,7 @@ public class RoadConstructor {
                 }
             }
         } catch (Exception ex) {
-            environmentFileStrBuilder.append("Error at construction wp and paths \n" + ex.toString());
+            environmentFileStrBuilder.append("Error at construction wp and paths \n" + ex.getMessage());
         }
 
         ConsoleLogger.print('d', "Final Road Str Builder Obj " + environmentFileStrBuilder.toString());
@@ -1299,6 +1313,7 @@ public class RoadConstructor {
 //            maxLength -= 1;
 //        }
         int strikerID = AccidentConstructorUtil.findStrikerAndVictim(vehicleList.get(0), vehicleList.get(1))[0].getVehicleId();
+        ArrayList<String> createdWaypoints = new ArrayList<String>();
         for (int i = 1; i < maxLength; i++) {
 
             String waypointName = "wp" + i + "_" + currentVehicle.getVehicleId();
@@ -1316,16 +1331,17 @@ public class RoadConstructor {
 
                 if (currentVehicle.getVehicleId() != strikerID)
                 {
-                    if (AccidentConstructorUtil.getNonCriticalDistance() > 0
-                            && !testCaseInfo.getCrashType().contains("straight path"))
+                    if (AccidentConstructorUtil.getNonCriticalDistance() > 0)
                         waypointName = "wp_near_crash";
                 }
 
                 else if (currentVehicle.getVehicleId() == strikerID)
                 {
-                    waypointPathLuaStrBuilder.append("\'" + waypointName + "\'" + ",");
-                    if (AccidentConstructorUtil.getNonCriticalDistance() == 0)
+                    if (createdWaypoints.indexOf(waypointName) > -1) {
+                        waypointPathLuaStrBuilder.append("\'" + waypointName + "\'" + ",");
                         continue;
+                    }
+
                 }
 
 
@@ -1346,16 +1362,19 @@ public class RoadConstructor {
 
             waypointInfoStr = waypointInfoStr.replace("$scale", scaleValue.trim());
 
+            createdWaypoints.add(waypointName);
+
             waypointListStrBuilder.append(waypointInfoStr);
         }
 
         // Construct the vehicle path that goes through these wps
-        vehicleListStrBuilder.append(constructInvisibleTrajectory(currentVehicle.getVehicleId(),
-                currentVehiclePath.get(0), constructRoadNodeString(currentVehiclePath, AccidentParam.laneWidth)));
+        if (maxLength > 1) {
+            vehicleListStrBuilder.append(constructInvisibleTrajectory(currentVehicle.getVehicleId(),
+                    currentVehiclePath.get(0), constructRoadNodeString(currentVehiclePath, AccidentParam.laneWidth)));
 
-        currentVehicle.setWaypointPathNodeName(waypointPathLuaStrBuilder.
-                deleteCharAt(waypointPathLuaStrBuilder.length() - 1).toString());
-
+            currentVehicle.setWaypointPathNodeName(waypointPathLuaStrBuilder.
+                    deleteCharAt(waypointPathLuaStrBuilder.length() - 1).toString());
+        }
         // Construct LUA logic
         try
         {

@@ -1,0 +1,27 @@
+[
+{
+    "name": "FI (18)_non-critical",
+    "description": "This 2-vehicle crash occurred on 3-lane city street. This road runs north to south and has a painted center 2-way left turn lane. This road is straight and level with a paved bike-path/shoulder on both sides of the road.  This crash occurred in the morning daylight hours with a light rain falling and a wet asphalt road. The posted speed limit is 56 kmph (35 mph). 
+vehicle1 (vehicle1) was a vehicle1 4 door sedan driven by a thirty 2 (32) year old male with 1 passenger. vehicle1 was northbound when the driver of vehicle1 stated that he had taken his eyes off the road to look down for a cd case. when his passenger alerted him of the impending impact, it was too late. vehicle1 impacted the rear plane of a vehicle2 pickup that was legally parked partially in the bike-lane/shoulder and partially on the adjacent sidewalk off of the travel lanes. after the impact vehicle1 pushed the vehicle2 truck onto a sidewalk where both vehicle came to rest. vehicle1 was towed due to damage.",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player1": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":2,
+							 "maxSpeed":56.321999999999996},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["FI (18)_non-critical"],
+    "radiusMultiplierAI": 2
+},
+]

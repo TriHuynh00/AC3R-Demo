@@ -42,7 +42,7 @@ public class AccidentParam {
     public static int parkingLineWidth = 2;  // Width unit in Beamng
 
     public static int defaultSpeed  = 20; // mph
-    public static double accelerationTo20Mph = 2.9; // m/s2
+    public static double accelerationTo20Mph = 2.9; // 2.9; // m/s2
 
     public static String noCrashStr = "noCrash";
 

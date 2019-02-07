@@ -1,0 +1,366 @@
+//--- OBJECT WRITE BEGIN ---
+$ThisPrefab = new SimGroup() {
+	canSave = "1";
+	canSaveDynamicFields = "1";
+		groupPosition = "0.000000 0.000000 0.000000";
+	
+	new DecalRoad(lane1) {
+		drivability = "-1";
+		oneWay = "0";
+		flipDirection = "0";
+		improvedSpline = "0";
+		startTangent = "0";
+		endTangent = "0";
+		looped = "0";
+		smoothness = "0.5";
+		detail = "0.100000001";
+		overObjects = "1";
+		Material = "road_asphalt_2lane";
+		textureLength = "5";
+		breakAngle = "3";
+		renderPriority = "10";
+		zBias = "0";
+		decalBias = "0.000500000024";
+		distanceFade = "0 0";
+		startEndFade = "0 0";
+		position = "-240.0 0.0 0";
+		scale = "1 1 1";
+		rotationMatrix = "1 0 0 0 1 0 0 0 1";
+		canSave = "1";
+		canSaveDynamicFields = "1";
+
+				Node = "-240.0 0.0 0 20.0";
+		Node = "-180.0 0.0 0 20.0";
+		Node = "-120.0 0.0 0 20.0";
+		Node = "-60.0 0.0 0 20.0";
+		Node = "0 0 0 20.0";
+		Node = "60.0 0.0 0 20.0";
+		Node = "120.0 0.0 0 20.0";
+		Node = "180.0 0.0 0 20.0";
+		Node = "240.0 0.0 0 20.0";
+
+   };
+
+
+	new DecalRoad(pavementright_1) {
+		drivability = "-1";
+		oneWay = "0";
+		flipDirection = "0";
+		improvedSpline = "0";
+		startTangent = "0";
+		endTangent = "0";
+		looped = "0";
+		smoothness = "0.5";
+		detail = "0.100000001";
+		overObjects = "1";
+		Material = "sidewalk_concrete";
+		textureLength = "5";
+		breakAngle = "3";
+		renderPriority = "11";
+		zBias = "0";
+		decalBias = "0.000500000024";
+		distanceFade = "0 0";
+		startEndFade = "0 0";
+		position = "-240.0 -12.0 0";
+		scale = "1 1 1";
+		rotationMatrix = "1 0 0 0 1 0 0 0 1";
+		canSave = "1";
+		canSaveDynamicFields = "1";
+
+				Node = "-240.0 -12.0 0 4.0";
+		Node = "-180.0 -12.0 0 4.0";
+		Node = "-120.0 -12.0 0 4.0";
+		Node = "-60.0 -12.0 0 4.0";
+		Node = "0 -12.0 0 4.0";
+		Node = "60.0 -12.0 0 4.0";
+		Node = "120.0 -12.0 0 4.0";
+		Node = "180.0 -12.0 0 4.0";
+		Node = "240.0 -12.0 0 4.0";
+
+   };
+
+
+	new DecalRoad(pavementleft_1) {
+		drivability = "-1";
+		oneWay = "0";
+		flipDirection = "0";
+		improvedSpline = "0";
+		startTangent = "0";
+		endTangent = "0";
+		looped = "0";
+		smoothness = "0.5";
+		detail = "0.100000001";
+		overObjects = "1";
+		Material = "sidewalk_concrete";
+		textureLength = "5";
+		breakAngle = "3";
+		renderPriority = "11";
+		zBias = "0";
+		decalBias = "0.000500000024";
+		distanceFade = "0 0";
+		startEndFade = "0 0";
+		position = "-240.0 12.0 0";
+		scale = "1 1 1";
+		rotationMatrix = "1 0 0 0 1 0 0 0 1";
+		canSave = "1";
+		canSaveDynamicFields = "1";
+
+				Node = "-240.0 12.0 0 4.0";
+		Node = "-180.0 12.0 0 4.0";
+		Node = "-120.0 12.0 0 4.0";
+		Node = "-60.0 12.0 0 4.0";
+		Node = "0 12.0 0 4.0";
+		Node = "60.0 12.0 0 4.0";
+		Node = "120.0 12.0 0 4.0";
+		Node = "180.0 12.0 0 4.0";
+		Node = "240.0 12.0 0 4.0";
+
+   };
+
+
+	new DecalRoad(roadDivision1_1) {
+		drivability = "-1";
+		oneWay = "0";
+		flipDirection = "0";
+		improvedSpline = "0";
+		startTangent = "0";
+		endTangent = "0";
+		looped = "0";
+		smoothness = "0.5";
+		detail = "0.100000001";
+		overObjects = "1";
+		Material = "line_yellow";
+		textureLength = "5";
+		breakAngle = "3";
+		renderPriority = "9";
+		zBias = "0";
+		decalBias = "0.000500000024";
+		distanceFade = "0 0";
+		startEndFade = "0 0";
+		position = "-240.0 0.0 0";
+		scale = "1 1 1";
+		rotationMatrix = "1 0 0 0 1 0 0 0 1";
+		canSave = "1";
+		canSaveDynamicFields = "1";
+
+				Node = "-240.0 5 0  0.1";
+		Node = "-180.0 5 0  0.1";
+		Node = "-120.0 5 0  0.1";
+		Node = "-60.0 5 0  0.1";
+		Node = "0.0 5 0  0.1";
+		Node = "60.0 5 0  0.1";
+		Node = "120.0 5 0  0.1";
+		Node = "180.0 5 0  0.1";
+		Node = "240.0 5 0  0.1";
+
+   };
+
+
+	new DecalRoad(roadDivision2_1) {
+		drivability = "-1";
+		oneWay = "0";
+		flipDirection = "0";
+		improvedSpline = "0";
+		startTangent = "0";
+		endTangent = "0";
+		looped = "0";
+		smoothness = "0.5";
+		detail = "0.100000001";
+		overObjects = "1";
+		Material = "line_yellow";
+		textureLength = "5";
+		breakAngle = "3";
+		renderPriority = "9";
+		zBias = "0";
+		decalBias = "0.000500000024";
+		distanceFade = "0 0";
+		startEndFade = "0 0";
+		position = "-240.0 0.0 0";
+		scale = "1 1 1";
+		rotationMatrix = "1 0 0 0 1 0 0 0 1";
+		canSave = "1";
+		canSaveDynamicFields = "1";
+
+				Node = "-240.0 0 0  0.1";
+		Node = "-180.0 0 0  0.1";
+		Node = "-120.0 0 0  0.1";
+		Node = "-60.0 0 0  0.1";
+		Node = "0.0 0 0  0.1";
+		Node = "60.0 0 0  0.1";
+		Node = "120.0 0 0  0.1";
+		Node = "180.0 0 0  0.1";
+		Node = "240.0 0 0  0.1";
+
+   };
+
+
+	new DecalRoad(roadDivision3_1) {
+		drivability = "-1";
+		oneWay = "0";
+		flipDirection = "0";
+		improvedSpline = "0";
+		startTangent = "0";
+		endTangent = "0";
+		looped = "0";
+		smoothness = "0.5";
+		detail = "0.100000001";
+		overObjects = "1";
+		Material = "line_yellow";
+		textureLength = "5";
+		breakAngle = "3";
+		renderPriority = "9";
+		zBias = "0";
+		decalBias = "0.000500000024";
+		distanceFade = "0 0";
+		startEndFade = "0 0";
+		position = "-240.0 0.0 0";
+		scale = "1 1 1";
+		rotationMatrix = "1 0 0 0 1 0 0 0 1";
+		canSave = "1";
+		canSaveDynamicFields = "1";
+
+				Node = "-240.0 -5 0  0.1";
+		Node = "-180.0 -5 0  0.1";
+		Node = "-120.0 -5 0  0.1";
+		Node = "-60.0 -5 0  0.1";
+		Node = "0.0 -5 0  0.1";
+		Node = "60.0 -5 0  0.1";
+		Node = "120.0 -5 0  0.1";
+		Node = "180.0 -5 0  0.1";
+		Node = "240.0 -5 0  0.1";
+
+   };
+
+ 	new BeamNGVehicle(scenario_player1) {
+		JBeam = "etk800";
+		color = "1 0.9 0 1";
+		colorPalette0 = "White";
+		colorPalette1 = "White";
+		partConfig = "vehicles/etk800/etk854t_A.pc";
+		renderDistance = "500";
+		renderFade = "0.100000001";
+		dataBlock = "default_vehicle";
+		position = "-60.0 -7.5 0";
+		scale = "1 1 1";
+		rotationMatrix = "0.000197529793 0.999126077 0.041796688 -0.997556925 0.00311672688 -0.0697889775 -0.069858253 -0.0416807905 0.996685803";
+		canSave = "1";
+		canSaveDynamicFields = "1";
+		 annotation = "CAR";
+		 isAIControlled = "1";
+		 licenseText = "Car1";
+		 mode = "Ignore";
+	};
+	new DecalRoad(v1_trajectory) {
+		drivability = "1";
+		oneWay = "0";
+		flipDirection = "0";
+		improvedSpline = "0";
+		startTangent = "0";
+		endTangent = "0";
+		looped = "0";
+		smoothness = "0.5";
+		detail = "0.100000001";
+		overObjects = "1";
+		Material = "road_invisible";
+		textureLength = "5";
+		breakAngle = "3";
+		renderPriority = "10";
+		zBias = "0";
+		decalBias = "0.000500000024";
+		distanceFade = "0 0";
+		startEndFade = "0 0";
+		position = "-60.0 -7.5 0";
+		scale = "1 1 1";
+		rotationMatrix = "1 0 0 0 1 0 0 0 1";
+		canSave = "1";
+		canSaveDynamicFields = "1";
+
+				Node = "-60.0 -7.5 0 5.0";
+		Node = "-40.0 -7.5 0 5.0";
+		Node = "-20.0 -7.5 0 5.0";
+		Node = "15.0 -12.5 0 5.0";
+
+
+   };
+	new BeamNGVehicle(scenario_player2) {
+		JBeam = "etk800";
+		color = "0.871 0.878 0.871 1";
+		colorPalette0 = "White";
+		colorPalette1 = "White";
+		partConfig = "vehicles/etk800/etk854t_A.pc";
+		renderDistance = "500";
+		renderFade = "0.100000001";
+		dataBlock = "default_vehicle";
+		position = "0.0 -17.5 0";
+		scale = "1 1 1";
+		rotationMatrix = "0.000197529793 0.999126077 0.041796688 -0.997556925 0.00311672688 -0.0697889775 -0.069858253 -0.0416807905 0.996685803";
+		canSave = "1";
+		canSaveDynamicFields = "1";
+		 annotation = "CAR";
+		 isAIControlled = "1";
+		 licenseText = "Car2";
+		 mode = "Ignore";
+	};
+
+
+	new BeamNGWaypoint(wp1_v1) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "-40.0 -7.5 0";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 0.999999523 -0.000976562209 0 0.000976562209 0.999999523";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+	};
+	new BeamNGWaypoint(wp2_v1) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "-20.0 -7.5 0";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 0.999999523 -0.000976562209 0 0.000976562209 0.999999523";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+	};
+	new BeamNGWaypoint(wp3_v1) {
+      drawDebug = "0";
+      directionalWaypoint = "0";
+      position = "15.0 -12.5 0";
+      scale = "1 1 1";
+      rotationMatrix = "1 0 0 0 0.999999523 -0.000976562209 0 0.000976562209 0.999999523";
+      canSave = "1";
+      canSaveDynamicFields = "1";
+	};
+
+
+	new ScatterSky(SkyEnv) {
+		position = "70.39710235595703,4.539209842681885,73.99230194091797";
+ 	 	ambientScale = "0.6299999952316284,0.699999988079071,0.8100000023841858,1";
+ 	 	azimuth = "286.6984558105469";
+ 	 	colorize = "0.4000000059604645,0.5,0.6000000238418579,1";
+ 	 	colorizeAmount = "0.5";
+ 	 	elevation = "52.818603515625";
+ 	 	exposure = "1.399999976158142";
+ 	 	flareScale = "10";
+ 	 	flareType = "BNG_Sunflare_2";
+ 	 	fogScale = "0.8100000023841858,0.8600000143051147,0.8799999952316284,1";
+ 	 	lastSplitTerrainOnly = "true";
+ 	 	logWeight = "0.9900000095367432";
+ 	 	mieScattering = "0.000607529713306576";
+ 	 	moonLightColor = "0.2470590025186539,0.2470590025186539,0.2470590025186539,1";
+ 	 	moonMat = "Moon_Glow_Mat";
+ 	 	moonScale = "0.02999999932944775";
+ 	 	nightColor = "0.02352939918637276,0.02352939918637276,0.02352930046617985,1";
+ 	 	nightCubemap = "BlackSkyCubemap";
+ 	 	nightFogColor = "6.313690360861896e-41,0,0,1";
+ 	 	overDarkFactor = "20000,11000,2000,400";
+ 	 	shadowDarkenColor = "0,0,0,0";
+ 	 	shadowDistance = "1600";
+ 	 	shadowSoftness = "0.2000000029802322";
+ 	 	skyBrightness = "240.0";
+		brightness = "0.8";
+ 	 	sunScale = "1,0.8600000143051147,0.6299999952316284,1";
+ 	 	texSize = "1024";
+ 	 	useNightCubemap = "true";
+   };
+
+ };

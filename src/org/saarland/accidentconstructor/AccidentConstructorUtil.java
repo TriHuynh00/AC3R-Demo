@@ -464,9 +464,12 @@ public class AccidentConstructorUtil {
 
     // Replace word number with number
     public static String transformWordNumIntoNum(String text) {
-
         for (int i = 0; i < wordNumber.length; i++) {
-            text = text.replace(" " + wordNumber[i], " " + i).replace(wordNumber[i] + " ", i + " ");
+            if (text.contains(wordNumber[i] + " ") || text.contains(" " + wordNumber[i])) {
+                text = text.replace(" " + wordNumber[i], " " + i)
+                        .replace(wordNumber[i] + " ", i + " ");
+                continue;
+            }
         }
         return text;
     }
@@ -775,5 +778,25 @@ public class AccidentConstructorUtil {
         return AccidentParam.RIGHTMOSTLANE; // If the lane is not found, set the vehicle at the right most lane
     }
 
+    public static boolean searchForWordInParagragh(String keyword, String paragraph)
+    {
+        String[] words = paragraph.split(" ");
+        boolean keywordIsFound = false;
+        for (int i = 0; i < words.length; i++)
+        {
+            String word = words[i];
+
+            word = word.replace(",", "")
+                    .replace(".","")
+                    .replace(";", "")
+                    .replace(":", "");
+
+            if (word.trim().startsWith(keyword))
+            {
+                keywordIsFound = true;
+            }
+        }
+        return keywordIsFound;
+    }
 }
 

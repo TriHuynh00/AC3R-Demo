@@ -1,0 +1,27 @@
+[
+{
+    "name": "RE (5)",
+    "description": "The crash happened on a roadway that travels north/south.  This roadway consists of 2 lanes, 1 southbound left turn lane, 2 shoulders on either side of the roadway and 2 bicycle lanes on either side.  The weather conditions that day were clear.  The crash occurred in the early afternoon hours. 
+the driver of vehicle1 was traveling southbound on the roadway approaching the intersection. the driver of vehicle1 did not see vehicle2 stopped in the travel lane. vehicle1 contacted the rear of vehicle2 with its front end. neither driver required medical attention. vehicle1 was towed do to major damage to its front end.",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player1": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":1,
+							 "maxSpeed":40.23},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["RE (5)"],
+    "radiusMultiplierAI": 2
+},
+]

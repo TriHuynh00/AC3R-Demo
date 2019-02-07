@@ -1,0 +1,27 @@
+[
+{
+    "name": "RE (19)_non-critical",
+    "description": "This crash occurred on a 4 lane undivided roadway slightly curving to the left prior to the crash site. The posted speed limit is 48 KMPH (30MPH) with no grade. The weather was clear and the roadway was dry. The crash occurred on a weekday evening.
+vehicle2, a vehicle2, was traveling north on the 4 lane undivided roadway when it stopped to allow several southbound vehicle to pass before proceeding to make an intended left turn into a retail establishment's driveway. vehicle1, a vehicle1, was traveling in the same direction behind vehicle2 . vehicle1 impacted the rear of vehicle2 with its front. both vehicles came to rest in the roadway facing north.",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player1": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":2,
+							 "maxSpeed":48.275999999999996},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["RE (19)_non-critical"],
+    "radiusMultiplierAI": 2
+},
+]

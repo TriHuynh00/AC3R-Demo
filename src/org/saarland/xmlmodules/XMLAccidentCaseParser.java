@@ -138,7 +138,7 @@ public class XMLAccidentCaseParser {
                 ConsoleLogger.print('d', "Found BODY_TYPE " + bodyType);
                 AccidentConcept bodyTypeConcept = parser.findExactConceptInKeyword(bodyType);
 
-                if (bodyTypeConcept != null && bodyTypeConcept.getConceptGroup().equals("car_model")) {
+                if (bodyTypeConcept != null && bodyTypeConcept.getLeafLevelName().equals("car_model")) {
                     vehicle.setVehicleType(bodyType);
                 }
 
@@ -150,12 +150,12 @@ public class XMLAccidentCaseParser {
                 {
                     try {
 //                    // try until we find a body type concept
-//                    while (!bodyTypeConcept.getConceptGroup().equals("car_model"))
+//                    while (!bodyTypeConcept.getLeafLevelName().equals("car_model"))
 //                    {
 //
 //                    }
                         // Find if the body type is in the Ontology
-                        if (bodyTypeConcept.getConceptGroup().equals("car_model")) {
+                        if (bodyTypeConcept.getLeafLevelName().equals("car_model")) {
 
                             if (bodyTypeConcept.getDataProperties() != null) {
                                 vehicle.setPartConfig(bodyTypeConcept.getDataProperties().get("partconfig"));
@@ -208,7 +208,7 @@ public class XMLAccidentCaseParser {
 //                AccidentConcept colorConcept = parser.findConcept(colorName);
 //                // Find if the color is in the Ontology
 //                try {
-//                    if (colorConcept.getConceptGroup().equals("color")) {
+//                    if (colorConcept.getLeafLevelName().equals("color")) {
 //
 //                        if (colorConcept.getDataProperties() != null) {
 //                            vehicle.setColor(colorConcept.getDataProperties().get("rgb_code"));
@@ -390,18 +390,25 @@ public class XMLAccidentCaseParser {
     }
 
     public static String readTagOfAGivenOrder(String mainTagName, String specificTagName, int objectIndex) {
-        NodeList targetTags = rootElement.getElementsByTagName(specificTagName);
+        try {
+            NodeList targetTags = rootElement.getElementsByTagName(specificTagName);
 
-        Node tagInfo = targetTags.item(objectIndex);
+            Node tagInfo = targetTags.item(objectIndex);
 
-        ConsoleLogger.print('d',"tagInfo " + tagInfo.getNodeName());
+            ConsoleLogger.print('d', "tagInfo " + tagInfo.getNodeName());
 
-        Node tagInfoIterator = tagInfo.getFirstChild();
+            Node tagInfoIterator = tagInfo.getFirstChild();
 
-        ConsoleLogger.print('d',"tagInfoIterator " + tagInfoIterator.getTextContent());
+            ConsoleLogger.print('d', "tagInfoIterator " + tagInfoIterator.getTextContent());
+
+            return AccidentConstructorUtil.transformWordNumIntoNum(tagInfoIterator.getTextContent().trim());
+        } catch (Exception ex) {
+            ConsoleLogger.print('d', "Error when read tag of a given order");
+            ex.printStackTrace();
+            return "";
+        }
 
 
-        return AccidentConstructorUtil.transformWordNumIntoNum(tagInfoIterator.getTextContent().trim());
     }
 
     private String readColorValue(String colorName, OntologyHandler parser)
@@ -410,7 +417,7 @@ public class XMLAccidentCaseParser {
         AccidentConcept colorConcept = parser.findConcept(colorName);
         // Find if the color is in the Ontology
         try {
-            if (colorConcept.getConceptGroup().equals("color")) {
+            if (colorConcept.getLeafLevelName().equals("color")) {
 
                 if (colorConcept.getDataProperties() != null) {
                     return colorConcept.getDataProperties().get("rgb_code");

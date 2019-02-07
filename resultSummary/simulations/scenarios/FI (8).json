@@ -1,0 +1,27 @@
+[
+{
+    "name": "FI (8)",
+    "description": "This crash occurred in the early afternoon of a weekday on a 2-way, 2-lane, divided residential roadway.  The bituminous east/west roadway featured 1 lane in each direction (with wide shoulders for parking) divided by a grass median.  The roadway was dry, straight, and level, with a posted speed limit of 40kmph (25 mph).  Traffic flow was normal and there were no adverse atmospheric conditions at the time of the crash. 
+vehicle1, a vehicle1 hatchback, was eastbound in lane 1. vehicle2, a vehicle2, was legally parked on the right side of lane 1. as vehicle1 continued eastbound it began drifting to the right and struck vehicle2 in the rear. after impact vehicle2 rolled approximately 7m (23ft.) before coming to final rest. vehicle1 came to final rest near the point of impact. ",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player1": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":1,
+							 "maxSpeed":40.23},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["FI (8)"],
+    "radiusMultiplierAI": 2
+},
+]

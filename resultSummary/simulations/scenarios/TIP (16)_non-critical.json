@@ -1,0 +1,27 @@
+[
+{
+    "name": "TIP (16)_non-critical",
+    "description": "The crash occurred in the eastbound lane of a 2-lane roadway with a T-intersection.  Conditions were dusk and dry in the evening on a weekend.  The northbound lane had a posted speed limit of 40 kmph (25 mph) and the eastbound lane had a posted speed limit of 56 kmph (35 mph).
+   vehicle1 was a vehicle1 sedan traveling eastbound in the right lane approaching a t-intersection. vehicle2, a vehicle2 sedan, was traveling northbound in the right lane approaching a stop sign intending on turning left. vehicle2 stopped at the stop sign, looked in both directions but there was landscaping and a fence obstructing vehicle2's view. vehicle2 then proceeded to turn left and the front of vehicle1 struck the left side of vehicle2 in the intersection., as vehicle1 passed by vehicle2, vehicle2's right front contacted the back of vehicle1. vehicle1 continued on and struck a curb and a tree. vehicle1 came to final rest facing eastbound. vehicle2 continued on and struck a curb and came to final rest facing northwest.",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player1": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":1,
+							 "maxSpeed":56.321999999999996},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["TIP (16)_non-critical"],
+    "radiusMultiplierAI": 2
+},
+]

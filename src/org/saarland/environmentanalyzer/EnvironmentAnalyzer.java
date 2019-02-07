@@ -1,9 +1,12 @@
-package org.saarland.accidentconstructor;
+package org.saarland.environmentanalyzer;
 
+import org.saarland.accidentconstructor.AccidentConstructorUtil;
+import org.saarland.accidentconstructor.ConsoleLogger;
 import org.saarland.accidentelementmodel.RoadShape;
 import org.saarland.accidentelementmodel.Street;
 import org.saarland.accidentelementmodel.TestCaseInfo;
 import org.saarland.accidentelementmodel.VehicleAttr;
+import org.saarland.nlptools.StanfordCoreferencer;
 import org.saarland.nlptools.Stemmer;
 import org.saarland.ontologyparser.AccidentConcept;
 import org.saarland.ontologyparser.OntologyHandler;
@@ -26,6 +29,64 @@ public class EnvironmentAnalyzer {
     }
 
     public EnvironmentAnalyzer(){ connectedStreetDirections = new ArrayList<String>();   }
+
+
+    public void extractBasicRoadProperties(String paragraph1, String paragraph2,
+                                           OntologyHandler parser, TestCaseInfo testCase,
+                                           ArrayList<VehicleAttr> vehicleList, StanfordCoreferencer stanfordCoreferencer)
+    {
+        // Find the existence of intersection
+        RoadAnalyzer roadAnalyzer = new RoadAnalyzer(testCase.getStreetList(), parser, testCase);
+
+        String intersectionType = "";
+
+        // For forward impact or rear end, no intersection needs to be found
+        if (testCase.getCrashType().contains("rear-end") || testCase.getCrashType().contains("rearend")
+                || testCase.getCrashType().contains("forward impact"))
+        {
+            // Create a single street and set it as East Direction
+            Street newStreet = testCase.createNewStreet();
+            newStreet.putValToKey("road_navigation", "E");
+        }
+        else // Other crash types, we need to find if an intersection exists
+        {
+            intersectionType = roadAnalyzer.findIntersectionExistence(paragraph1);
+
+            if (intersectionType.equals("none"))
+            {
+                intersectionType = roadAnalyzer.findIntersectionExistence(paragraph2);
+            }
+
+            ConsoleLogger.print('d', "INTERSECTION type is " + intersectionType);
+        } // End checking intersection
+
+        // Creates road based on the intersection
+        if (!intersectionType.equals("none"))
+            roadAnalyzer.createEmptyRoads(intersectionType, testCase);
+
+        // Try to search the two paragraphs for road information
+        boolean allRoadHasDirection =
+                roadAnalyzer.analyzeRoadDirection(intersectionType, paragraph1, stanfordCoreferencer);
+
+        // If not all the roads have a specific direction, scan paragraph 2 and analyzes any mentioned direction
+        if (!allRoadHasDirection)
+            allRoadHasDirection = roadAnalyzer.analyzeRoadDirection(intersectionType, paragraph2, stanfordCoreferencer);
+
+        // If not all direction are found, scan the road type to determine how many road sections are there
+        if (!allRoadHasDirection)
+        {
+            roadAnalyzer.constructRoadByRoadType(paragraph1);
+            roadAnalyzer.analyzeRoadDirection(intersectionType, paragraph2, stanfordCoreferencer);
+        }
+
+        // ----- End road analysis based on direction -----
+
+        // ----- Analyze other road properties -----
+
+        // ** Number of lanes **
+
+
+    }
 
     public void extractEnvironmentProp(LinkedList<LinkedList<String>> environmenTaggedWordsAndDependencies,
                                        OntologyHandler parser, TestCaseInfo testCase, ArrayList<VehicleAttr> vehicleList)
@@ -138,7 +199,7 @@ public class EnvironmentAnalyzer {
 
                             AccidentConcept assumedDirectionConcept = parser.findExactConcept(assumedDirectionWord);
 //                        ConsoleLogger.print('d',"AssumedDirectionWord is " + assumedDirectionWord + " concept: " + assumedDirectionConcept);
-                            if (assumedDirectionConcept != null && assumedDirectionConcept.getConceptGroup().equals("vehicle_direction")) {
+                            if (assumedDirectionConcept != null && assumedDirectionConcept.getLeafLevelName().equals("vehicle_direction")) {
                                 connectedStreetDirections.add(AccidentConstructorUtil.convertDirectionWordToDirectionLetter(assumedDirectionWord));
                             }
                         }
@@ -155,8 +216,8 @@ public class EnvironmentAnalyzer {
                             && !AccidentConstructorUtil.isNumeric(word) && parser.isExactConceptExist(word)) {
                         AccidentConcept conceptOfWord = parser.findExactConcept(word);
                         if (conceptOfWord != null && conceptOfWord.getInputGroup().equals("environment_properties")
-                                || conceptOfWord.getConceptGroup().equals("vehicle_direction")) {
-                            ConsoleLogger.print('d', String.format("Found envi concept : %s with group : %s\n", word, conceptOfWord.getConceptGroup()));
+                                || conceptOfWord.getLeafLevelName().equals("vehicle_direction")) {
+                            ConsoleLogger.print('d', String.format("Found envi concept : %s with group : %s\n", word, conceptOfWord.getLeafLevelName()));
 
                             // Initiate the current working street
 
@@ -171,9 +232,9 @@ public class EnvironmentAnalyzer {
                                 } else // street(s) is already created
                                 {
                                     if (currentStreet == null) {
-                                        ConsoleLogger.print('d', "Process street with doubt " + conceptOfWord.getConceptGroup());
+                                        ConsoleLogger.print('d', "Process street with doubt " + conceptOfWord.getLeafLevelName());
                                         // Determine whether we need to refer a street a not
-                                        if (conceptOfWord.getConceptGroup().equals("road_type")) {
+                                        if (conceptOfWord.getLeafLevelName().equals("road_type")) {
                                             String otherWordToken = AccidentConstructorUtil.getOtherWordInDep(word, wordPair);
 
                                             String otherWord = AccidentConstructorUtil.getWordFromToken(otherWordToken).toLowerCase();
@@ -295,7 +356,7 @@ public class EnvironmentAnalyzer {
                             }
 
 
-                            if (conceptOfWord.getConceptGroup().equals("speed_limit")) {
+                            if (conceptOfWord.getLeafLevelName().equals("speed_limit")) {
                                 if (word.equals("speed_limit")) {
                                     // Find the speed limit value
                                     String speedMeasurementUnit = "mph";
@@ -334,7 +395,7 @@ public class EnvironmentAnalyzer {
 
                                     }
                                 }
-                            } else if (conceptOfWord.getConceptGroup().equals("road_grade")) {
+                            } else if (conceptOfWord.getLeafLevelName().equals("road_grade")) {
                                 // Find the grade percentage
                                 LinkedList<String> gradeDeps = AccidentConstructorUtil.findConnectedDependencies(
                                         dependencyList, null, "%", dependency, 0);
@@ -399,7 +460,7 @@ public class EnvironmentAnalyzer {
                                     }
                                 }
 
-                            } else if (conceptOfWord.getConceptGroup().equals("lane")) {
+                            } else if (conceptOfWord.getLeafLevelName().equals("lane")) {
                                 // Find the lane number
                                 if (word.equals("lane")) {
                                     String otherWordToken = AccidentConstructorUtil.getOtherWordInDep(word, wordPair);
@@ -414,7 +475,7 @@ public class EnvironmentAnalyzer {
                                     putRoadPropToTargetRoads(false, currentStreet, "lane_num"
                                             , word.split("-")[0], testCase);
                                 }
-                            } else if (conceptOfWord.getConceptGroup().equals("road_shape")) {
+                            } else if (conceptOfWord.getLeafLevelName().equals("road_shape")) {
                                 ConsoleLogger.print('d', "analyze Road Shape for word " + word);
                                 if (isMultipleRoad) {
                                     for (Street street : testCase.getStreetList()) {
@@ -425,10 +486,10 @@ public class EnvironmentAnalyzer {
                                 }
 //                            ConsoleLogger.print('d',"Curr Street After analyze ");
 //                            currentStreet.printStreetInfo();
-                            } else if (conceptOfWord.getConceptGroup().equals("road_type")) {
+                            } else if (conceptOfWord.getLeafLevelName().equals("road_type")) {
                                 putRoadPropToTargetRoads(isMultipleRoad, currentStreet, "road_type"
                                         , word, testCase);
-                            } else if (conceptOfWord.getConceptGroup().equals("junction_type")) {
+                            } else if (conceptOfWord.getLeafLevelName().equals("junction_type")) {
                                 ConsoleLogger.print('d', "Junction type " + word);
                                 if (word.contains("intersection")) {
                                     ConsoleLogger.print('d', "Found " + word);
@@ -443,18 +504,18 @@ public class EnvironmentAnalyzer {
                                     }
 //                                ConsoleLogger.print('d',"Current Street assigned in Intersection " + currentStreet.getStreetPropertyValue("road_ID"));
                                 }
-                            } else if (conceptOfWord.getConceptGroup().equals("pavement_type")) {
+                            } else if (conceptOfWord.getLeafLevelName().equals("pavement_type")) {
                                 ConsoleLogger.print('d', "Pavement type " + word);
 
                                 putRoadPropToTargetRoads(isMultipleRoad, currentStreet, "pavement_type"
                                         , word, testCase);
-                            } else if (conceptOfWord.getConceptGroup().equals("traffic_sign")) {
+                            } else if (conceptOfWord.getLeafLevelName().equals("traffic_sign")) {
                                 ConsoleLogger.print('d', "traffic sign found " + word);
                                 appendRoadPropToTargetRoads(isMultipleRoad, currentStreet, "traffic_sign_list"
                                         , word, testCase);
                                 // For T-intersection, create 2 roads
 
-                            } else if (conceptOfWord.getConceptGroup().equals("vehicle_direction")) {
+                            } else if (conceptOfWord.getLeafLevelName().equals("vehicle_direction")) {
                                 ConsoleLogger.print('d', "Found direction " + word);
                                 String direction = AccidentConstructorUtil.convertDirectionWordToDirectionLetter(word);
                                 // If the street does not have navigation, define it
@@ -493,9 +554,9 @@ public class EnvironmentAnalyzer {
 
                                 } // End checking currentStreet is null
                             } else {
-                                if (newTestCaseProp.containsKey(conceptOfWord.getConceptGroup())) {
-                                    newTestCaseProp.put(conceptOfWord.getConceptGroup(), word);
-                                    putRoadPropToTargetRoads(isMultipleRoad, currentStreet, conceptOfWord.getConceptGroup()
+                                if (newTestCaseProp.containsKey(conceptOfWord.getLeafLevelName())) {
+                                    newTestCaseProp.put(conceptOfWord.getLeafLevelName(), word);
+                                    putRoadPropToTargetRoads(isMultipleRoad, currentStreet, conceptOfWord.getLeafLevelName()
                                             , word, testCase);
                                     processedConcepts.add(word);
                                 }
@@ -518,9 +579,9 @@ public class EnvironmentAnalyzer {
 
                     // If concept exists, add the value to the corresponding test case attr
                     if (exactWordConcept != null) {
-                        ConsoleLogger.print('d', "Exact concept of word " + stemmedWord + " is " + exactWordConcept.getConceptGroup());
-                        if (exactWordConcept.getConceptGroup().equals("lighting") || exactWordConcept.getConceptGroup().equals("weather")) {
-                            String conceptGroup = exactWordConcept.getConceptGroup();
+                        ConsoleLogger.print('d', "Exact concept of word " + stemmedWord + " is " + exactWordConcept.getLeafLevelName());
+                        if (exactWordConcept.getLeafLevelName().equals("lighting") || exactWordConcept.getLeafLevelName().equals("weather")) {
+                            String conceptGroup = exactWordConcept.getLeafLevelName();
                             ConsoleLogger.print('d', "Find Lighting or Weather word " + word);
                             String currentLightingWeatherCondition = testCase.getEnvPropertyValue(conceptGroup);
 
@@ -570,7 +631,7 @@ public class EnvironmentAnalyzer {
 
 
                         } else {
-                            testCase.putValToKey(exactWordConcept.getConceptGroup(), stemmedWord);
+                            testCase.putValToKey(exactWordConcept.getLeafLevelName(), stemmedWord);
                         }
                     } // End checking exact concept is not null
 
@@ -581,7 +642,7 @@ public class EnvironmentAnalyzer {
 
                         // Find whether street has parking line
                         if (wordConcept != null
-                                && wordConcept.getConceptGroup().equals("road_type")
+                                && wordConcept.getLeafLevelName().equals("road_type")
                                 && dependency.contains("side-")) {
                             String sidePattern = "side-";
                             LinkedList<String> relatedSideDependencies = AccidentConstructorUtil.findConnectedDependencies(dependencyList, taggedWordList,
@@ -844,7 +905,7 @@ public class EnvironmentAnalyzer {
         for (int i = 0; i < streetList.size(); i++)
         {
             streetProp = streetList.get(i).getStreetProp();
-            ConsoleLogger.print('d',"Check Missing property for car #" + streetProp.get("road_ID"));
+            ConsoleLogger.print('d',"Check Missing property for street #" + streetProp.get("road_ID"));
             // Try to assign assumed value to an important empty tag, or find the value in the file
             // Negate the curve radius if the curve direction is right
 
@@ -855,19 +916,28 @@ public class EnvironmentAnalyzer {
                         // Find the Number of Lane tag
 
                         if (key.equals("lane_num")) {
-                            ConsoleLogger.print('d',"Processing Missing Lane Number");
+                            ConsoleLogger.print('d',"Processing Missing Lane Number for road " + streetProp.get("road_ID"));
                             try {
                                 String laneNumber = XMLAccidentCaseParser.readTagOfAGivenOrder("ROADWAY",
                                         "NUM_OF_TRAVEL_LANES", Integer.parseInt(streetProp.get("road_ID")) - 1);
                                 ConsoleLogger.print('d',"Lane Number in Tag NUM_OF_TRAVEL_LANES for road #" + streetProp.get("road_ID") + " is " + laneNumber);
-                                laneNumber = AccidentConstructorUtil.transformWordNumIntoNum(laneNumber.toLowerCase() + " ").trim();
+//                                laneNumber = AccidentConstructorUtil.transformWordNumIntoNum(laneNumber.toLowerCase() + " ").trim();
 //                                testCaseProp.put(key, laneNumber);
-                                streetProp.put(key, laneNumber);
+                                if (AccidentConstructorUtil.isNumeric(laneNumber))
+                                {
+                                    streetProp.put(key, laneNumber.trim());
+                                }
+                                else
+                                {
+                                    streetProp.put(key, "2");
+                                    laneNumber = "2";
+                                }
+                                ConsoleLogger.print('d',String.format("put lane Number %s for road #%s \n", laneNumber.trim(), streetProp.get("road_ID")));
                             }
                             catch (Exception ex)
                             {
                                 streetProp.put(key, "2");
-                                ConsoleLogger.print('d',"Error in reading lane number!!!! \n" + ex);
+                                ConsoleLogger.print('d',"Error in reading lane number!!!! Put lane number = 2 to road \n" + ex);
                             }
                         } // End finding value for lane_num
                         else if (key.equals("road_grade"))
@@ -901,7 +971,12 @@ public class EnvironmentAnalyzer {
                         {
                             String speed_limit = XMLAccidentCaseParser.readTagOfAGivenOrder("ROADWAY",
                                     "SPEED_LIMIT", Integer.parseInt(streetProp.get("road_ID")) - 1);
-                            streetProp.put(key, "" + Math.round(Double.parseDouble(speed_limit) * 0.621427));
+                            if (AccidentConstructorUtil.isNumeric(speed_limit))
+                            {
+                                streetProp.put(key, "" + Math.round(Double.parseDouble(speed_limit) * 0.621427));
+                                ConsoleLogger.print('d', "put speed limit %s to street #");
+                            }
+
                         }
 
 
@@ -926,7 +1001,8 @@ public class EnvironmentAnalyzer {
             }
             catch (Exception ex)
             {
-                ConsoleLogger.print('e',"Exception in checking empty street prop \n" + ex);
+                ConsoleLogger.print('e',"Exception in checking empty street prop \n");
+                ex.printStackTrace();
             }
         }
 

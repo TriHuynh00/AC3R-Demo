@@ -1,0 +1,11 @@
+Test Result run at 2019-01-08T20:28:40.027+01:00
+Total Number Of Cases: 20
+Perfectly Matched Crash Case: 8
+Partially Matched Crash Case: 2
+Unverified Crash Case: 0
+No Crash Case: 10
+
+Perfectly Matched Case Names [FI (1), FI (10), FI (15), FI (18), FI (19), FI (4), FI (7), FI (9)]
+Partially Matched Case Names [FI (14), FI (8)]
+Unverified Matched Case Names []
+No Crash Case Names: [FI (11), FI (12), FI (13), FI (16), FI (17), FI (2), FI (20), FI (3), FI (5), FI (6)]

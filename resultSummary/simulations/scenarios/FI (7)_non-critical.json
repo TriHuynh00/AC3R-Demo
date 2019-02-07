@@ -1,0 +1,27 @@
+[
+{
+    "name": "FI (7)_non-critical",
+    "description": "This crash occurred on an undivided 2-lane street with no markings.  Parking was permitted on the eastbound side of the street.  The street was straight, level, and bituminous with a posted speed of 40 kmph (25 mph).  It was late in the afternoon on a weekday.  The road was dry and conditions were clear.
+vehicle1 was a vehicle1 vvehicle1 xc station wagon driven by a 56-year-old female. vehicle1 was traveling westbound when it crossed into the eastbound lane and impacted a legally parked vehicle2 3500 straight truck. vehicle1 sustained severe damage to the front end, deploying the safety systems. the vehicle2 truck sustained moderate damage to its front end.",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player1": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":1,
+							 "maxSpeed":40.23},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["FI (7)_non-critical"],
+    "radiusMultiplierAI": 2
+},
+]

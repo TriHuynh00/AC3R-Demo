@@ -1,4 +1,4 @@
-package org.saarland.crashAnalyzer;
+package org.saarland.crashanalyzer;
 
 import org.joda.time.DateTime;
 import org.saarland.accidentconstructor.AccidentConstructorUtil;

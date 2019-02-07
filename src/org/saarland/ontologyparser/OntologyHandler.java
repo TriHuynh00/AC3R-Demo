@@ -21,6 +21,11 @@ public class OntologyHandler {
     private LinkedList<AccidentConcept> accidentConceptList;
     private LinkedList<AccidentConcept> roadConcepts;
 
+    public LinkedList<AccidentConcept> getDirectionConcepts() {
+        return directionConcepts;
+    }
+
+    private LinkedList<AccidentConcept> directionConcepts;
 
     public LinkedList<AccidentConcept> getRoadConcepts() {
         return roadConcepts;
@@ -40,6 +45,8 @@ public class OntologyHandler {
         keyWordList = new LinkedList<String>();
         accidentConceptList = new LinkedList<AccidentConcept>();
         roadConcepts = new LinkedList<AccidentConcept>();
+        directionConcepts = new LinkedList<AccidentConcept>();
+
 
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         IRI remoteOntology = IRI.create(new File("ontology/AccidentOntology.owl"));
@@ -89,7 +96,12 @@ public class OntologyHandler {
                     AccidentConcept accidentConcept = new AccidentConcept();
                     accidentConcept.setConceptName(keyWordName);
 //                    ConsoleLogger.print('d',"Class=>" + owlClassFullName.substring(owlClassFullName.indexOf("#") + 1, leafLvlStrIndex));
-                    accidentConcept.setConceptGroup(owlClassFullName.substring(owlClassFullName.indexOf("#") + 1, leafLvlStrIndex));
+                    accidentConcept.setLeafLevelName(owlClassFullName.substring(owlClassFullName.indexOf("#") + 1, leafLvlStrIndex));
+
+                    if (accidentConcept.getLeafLevelName().equals("vehicle_direction"))
+                    {
+                        directionConcepts.add(accidentConcept);
+                    }
 
 //                    ConsoleLogger.print('d',"Obj Prop " + factory.getOWLObjectProperty("isVehicleType", pm).getIndividualsInSignature());
 //                    ConsoleLogger.print('d',"ParentClass=>" + reasoner.getSuperClasses(owlClass, false).getFlattened().toString());
@@ -115,6 +127,8 @@ public class OntologyHandler {
                             accidentConcept.setInputGroup(superClassName.substring(superClassName.indexOf("#") + 1,
                                     superClassName.indexOf("-toplvl")));
                         }
+                        // Extract intersection concepts
+
 
                     }
 
@@ -146,7 +160,7 @@ public class OntologyHandler {
 //        {
 //            ConsoleLogger.print('d',"=======================================");
 //            ConsoleLogger.print('d',"Concept name: " + concept.getConceptName());
-//            ConsoleLogger.print('d',"Concept group: " + concept.getConceptGroup());
+//            ConsoleLogger.print('d',"Concept group: " + concept.getLeafLevelName());
 //            ConsoleLogger.print('d',"Category: " + concept.getCategory());
 //            ConsoleLogger.print('d',"Input Group: " + concept.getInputGroup());
 //            ConsoleLogger.print('d',"Data Properties " + concept.getDataProperties());

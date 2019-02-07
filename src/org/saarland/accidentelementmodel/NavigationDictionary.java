@@ -24,6 +24,24 @@ import java.util.Map;
  */
 
 public class NavigationDictionary {
+    public static final String SAME_AXIS_SIGN = "-";
+
+    public static final String PERPENDICULAR_SIGN = "+";
+
+    public static String[] sameAxisDirectionDict = new String[] {"N-S", "E-W", "NE-SW", "NW-SE"};
+
+    /*
+     * Showing perpendicular directions of a given cardinal direction, on the left of "+" sign is
+     * the given cardinal direction, on the right side are the relative left and right directions
+     * in the form "left,right"
+     */
+    public static String[] perpendicularDirectionDict = new String[] {
+            "N+W,E",
+            "S+E,W",
+            "E+N,S",
+            "W+S,N",
+    };
+
     public static HashMap<String, String> NorthNavDict = new HashMap<String, String>();
 
     public static HashMap<String, String> SouthNavDict = new HashMap<String, String>();
@@ -177,5 +195,25 @@ public class NavigationDictionary {
                 break;
         }
         return navigationDict;
+    }
+
+    /*
+     *   Find if two given directions belongs to the same axis
+     */
+    public static boolean isDirectionsInSameAxis(String directionA, String directionB)
+    {
+        boolean isSameAxis = false;
+        for (String sameAxisInfo : sameAxisDirectionDict)
+        {
+            // If two directions match with a same axis string, they are in the same axis
+            if (sameAxisInfo.equals(directionA + SAME_AXIS_SIGN + directionB)
+                || sameAxisInfo.equals(directionB + SAME_AXIS_SIGN + directionA))
+            {
+                isSameAxis = true;
+                break;
+            }
+        }
+        ConsoleLogger.print('d', directionA + " and " + directionB + " is in same axis? " + isSameAxis);
+        return isSameAxis;
     }
 }

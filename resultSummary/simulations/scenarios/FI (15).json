@@ -1,0 +1,27 @@
+[
+{
+    "name": "FI (15)",
+    "description": "This 2-vehicle crash occurred in the parking lane of an undivided, straight roadway. The northbound lane has a 5 percent downhill grade. The speed limit for this roadway is 48 kmph (30 mph). This crash occurred during daylight hours with no adverse atmospheric conditions.
+vehicle1 (vehicle1), a vehicle1, was northbound in lane 1. vehicle2 (vehicle2), a vehicle2 f150 vehicle2, was parked on the right side of the roadway. vehicle1 traveled to the right and the front struck the back of vehicle2. vehicle1 was towed due to damage.",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player1": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":1,
+							 "maxSpeed":77.2416},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["FI (15)"],
+    "radiusMultiplierAI": 2
+},
+]

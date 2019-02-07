@@ -1,0 +1,27 @@
+[
+{
+    "name": "RE (11)_non-critical",
+    "description": "The crash occurred in the westbound lanes of a 3-lane urban roadway separated by a grass median. There were 3 westbound lanes and 4 eastbound lanes. It was late afternoon on a weekend, and the roads were dry and skies were clear. The traffic flow was normal and the roadway was straight and level. 
+vehicle1 was a vehicle1 that was traveling in lane 1 behind vehicle2, a vehicle2 that was also in lane 1, approaching an intersection controlled by a traffic light. the driver of vehicle2 noticed that the light had turned yellow and quickly slammed on his brakes to try to stop in time. at that point, the front of vehicle1 struck the rear of vehicle2.",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player1": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":2,
+							 "maxSpeed":72.414},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["RE (11)_non-critical"],
+    "radiusMultiplierAI": 2
+},
+]

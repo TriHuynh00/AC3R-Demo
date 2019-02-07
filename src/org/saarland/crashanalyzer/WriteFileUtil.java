@@ -1,7 +1,6 @@
-package org.saarland.crashAnalyzer;
+package org.saarland.crashanalyzer;
 
 import org.saarland.accidentconstructor.ConsoleLogger;
-import org.saarland.configparam.FilePathsConfig;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

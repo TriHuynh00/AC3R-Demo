@@ -1,0 +1,27 @@
+[
+{
+    "name": "RE (20)_non-critical",
+    "description": "This crash occurred on a 2 lane undivided roadway curving to the right, with a posted speed limit of  89KPH (55MPH) and a -2.5% grade.  Many driveways for retail establishments intersect the roadway.  It should be noted that there was a black on yellow curve warning sign with a suggested speed limit of 72 KPH (45 MPH) prior to the curve. The weather was clear and the roadway was dry. This crash occurred on a weekday morning.  
+vehicle1, a vehicle1, was traveling south on the 2 lane undivided roadway when it stopped to allow northbound traffic to pass before making a left turn into a driveway. vehicle2, a vehicle2 xl, was traveling on the same 2 lane undivided roadway, in the same direction behind vehicle1. vehicle2 impacted the rear of vehicle1 with its front. both vehicles came to rest in the roadway facing south.",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player2": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":1,
+							 "maxSpeed":88.506},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["RE (20)_non-critical"],
+    "radiusMultiplierAI": 2
+},
+]

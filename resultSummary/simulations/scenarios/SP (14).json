@@ -1,0 +1,27 @@
+[
+{
+    "name": "SP (14)",
+    "description": "This 2-vehicle crash occurred on a 4-lane, 2-way, undivided, dry, bituminous, level roadway that runs east to west.  This road has a speed limit of 48 kmph (30 mph).  A 3-lane, dry, level, bituminous roadway, intersects this roadway.  This intersecting roadway has 1 lane designated for southbound traffic, 1 lane designated for northbound traffic, and 1 lane designated for turning left (east) from the southbound lanes.  This road also has a designated parking lane on the southbound side.  This roadway has a speed limit of 40 kmph (25 mph).  This intersection is controlled by a stop sign on the right side of lane 1.  There was a large yellow school bus parked parallel to the southbound lanes in the parking lane at the time of the crash.  This crash occurred during daylight hours with no adverse atmospheric conditions.
+vehicle1 (vehicle1), a vehicle1 was traveling southbound in lane 1. vehicle2 (vehicle2), a vehicle2 was traveling eastbound in lane 2. as vehicle1 entered the intersection, the front of vehicle2 contacted the right side of vehicle1. both vehicles stopped at impact and were towed due to damage.",
+    "previews": ["my_first_scenario.jpg"],
+    "type": "race",
+    "authors": "Tri",
+
+    "difficulty": "10",
+	
+	"vehicles": {
+        "scenario_player2": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":1,
+							 "maxSpeed":64.368},
+        "*": {"playerUsable": false},
+    },
+	
+    "whiteListActions": ["default_whitelist_scenario" ],
+    "blackListActions": ["default_blacklist_scenario" ],
+	
+    
+    "prefabs": ["SP (14)"],
+    "radiusMultiplierAI": 2
+},
+]

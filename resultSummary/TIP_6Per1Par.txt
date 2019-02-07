@@ -1,0 +1,11 @@
+Test Result run at 2019-02-07T17:34:52.980+07:00
+Total Number Of Cases: 20
+Perfectly Matched Crash Case: 6
+Partially Matched Crash Case: 1
+Unverified Crash Case: 0
+No Crash Case: 13
+
+Perfectly Matched Case Names [TIP (10), TIP (12), TIP (15), TIP (16), TIP (17), TIP (2)]
+Partially Matched Case Names [TIP (6)]
+Unverified Matched Case Names []
+No Crash Case Names: [TIP (1), TIP (11), TIP (13), TIP (14), TIP (18), TIP (19), TIP (20), TIP (3), TIP (4), TIP (5), TIP (7), TIP (8), TIP (9)]

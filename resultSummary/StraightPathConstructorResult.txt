@@ -1,0 +1,11 @@
+Test Result run at 2019-01-08T17:43:34.151+01:00
+Total Number Of Cases: 20
+Perfectly Matched Crash Case: 2
+Partially Matched Crash Case: 0
+Unverified Crash Case: 0
+No Crash Case: 18
+
+Perfectly Matched Case Names [SP (14)]
+Partially Matched Case Names []
+Unverified Matched Case Names []
+No Crash Case Names: [SP (1), SP (10), SP (11), SP (12), SP (13), SP (15), SP (16), SP (17), SP (18), SP (19), SP (2), SP (20), SP (3), SP (4), SP (5), SP (6), SP (7), SP (8), SP (9)]
