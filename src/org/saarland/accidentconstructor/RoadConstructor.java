@@ -82,11 +82,22 @@ public class RoadConstructor {
         // Remove last 2 duplicate coords, if any
         for (VehicleAttr vehicleAttr : vehicleList) {
             ArrayList<String> movementPath = vehicleAttr.getMovementPath();
-            if (movementPath.get(movementPath.size() - 1).equals(movementPath.get(movementPath.size() - 2)))
+            if (movementPath.size() > 1
+                && movementPath.get(movementPath.size() - 1).equals(movementPath.get(movementPath.size() - 2)))
             {
                 movementPath.remove(movementPath.size() - 1);
                 vehicleAttr.setMovementPath(movementPath);
             }
+//            if (movementPath.size() > 1)
+//            {
+//                for (int z = movementPath.size() - 1; z > 0 ; z--)
+//                {
+//                    if (movementPath.get(z).equals(movementPath.get(z - 1)))
+//                    {
+//                        movementPath.remove(z);
+//                    }
+//                }
+//            }
         }
 
         ArrayList<Street> streetList = testCaseInfo.getStreetList();
@@ -319,15 +330,28 @@ public class RoadConstructor {
 
                     // Set xCoord / yCoord along the right and left configuration for road with >1 lane
                     if (totalLaneNumber > 1) {
+                        double adjustedXDistance = 0;
+                        double adjustedYDistance = 0;
+                        if (totalLaneNumber % 2 == 0)
+                        {
+                            adjustedXDistance = NavigationDictionary.setCoordValue(AccidentParam.laneWidth / 2, leftCoordConfig[0]);
+                            adjustedYDistance = NavigationDictionary.setCoordValue(AccidentParam.laneWidth / 2, leftCoordConfig[1]);
+                        }
+                        else
+                        {
+                            adjustedXDistance = NavigationDictionary.setCoordValue(AccidentParam.laneWidth * 0.75, leftCoordConfig[0]);
+                            adjustedYDistance = NavigationDictionary.setCoordValue(AccidentParam.laneWidth * 0.75, leftCoordConfig[1]);
+                        }
+
                         xCoord = anchorPointX
                                 + NavigationDictionary.setCoordValue(
                                 vehicleAttr.getTravelOnLaneNumber() * AccidentParam.laneWidth, rightCoordConfig[0])
-                                + NavigationDictionary.setCoordValue(AccidentParam.laneWidth / 2, leftCoordConfig[0]);
+                                + adjustedXDistance;
 
                         yCoord = anchorPointY
                                 + NavigationDictionary.setCoordValue(
                                 vehicleAttr.getTravelOnLaneNumber() * AccidentParam.laneWidth, rightCoordConfig[1])
-                                + NavigationDictionary.setCoordValue(AccidentParam.laneWidth / 2, leftCoordConfig[1]);
+                                + adjustedYDistance;
                     }
 
                     ConsoleLogger.print('d', String.format("anchorX = %.2f \n anchorY = %.2f \n xCoord = %.2f \n yCoord = %.2f \n",
@@ -1046,12 +1070,18 @@ public class RoadConstructor {
                     if (roadNavigation.equals("N") || roadNavigation.equals("S"))
                     {
                         ConsoleLogger.print('d',"Draw split line NS road");
-                        modifiedPos = Double.parseDouble(originalCoord.split(" ")[1]) // original Y
+//                        modifiedPos = Double.parseDouble(originalCoord.split(" ")[1]) // original Y
+//                                + laneNumber * AccidentParam.laneWidth / 2 // (laneNumber + 1 pavement) * width / 2
+//                                - i * AccidentParam.laneWidth + pavementPadding; // j * laneWidth
+
+//                        newPosStr = originalCoordElements[0] + " " +
+//                                AccidentParam.df6Digit.format(modifiedPos) + " " + originalCoordElements[2] + " ";
+                        modifiedPos = Double.parseDouble(originalCoord.split(" ")[0]) // original Y
                                 + laneNumber * AccidentParam.laneWidth / 2 // (laneNumber + 1 pavement) * width / 2
                                 - i * AccidentParam.laneWidth + pavementPadding; // j * laneWidth
+                        newPosStr = AccidentParam.df6Digit.format(modifiedPos) + " " +
+                                originalCoordElements[1] + " " + originalCoordElements[2] + " ";
 
-                        newPosStr = originalCoordElements[0] + " " +
-                                AccidentParam.df6Digit.format(modifiedPos) + " " + originalCoordElements[2] + " ";
                     }
                     else if (roadNavigation.equals("E") || roadNavigation.equals("W"))
                     {
@@ -1316,18 +1346,22 @@ public class RoadConstructor {
         ArrayList<String> createdWaypoints = new ArrayList<String>();
         for (int i = 1; i < maxLength; i++) {
 
-            String waypointName = "wp" + i + "_" + currentVehicle.getVehicleId();
+            String waypointName = "wp" + i + "_v" + currentVehicle.getVehicleId();
             String waypointInfoStr = waypointTemplate.replace("$coord", currentVehiclePath.get(i));
 
             String scaleValue = "1 1 1";
 
+            if (i == maxLength - 1 && currentVehicle.getVehicleId() == strikerID)
+            {
+                waypointName = "wp_goal";
+            }
 
             // Set the impact point name as "wp_crash" and only 1 vehicle set this
-            if ( (i == currentVehiclePath.size() - 2 && testCaseInfo.getCrashType().contains("straight path"))
-                    || (i == currentVehiclePath.size() - 1 && !testCaseInfo.getCrashType().contains("straight path")))
+            if ( (i == maxLength - 2 && testCaseInfo.getCrashType().contains("straight path"))
+                    || (i == maxLength - 1 && !testCaseInfo.getCrashType().contains("straight path")))
             {
-
-                waypointName = "wp_crash";
+                if (!waypointName.equals("wp_goal"))
+                    waypointName = "wp_crash";
 
                 if (currentVehicle.getVehicleId() != strikerID)
                 {
@@ -2021,7 +2055,15 @@ public class RoadConstructor {
                     StringBuilder waypointPathLuaStrBuilder = new StringBuilder();
 
                     for (int i = 1; i < currentVehiclePath.size(); i++) {
-                        String waypointName = "wp" + i + "_v" + currentVehicle.getVehicleId();
+                        String waypointName = "wp";
+                        if (i == currentVehiclePath.size() - 1)
+                        {
+                            waypointName += "_goal";
+                        }
+                        else
+                        {
+                            waypointName += i + "_v" + currentVehicle.getVehicleId();
+                        }
                         String waypointInfoStr = waypointTemplate.replace("$name", waypointName); // wp[index]_[carID]
 
                         waypointPathLuaStrBuilder.append("\'" + waypointName + "\',");

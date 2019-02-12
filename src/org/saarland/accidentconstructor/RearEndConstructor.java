@@ -387,10 +387,10 @@ public class RearEndConstructor {
 
                     constructedCoordVeh.set(victimVehicle.getVehicleId() - 1, vehicleCoordVictim);
 
-                    if (AccidentConstructorUtil.getNonCriticalDistance() > 0)
-                    {
-                        vehicleCoordStriker.remove(vehicleCoordStriker.get(vehicleCoordStriker.size() - 1));
-                    }
+//                    if (AccidentConstructorUtil.getNonCriticalDistance() > 0)
+//                    {
+//                        vehicleCoordStriker.remove(vehicleCoordStriker.get(vehicleCoordStriker.size() - 1));
+//                    }
 
                     constructedCoordVeh.set(strikerVehicle.getVehicleId() - 1, vehicleCoordStriker);
                 }
@@ -499,6 +499,8 @@ public class RearEndConstructor {
             ConsoleLogger.print('d', "");
         }
 
+
+
         return constructedCoordVeh;
     }
 
@@ -513,7 +515,7 @@ public class RearEndConstructor {
             int vehicleIndexInCoordArr = vehicleAttr.getVehicleId() - 1;
             ArrayList<String> coordOfSelectedVehicle = vehicleCoordList.get(vehicleIndexInCoordArr);
 
-            for (int i = 1; i <= AccidentParam.SIMULATION_DURATION; i++)
+            for (int i = 1; i <= AccidentParam.SIMULATION_DURATION + 1; i++)
             {
                 int estimateVehicleSpeed = Integer.parseInt(parser.findExactConcept(vehicleAttr.getActionList().get(0))
                         .getDataProperties()

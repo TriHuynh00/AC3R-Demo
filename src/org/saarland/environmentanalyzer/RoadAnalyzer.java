@@ -266,9 +266,13 @@ public class RoadAnalyzer {
 
 
                 ConsoleLogger.print('d', "Number of Lanes is " + numberOfLanes + " street is null?" + (assignedDirectionStreet == null));
-                if (numberOfLanes > 0 && assignedDirectionStreet != null)
+                if (numberOfLanes > 0)
                 {
-                    assignedDirectionStreet.putValToKey("lane_num", numberOfLanes + "");
+                    if (assignedDirectionStreet != null)
+                    {
+                        ConsoleLogger.print('d', "Assign lane number to UNKNOWN existing road");
+                        assignedDirectionStreet.putValToKey("lane_num", numberOfLanes + "");
+                    }
                 }
             }
 
@@ -480,7 +484,7 @@ public class RoadAnalyzer {
     /*
      * Analyze the lane number from the dependency list
      */
-    private int analyzeNumberOfLane(LinkedList<String> dependencyList) {
+    public int analyzeNumberOfLane(LinkedList<String> dependencyList) {
         int numberOfLanes = 0;
         for (String dependency : dependencyList)
         {

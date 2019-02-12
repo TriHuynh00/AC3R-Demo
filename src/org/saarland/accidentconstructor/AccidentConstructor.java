@@ -287,6 +287,22 @@ public class AccidentConstructor {
                     RearEndConstructor rearEndConstructor = new RearEndConstructor(accidentConstructor.vehicleList, ontologyHandler,
                             accidentConstructor.testCase);
                     rearEndConstructor.constructAccidentScenario(accidentConstructor.vehicleList, ontologyHandler);
+                    if (AccidentConstructorUtil.getNonCriticalDistance() > 0)
+                    {
+                        VehicleAttr[] strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictimForRearEnd(
+                                accidentConstructor.vehicleList.get(0), accidentConstructor.vehicleList.get(1),
+                                AccidentParam.defaultCoordDelimiter);
+
+                        ArrayList<String> strikerCoordList = strikerAndVictim[0].getMovementPath();
+                        strikerCoordList.remove(strikerCoordList.size() - 1);
+
+                        if (strikerAndVictim[1].getVelocity() > 0
+                                && strikerAndVictim[1].getVelocity() < strikerAndVictim[0].getVelocity())
+                        {
+                            strikerAndVictim[0].setVelocity((int)(strikerAndVictim[1].getVelocity() + strikerAndVictim[1].getVelocity() * 0.1));
+                        }
+
+                    }
                 } else if (accidentConstructor.accidentType.toLowerCase().contains("forward impact")) {
                     foundAccidentType = true;
                     FrontCollisionConstructor frontCollisionConstructor = new FrontCollisionConstructor();

@@ -350,7 +350,7 @@ public class FrontCollisionConstructor {
                                         newCoord = AccidentConstructorUtil.updateCoordElementAtDimension(
                                             2, newCoord, pathNodeElements[2], AccidentParam.defaultCoordDelimiter);
 
-                                    // Adjust the car position far away a bit to ensure crash
+                                    // Adjust the car position far away a bit to ensure crash happens
 
                                     String adjustedCoord = AccidentConstructorUtil.updateCoordElementAtDimension(0, newCoord,
                                             (Double.parseDouble(convertedCoordElements[0]) + 3) + "",
@@ -360,21 +360,26 @@ public class FrontCollisionConstructor {
                                             AccidentParam.defaultCoordDelimiter);
 
                                     // If non-critical param is specified, then make the striker goes around the parked vehicle
-                                    if (AccidentConstructorUtil.getNonCriticalDistance() > 0)
-                                    {
+                                    String[] wpGoalCoordElements = convertedCoord.split(AccidentParam.defaultCoordDelimiter);
+                                    double extraDistance = AccidentConstructorUtil.getNonCriticalDistance() == 0 ?
+                                            5 // In critical scenario, wp goal is 5m ahead
+                                            :
+                                            AccidentConstructorUtil.getNonCriticalDistance(); // add extra non-critical distance param
+                                    String wpGoalCoord = AccidentConstructorUtil.updateCoordElementAtDimension(0, adjustedCoord,
+                                            (Double.parseDouble(wpGoalCoordElements[0])
+                                                    + extraDistance) + "",
+                                            AccidentParam.defaultCoordDelimiter);
+//                                    if (AccidentConstructorUtil.getNonCriticalDistance() > 0)
+//                                    {
                                         ConsoleLogger.print('d', "Front Collision Non-critical goal wp construction");
-                                        String[] adjustedCoordElements = convertedCoord.split(AccidentParam.defaultCoordDelimiter);
-                                        adjustedCoord = AccidentConstructorUtil.updateCoordElementAtDimension(0, adjustedCoord,
-                                                (Double.parseDouble(adjustedCoordElements[0])
-                                                        + AccidentConstructorUtil.getNonCriticalDistance()) + "",
-                                                AccidentParam.defaultCoordDelimiter);
+
 
                                         // If the parked vehicle stands on the left side of the road, make the striker
                                         // goes to the right of the victim
                                         if (vehicleAttr.getStandingRoadSide().equals("left"))
                                         {
                                             ConsoleLogger.print('d', "The parked car is on the left side of the road");
-                                            adjustedCoord = AccidentConstructorUtil.updateCoordElementAtDimension(1, adjustedCoord,
+                                            wpGoalCoord = AccidentConstructorUtil.updateCoordElementAtDimension(1, wpGoalCoord,
                                                     (Double.parseDouble(newYCoord)
                                                             + NavigationDictionary.setCoordValue(
                                                             AccidentParam.laneWidth,
@@ -383,8 +388,8 @@ public class FrontCollisionConstructor {
                                         }
                                         else
                                         {
-                                            ConsoleLogger.print('d', "adjustedCoordY before adjusted " + Double.parseDouble(adjustedCoordElements[1]));
-                                            adjustedCoord = AccidentConstructorUtil.updateCoordElementAtDimension(1, adjustedCoord,
+                                            ConsoleLogger.print('d', "adjustedCoordY before adjusted " + Double.parseDouble(wpGoalCoordElements[1]));
+                                            wpGoalCoord = AccidentConstructorUtil.updateCoordElementAtDimension(1, wpGoalCoord,
                                                     (Double.parseDouble(newYCoord)
                                                             + NavigationDictionary.setCoordValue(
                                                             AccidentParam.laneWidth,
@@ -392,11 +397,23 @@ public class FrontCollisionConstructor {
                                                     AccidentParam.defaultCoordDelimiter);
                                         }
 
-                                    }
+//                                    }
 
 
                                     ConsoleLogger.print('d', "Found same impact coord at " + j + " value " + adjustedCoord);
-                                    otherVehicleMovementPath.set(j, adjustedCoord);
+
+                                    // If the non-critical mode is activated, append the goal waypoint to the striker's
+                                    // trajectory
+
+                                    if (AccidentConstructorUtil.getNonCriticalDistance() > 0)
+                                    {
+                                        otherVehicleMovementPath.set(j, wpGoalCoord);
+                                    }
+                                    else // Otherwise, modify the crash point, and append the goal waypoint
+                                    {
+                                        otherVehicleMovementPath.set(j, adjustedCoord);
+                                        otherVehicleMovementPath.add(wpGoalCoord);
+                                    }
                                     otherVehicle.setMovementPath(otherVehicleMovementPath);
 
                                     vehicleMovementPath.set(0, newCoord);

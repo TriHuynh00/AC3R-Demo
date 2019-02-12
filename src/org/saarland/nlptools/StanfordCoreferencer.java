@@ -294,8 +294,6 @@ public class StanfordCoreferencer {
 
     public LinkedList<LinkedList<String>> findDependencies(String text)
     {
-
-
         LinkedList<LinkedList<String>> resultList = new LinkedList<LinkedList<String>>();
         LinkedList<String> taggedWordList = new LinkedList<String>();
         LinkedList<String> extractedDependencyList = new LinkedList<String>();

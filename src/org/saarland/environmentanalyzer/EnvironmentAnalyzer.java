@@ -47,6 +47,18 @@ public class EnvironmentAnalyzer {
             // Create a single street and set it as East Direction
             Street newStreet = testCase.createNewStreet();
             newStreet.putValToKey("road_navigation", "E");
+            String[] sentences = paragraph1.split("\\. ");
+
+            for (String sentence : sentences)
+            {
+                LinkedList<LinkedList<String>> dependencyAndTagList = stanfordCoreferencer.findDependencies(sentence);
+                int numberOfLane = roadAnalyzer.analyzeNumberOfLane(dependencyAndTagList.get(1));
+                if (numberOfLane > 0)
+                {
+                    newStreet.putValToKey("lane_num", numberOfLane + "");
+                    break;
+                }
+            }
         }
         else // Other crash types, we need to find if an intersection exists
         {
@@ -58,26 +70,28 @@ public class EnvironmentAnalyzer {
             }
 
             ConsoleLogger.print('d', "INTERSECTION type is " + intersectionType);
+
+            // Creates road based on the intersection
+            if (!intersectionType.equals("none"))
+                roadAnalyzer.createEmptyRoads(intersectionType, testCase);
+
+            // Try to search the two paragraphs for road information
+            boolean allRoadHasDirection =
+                    roadAnalyzer.analyzeRoadDirection(intersectionType, paragraph1, stanfordCoreferencer);
+
+            // If not all the roads have a specific direction, scan paragraph 2 and analyzes any mentioned direction
+            if (!allRoadHasDirection)
+                allRoadHasDirection = roadAnalyzer.analyzeRoadDirection(intersectionType, paragraph2, stanfordCoreferencer);
+
+            // If not all direction are found, scan the road type to determine how many road sections are there
+            if (!allRoadHasDirection)
+            {
+                roadAnalyzer.constructRoadByRoadType(paragraph1);
+                roadAnalyzer.analyzeRoadDirection(intersectionType, paragraph2, stanfordCoreferencer);
+            }
         } // End checking intersection
 
-        // Creates road based on the intersection
-        if (!intersectionType.equals("none"))
-            roadAnalyzer.createEmptyRoads(intersectionType, testCase);
 
-        // Try to search the two paragraphs for road information
-        boolean allRoadHasDirection =
-                roadAnalyzer.analyzeRoadDirection(intersectionType, paragraph1, stanfordCoreferencer);
-
-        // If not all the roads have a specific direction, scan paragraph 2 and analyzes any mentioned direction
-        if (!allRoadHasDirection)
-            allRoadHasDirection = roadAnalyzer.analyzeRoadDirection(intersectionType, paragraph2, stanfordCoreferencer);
-
-        // If not all direction are found, scan the road type to determine how many road sections are there
-        if (!allRoadHasDirection)
-        {
-            roadAnalyzer.constructRoadByRoadType(paragraph1);
-            roadAnalyzer.analyzeRoadDirection(intersectionType, paragraph2, stanfordCoreferencer);
-        }
 
         // ----- End road analysis based on direction -----
 
