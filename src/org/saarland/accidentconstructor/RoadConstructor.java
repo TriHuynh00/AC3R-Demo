@@ -1168,12 +1168,24 @@ public class RoadConstructor {
                     int intersectionCoordIndex = currentlaneDivisionPath.size() / 2;
                     String intersectionCoord = currentlaneDivisionPath.get(intersectionCoordIndex);
                     String[] intersectionCoordElems = intersectionCoord.split(AccidentParam.beamngCoordDelimiter);
+                    int maxIteration = 2;
 
                     // Create one more forward coordinate to resume the division lane at the other side of the intersection
                     // Only do this if the processing road is a long road, i.e. the road continues after the intersection
                     if (currentlaneDivisionPath.size() > AccidentParam.ROAD_PIECE_NODE + 1) // 1 is intersection coord
                     {
                         currentlaneDivisionPath.add(intersectionCoordIndex, currentlaneDivisionPath.get(intersectionCoordIndex));
+                    }
+                    // For single road segment (a road ends at the intersection), add the point in the end
+                    else if (currentlaneDivisionPath.size() == AccidentParam.ROAD_PIECE_NODE + 1)
+                    {
+                        maxIteration = 1;
+                        int lastPathIndex = currentlaneDivisionPath.size() - 1;
+                        intersectionCoord = currentlaneDivisionPath.get(lastPathIndex);
+                        intersectionCoordElems = intersectionCoord.split(AccidentParam.beamngCoordDelimiter);
+                        intersectionCoordIndex = lastPathIndex;
+                        currentlaneDivisionPath.add(lastPathIndex,
+                                currentlaneDivisionPath.get(lastPathIndex));
                     }
 
                     HashMap<String, String> processingRoadNavDict =
@@ -1246,10 +1258,14 @@ public class RoadConstructor {
                     ConsoleLogger.print('d', "Current Lane Div Path " + currentlaneDivisionPath.toString());
 
 
-                    for (int z = 0; z < 2; z++)
+                    for (int z = 0; z < maxIteration; z++)
                     {
                         int startIndex = z == 0 ? 0 : currentlaneDivisionPath.size() / 2;
                         int endIndex = z == 0 ? currentlaneDivisionPath.size() / 2 : currentlaneDivisionPath.size();
+                        if (maxIteration == 1)
+                        {
+                            endIndex += 2;
+                        }
                         String sectionPosition = z == 0 ? "_back" : "_front";
                         String roadDivisionName = "roadDivision" + i + "_" + roadID + sectionPosition;
 
@@ -2534,8 +2550,8 @@ public class RoadConstructor {
             if (roadConcept != null) {
                 ConsoleLogger.print('d',"Get Texture of road concept " + roadObj.getStreetPropertyValue("road_type"));
                 if (roadConcept.getDataProperties() != null) {
-                    //material = roadConcept.getDataProperties().get("texture");
-                    material = "road_invisible";
+                    material = roadConcept.getDataProperties().get("texture");
+
                     ConsoleLogger.print('d',"Selected Street Material " + material);
                 }
 
@@ -2571,7 +2587,8 @@ public class RoadConstructor {
                     if (pavementConcept != null) {
                         ConsoleLogger.print('d',"Get Texture of pavement concept " + roadObj.getStreetPropertyValue("pavement_type"));
                         if (pavementConcept.getDataProperties() != null)
-                            material = pavementConcept.getDataProperties().get("texture");
+                            material = "road_invisible";
+//                            material = pavementConcept.getDataProperties().get("texture");
                     }
                 }
                 catch (Exception ex)
