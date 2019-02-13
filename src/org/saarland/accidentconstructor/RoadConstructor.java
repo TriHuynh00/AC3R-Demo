@@ -2534,7 +2534,8 @@ public class RoadConstructor {
             if (roadConcept != null) {
                 ConsoleLogger.print('d',"Get Texture of road concept " + roadObj.getStreetPropertyValue("road_type"));
                 if (roadConcept.getDataProperties() != null) {
-                    material = roadConcept.getDataProperties().get("texture");
+                    //material = roadConcept.getDataProperties().get("texture");
+                    material = "road_invisible";
                     ConsoleLogger.print('d',"Selected Street Material " + material);
                 }
 
