@@ -11,6 +11,7 @@ import org.saarland.nlptools.Stemmer;
 import org.saarland.ontologyparser.AccidentConcept;
 import org.saarland.ontologyparser.OntologyHandler;
 import org.saarland.xmlmodules.XMLAccidentCaseParser;
+import sun.awt.image.ImageWatched;
 
 import java.util.*;
 
@@ -29,6 +30,56 @@ public class EnvironmentAnalyzer {
     }
 
     public EnvironmentAnalyzer(){ connectedStreetDirections = new ArrayList<String>();   }
+
+
+    public void analyzeWeatherAndLightingProperties(String paragraph, OntologyHandler parser, TestCaseInfo testCase,
+                                          ArrayList<VehicleAttr> vehicleList, StanfordCoreferencer stanfordCoreferencer) {
+
+
+
+        String[] sentences = paragraph.split("\\. ");
+
+        for (String sentence : sentences)
+        {
+
+            LinkedList<String> dependencyList = stanfordCoreferencer.findDependencies(sentence).get(1);
+
+            Stemmer stemmer = new Stemmer();
+
+            LinkedList<LinkedList<AccidentConcept>> weatherAndLightingConcept = new LinkedList<LinkedList<AccidentConcept>>();
+
+            weatherAndLightingConcept.add(parser.getWeatherConcepts());
+            weatherAndLightingConcept.add(parser.getLightingConcepts());
+
+            for (LinkedList<AccidentConcept> envPropList : weatherAndLightingConcept) {
+                for (AccidentConcept weatherConcept : envPropList) {
+                    String weatherConceptName = weatherConcept.getConceptName();
+                    weatherConceptName = stemmer.stem(weatherConceptName);
+                    if (dependencyList.toString().contains(weatherConceptName + "-")) {
+                        String conceptGroup = weatherConcept.getLeafLevelName();
+                        ConsoleLogger.print('d', "Find Weather word " + weatherConceptName);
+                        String currentWeatherCondition = testCase.getEnvPropertyValue(conceptGroup);
+
+                        // Find the negation of this word
+                        boolean hasNegation = AccidentConstructorUtil.findNegationOfToken(weatherConceptName + "-", dependencyList);
+
+                        if (hasNegation) {
+                            ConsoleLogger.print('d', "Has negation of env term " + weatherConceptName);
+                            weatherConceptName = "n_" + weatherConceptName;
+                        }
+
+                        if (currentWeatherCondition.equals("normal")) {
+                            testCase.putValToKey(conceptGroup, weatherConceptName);
+                        } else {
+                            if (!currentWeatherCondition.contains(weatherConceptName)) {
+                                testCase.putValToKey(conceptGroup, currentWeatherCondition + " " + weatherConceptName);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
     public void extractBasicRoadProperties(String paragraph1, String paragraph2,

@@ -20,15 +20,25 @@ public class OntologyHandler {
     private LinkedList<String> keyWordList;
     private LinkedList<AccidentConcept> accidentConceptList;
     private LinkedList<AccidentConcept> roadConcepts;
+    private LinkedList<AccidentConcept> directionConcepts;
+
+    private LinkedList<AccidentConcept> weatherConcepts;
+    private LinkedList<AccidentConcept> lightingConcepts;
 
     public LinkedList<AccidentConcept> getDirectionConcepts() {
         return directionConcepts;
     }
 
-    private LinkedList<AccidentConcept> directionConcepts;
-
     public LinkedList<AccidentConcept> getRoadConcepts() {
         return roadConcepts;
+    }
+
+    public LinkedList<AccidentConcept> getWeatherConcepts() {
+        return weatherConcepts;
+    }
+
+    public LinkedList<AccidentConcept> getLightingConcepts() {
+        return lightingConcepts;
     }
 
     public void setRoadConcepts(LinkedList<AccidentConcept> roadConcepts) {
@@ -46,7 +56,8 @@ public class OntologyHandler {
         accidentConceptList = new LinkedList<AccidentConcept>();
         roadConcepts = new LinkedList<AccidentConcept>();
         directionConcepts = new LinkedList<AccidentConcept>();
-
+        weatherConcepts = new LinkedList<AccidentConcept>();
+        lightingConcepts = new LinkedList<AccidentConcept>();
 
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         IRI remoteOntology = IRI.create(new File("ontology/AccidentOntology.owl"));
@@ -101,6 +112,14 @@ public class OntologyHandler {
                     if (accidentConcept.getLeafLevelName().equals("vehicle_direction"))
                     {
                         directionConcepts.add(accidentConcept);
+                    }
+                    else if (accidentConcept.getLeafLevelName().equals("weather"))
+                    {
+                        weatherConcepts.add(accidentConcept);
+                    }
+                    else if (accidentConcept.getLeafLevelName().equals("lighting"))
+                    {
+                        lightingConcepts.add(accidentConcept);
                     }
 
 //                    ConsoleLogger.print('d',"Obj Prop " + factory.getOWLObjectProperty("isVehicleType", pm).getIndividualsInSignature());

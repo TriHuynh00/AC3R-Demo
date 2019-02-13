@@ -6,6 +6,7 @@ public class AccidentParam {
     public static final boolean DEBUG = true;
     public static final int SIMULATION_DURATION = 2; // Duration in steps
     public static final int DISTANCE_BETWEEN_CARS = 9;
+    public static final int ROAD_PIECE_NODE = 4;
     public static final int BEAMNG_PORT = 64256;
 
     public static String[] cardinalDirectionPair = new String[] {"E/W", "N/S", "NE/SW", "NW/SE"};
@@ -38,8 +39,9 @@ public class AccidentParam {
     public static DecimalFormat df2Digit = new DecimalFormat("####.##");
     public static DecimalFormat df6Digit = new DecimalFormat("####.######");
 
-    public static double laneWidth = 5;  // Width unit in Beamng
-    public static int parkingLineWidth = 2;  // Width unit in Beamng
+    public static double laneWidth = 5;  // lane Width unit in Beamng
+    public static int parkingLineWidth = 2;  // parking lane Width unit in Beamng
+    public static double shoulderPadding = 0.5;
 
     public static int defaultSpeed  = 20; // mph
     public static double accelerationTo20Mph = 2.9; // 2.9; // m/s2
@@ -51,10 +53,14 @@ public class AccidentParam {
     public static String defaultCoordDelimiter = ":";
     public static String beamngCoordDelimiter = " ";
 
+    /************ MATERIAL TEXTURE **************/
+
     public static String asphaltMaterial = "road_asphalt_2lane";
     public static String dirtMaterial = "road_dirt";
     public static String pavementMaterial = "sidewalk_concrete";
-    public static String laneDivisionMaterial = "line_yellow";
+    public static String twoWayLaneDivisionMaterial = "line_yellow";
+    public static String laneDivisionMaterial = "crossing_white";
+    public static String shoulderDivisionMaterial = "line_white";
 
     public static int RIGHTMOSTLANE = 100;
 

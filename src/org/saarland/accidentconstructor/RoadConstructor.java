@@ -205,7 +205,7 @@ public class RoadConstructor {
 
             // Add nodes to construct the road, if the road is a single road piece i.e. the road ends at an intersection,
             // then construct a short road. Otherwise construct a road spanning across the intersection
-            for (int i = 1; i <= 4; i++)
+            for (int i = 1; i <= AccidentParam.ROAD_PIECE_NODE; i++)
             {
                 double segmentLength = i * distanceBetweenBaseRoadNodes;
 
@@ -246,7 +246,7 @@ public class RoadConstructor {
             try
             {
                 // Update to environment file
-                environmentFileStrBuilder.append(constructRoadObjs(roadCoordList.get(0), nodeListStr.toString(),
+                environmentFileStrBuilder.append(constructRoadTemplates(roadCoordList.get(0), nodeListStr.toString(),
                         roadCoordList, laneNumber, isPavementNeeded, road));
 
                 environmentFileStrBuilder.append("\n ");
@@ -611,7 +611,7 @@ public class RoadConstructor {
 //                try
 //                {
 //                    // Update to environment file
-//                    environmentFileStrBuilder.append(constructRoadObjs(roadCoordList.get(0), nodeListStr.toString(),
+//                    environmentFileStrBuilder.append(constructRoadTemplates(roadCoordList.get(0), nodeListStr.toString(),
 //                            roadCoordList, laneNumber, isPavementNeeded, road));
 //
 //                    environmentFileStrBuilder.append("\n ");
@@ -712,7 +712,7 @@ public class RoadConstructor {
 //                    ConsoleLogger.print('d',"Modified Vehicle Path " + vehiclePath);
 //                    ConsoleLogger.print('d',"Modified Road Path " + roadPath);
 //                    // Update to environment file
-//                    environmentFileStrBuilder.append(constructRoadObjs(initPosition, nodeListStr.toString(),
+//                    environmentFileStrBuilder.append(constructRoadTemplates(initPosition, nodeListStr.toString(),
 //                            roadPath, laneNumber, isPavementNeeded, road));
 //
 //                    environmentFileStrBuilder.append(constructWaypointsAndVehicles(vehiclePath, scenarioName));
@@ -745,8 +745,8 @@ public class RoadConstructor {
 
     }
 
-    private String constructRoadObjs(String initPosition, String nodeListStr, ArrayList<String> vehiclePath,
-                                   int laneNumber, boolean isPavementNeeded, Street processingRoad) {
+    private String constructRoadTemplates(String initPosition, String nodeListStr, ArrayList<String> vehiclePath,
+                                          int laneNumber, boolean isPavementNeeded, Street processingRoad) {
         ConsoleLogger.print('d',"init Position: " + initPosition);
         ConsoleLogger.print('d',"Node List " + nodeListStr);
 
@@ -781,113 +781,114 @@ public class RoadConstructor {
 
             ConsoleLogger.print('d',"isPavementNeeded? " + isPavementNeeded);
             boolean hasParkingLine = false;
-            if (isPavementNeeded)
-            {
-                String lane1RoadCoord = appendWidthToNodeList(laneNumber * AccidentParam.laneWidth, vehiclePath);
-
-                //lane1RoadStr = lane1RoadStr.replace("$nodeList", lane1RoadCoord);
-
-                lane1RoadStr = constructRoadObject("lane" + roadID, "10", processingRoad,
-                        initPosition, "-1", lane1RoadCoord);
-
-                processingRoad.putValToKey("road_node_list", lane1RoadCoord.replace("\n", "")
-                        .replace("\t", "")
-                        .replace("Node = \"", "")
-                        .replace("\"", ""));
-
-                ConsoleLogger.print('d',"lane1RoadStr: \n" + lane1RoadStr);
-
-//                String pavementRoadStr = roadStrBuilder.toString();
-//                pavementRoadStr = pavementRoadStr.replace("$laneName", "pavement1");
-//                pavementRoadStr = pavementRoadStr.replace("$priority", "9");
-//                pavementRoadStr = pavementRoadStr.replace("$material", AccidentParam.pavementMaterial);
-
-                // Extract the yCoord and replace the new yCoord to the base initPos
-                double pavementInitYPos = Double.parseDouble(
-                        initPosition.split(" ")[1]) - (laneNumber / 2 * AccidentParam.laneWidth);
-                String pavementInitPos = initPosition.replace(initPosition.split(" ")[1], AccidentParam.df6Digit.format(pavementInitYPos));
-
-//                pavementRoadStr = pavementRoadStr.replace("$initCoord", pavementInitPos);
-
-                ArrayList<String> pavementPath = new ArrayList<String>();
-                pavementPath.addAll(vehiclePath);
-
-                // Edit the coord of pavement by taking the base coord - 5
-                for (int i = 0; i < pavementPath.size(); i++) {
-                    String originalCoord = pavementPath.get(i);
-                    String[] originalCoordElements = originalCoord.split(" ");
-                    double newYPos = Double.parseDouble(
-                            originalCoord.split(" ")[1]) - (laneNumber / 2 * AccidentParam.laneWidth
-                            + AccidentParam.laneWidth / 2);
-                    String newYPosStr = originalCoordElements[0] + " " +
-                            AccidentParam.df6Digit.format(newYPos) + " " + originalCoordElements[2] + " ";
-                    pavementPath.set(i, newYPosStr);
-                }
-
-                // Construct pavement on the left side
-//                String pavement2RoadStr = roadStrBuilder.toString();
-//                pavement2RoadStr = pavement2RoadStr.replace("$laneName", "pavement2");
-//                pavement2RoadStr = pavement2RoadStr.replace("$priority", "9");
-//                pavement2RoadStr = pavement2RoadStr.replace("$material", AccidentParam.pavementMaterial);
-
-                // Extract the yCoord and replace the new yCoord to the base initPos
-                double pavement2InitYPos = Double.parseDouble(
-                        initPosition.split(" ")[1]) + ( laneNumber / 2 * AccidentParam.laneWidth);
-                String pavement2InitPos = initPosition.replace(initPosition.split(" ")[1], AccidentParam.df6Digit.format(pavement2InitYPos));
-
-//                pavement2RoadStr = pavement2RoadStr.replace("$initCoord", pavement2InitPos);
-
-                ArrayList<String> pavement2Path = new ArrayList<String>();
-                pavement2Path.addAll(vehiclePath);
-
-                // Edit the coord of pavement2 by taking the base coord + #lane * laneWidth
-                for (int i = 0; i < pavement2Path.size(); i++) {
-                    String originalCoord = pavement2Path.get(i);
-                    String[] originalCoordElements = originalCoord.split(" ");
-                    double newYPos = Double.parseDouble(
-                            originalCoord.split(" ")[1]) + ( laneNumber / 2 * AccidentParam.laneWidth
-                            + AccidentParam.laneWidth / 2);
-                    String newYPosStr = originalCoordElements[0] + " " +
-                            AccidentParam.df6Digit.format(newYPos) + " " + originalCoordElements[2] + " ";
-                    pavement2Path.set(i, newYPosStr);
-                }
-
-                String newPavementCoordPos = appendWidthToNodeList(AccidentParam.laneWidth, pavementPath);
-
-                String newPavement2CoordPos = appendWidthToNodeList(AccidentParam.laneWidth, pavement2Path);
-
-//                pavementRoadStr = pavementRoadStr.replace("$nodeList", newPavementCoordPos);
-
-                processingRoad.putValToKey("right_pavement_node_list", newPavementCoordPos.replace("\n", "")
-                        .replace("\t", "")
-                        .replace("Node = \"", "")
-                        .replace("\"", ""));
-
-//                pavement2RoadStr = pavement2RoadStr.replace("$nodeList", newPavement2CoordPos);
-
-
-                String pavementRoadStr = constructRoadObject("pavement1", "9", processingRoad,
-                        pavementInitPos, "-1", newPavementCoordPos);
-
-                String pavement2RoadStr = constructRoadObject("pavement2", "9", processingRoad,
-                        pavement2InitPos, "-1", newPavement2CoordPos);
-
-                ConsoleLogger.print('d',"pavementRoadStr \n" + pavementRoadStr);
-
-                processingRoad.putValToKey("left_pavement_node_list", newPavement2CoordPos.replace("\n", "")
-                        .replace("\t", "")
-                        .replace("Node = \"", "")
-                        .replace("\"", ""));
-
-                ConsoleLogger.print('d',"pavement2RoadStr \n" + pavement2RoadStr);
-
-                lane1RoadStr += "\n\n" + pavementRoadStr;
-
-                lane1RoadStr += "\n\n" + pavement2RoadStr;
-                
-                
-            }
-            else // Construct road with the pavements as decoration
+//            if (isPavementNeeded)
+//            {
+//                String lane1RoadCoord = appendWidthToNodeList(laneNumber * AccidentParam.laneWidth, vehiclePath);
+//
+//                //lane1RoadStr = lane1RoadStr.replace("$nodeList", lane1RoadCoord);
+//
+//                lane1RoadStr = constructBeamNgRoadObject("lane" + roadID, "10", processingRoad,
+//                        initPosition, "-1", lane1RoadCoord);
+//
+//                processingRoad.putValToKey("road_node_list", lane1RoadCoord.replace("\n", "")
+//                        .replace("\t", "")
+//                        .replace("Node = \"", "")
+//                        .replace("\"", ""));
+//
+//                ConsoleLogger.print('d',"lane1RoadStr: \n" + lane1RoadStr);
+//
+////                String pavementRoadStr = roadStrBuilder.toString();
+////                pavementRoadStr = pavementRoadStr.replace("$laneName", "pavement1");
+////                pavementRoadStr = pavementRoadStr.replace("$priority", "9");
+////                pavementRoadStr = pavementRoadStr.replace("$material", AccidentParam.pavementMaterial);
+//
+//                // Extract the yCoord and replace the new yCoord to the base initPos
+//                double pavementInitYPos = Double.parseDouble(
+//                        initPosition.split(" ")[1]) - (laneNumber / 2 * AccidentParam.laneWidth);
+//                String pavementInitPos = initPosition.replace(initPosition.split(" ")[1], AccidentParam.df6Digit.format(pavementInitYPos));
+//
+////                pavementRoadStr = pavementRoadStr.replace("$initCoord", pavementInitPos);
+//
+//                ArrayList<String> pavementPath = new ArrayList<String>();
+//                pavementPath.addAll(vehiclePath);
+//
+//                // Edit the coord of pavement by taking the base coord - 5
+//                for (int i = 0; i < pavementPath.size(); i++) {
+//                    String originalCoord = pavementPath.get(i);
+//                    String[] originalCoordElements = originalCoord.split(" ");
+//                    double newYPos = Double.parseDouble(
+//                            originalCoord.split(" ")[1]) - (laneNumber / 2 * AccidentParam.laneWidth
+//                            + AccidentParam.laneWidth / 2);
+//                    String newYPosStr = originalCoordElements[0] + " " +
+//                            AccidentParam.df6Digit.format(newYPos) + " " + originalCoordElements[2] + " ";
+//                    pavementPath.set(i, newYPosStr);
+//                }
+//
+//                // Construct pavement on the left side
+////                String pavement2RoadStr = roadStrBuilder.toString();
+////                pavement2RoadStr = pavement2RoadStr.replace("$laneName", "pavement2");
+////                pavement2RoadStr = pavement2RoadStr.replace("$priority", "9");
+////                pavement2RoadStr = pavement2RoadStr.replace("$material", AccidentParam.pavementMaterial);
+//
+//                // Extract the yCoord and replace the new yCoord to the base initPos
+//                double pavement2InitYPos = Double.parseDouble(
+//                        initPosition.split(" ")[1]) + ( laneNumber / 2 * AccidentParam.laneWidth);
+//                String pavement2InitPos = initPosition.replace(initPosition.split(" ")[1], AccidentParam.df6Digit.format(pavement2InitYPos));
+//
+////                pavement2RoadStr = pavement2RoadStr.replace("$initCoord", pavement2InitPos);
+//
+//                ArrayList<String> pavement2Path = new ArrayList<String>();
+//                pavement2Path.addAll(vehiclePath);
+//
+//                // Edit the coord of pavement2 by taking the base coord + #lane * laneWidth
+//                for (int i = 0; i < pavement2Path.size(); i++) {
+//                    String originalCoord = pavement2Path.get(i);
+//                    String[] originalCoordElements = originalCoord.split(" ");
+//                    double newYPos = Double.parseDouble(
+//                            originalCoord.split(" ")[1]) + ( laneNumber / 2 * AccidentParam.laneWidth
+//                            + AccidentParam.laneWidth / 2);
+//                    String newYPosStr = originalCoordElements[0] + " " +
+//                            AccidentParam.df6Digit.format(newYPos) + " " + originalCoordElements[2] + " ";
+//                    pavement2Path.set(i, newYPosStr);
+//                }
+//
+//                String newPavementCoordPos = appendWidthToNodeList(AccidentParam.laneWidth, pavementPath);
+//
+//                String newPavement2CoordPos = appendWidthToNodeList(AccidentParam.laneWidth, pavement2Path);
+//
+////                pavementRoadStr = pavementRoadStr.replace("$nodeList", newPavementCoordPos);
+//
+//                processingRoad.putValToKey("right_pavement_node_list", newPavementCoordPos.replace("\n", "")
+//                        .replace("\t", "")
+//                        .replace("Node = \"", "")
+//                        .replace("\"", ""));
+//
+////                pavement2RoadStr = pavement2RoadStr.replace("$nodeList", newPavement2CoordPos);
+//
+//
+//                String pavementRoadStr = constructBeamNgRoadObject("pavement1", "9", processingRoad,
+//                        pavementInitPos, "-1", newPavementCoordPos);
+//
+//                String pavement2RoadStr = constructBeamNgRoadObject("pavement2", "9", processingRoad,
+//                        pavement2InitPos, "-1", newPavement2CoordPos);
+//
+//                ConsoleLogger.print('d',"pavementRoadStr \n" + pavementRoadStr);
+//
+//                processingRoad.putValToKey("left_pavement_node_list", newPavement2CoordPos.replace("\n", "")
+//                        .replace("\t", "")
+//                        .replace("Node = \"", "")
+//                        .replace("\"", ""));
+//
+//                ConsoleLogger.print('d',"pavement2RoadStr \n" + pavement2RoadStr);
+//
+//                lane1RoadStr += "\n\n" + pavementRoadStr;
+//
+//                lane1RoadStr += "\n\n" + pavement2RoadStr;
+//
+//
+//            }
+//            else // Construct road with the pavements as decoration
+            if (true)
             {
                 String lane1RoadCoord = "";
 
@@ -910,7 +911,7 @@ public class RoadConstructor {
                                                                 .replace("Node = \"", "")
                                                                 .replace("\"", ""));
 
-                lane1RoadStr = constructRoadObject("lane" + roadID, "10",
+                lane1RoadStr = constructBeamNgRoadObject("lane" + roadID, "10",
                         processingRoad, vehiclePath.get(0), "-1", lane1RoadCoord);
 
                 // Construct Parking Line if applicable
@@ -965,7 +966,7 @@ public class RoadConstructor {
                                 .replace("Node = \"", "")
                                 .replace("\"", ""));
 
-                        String parkingLineRoadStr = constructRoadObject("parkingLine" + sideIndicator, "8",
+                        String parkingLineRoadStr = constructBeamNgRoadObject("parkingLine" + sideIndicator, "8",
                                 processingRoad, parkingLinePath.get(0), "-1", parkingLineNodeListStr);
 
 
@@ -1035,7 +1036,8 @@ public class RoadConstructor {
     //                pavementRoadStr = pavementRoadStr.replace("$nodeList", pavementRoadNodeListStr);
     //                pavementRoadStr = pavementRoadStr.replace("drivability = \"1\"", "drivability = \"-1\"");
 
-                    String pavementRoadStr = constructRoadObject("pavement" + sideIndicator + "_" + roadID, basePriority + 1 + "",
+                    String pavementRoadStr = constructBeamNgRoadObject("pavement" + sideIndicator + "_" + roadID,
+                            basePriority + 1 + "",
                             processingRoad, pavementPath.get(0), "-1", pavementRoadNodeListStr);
 
                     // Update the node coords into the corresponding pavement side of the road
@@ -1054,75 +1056,221 @@ public class RoadConstructor {
             double pavementPadding = isPavementNeeded ? AccidentParam.laneWidth / 2 : 0;
 
             // Construct the road division(s) based on the number of lanes
-            for (int i = 1; i < laneNumber; i++) {
+            for (int i = 0; i <= laneNumber; i++) {
+//            for (int i = 1; i < laneNumber; i++) {
                 ArrayList<String> currentlaneDivisionPath = new ArrayList<String>();
                 currentlaneDivisionPath.addAll(vehiclePath);
 
-                for (int j = 0; j < currentlaneDivisionPath.size(); j++)
-                {
+                for (int j = 0; j < currentlaneDivisionPath.size(); j++) {
+
                     // Modify the y coord of the lane node by taking the current coord + totalLaneWidth/2 - i * laneWidth
                     String originalCoord = currentlaneDivisionPath.get(j);
+
                     String[] originalCoordElements = originalCoord.split(" ");
 
                     double modifiedPos = 0;
                     String newPosStr = "";
 
-                    if (roadNavigation.equals("N") || roadNavigation.equals("S"))
-                    {
-                        ConsoleLogger.print('d',"Draw split line NS road");
+                    if (roadNavigation.equals("N") || roadNavigation.equals("S")) {
+                        ConsoleLogger.print('d', "Draw split line NS road");
 //                        modifiedPos = Double.parseDouble(originalCoord.split(" ")[1]) // original Y
 //                                + laneNumber * AccidentParam.laneWidth / 2 // (laneNumber + 1 pavement) * width / 2
 //                                - i * AccidentParam.laneWidth + pavementPadding; // j * laneWidth
 
 //                        newPosStr = originalCoordElements[0] + " " +
 //                                AccidentParam.df6Digit.format(modifiedPos) + " " + originalCoordElements[2] + " ";
-                        modifiedPos = Double.parseDouble(originalCoord.split(" ")[0]) // original Y
+                        modifiedPos = Double.parseDouble(originalCoord.split(" ")[0]) // original X
                                 + laneNumber * AccidentParam.laneWidth / 2 // (laneNumber + 1 pavement) * width / 2
                                 - i * AccidentParam.laneWidth + pavementPadding; // j * laneWidth
-                        newPosStr = AccidentParam.df6Digit.format(modifiedPos) + " " +
-                                originalCoordElements[1] + " " + originalCoordElements[2] + " ";
 
-                    }
-                    else if (roadNavigation.equals("E") || roadNavigation.equals("W"))
-                    {
-                        ConsoleLogger.print('d',"Draw split line EW road");
+                        if (i == 0) {
+                            modifiedPos -= AccidentParam.shoulderPadding;
+                        } else if (i == laneNumber) {
+                            modifiedPos += AccidentParam.shoulderPadding;
+                        }
+
+                        newPosStr = AccidentParam.df6Digit.format(modifiedPos) + " "
+                                + originalCoordElements[1] + " "
+                                + originalCoordElements[2] + " ";
+
+                    } else if (roadNavigation.equals("E") || roadNavigation.equals("W")) {
+                        ConsoleLogger.print('d', "Draw split line EW road");
                         modifiedPos = Double.parseDouble(originalCoord.split(" ")[1]) // original Y
                                 + laneNumber * AccidentParam.laneWidth / 2 // (laneNumber + 1 pavement) * width / 2
-                                - i * AccidentParam.laneWidth ; // j * laneWidth
+                                - i * AccidentParam.laneWidth; // j * laneWidth
 
 //                        newPosStr = AccidentParam.df6Digit.format(modifiedPos) + " "
 //                                + (Double.parseDouble(originalCoordElements[1]) + pavementPadding) + " "
 //                                + originalCoordElements[2] + " ";
 
+                        if (i == 0) {
+                            modifiedPos -= AccidentParam.shoulderPadding;
+                        } else if (i == laneNumber) {
+                            modifiedPos += AccidentParam.shoulderPadding;
+                        }
+
                         newPosStr = (Double.parseDouble(originalCoordElements[0]) + " "
                                 + AccidentParam.df6Digit.format(modifiedPos)) + " "
                                 + originalCoordElements[2] + " ";
-                    }
-                    else // NS NW SE SW directions
+                    } else // NS NW SE SW directions
                     {
 
                         modifiedPos = (Double.parseDouble(originalCoord.split(" ")[1]) - 3 - laneNumber * AccidentParam.laneWidth / 2)  // Get start point from original X
                                 + (AccidentParam.laneWidth + 2) * i // Get total width by far
-                                 // Divide into equal pieces
-                                ; // get the coord at the end length of that piece
+                        // Divide into equal pieces
+                        ; // get the coord at the end length of that piece
+                        if (i == 0) {
+                            modifiedPos -= AccidentParam.shoulderPadding / 2;
+                        } else if (i == laneNumber) {
+                            modifiedPos += AccidentParam.shoulderPadding / 2;
+                        }
 
                         newPosStr = originalCoordElements[0] + " "
-                                + AccidentParam.df6Digit.format(modifiedPos) + " " + originalCoordElements[2] + " ";
+                                + AccidentParam.df6Digit.format(modifiedPos) + " "
+                                + originalCoordElements[2] + " ";
                     }
                     currentlaneDivisionPath.set(j, newPosStr);
                 }
 
-//                String roadDivisionStr = roadStrBuilder.toString();
-//                roadDivisionStr = roadDivisionStr.replace("$laneName", "roadDivision" + i);
-//                roadDivisionStr = roadDivisionStr.replace("$priority", "9");
-//                roadDivisionStr = roadDivisionStr.replace("$material", AccidentParam.laneDivisionMaterial);
-//                roadDivisionStr = roadDivisionStr.replace("$initCoord", initPosition);
-//                roadDivisionStr = roadDivisionStr.replace("drivability = \"1\"", "drivability = \"-1\"");
-                String roadDivisionCoord = appendWidthToNodeList(0.1, currentlaneDivisionPath);
+                int numberOfStreet = testCaseInfo.getStreetList().size();
+
+                if (numberOfStreet == 1) {
+                    String roadDivisionCoord = appendWidthToNodeList(0.1, currentlaneDivisionPath);
 //                roadDivisionStr = roadDivisionStr.replace("$nodeList", roadDivisionCoord);
-                String roadDivisionStr = constructRoadObject("roadDivision" + i + "_" + roadID, "9",
-                        processingRoad, initPosition, "-1", roadDivisionCoord);
-                lane1RoadStr += "\n\n" + roadDivisionStr;
+                    String roadDivisionName = "roadDivision" + i + "_" + roadID;
+                    roadDivisionName = appendSuffixToRoadName(processingRoad, roadID, laneNumber, roadDivisionName, i);
+//                if (processingRoad.getStreetPropertyValue("road_direction").equals("1-way")) {
+//                    roadDivisionName += "1LaneDivLine";
+//                } else {
+//                    // Paint a 2-way division texture on the middle line
+//                    if (i == laneNumber / 2) {
+//                        roadDivisionName += "2WayDivLine";
+//                    }
+//                    if (i == 0) {
+//                        roadDivisionName += "leftShoulderDiv";
+//                    } else if (i == laneNumber) {
+//                        roadDivisionName += "rightShoulderDiv";
+//                    }
+//                    // For other line, paint a white dash
+//                    else {
+//                        roadDivisionName += "1LaneDivLine";
+//                    }
+//                }
+                    String roadDivisionStr = constructBeamNgRoadObject(roadDivisionName, "9",
+                            processingRoad, initPosition, "-1", roadDivisionCoord);
+                    lane1RoadStr += "\n\n" + roadDivisionStr;
+                }
+                else if (numberOfStreet > 1)
+                {
+                    ConsoleLogger.print('d', "Found numStreet > 1 in road div construction");
+                    // If there is an intersection, modify the intersection coordinate to remove the division lines in the
+                    // intersection
+                    int intersectionCoordIndex = currentlaneDivisionPath.size() / 2;
+                    String intersectionCoord = currentlaneDivisionPath.get(intersectionCoordIndex);
+                    String[] intersectionCoordElems = intersectionCoord.split(AccidentParam.beamngCoordDelimiter);
+
+                    // Create one more forward coordinate to resume the division lane at the other side of the intersection
+                    // Only do this if the processing road is a long road, i.e. the road continues after the intersection
+                    if (currentlaneDivisionPath.size() > AccidentParam.ROAD_PIECE_NODE + 1) // 1 is intersection coord
+                    {
+                        currentlaneDivisionPath.add(intersectionCoordIndex, currentlaneDivisionPath.get(intersectionCoordIndex));
+                    }
+
+                    HashMap<String, String> processingRoadNavDict =
+                            NavigationDictionary.selectDictionaryFromTravelingDirection(roadNavigation);
+
+                    int maxLaneNumOtherStreet = 1;
+                    ConsoleLogger.print('d', "currentlaneDivisionPath " + currentlaneDivisionPath.toString());
+
+                    // get the max lane number of other roads to remove the lines in the intersection area
+                    for (Street otherStreet : testCaseInfo.getStreetList())
+                    {
+                        if (otherStreet.getStreetPropertyValue("road_ID").equals(roadID))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            int otherStreetLaneNum = Integer.parseInt(otherStreet.getStreetPropertyValue("lane_num"));
+                            ConsoleLogger.print('d', "lane num of other road = " + otherStreetLaneNum);
+                            if (otherStreetLaneNum > maxLaneNumOtherStreet)
+                            {
+                                maxLaneNumOtherStreet = otherStreetLaneNum;
+                            }
+                        }
+                    }
+
+                    // take the pavement length into account
+                    maxLaneNumOtherStreet += 1;
+
+                    // Modify the coord to record the interrupted coord of the division line, and its continuous line
+                    double backwardCoordXChange = NavigationDictionary.setCoordValue(
+                            maxLaneNumOtherStreet * AccidentParam.laneWidth / 2.0,
+                            processingRoadNavDict.get("backward").split(NavigationDictionary.NAVIGATION_MAP_DELIMITER)[0]);
+
+                    double backwardCoordYChange = NavigationDictionary.setCoordValue(
+                            maxLaneNumOtherStreet * AccidentParam.laneWidth / 2.0,
+                            processingRoadNavDict.get("backward").split(NavigationDictionary.NAVIGATION_MAP_DELIMITER)[1]);
+
+                    double forwardCoordXChange = NavigationDictionary.setCoordValue(
+                            maxLaneNumOtherStreet * AccidentParam.laneWidth / 2.0,
+                            processingRoadNavDict.get("forward").split(NavigationDictionary.NAVIGATION_MAP_DELIMITER)[0]);
+
+                    double forwardCoordYChange = NavigationDictionary.setCoordValue(
+                            maxLaneNumOtherStreet * AccidentParam.laneWidth / 2.0,
+                            processingRoadNavDict.get("forward").split(NavigationDictionary.NAVIGATION_MAP_DELIMITER)[1]);
+
+                    ConsoleLogger.print('d', "Intersection Coord " + intersectionCoord);
+
+                    String backwardCoord = intersectionCoord;
+                    backwardCoord = AccidentConstructorUtil.updateCoordElementAtDimension(0, backwardCoord,
+                            Double.parseDouble(intersectionCoordElems[0]) + backwardCoordXChange + "",
+                            AccidentParam.beamngCoordDelimiter);
+
+                    backwardCoord = AccidentConstructorUtil.updateCoordElementAtDimension(1, backwardCoord,
+                            Double.parseDouble(intersectionCoordElems[1]) + backwardCoordYChange + "",
+                            AccidentParam.beamngCoordDelimiter);
+
+                    String forwardCoord = intersectionCoord;
+                    forwardCoord = AccidentConstructorUtil.updateCoordElementAtDimension(0, forwardCoord,
+                            Double.parseDouble(intersectionCoordElems[0]) + forwardCoordXChange + "",
+                            AccidentParam.beamngCoordDelimiter);
+
+                    forwardCoord = AccidentConstructorUtil.updateCoordElementAtDimension(1, forwardCoord,
+                            Double.parseDouble(intersectionCoordElems[1]) + forwardCoordYChange + "",
+                            AccidentParam.beamngCoordDelimiter);
+
+                    currentlaneDivisionPath.set(intersectionCoordIndex, backwardCoord);
+                    currentlaneDivisionPath.set(intersectionCoordIndex + 1, forwardCoord);
+
+                    ConsoleLogger.print('d', "Current Lane Div Path " + currentlaneDivisionPath.toString());
+
+
+                    for (int z = 0; z < 2; z++)
+                    {
+                        int startIndex = z == 0 ? 0 : currentlaneDivisionPath.size() / 2;
+                        int endIndex = z == 0 ? currentlaneDivisionPath.size() / 2 : currentlaneDivisionPath.size();
+                        String sectionPosition = z == 0 ? "_back" : "_front";
+                        String roadDivisionName = "roadDivision" + i + "_" + roadID + sectionPosition;
+
+                        ArrayList<String> laneDivSection = new ArrayList<String>();
+
+                        for (int k = startIndex; k < endIndex; k++)
+                        {
+                            laneDivSection.add(currentlaneDivisionPath.get(k));
+                        }
+
+                        ConsoleLogger.print('d', "Lane Division Section " + roadDivisionName + " coord list is " + laneDivSection.toString());
+
+                        String roadDivisionCoord = appendWidthToNodeList(0.1, laneDivSection);
+
+                        roadDivisionName = appendSuffixToRoadName(processingRoad, roadID, laneNumber, roadDivisionName, i);
+                        String roadDivisionStr = constructBeamNgRoadObject(roadDivisionName, "9",
+                                processingRoad, initPosition, "-1", roadDivisionCoord);
+                        lane1RoadStr += "\n\n" + roadDivisionStr;
+
+                    }
+                }
             }
 
             ConsoleLogger.print('d',"Final Road String \n" + lane1RoadStr);
@@ -2372,8 +2520,8 @@ public class RoadConstructor {
         return vehicleListStrBuilder;
     }
 
-    private String constructRoadObject(String laneName, String priority, Street roadObj, String initPosition,
-                                       String drivable, String roadCoordListStr)
+    private String constructBeamNgRoadObject(String laneName, String priority, Street roadObj, String initPosition,
+                                             String drivable, String roadCoordListStr)
     {
         String roadTemplate = loadTemplateFileContent(Paths.get(AccidentParam.roadFilePath));
         String material = null;
@@ -2438,7 +2586,18 @@ public class RoadConstructor {
             }
             else
             {
-                material = AccidentParam.laneDivisionMaterial;
+                if (laneName.contains("2Way"))
+                {
+                    material = AccidentParam.twoWayLaneDivisionMaterial;
+                }
+                else if (laneName.contains("1Lane"))
+                {
+                    material = AccidentParam.laneDivisionMaterial;
+                }
+                else if (laneName.contains("ShoulderDiv"))
+                {
+                    material = AccidentParam.shoulderDivisionMaterial;
+                }
             }
         }
 
@@ -2649,4 +2808,27 @@ public class RoadConstructor {
         return finalCoord;
     }
 
+    private String appendSuffixToRoadName(Street processingRoad, String roadID, int laneNumber, String baseName, int index)
+    {
+        String roadDivisionName = baseName;
+
+        if (processingRoad.getStreetPropertyValue("road_direction").equals("1-way")) {
+            roadDivisionName += "1LaneDivLine";
+        } else {
+            // Paint a 2-way division texture on the middle line
+            if (index == laneNumber / 2) {
+                roadDivisionName += "2WayDivLine";
+            }
+            if (index == 0) {
+                roadDivisionName += "leftShoulderDiv";
+            } else if (index == laneNumber) {
+                roadDivisionName += "rightShoulderDiv";
+            }
+            // For other line, paint a white dash
+            else {
+                roadDivisionName += "1LaneDivLine";
+            }
+        }
+        return roadDivisionName;
+    }
 }

@@ -181,19 +181,29 @@ public class AccidentConstructor {
                 accidentContext[0] = accidentConstructor.replacePhrases(accidentContext[0]).toLowerCase();
                 accidentContext[1] = accidentConstructor.replacePhrases(accidentContext[1]).toLowerCase();
 
+                if (System.getProperty("enableEnvironmentPropertiesConstruction") != null)
+                {
+                    environmentAnalyzer.analyzeWeatherAndLightingProperties(accidentContext[0], ontologyHandler,
+                            accidentConstructor.getTestCase(), accidentConstructor.vehicleList, stanfordCoreferencer);
+                }
+
                 environmentAnalyzer.extractBasicRoadProperties(accidentContext[0], accidentContext[1], ontologyHandler,
                         accidentConstructor.getTestCase(), accidentConstructor.vehicleList, stanfordCoreferencer);
+
+
 //                if (blockSignal) continue;
 
-//                String[] environmentParagraph = accidentConstructor.replacePhrases(accidentContext[0]).split("\\. ");
+//                String[] environmentParagraph = accidentContext[0].split("\\. ");
 //                for (int i = 0; i < environmentParagraph.length; i++) {
 //                    LinkedList<LinkedList<String>> environmenTaggedWordsAndDependencies =
 //                            stanfordCoreferencer.findDependencies(environmentParagraph[i]);
-//
+////
 //                    environmentAnalyzer.extractEnvironmentProp
 //                            (environmenTaggedWordsAndDependencies, ontologyHandler, accidentConstructor.testCase,
 //                                    accidentConstructor.vehicleList);
 //                }
+
+
 
                 environmentAnalyzer.checkMissingEnvironmentProperties(accidentConstructor.testCase);
 

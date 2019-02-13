@@ -9,7 +9,10 @@
     "difficulty": "10",
 	
 	"vehicles": {
-        "scenario_player0": {"playerUsable": true},
+        "scenario_player$strikerID": {"playerUsable" : true, 
+							 "startFocus" : true, 
+							 "nLanes":$NLanes,
+							 "maxSpeed":$speedLimit},
         "*": {"playerUsable": false},
     },
 	

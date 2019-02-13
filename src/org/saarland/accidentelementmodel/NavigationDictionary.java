@@ -26,6 +26,8 @@ import java.util.Map;
 public class NavigationDictionary {
     public static final String SAME_AXIS_SIGN = "-";
 
+    public static final String NAVIGATION_MAP_DELIMITER = ";";
+
     public static final String PERPENDICULAR_SIGN = "+";
 
     public static String[] sameAxisDirectionDict = new String[] {"N-S", "E-W", "NE-SW", "NW-SE"};
