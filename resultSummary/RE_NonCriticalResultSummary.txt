@@ -1,0 +1,13 @@
+Test Result run at 2019-02-14T22:28:28.285+07:00
+Total Number Of Cases: 20
+Perfectly Matched Crash Case: 1
+Partially Matched Crash Case: 0
+Unverified Crash Case: 0
+No Crash Case: 11
+Generation Failure Case: 8
+
+Perfectly Matched Case Names [RE_6_2005011268563_non-critical]
+Partially Matched Case Names []
+Unverified Matched Case Names []
+No Crash Case Names: [RE_10_2005041509401_non-critical, RE_11_2005041600861_non-critical, RE_13_2005043602062_non-critical, RE_18_2005002229021_non-critical, RE_19_2005002229322_non-critical, RE_1_2005003498523_non-critical, RE_20_2005002585142_non-critical, RE_4_2005005447482_non-critical, RE_5_2005006445282_non-critical, RE_7_2005041508541_non-critical, RE_8_2005041508601_non-critical]
+Generation Failure Cases Names: [RE_12_2005043601441, RE_14_2005043699481, RE_15_2005045587341, RE_16_2005045705322, RE_17_2005045705342, RE_2_2005003588441, RE_3_2005004495821, RE_9_2005041508661]

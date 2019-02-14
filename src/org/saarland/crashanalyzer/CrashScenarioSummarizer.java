@@ -23,12 +23,14 @@ public class CrashScenarioSummarizer {
     private final int UNVERIFIED_MATCHED_INDEX = 2;
 
     private final int NO_MATCH_INDEX = 3;
+
+    private final int GENERATION_FAIL_INDEX = 4;
     
     public CrashScenarioSummarizer(){}
 
     public void summarizeAllScenarios()
     {
-        int[] crashResultCounters = new int[] {0, 0, 0, 0};
+        int[] crashResultCounters = new int[] {0, 0, 0, 0, 0};
         
         int perfectlyMatchedCount = 0;
 
@@ -37,9 +39,11 @@ public class CrashScenarioSummarizer {
         int unverifiedCrashCount = 0;
 
         int noCrashCount = 0;
+
+        int generationFailCount = 0;
         
         ArrayList<LinkedList<String>> allCasesName = new ArrayList<LinkedList<String>>();
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < crashResultCounters.length; i++)
         {
             allCasesName.add(new LinkedList<String>());
         }
@@ -82,7 +86,9 @@ public class CrashScenarioSummarizer {
 
             summaryStrBuilder.append("Unverified Crash Case: " + crashResultCounters[UNVERIFIED_MATCHED_INDEX] + "\n");
 
-            summaryStrBuilder.append("No Crash Case: " + crashResultCounters[NO_MATCH_INDEX] + "\n\n");
+            summaryStrBuilder.append("No Crash Case: " + crashResultCounters[NO_MATCH_INDEX] + "\n");
+
+            summaryStrBuilder.append("Generation Failure Case: " + crashResultCounters[GENERATION_FAIL_INDEX] + "\n\n");
 
             summaryStrBuilder.append("Perfectly Matched Case Names " + allCasesName.get(ALL_MATCHED_INDEX) + "\n");
 
@@ -91,6 +97,8 @@ public class CrashScenarioSummarizer {
             summaryStrBuilder.append("Unverified Matched Case Names " + allCasesName.get(UNVERIFIED_MATCHED_INDEX) + "\n");
 
             summaryStrBuilder.append("No Crash Case Names: " + allCasesName.get(NO_MATCH_INDEX) + "\n");
+
+            summaryStrBuilder.append("Generation Failure Cases Names: " + allCasesName.get(GENERATION_FAIL_INDEX) + "\n");
 
             String summaryFileName = "testSummary_"
                     + today.getDayOfMonth() + "-" + today.getMonthOfYear() + "-" + today.getYear() + "-"
@@ -136,13 +144,18 @@ public class CrashScenarioSummarizer {
         HashSet<String> partVehicleSet = new HashSet<>();
         HashSet<String> unverifiedMatchVehicleSet = new HashSet<>();
         HashSet<String> notMatchVehicleSet = new HashSet<>();
+        HashSet<String> failGenerationSet = new HashSet<>();
         // Found a no crash case
-        if (recordElements[1].contains(AccidentParam.noCrashStr))
+        if (recordElements[1].contains(AccidentParam.NO_CRASH_STR))
         {
             crashResultCounters[NO_MATCH_INDEX]++;
             allCasesName.get(NO_MATCH_INDEX).add(recordElements[0]);
         }
-
+        else if (recordElements[1].contains(AccidentParam.FAILED_TO_GENERATE))
+        {
+            crashResultCounters[GENERATION_FAIL_INDEX]++;
+            allCasesName.get(GENERATION_FAIL_INDEX).add(recordElements[0]);
+        }
         else// if (!record.contains(CrashResultCode.ALL_MATCHED))
         {
             // Loop through the vehicle's damage element

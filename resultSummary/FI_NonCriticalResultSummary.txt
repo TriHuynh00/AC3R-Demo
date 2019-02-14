@@ -1,0 +1,13 @@
+Test Result run at 2019-02-14T23:14:39.767+07:00
+Total Number Of Cases: 21
+Perfectly Matched Crash Case: 0
+Partially Matched Crash Case: 0
+Unverified Crash Case: 0
+No Crash Case: 12
+Generation Failure Case: 9
+
+Perfectly Matched Case Names []
+Partially Matched Case Names []
+Unverified Matched Case Names []
+No Crash Case Names: [FI_10_2006048103049_non-critical, FI_12_2006078437504_non-critical, FI_13_2007049137414_non-critical, FI_14_2007074433785_non-critical, FI_15_2007074531628_non-critical, FI_18_2007076597933_non-critical, FI_19_2007079624048_non-critical, FI_20_2007082626282_non-critical, FI_4_2005075153762_non-critical, FI_7_2006008500984_non-critical, FI_8_2006009276225_non-critical, FI_9_2006012695946_non-critical]
+Generation Failure Cases Names: [FI_11_2006078436949, FI_16_2007075752271, FI_17_2007076197934, FI_1_2005012694982, FI_2_2005072603581, FI_3_2005072709061, FI_5_2005082203941, FI_6_2006003498784, renameWithID.py]

@@ -480,7 +480,7 @@ public class AccidentConstructor {
             } catch (Exception e) {
 
                 DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(null, scenarioName);
-                crashAnalyzer.checkWhetherCrashOccur(false);
+                crashAnalyzer.markGenerationFailureCase();
                 ConsoleLogger.print('r', "Error in generating case " + scenarioName);
                 e.printStackTrace();
                 continue;

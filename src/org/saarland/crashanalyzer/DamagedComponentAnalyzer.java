@@ -102,6 +102,11 @@ public class DamagedComponentAnalyzer {
         return damagedComponent;
     }
 
+    public void markGenerationFailureCase()
+    {
+        writeDamageAnalysisResult(scenarioName + ":" + AccidentParam.FAILED_TO_GENERATE);
+    }
+
     public boolean checkWhetherCrashOccur(boolean hasCrash)
     {
         // Read all the files that contain scenario name
@@ -111,15 +116,15 @@ public class DamagedComponentAnalyzer {
         // If there is only 1 file, check whether this is a crash file
         if (!hasCrash)
         {
-            writeDamageAnalysisResult(scenarioName + ":" + AccidentParam.noCrashStr);
+            writeDamageAnalysisResult(scenarioName + ":" + AccidentParam.NO_CRASH_STR);
             return false;
         }
         else if (files.length == 1)
         {
             // If this is a noCrash file, stop here and record that the test case fails
-            if (files[0].getName().contains(AccidentParam.noCrashStr))
+            if (files[0].getName().contains(AccidentParam.NO_CRASH_STR))
             {
-                writeDamageAnalysisResult(scenarioName + ":" + AccidentParam.noCrashStr);
+                writeDamageAnalysisResult(scenarioName + ":" + AccidentParam.NO_CRASH_STR);
             }
         }
         // More than 1 file => read the crash components
@@ -145,7 +150,7 @@ public class DamagedComponentAnalyzer {
             }
 
             ConsoleLogger.print('d',"Damage Summary");
-            ConsoleLogger.print('d',damageSummary);
+            ConsoleLogger.print('d', damageSummary);
 
             // Verify whether crashed component matches with the description
             verifyCrashedComponents(damageSummary);

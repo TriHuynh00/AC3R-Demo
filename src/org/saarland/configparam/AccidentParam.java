@@ -46,7 +46,8 @@ public class AccidentParam {
     public static int defaultSpeed  = 20; // mph
     public static double accelerationTo20Mph = 2.9; // 2.9; // m/s2
 
-    public static String noCrashStr = "noCrash";
+    public static String NO_CRASH_STR = "noCrash";
+    public static String FAILED_TO_GENERATE = "generationFail";
 
     public static boolean isGradingConcerned = false;
 
