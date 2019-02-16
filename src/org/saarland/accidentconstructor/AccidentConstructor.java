@@ -22,6 +22,8 @@ import java.util.concurrent.TimeUnit;
 
 
 public class AccidentConstructor {
+
+
     private String[] actorKeywords = {"vehicle", "pedestrian"};
 
     private ArrayList<VehicleAttr> vehicleList;
@@ -72,6 +74,7 @@ public class AccidentConstructor {
     }
 
     public static void main(String[] args) {
+        TreeMap<String, Long> scenarioConstructionTime = new TreeMap<String, Long>();
         boolean blockSignal = true;
         // Move test and crash info verification files into another folders
         AccidentConstructorUtil.moveFilesToAnotherFolder(FilePathsConfig.damageRecordLocation,
@@ -87,7 +90,7 @@ public class AccidentConstructor {
         TestCaseRunner testCaseRunner = new TestCaseRunner();
 
 
-        long startTimeCoref = System.nanoTime();
+
         ConsoleLogger.print('r', "Loading Ontology");
         OntologyHandler ontologyHandler = new OntologyHandler();
         try {
@@ -97,14 +100,18 @@ public class AccidentConstructor {
             e.printStackTrace();
         }
 
-
+        ConsoleLogger.print('r', "Loading Coreferencer");
+        long startTimeCoref = System.nanoTime();
+        StanfordCoreferencer stanfordCoreferencer = new StanfordCoreferencer();
+        long endTimeCoref = (System.nanoTime() - startTimeCoref);
+        ConsoleLogger.print('r', String.format("Finish Loading Coreferencer after %d seconds", TimeUnit.NANOSECONDS.toSeconds(endTimeCoref)));
+        ConsoleLogger.print('r', "Coreferencer loaded");
 
 //        ConsoleLogger.print('r', "Loading Coreferencer");
 //        StanfordCoreferencer stanfordCoreferencer = new StanfordCoreferencer();
 //        ConsoleLogger.print('r', "Coreferencer loaded");
 
-        long endTimeCoref = (System.nanoTime() - startTimeCoref);
-        ConsoleLogger.print('r', String.format("Finish Loading Coreferencer after %d seconds", TimeUnit.NANOSECONDS.toSeconds(endTimeCoref)));
+
         ConsoleLogger.print('r', "Please Select Crash Reports");
 
         JFileChooser fileChooser = new JFileChooser();
@@ -135,9 +142,7 @@ public class AccidentConstructor {
                 //TODO: check if the scenario actually exists
                 scenarioName = accidentFilePath.substring(accidentFilePath.lastIndexOf("/") + 1).replace(".xml", "");
 
-                ConsoleLogger.print('r', "Loading Coreferencer");
-                StanfordCoreferencer stanfordCoreferencer = new StanfordCoreferencer();
-                ConsoleLogger.print('r', "Coreferencer loaded");
+
 
                 ConsoleLogger.print('r', "\n Constructing Scenario " + scenarioName + "\n");
 
@@ -452,6 +457,7 @@ public class AccidentConstructor {
 
                 long endTime = (System.nanoTime() - startTime);
                 ConsoleLogger.print('r', String.format("Finish generating simulation %s after %d milliseconds\n", scenarioName, TimeUnit.NANOSECONDS.toMillis(endTime)));
+                scenarioConstructionTime.put(scenarioName, TimeUnit.NANOSECONDS.toMillis(endTime));
                 ConsoleLogger.print('d', "Final Street List");
                 for (Street street : accidentConstructor.testCase.getStreetList()) {
                     ConsoleLogger.print('d', "Street ID " + street.getStreetProp().get("road_ID"));
@@ -488,6 +494,15 @@ public class AccidentConstructor {
         }
         CrashScenarioSummarizer csr = new CrashScenarioSummarizer();
         csr.summarizeAllScenarios();
+
+        long total = 0;
+        for (String key : scenarioConstructionTime.keySet())
+        {
+            ConsoleLogger.print('d', key + "," + scenarioConstructionTime.get(key));
+            total += scenarioConstructionTime.get(key);
+        }
+        ConsoleLogger.print('d', "Average: " + total / scenarioConstructionTime.size() + " ms");
+
 
     }
 
