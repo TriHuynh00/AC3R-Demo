@@ -13,6 +13,7 @@ import org.saarland.ontologyparser.OntologyHandler;
 import org.saarland.xmlmodules.XMLAccidentCaseParser;
 import sun.awt.image.ImageWatched;
 
+import java.io.StreamTokenizer;
 import java.util.*;
 
 public class EnvironmentAnalyzer {
@@ -1041,6 +1042,11 @@ public class EnvironmentAnalyzer {
                                 streetProp.put(key, "" + Math.round(Double.parseDouble(speed_limit) * 0.621427));
                                 ConsoleLogger.print('d', "put speed limit %s to street #");
                             }
+
+                        }
+                        else if (key.equals("road_direction"))
+                        {
+                            streetProp.put(key, "2-way");
 
                         }
 

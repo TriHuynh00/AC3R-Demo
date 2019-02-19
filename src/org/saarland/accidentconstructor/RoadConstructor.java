@@ -911,7 +911,7 @@ public class RoadConstructor {
                                                                 .replace("Node = \"", "")
                                                                 .replace("\"", ""));
 
-                lane1RoadStr = constructBeamNgRoadObject("lane" + roadID, "10",
+                lane1RoadStr = constructBeamNgRoadObject("road" + roadID, "10",
                         processingRoad, vehiclePath.get(0), "-1", lane1RoadCoord);
 
                 // Construct Parking Line if applicable
@@ -1278,7 +1278,7 @@ public class RoadConstructor {
 
                         ConsoleLogger.print('d', "Lane Division Section " + roadDivisionName + " coord list is " + laneDivSection.toString());
 
-                        String roadDivisionCoord = appendWidthToNodeList(0.1, laneDivSection);
+                        String roadDivisionCoord = appendWidthToNodeList(0.2, laneDivSection);
 
                         roadDivisionName = appendSuffixToRoadName(processingRoad, roadID, laneNumber, roadDivisionName, i);
                         String roadDivisionStr = constructBeamNgRoadObject(roadDivisionName, "9",
@@ -2604,18 +2604,36 @@ public class RoadConstructor {
             }
             else
             {
+                boolean is2WayRoad = roadObj.getStreetPropertyValue("road_direction").equals("2-way") ? true : false;
+                ConsoleLogger.print('d', "Road " + roadObj.getStreetPropertyValue("road_ID") + " is 2 way ? " + is2WayRoad);
+                // Construct road direction division line
+                // For 2 ways, the middle line is a continuous yellow line
+                // For 1 way, the middle line is a white dash line
                 if (laneName.contains("2Way"))
                 {
-                    material = AccidentParam.twoWayLaneDivisionMaterial;
+                    if (is2WayRoad) {
+                        material = AccidentParam.twoWayLaneDivisionMaterial;
+                    }
+                    else
+                    {
+                        material = AccidentParam.laneDivisionMaterial;
+                    }
+                }
+                else if (laneName.contains("ShoulderDiv"))
+                {
+
+                    if ((laneName.contains("leftShoulderDiv") && is2WayRoad) || laneName.contains("rightShoulderDiv"))
+                        material = AccidentParam.shoulderDivisionMaterial;
+                    else
+                        material = AccidentParam.twoWayLaneDivisionMaterial;
+                    ConsoleLogger.print('d', "paint shoulder line with material " + material);
+
                 }
                 else if (laneName.contains("1Lane"))
                 {
                     material = AccidentParam.laneDivisionMaterial;
                 }
-                else if (laneName.contains("ShoulderDiv"))
-                {
-                    material = AccidentParam.shoulderDivisionMaterial;
-                }
+
             }
         }
 
@@ -2830,9 +2848,9 @@ public class RoadConstructor {
     {
         String roadDivisionName = baseName;
 
-        if (processingRoad.getStreetPropertyValue("road_direction").equals("1-way")) {
-            roadDivisionName += "1LaneDivLine";
-        } else {
+//        if (processingRoad.getStreetPropertyValue("road_direction").equals("1-way")) {
+//            roadDivisionName += "1LaneDivLine";
+//        } else {
             // Paint a 2-way division texture on the middle line
             if (index == laneNumber / 2) {
                 roadDivisionName += "2WayDivLine";
@@ -2846,7 +2864,7 @@ public class RoadConstructor {
             else {
                 roadDivisionName += "1LaneDivLine";
             }
-        }
+//        }
         return roadDivisionName;
     }
 }

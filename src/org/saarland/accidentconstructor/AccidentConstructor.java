@@ -23,10 +23,10 @@ import java.util.concurrent.TimeUnit;
 
 public class AccidentConstructor {
 
-
     private String[] actorKeywords = {"vehicle", "pedestrian"};
 
     private ArrayList<VehicleAttr> vehicleList;
+
     private String accidentType = "";
 
     private OntologyHandler ontoParser;
@@ -76,7 +76,8 @@ public class AccidentConstructor {
     public static void main(String[] args) {
         TreeMap<String, Long> scenarioConstructionTime = new TreeMap<String, Long>();
         boolean blockSignal = true;
-        // Move test and crash info verification files into another folders
+
+        // Move previous test and crash info verification files into another folders
         AccidentConstructorUtil.moveFilesToAnotherFolder(FilePathsConfig.damageRecordLocation,
                 FilePathsConfig.previousRecordLocation, ".log");
 
@@ -88,8 +89,6 @@ public class AccidentConstructor {
 
 //        BeamNGServerSocket beamNGServerSocket = new BeamNGServerSocket();
         TestCaseRunner testCaseRunner = new TestCaseRunner();
-
-
 
         ConsoleLogger.print('r', "Loading Ontology");
         OntologyHandler ontologyHandler = new OntologyHandler();
@@ -122,12 +121,15 @@ public class AccidentConstructor {
 
         File[] selectedFiles = null;
 
+        // Display the File Chooser to choose crash report
+
         if (fileStat == JFileChooser.APPROVE_OPTION) {
             selectedFiles = fileChooser.getSelectedFiles();
 
             for (File selectedFile : selectedFiles) {
                 ConsoleLogger.print('d', "Selected File " + selectedFile.getAbsolutePath());
             }
+
         }
 
         if (selectedFiles == null) {
@@ -160,26 +162,35 @@ public class AccidentConstructor {
                 }
                 ConsoleLogger.print('d', "");
 
-
                 long startParsingFileTime = System.nanoTime();
 
+                /*
+                 * Preprocess the crash report
+                 * - Normalize paragraphs in a crash report
+                 * - Identify the number of cars and their properties (color, body type)
+                 */
                 String[] accidentContext = xmlAccidentCaseParser.parseAccidentXmlFile(accidentConstructor, ontologyHandler);
 
                 String[] storyline = accidentConstructor.replacePhrases(accidentContext[1]).split("\\.");
 
                 long endParsingFileTime = System.nanoTime() - startParsingFileTime;
+
                 ConsoleLogger.print('d', String.format("Finish Processing report after %d milliseconds", TimeUnit.NANOSECONDS.toMillis(endParsingFileTime)));
 
                 long startCorefTime = System.nanoTime();
+
+                // Replace coreferenced phrases (anaphora) by the referred noun (antecedent) in the paragraph.
                 for (int i = 0; i < storyline.length; i++) {
                     String modSentence = stanfordCoreferencer.findCoreference(storyline[i]);
                     storyline[i] = modSentence.trim();
                 }
                 long endCorefTime = System.nanoTime() - startCorefTime;
+
                 ConsoleLogger.print('d', String.format("Finish Parsing Coref after %d milliseconds", TimeUnit.NANOSECONDS.toMillis(endCorefTime)));
 
-                // Analyze the environment
-                //String[] environmentParagraph = accidentContext[0].replace("speed limit", "speed_limit").split("\\. ");
+                /******************************************
+                 ****** BEGIN ENVIRONMENT ANALYSIS ********
+                 ******************************************/
                 long envNADStart = System.nanoTime();
 
                 // ------- NEW BASIC ROAD ANALYZER ------
@@ -208,8 +219,7 @@ public class AccidentConstructor {
 //                                    accidentConstructor.vehicleList);
 //                }
 
-
-
+                // Handle missing or empty environment properties here
                 environmentAnalyzer.checkMissingEnvironmentProperties(accidentConstructor.testCase);
 
                 accidentConstructor.testCase.printTestCaseInfo();
@@ -220,20 +230,25 @@ public class AccidentConstructor {
 
                 for (Street street : accidentConstructor.testCase.getStreetList())
                 {
-                    ConsoleLogger.print('d', String.format("Street %s, direction %s, is_single_road %s, type %s, lane num %s",
+                    ConsoleLogger.print('d', String.format("Street %s, cardinal direction %s, is_single_road %s, type %s, lane num %s, number of travel direction %s",
                             street.getStreetPropertyValue("road_ID"),
                             street.getStreetPropertyValue("road_navigation"),
                             street.getStreetPropertyValue("is_single_road_piece"),
                             street.getStreetPropertyValue("road_type"),
-                            street.getStreetPropertyValue("lane_num")) );
+                            street.getStreetPropertyValue("lane_num"),
+                            street.getStreetPropertyValue("road_direction") ));
                 }
+
+                /******************************************
+                 ******** END ENVIRONMENT ANALYSIS ********
+                 ******************************************/
 
 //                if (blockSignal) continue;
                 // Until here is the environment analysis
 
-//            Thread.sleep(1000);
-//            stanfordCoreferencer.destroyCoref();
-//            stanfordCoreferencer.initParser();
+                /***************************************************
+                 ******** BEGIN ACCIDENT DEVELOPMENT ANALYSIS ******
+                 ***************************************************/
 
                 LinkedList<LinkedList<ActionDescription>> storylineActionList = new LinkedList<LinkedList<ActionDescription>>();
 
@@ -241,7 +256,6 @@ public class AccidentConstructor {
                     if (sentence.equalsIgnoreCase("") || sentence == null) {
                         continue;
                     }
-                    // Analyze street properties
                     Stemmer stemmer = new Stemmer();
                     LinkedList<LinkedList<String>> relevantTaggedWordsAndDependencies = stanfordCoreferencer.findDependencies(sentence);
                     LinkedList<ActionDescription> actionChain = accidentConstructor.extractActionChains
@@ -270,10 +284,9 @@ public class AccidentConstructor {
 
 //                if (blockSignal) continue;
 
+
+
                 boolean foundAccidentType = false;
-
-                double leaveTriggerDistance = 0;
-
 
                 ConsoleLogger.print('d', "Street List Before Constructing Coord");
                 for (Street street : accidentConstructor.testCase.getStreetList()) {
@@ -281,6 +294,7 @@ public class AccidentConstructor {
                     street.printStreetInfo();
                 }
 
+                //
                 accidentConstructor.checkMissingPropertiesVehicles();
                 long envNADEnd = System.nanoTime() - envNADStart;
                 //ConsoleLogger.print('r', String.format("Finish Extracting Environment and Accident Development after %d milliseconds", TimeUnit.NANOSECONDS.toMillis(envNADEnd)));
@@ -289,12 +303,16 @@ public class AccidentConstructor {
 //            if (exitNow)
 //                continue;
 
+                /*************************************************
+                 ******** END ACCIDENT DEVELOPMENT ANALYSIS ******
+                 *************************************************/
+
                 long simulationGenStartTime = System.nanoTime();
 
                 NavigationDictionary.init();
                 ConsoleLogger.print('r', "Navigation Dictionary initialized!");
 
-                // Analyze the action list of each vehicle, then create the Crash Scenario
+                // Analyze the action list of each vehicle, then create the Crash Scenario based on crash type
                 if (accidentConstructor.accidentType.toLowerCase().contains("rear-end")
                         || accidentConstructor.accidentType.toLowerCase().contains("rearend")
                         || accidentConstructor.accidentType.toLowerCase().contains("rear end")) {
@@ -376,19 +394,6 @@ public class AccidentConstructor {
                     ConsoleLogger.print('d', "Scenario Name " + scenarioName);
                     Path finalResultPath = Paths.get(AccidentParam.finalResultLocation + "\\" + scenarioName + ".prefab");
                     Files.write(finalResultPath, buffer);
-//                for (Street road : accidentConstructor.testCase.getStreetList())
-//                {
-//                    RoadConstructor roadConstructor = new RoadConstructor(
-//                            accidentConstructor.vehicleList,
-//                            accidentConstructor.testCase);
-
-//                    roadConstructor.constructRoadNodes(road.getStreetProp().get("road_grade"),
-//                            road.getStreetProp().get("road_grade_deg"),
-//                            Integer.parseInt(road.getStreetProp().get("lane_num")),
-//                            road.getStreetProp().get("curve_radius"),
-//                            scenarioName);
-//                }
-
 
                     // Construct Scenario Config file
                     String scenarioTemplateFile = AccidentConstructorUtil.loadTemplateContent
@@ -396,6 +401,7 @@ public class AccidentConstructor {
 
                     VehicleAttr[] strikerAndVictim = new VehicleAttr[2];
 
+                    // Find the right striker and victim ID. The striker vehicle is assigned to drive the ego-car
                     if (accidentConstructor.accidentType.contains("rear-end")
                             || accidentConstructor.accidentType.contains("rearend")
                             || accidentConstructor.accidentType.contains("rear end")) {
@@ -429,7 +435,7 @@ public class AccidentConstructor {
                             (int) Math.ceil(strikerLaneNum / 2.0)));
 
                     double speedLimit = -1;
-                    // If there is no speed limit
+                    // Record the speed limit in the scenario's JSON file, if speed_limit is not specified, set it as -1
                     if (!strikerAndVictim[0].getStandingStreet().getStreetPropertyValue("speed_limit").equals(""))
                     {
                          speedLimit = AccidentConstructorUtil.convertMPHToKMPH(Double.parseDouble(
@@ -449,8 +455,7 @@ public class AccidentConstructor {
 
 //                    beamNGServerSocket.setScenarioName(scenarioPath);
                     testCaseRunner.setScenarioName(scenarioName);
-//                OSMAccidentCaseConstructor osmAccidentCaseConstructor = new OSMAccidentCaseConstructor();
-//                String[] accidentFileElements = accidentFilePath.split("/");
+//                OSMAccidentCaseConstructor osmAccidentCaseConstructor = new OSMAccidentCaseConstructor();//                String[] accidentFileElements = accidentFilePath.split("/");
 //                osmAccidentCaseConstructor.constructOSMTestCase(accidentConstructor.vehicleList,
 //                        accidentFileElements[accidentFileElements.length - 1].replace(".xml", ".osm"));
                 }
@@ -459,6 +464,7 @@ public class AccidentConstructor {
                 ConsoleLogger.print('r', String.format("Finish generating simulation %s after %d milliseconds\n", scenarioName, TimeUnit.NANOSECONDS.toMillis(endTime)));
                 scenarioConstructionTime.put(scenarioName, TimeUnit.NANOSECONDS.toMillis(endTime));
                 ConsoleLogger.print('d', "Final Street List");
+
                 for (Street street : accidentConstructor.testCase.getStreetList()) {
                     ConsoleLogger.print('d', "Street ID " + street.getStreetProp().get("road_ID"));
                     street.printStreetInfo();
@@ -485,6 +491,7 @@ public class AccidentConstructor {
 
             } catch (Exception e) {
 
+                // If there is an exception during the scenario generation process, set the case as generation failure
                 DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(null, scenarioName);
                 crashAnalyzer.markGenerationFailureCase();
                 ConsoleLogger.print('r', "Error in generating case " + scenarioName);
@@ -2212,6 +2219,10 @@ public class AccidentConstructor {
         } // End looping through each vehicle/
     }
 
+    /*
+     * Replace space by underscore in certain compound words. For example: "stop sign" becomes "stop_sigh"
+     * @param paragraph: The input paragraph string of which compound words are modified
+     */
     private String replacePhrases(String paragraph) {
         String[] phrases = new String[] {"speed limit", "stop sign", "traffic sign", "traffic light"};
         for (String phrase : phrases)
@@ -2223,10 +2234,14 @@ public class AccidentConstructor {
         return paragraph;
     }
 
+    /*
+     *  In an impact description sentence, find the name of the striker from the victim i.e. the vehicle which is impacted
+     *
+     */
     private String findSuspectedVehicle(LinkedList<String> dependencyList, LinkedList<String> tagWordList,
                                         String impactedVehicle, DamagedComponentAnalyzer damagedComponentAnalyzer)
     {
-        // Get other vehicle except the impacted vehicle in the sentence, set this one as subject vehicle
+        // Get other vehicle except the impacted vehicle in the sentence, set the other vehicle as striker (subject)
         HashSet<String> suspectedVehicles = new HashSet<String>();
         String subjectVehicle = "";
         for (String suspectedDependency : dependencyList) {
@@ -2239,14 +2254,17 @@ public class AccidentConstructor {
 
                 ConsoleLogger.print('d', "suspected Dep with veh " + suspectedDependency);
                 String[] suspectedWordPair = AccidentConstructorUtil.getWordPairFromDependency(suspectedDependency);
+
+                // If a vehicle with a specific vehicle ID is given, record it as suspected striker
                 if (suspectedWordPair[0].contains("vehicle") && !suspectedWordPair[0].startsWith("vehicle-")) {
                     ConsoleLogger.print('d', "suspected Dep get word 0: " + suspectedWordPair[0]);
                     suspectedActor = AccidentConstructorUtil.getWordFromToken(suspectedWordPair[0]);
 
                     suspectedVehicles.add(suspectedActor);
                     otherWord = suspectedWordPair[1];
-                } else {
-                    // If this is not an anonymous vehicle, set it as suspected vehicle
+                }
+                else // If this is not an anonymous vehicle, set it as suspected vehicle
+                {
                     if (!suspectedWordPair[1].startsWith("vehicle-"))
                     {
                         ConsoleLogger.print('d', "suspected Dep get word 1: " + suspectedWordPair[1]);
@@ -2260,6 +2278,7 @@ public class AccidentConstructor {
             // Find the concept of other word that describe the crash component
             String otherWordStr = AccidentConstructorUtil.getWordFromToken(otherWord);
             AccidentConcept otherWordConcept = ontoParser.findExactConcept(otherWordStr);
+
             if (!impactedVehicle.equals("") && otherWordConcept != null
                     && otherWordConcept.getLeafLevelName().equals("vehicle_impact_side"))
             {
@@ -2269,18 +2288,19 @@ public class AccidentConstructor {
                 String damagedSide = damagedComponentAnalyzer.findSideOfCrashedComponents(dependencyList,
                         otherWord, suspectedActor, tagWordList);
                 ConsoleLogger.print('d', "Final damaged Side " + damagedSide);
-
             }
         }
 
-        Iterator<String> susVehicleIter = suspectedVehicles.iterator();
-        while (susVehicleIter.hasNext()) {
+        Iterator<String> suspectVehicleIter = suspectedVehicles.iterator();
 
-            String susVeh = susVehicleIter.next();
+        // Remove nouns that do not specify any vehicle identity
+        while (suspectVehicleIter.hasNext()) {
+
+            String susVeh = suspectVehicleIter.next();
             ConsoleLogger.print('d', "Sus vehicle: " + susVeh);
             if (susVeh.equals("vehicle") || !susVeh.startsWith("vehicle"))
             {
-                susVehicleIter.remove();
+                suspectVehicleIter.remove();
                 ConsoleLogger.print('d', suspectedVehicles);
             }
         }
