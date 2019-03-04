@@ -42,7 +42,6 @@ public class EnvironmentAnalyzer {
 
         for (String sentence : sentences)
         {
-
             LinkedList<String> dependencyList = stanfordCoreferencer.findDependencies(sentence).get(1);
 
             Stemmer stemmer = new Stemmer();
@@ -56,24 +55,30 @@ public class EnvironmentAnalyzer {
                 for (AccidentConcept weatherConcept : envPropList) {
                     String weatherConceptName = weatherConcept.getConceptName();
                     weatherConceptName = stemmer.stem(weatherConceptName);
-                    if (dependencyList.toString().contains(weatherConceptName + "-")) {
-                        String conceptGroup = weatherConcept.getLeafLevelName();
-                        ConsoleLogger.print('d', "Find Weather word " + weatherConceptName);
-                        String currentWeatherCondition = testCase.getEnvPropertyValue(conceptGroup);
+                    for (String dep : dependencyList)
+                    {
+                        if (dep.startsWith(weatherConceptName))
+                        {
+                            String conceptGroup = weatherConcept.getLeafLevelName();
+                            ConsoleLogger.print('d', "Find Weather word " + weatherConceptName);
+                            String currentWeatherCondition = testCase.getEnvPropertyValue(conceptGroup);
 
-                        // Find the negation of this word
-                        boolean hasNegation = AccidentConstructorUtil.findNegationOfToken(weatherConceptName + "-", dependencyList);
+                            // Find the negation of this word
+                            boolean hasNegation = AccidentConstructorUtil.findNegationOfToken(weatherConceptName + "-", dependencyList);
 
-                        if (hasNegation) {
-                            ConsoleLogger.print('d', "Has negation of env term " + weatherConceptName);
-                            weatherConceptName = "n_" + weatherConceptName;
-                        }
+                            if (hasNegation) {
+                                ConsoleLogger.print('d', "Has negation of env term " + weatherConceptName);
+                                weatherConceptName = "n_" + weatherConceptName;
+                            }
 
-                        if (currentWeatherCondition.equals("normal")) {
-                            testCase.putValToKey(conceptGroup, weatherConceptName);
-                        } else {
-                            if (!currentWeatherCondition.contains(weatherConceptName)) {
-                                testCase.putValToKey(conceptGroup, currentWeatherCondition + " " + weatherConceptName);
+                            if (currentWeatherCondition.equals("normal")) {
+                                testCase.putValToKey(conceptGroup, weatherConceptName);
+                            }
+                            else
+                            {
+                                if (!currentWeatherCondition.contains(weatherConceptName)) {
+                                    testCase.putValToKey(conceptGroup, currentWeatherCondition + " " + weatherConceptName);
+                                }
                             }
                         }
                     }
@@ -960,8 +965,10 @@ public class EnvironmentAnalyzer {
         }
     }
 
-
-
+    /*
+     *  Set default values for road and environment properties, when AC3R cannot find certain these properties from
+     *  the crash reports.
+     */
     public void checkMissingEnvironmentProperties(TestCaseInfo testCase)
     {
         HashMap<String, String> testCaseProp = testCase.getTestCaseProp();
@@ -979,8 +986,8 @@ public class EnvironmentAnalyzer {
             try {
                 for (String key : streetProp.keySet()) {
                     if (streetProp.get(key).equals("") || streetProp.get(key) == null) {
-                        // Find the Number of Lane tag
-
+                        // If the number of lane of a road cannot be found, search the XML tag in the crash report
+                        // If the tag value cannot be found, set the lane number as 2
                         if (key.equals("lane_num")) {
                             ConsoleLogger.print('d',"Processing Missing Lane Number for road " + streetProp.get("road_ID"));
                             try {
@@ -1012,9 +1019,9 @@ public class EnvironmentAnalyzer {
                             streetProp.put(key, "level");
                             streetProp.put("road_grade_deg", "0");
                         }
+                        // By default, the road is straight if road shape is not found
                         else if (key.equals("road_shape"))
                         {
-                            // Assume a straight road
                             streetProp.put(key, RoadShape.STRAIGHT);
                             streetProp.put("curve_direction", "none");
                             streetProp.put("curve_radius", "0");
@@ -1033,6 +1040,7 @@ public class EnvironmentAnalyzer {
                             }
                             streetProp.put(key, material);
                         }
+                        // Attempt to find speed_limit in the XML tag if crash report does not mention
                         else if (key.equals("speed_limit"))
                         {
                             String speed_limit = XMLAccidentCaseParser.readTagOfAGivenOrder("ROADWAY",
@@ -1047,7 +1055,6 @@ public class EnvironmentAnalyzer {
                         else if (key.equals("road_direction"))
                         {
                             streetProp.put(key, "2-way");
-
                         }
 
 

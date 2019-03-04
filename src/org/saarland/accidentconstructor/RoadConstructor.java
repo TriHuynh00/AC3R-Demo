@@ -1112,9 +1112,9 @@ public class RoadConstructor {
                         newPosStr = (Double.parseDouble(originalCoordElements[0]) + " "
                                 + AccidentParam.df6Digit.format(modifiedPos)) + " "
                                 + originalCoordElements[2] + " ";
-                    } else // NS NW SE SW directions
+                    }
+                    else // NS NW SE SW directions
                     {
-
                         modifiedPos = (Double.parseDouble(originalCoord.split(" ")[1]) - 3 - laneNumber * AccidentParam.laneWidth / 2)  // Get start point from original X
                                 + (AccidentParam.laneWidth + 2) * i // Get total width by far
                         // Divide into equal pieces
@@ -2851,19 +2851,32 @@ public class RoadConstructor {
 //        if (processingRoad.getStreetPropertyValue("road_direction").equals("1-way")) {
 //            roadDivisionName += "1LaneDivLine";
 //        } else {
-            // Paint a 2-way division texture on the middle line
-            if (index == laneNumber / 2) {
-                roadDivisionName += "2WayDivLine";
-            }
-            if (index == 0) {
-                roadDivisionName += "leftShoulderDiv";
-            } else if (index == laneNumber) {
-                roadDivisionName += "rightShoulderDiv";
-            }
-            // For other line, paint a white dash
-            else {
-                roadDivisionName += "1LaneDivLine";
-            }
+        String roadCardinalDirection = processingRoad.getStreetPropertyValue("road_navigation");
+
+        int middleLineIndex = laneNumber / 2;
+
+        // For odd lane number, the following direction
+        if (laneNumber % 2 == 1
+            && (roadCardinalDirection.equals("S") || roadCardinalDirection.equals("W")
+            || roadCardinalDirection.equals("SW") || roadCardinalDirection.equals("NW")) )
+        {
+            middleLineIndex = laneNumber / 2 + 1;
+        }
+
+        // Paint a 2-way division texture on the middle line
+        if (index == middleLineIndex)
+        {
+            roadDivisionName += "2WayDivLine";
+        }
+        if (index == 0) {
+            roadDivisionName += "leftShoulderDiv";
+        } else if (index == laneNumber) {
+            roadDivisionName += "rightShoulderDiv";
+        }
+        // For other line, paint a white dash
+        else {
+            roadDivisionName += "1LaneDivLine";
+        }
 //        }
         return roadDivisionName;
     }

@@ -91,7 +91,9 @@ public class AccidentConstructor {
         TestCaseRunner testCaseRunner = new TestCaseRunner();
 
         ConsoleLogger.print('r', "Loading Ontology");
+
         OntologyHandler ontologyHandler = new OntologyHandler();
+
         try {
             ontologyHandler.readOntology();
         } catch (Exception e) {
@@ -106,22 +108,17 @@ public class AccidentConstructor {
         ConsoleLogger.print('r', String.format("Finish Loading Coreferencer after %d seconds", TimeUnit.NANOSECONDS.toSeconds(endTimeCoref)));
         ConsoleLogger.print('r', "Coreferencer loaded");
 
-//        ConsoleLogger.print('r', "Loading Coreferencer");
-//        StanfordCoreferencer stanfordCoreferencer = new StanfordCoreferencer();
-//        ConsoleLogger.print('r', "Coreferencer loaded");
-
-
         ConsoleLogger.print('r', "Please Select Crash Reports");
 
         JFileChooser fileChooser = new JFileChooser();
 
         fileChooser.setMultiSelectionEnabled(true);
 
+        // Display the File Chooser to choose crash report
+
         int fileStat = fileChooser.showOpenDialog(null);
 
         File[] selectedFiles = null;
-
-        // Display the File Chooser to choose crash report
 
         if (fileStat == JFileChooser.APPROVE_OPTION) {
             selectedFiles = fileChooser.getSelectedFiles();
@@ -129,13 +126,14 @@ public class AccidentConstructor {
             for (File selectedFile : selectedFiles) {
                 ConsoleLogger.print('d', "Selected File " + selectedFile.getAbsolutePath());
             }
-
         }
 
-        if (selectedFiles == null) {
+        if (selectedFiles == null)
+        {
             return;
         }
-        for (File selectedFile : selectedFiles) {
+        for (File selectedFile : selectedFiles)
+        {
             String scenarioName = "";
             try {
                 long startTime = System.nanoTime();
@@ -143,8 +141,6 @@ public class AccidentConstructor {
 
                 //TODO: check if the scenario actually exists
                 scenarioName = accidentFilePath.substring(accidentFilePath.lastIndexOf("/") + 1).replace(".xml", "");
-
-
 
                 ConsoleLogger.print('r', "\n Constructing Scenario " + scenarioName + "\n");
 
@@ -184,6 +180,7 @@ public class AccidentConstructor {
                     String modSentence = stanfordCoreferencer.findCoreference(storyline[i]);
                     storyline[i] = modSentence.trim();
                 }
+
                 long endCorefTime = System.nanoTime() - startCorefTime;
 
                 ConsoleLogger.print('d', String.format("Finish Parsing Coref after %d milliseconds", TimeUnit.NANOSECONDS.toMillis(endCorefTime)));
@@ -244,7 +241,7 @@ public class AccidentConstructor {
                  ******************************************/
 
 //                if (blockSignal) continue;
-                // Until here is the environment analysis
+
 
                 /***************************************************
                  ******** BEGIN ACCIDENT DEVELOPMENT ANALYSIS ******
@@ -273,6 +270,7 @@ public class AccidentConstructor {
                 }
 
                 accidentConstructor.pruneActionTree(accidentConstructor.vehicleList);
+
                 // SUPER PRUNE, APPLY ONLY TO 2 VEHICLES CASES, every action after FIRST HIT ARE IGNORED
                 accidentConstructor.superPrune(accidentConstructor.vehicleList);
 
@@ -284,8 +282,6 @@ public class AccidentConstructor {
 
 //                if (blockSignal) continue;
 
-
-
                 boolean foundAccidentType = false;
 
                 ConsoleLogger.print('d', "Street List Before Constructing Coord");
@@ -294,13 +290,14 @@ public class AccidentConstructor {
                     street.printStreetInfo();
                 }
 
-                //
+                // Unknown important vehicle properties, such as traveling road, are handled in this function
                 accidentConstructor.checkMissingPropertiesVehicles();
+
                 long envNADEnd = System.nanoTime() - envNADStart;
                 //ConsoleLogger.print('r', String.format("Finish Extracting Environment and Accident Development after %d milliseconds", TimeUnit.NANOSECONDS.toMillis(envNADEnd)));
                 ConsoleLogger.print('r', "\nFinish Extracting Environment and Accident Development\n");
 
-//            if (exitNow)
+//            if (blockSignal)
 //                continue;
 
                 /*************************************************
@@ -312,6 +309,10 @@ public class AccidentConstructor {
                 NavigationDictionary.init();
                 ConsoleLogger.print('r', "Navigation Dictionary initialized!");
 
+                /*************************************************
+                 ************ BEGIN TRAJECTORY PLANNING **********
+                 *************************************************/
+
                 // Analyze the action list of each vehicle, then create the Crash Scenario based on crash type
                 if (accidentConstructor.accidentType.toLowerCase().contains("rear-end")
                         || accidentConstructor.accidentType.toLowerCase().contains("rearend")
@@ -320,6 +321,9 @@ public class AccidentConstructor {
                     RearEndConstructor rearEndConstructor = new RearEndConstructor(accidentConstructor.vehicleList, ontologyHandler,
                             accidentConstructor.testCase);
                     rearEndConstructor.constructAccidentScenario(accidentConstructor.vehicleList, ontologyHandler);
+
+                    // If this is a non-critical case generation, remove the impact coordinate (last coord), and set
+                    // the velocity of striker as the victim's speed + 10% victim speed
                     if (AccidentConstructorUtil.getNonCriticalDistance() > 0)
                     {
                         VehicleAttr[] strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictimForRearEnd(
@@ -347,7 +351,8 @@ public class AccidentConstructor {
                     SideswipeConstructor sideswipeConstructor = new SideswipeConstructor();
                     sideswipeConstructor.constructAccidentScenario(accidentConstructor.vehicleList, ontologyHandler,
                             accidentConstructor.testCase);
-                } else //if (accidentConstructor.accidentType.contains("straight paths"))
+                }
+                else //if (accidentConstructor.accidentType.contains("straight paths"))
                 {
                     foundAccidentType = true;
                     ConsoleLogger.print('d', "Straight paths Accident Detected");
@@ -355,10 +360,20 @@ public class AccidentConstructor {
                     straightPathConstructor.constructAccidentScenario(accidentConstructor.vehicleList, ontologyHandler,
                             accidentConstructor.testCase);
                 }
+
+                /*************************************************
+                 ************ END TRAJECTORY PLANNING ************
+                 *************************************************/
+
                 long simulationGenEndTime = System.nanoTime() - simulationGenStartTime;
                 ConsoleLogger.print('d', String.format("Finish Generating simulation after %d milliseconds", TimeUnit.NANOSECONDS.toMillis(simulationGenEndTime)));
 
                 long simulationConstructionStartTime = System.nanoTime();
+
+                /*************************************************
+                 ************ BEGIN SCENARIO CONSTRUCTION ********
+                 *************************************************/
+
                 // This part afterward, is to construct the scenario from the environment props and vehicle coordinates
                 if (foundAccidentType) {
                     if (AccidentConstructorUtil.getNonCriticalDistance() > 0)
@@ -453,12 +468,12 @@ public class AccidentConstructor {
                     Path scenarioConfigPath = Paths.get(scenarioPath);
                     Files.write(scenarioConfigPath, scenarioTemplateFile.getBytes());
 
-//                    beamNGServerSocket.setScenarioName(scenarioPath);
                     testCaseRunner.setScenarioName(scenarioName);
-//                OSMAccidentCaseConstructor osmAccidentCaseConstructor = new OSMAccidentCaseConstructor();//                String[] accidentFileElements = accidentFilePath.split("/");
-//                osmAccidentCaseConstructor.constructOSMTestCase(accidentConstructor.vehicleList,
-//                        accidentFileElements[accidentFileElements.length - 1].replace(".xml", ".osm"));
                 }
+
+                /*************************************************
+                 ************ END SCENARIO CONSTRUCTION **********
+                 *************************************************/
 
                 long endTime = (System.nanoTime() - startTime);
                 ConsoleLogger.print('r', String.format("Finish generating simulation %s after %d milliseconds\n", scenarioName, TimeUnit.NANOSECONDS.toMillis(endTime)));
@@ -475,9 +490,10 @@ public class AccidentConstructor {
                     ConsoleLogger.print('d', "Vehicle " + vehicle.getVehicleId() + " track : " + vehicle.getMovementPath().toString());
                 }
 
-                //accidentConstructor.testCase.printTestCaseInfo();
-
                 long scenarioStartTime = System.nanoTime();
+
+                /************ BEGIN SCENARIO EXECUTION ***********/
+
                 boolean hasCrash = testCaseRunner.runScenario(scenarioName);
 
                 // Add BeamNG Server Socket handling here
@@ -486,6 +502,8 @@ public class AccidentConstructor {
                         ontologyHandler, scenarioName);
 
                 crashAnalyzer.checkWhetherCrashOccur(hasCrash);
+
+                /************ END SCENARIO EXECUTION ***********/
                 long scenarioEndTime = System.nanoTime() - scenarioStartTime;
                 ConsoleLogger.print('r', String.format("Finish running simulation after %d seconds\n", TimeUnit.NANOSECONDS.toSeconds(scenarioEndTime)));
 
@@ -499,6 +517,8 @@ public class AccidentConstructor {
                 continue;
             }
         }
+
+        // Summarize the number of total / partial / no match, and generation failure scenarios
         CrashScenarioSummarizer csr = new CrashScenarioSummarizer();
         csr.summarizeAllScenarios();
 
@@ -514,6 +534,7 @@ public class AccidentConstructor {
     }
 
     // *********** ACCIDENT ANALYZER ***************
+    // Extract the actions of vehicles from the crash reports
     private LinkedList<ActionDescription> extractActionChains(
             LinkedList<LinkedList<String>> relevantTaggedWordsAndDependencies,
             OntologyHandler parser, Stemmer stemmer, EnvironmentAnalyzer environmentAnalyzer) {
@@ -521,13 +542,10 @@ public class AccidentConstructor {
         ConsoleLogger.print('d', "Tagged Word List");
         LinkedList<String> tagWordList = relevantTaggedWordsAndDependencies.get(0);
         ConsoleLogger.print('d', tagWordList.toString());
-        //ConsoleLogger.print('d', "Dependency List");
 
         LinkedList<ActionDescription> actionList = new LinkedList<ActionDescription>();
 
         LinkedList<String> dependencyList = relevantTaggedWordsAndDependencies.get(1);
-
-        // TODO: put dmgCmpntAnalyzer as a globar var
 
         DamagedComponentAnalyzer damagedComponentAnalyzer = new DamagedComponentAnalyzer(vehicleList, parser, testCase.getName());
 

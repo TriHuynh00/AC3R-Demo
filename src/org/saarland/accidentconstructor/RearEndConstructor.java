@@ -24,12 +24,19 @@ public class RearEndConstructor {
 
     AccidentConstructorUtil accidentConstructorUtil = new AccidentConstructorUtil();
 
+    /*
+     *  Construct the waypoint paths for both vehicle in the rear-end scenarios. The waypoint are calculated based on
+     *  the actions of the vehicle. Each action has a predefined speed in the Ontology
+     *
+     *  @param:
+     *      vehicleList - The list of vehicle objects in the scenario
+     *      parser      - The ontology containing properties of vehicle's actions and other relevant concepts
+     */
     public ArrayList<ArrayList<String>> constructAccidentScenario(ArrayList<VehicleAttr> vehicleList, OntologyHandler parser) {
         int actionListLength = vehicleList.get(0).getActionList().size();
         ArrayList<Integer> impactAtSteps = new ArrayList<Integer>();
         ArrayList<ArrayList<VehicleAttr>> impactedVehiclesAtSteps = new ArrayList<ArrayList<VehicleAttr>>();
         ArrayList<Integer> impactLocation = new ArrayList<Integer>();
-        // Assume collision point is 0, at x = 0
         ArrayList<ArrayList<String>> constructedCoordVeh = new ArrayList<ArrayList<String>>();
 
         for (int i = 0; i < vehicleList.size(); i++)
@@ -37,20 +44,20 @@ public class RearEndConstructor {
             constructedCoordVeh.add(new ArrayList<String>());
         }
 
-        // Find impact points
+
         int j = 0;
+        // Assume collision point is 0, at x = 0
         impactLocation.add(0);
+
+        // Find the the index of the impact action
         for (int i = 0; i < actionListLength; i++) {
             ArrayList<VehicleAttr> impactedVehicleInThisStep = new ArrayList<VehicleAttr>();
-            boolean foundImpact = false;
             for (VehicleAttr vehicle : vehicleList) {
                 if (vehicle.getActionList().get(i).startsWith("hit")) {
-                    foundImpact = true;
                     ConsoleLogger.print('d',"Find impact at step " + i);
                     if (impactAtSteps.indexOf(i) == -1) {
                         impactAtSteps.add(i);
                     }
-
                     impactedVehicleInThisStep.add(vehicle);
                 }
             }
@@ -58,7 +65,9 @@ public class RearEndConstructor {
                 impactedVehiclesAtSteps.add(impactedVehicleInThisStep);
             }
         }
+
         VehicleAttr[] strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictim(vehicleList.get(0), vehicleList.get(1));
+
         // Start from the first impact point, construct the movement of the actor based on the action
         for (int l = 0; l < impactedVehiclesAtSteps.size(); l++)
         {
@@ -70,7 +79,6 @@ public class RearEndConstructor {
 
             boolean stableMovement = false;
 
-
             if (vehicleList.size() == 2) {
 
                 VehicleAttr strikerVehicle = null;
@@ -78,9 +86,7 @@ public class RearEndConstructor {
 
                 Random randomGen = new Random();
 
-                int pushAwayDistance = 0;
                 // Check if this vehicle is a victim or striker
-
 
                 ConsoleLogger.print('d', "Striker is v" + strikerAndVictim[0].getVehicleId());
                 strikerVehicle = strikerAndVictim[0];
@@ -101,13 +107,10 @@ public class RearEndConstructor {
 
                 ConsoleLogger.print('d',"EV0 : " + estimateSpeedOfStriker + "; EV1 : " + estimateSpeedOfVictim);
 
-                // If 2 vehicle has the same speed, increase the speed of the striker
+                // If 2 vehicle have the same speed, increase the speed of the striker
                 if (estimateSpeedOfStriker == estimateSpeedOfVictim)
                 {
                     stableMovement = true;
-                    // TODO: Randomize the pushAwayForce
-                    pushAwayDistance = estimateSpeedOfStriker / 2 + estimateSpeedOfVictim;
-                    // TODO: NEED A RANDOM GENERATOR to determine velocity
                     strikerVehicle.setVelocity(strikerVehicle.getVelocity() + 10);
                     // Construct corrdination
                     for (int i = 0; i < vehicleList.size(); i++) {
@@ -165,14 +168,9 @@ public class RearEndConstructor {
                                 .getDataProperties()
                                 .get("velocity"));
 
-                        // TODO : Need to detect mph and set speed for a specific travel action here
-
                         int estimateSpeedStriker = Integer.parseInt(parser.findExactConcept(strikerVehicle.getActionList().get(i))
                                 .getDataProperties()
                                 .get("velocity"));
-
-                        // TODO: Randomize the pushAwayForce
-                        // pushAwayDistance = Math.abs(estimateSpeedStriker / 2 + estimateSpeedVictim);
 
                         ConsoleLogger.print('d',"i:" + i + " ESV: " + estimateSpeedVictim + "; ESS: " + estimateSpeedStriker);
 
@@ -183,7 +181,7 @@ public class RearEndConstructor {
                             beforeDecelerSpeed = Integer.parseInt(parser.findExactConcept(victimVehicle.getActionList().get(i - 1))
                                     .getDataProperties()
                                     .get("velocity"));
-                            ConsoleLogger.print('d',"BDS: " + beforeDecelerSpeed);
+                            ConsoleLogger.print('d',"Before Deceleration Speed: " + beforeDecelerSpeed);
                             if (beforeDecelerSpeed > 0) {
                                 vehicleCoordStriker.add(0, "" + (-1 * (estimateSpeedStriker)));
                                 vehicleCoordVictim.add(0, "" + (-1 * (beforeDecelerSpeed - 10)));
@@ -199,26 +197,18 @@ public class RearEndConstructor {
                         }
                         else
                         {
-                            // Set distance before impact for striker
-//                            if (estimateSpeedStriker == estimateSpeedVictim) {
-//                                for (int k = 1; k < SIMULATION_DURATION + 1; k++) {
-
+                            // Set horizontal distance (xCoord) before the impact point for striker and victim,
                             if (vehicleCoordVictim.size() < impactAtSteps.get(0) + 1)
                             {
                                 vehicleCoordVictim.add(0, ""
                                         + (-1 * (estimateSpeedVictim) + Integer.parseInt(vehicleCoordVictim.get(0))) );
                             }
 
-                            // Only add before 1st impact distance if they are not already set
                             if (vehicleCoordStriker.size() < impactAtSteps.get(0) + 1)
                             {
                                 vehicleCoordStriker.add(0, ""
                                         + (-1 * (estimateSpeedStriker) + Integer.parseInt(vehicleCoordStriker.get(0))) );
                             }
-
-//                                }
-//                            }
-
                         }
                     } // End construct crash points before 1st impact
 
@@ -396,24 +386,6 @@ public class RearEndConstructor {
                 }
                 // Construct movement points if the vehicle velocity is more than 0
                 ConsoleLogger.print('d',"Stable Movement? " + stableMovement);
-//            if (stableMovement) {
-//                for (int i = 0; i < impactedVehicles.size(); i++) {
-//                    int vehicleVelocity = impactedVehicles.get(i).getVelocity();
-//                    ArrayList<String> vehicleCoord = new ArrayList<String>();
-//                    if (vehicleVelocity >= 0 && vehicleVelocity != 1000) {
-//                        // Construct the path based on the simulation time
-//                        for (int d = SIMULATION_DURATION; d >= 0; d--) {
-//                            if (vehicleVelocity > 0) {
-//                                vehicleCoord.add("" + vehicleVelocity * d * 1.0);
-//                            } else if (vehicleVelocity != 1000) {
-//                                vehicleCoord.add("" + 0);
-//                            }
-//                        }
-//
-//                    }
-//                    constructedCoordVeh.add(vehicleCoord);
-//                }
-//            }
 
                 // End construct movement points
             }
@@ -422,10 +394,8 @@ public class RearEndConstructor {
         // Add more coord prior to the start point
         constructedCoordVeh = appendPrecrashMovementsForTravelingVictim(constructedCoordVeh, vehicleList, parser);
 
-        // TODO: Apply moving direction to Coord
-
         ConsoleLogger.print('d',"Vehicle Coords in the end");
-//        for (ArrayList<String> vehicleCoord : constructedCoordVeh) {
+
         for (int v = 0; v < constructedCoordVeh.size(); v++) {
             ArrayList<String> vehicleCoord = constructedCoordVeh.get(v);
             ConsoleLogger.print('d',"Vehicle Coord of " + constructedCoordVeh.indexOf(vehicleCoord) + " : ");
@@ -463,9 +433,11 @@ public class RearEndConstructor {
 //                    {
 //                        vehicleCoord.set(i, vehicleCoord.get(i) + ":0");
 //                    }
+
                 // If grading does not matter, append 0 in the end
                 if (!AccidentParam.isGradingConcerned)
                     vehicleCoord.set(i, vehicleCoord.get(i) + ":0");
+
                 ConsoleLogger.print('n',vehicleCoord.get(i) + " ");
             }
 
@@ -477,8 +449,8 @@ public class RearEndConstructor {
         double v0XCoord = Double.parseDouble(constructedCoordVeh.get(0).get(0).split(AccidentParam.defaultCoordDelimiter)[0]);
         double v1XCoord = Double.parseDouble(constructedCoordVeh.get(1).get(0).split(AccidentParam.defaultCoordDelimiter)[0]);
 
-        // Striker sign
-
+        // In rear-end cases, the striker is the vehicle traveling behind the victim, so if the xCoord of a vehicle is
+        // smaller than the other one, that vehicle is set as striker
         if (v0XCoord < v1XCoord)
         {
             strikerAndVictim[0].setMovementPath(constructedCoordVeh.get(0));
@@ -509,7 +481,7 @@ public class RearEndConstructor {
                                                                  OntologyHandler parser)
     {
         int defaultSpeed = 20;
-        // Append the coord based on the first action of the vehicle
+        // Append extra coordinates based on the first action of the vehicles
         for (VehicleAttr vehicleAttr : vehicleList)
         {
             int vehicleIndexInCoordArr = vehicleAttr.getVehicleId() - 1;
@@ -521,12 +493,14 @@ public class RearEndConstructor {
                         .getDataProperties()
                         .get("velocity"));
 
+                // If the vehicle action has a positive speed, multiply the vehicle action's speed with the duration step
                 if (estimateVehicleSpeed > 0 && estimateVehicleSpeed != 1000)
                 {
 //                    ConsoleLogger.print('d',"Vehicle " + vehicleIndexInCoordArr + " Travel 1st act : computedCoord:" + (-1 * estimateVehicleSpeed * i) + " first coord:" + Integer.parseInt(coordOfSelectedVehicle.get(0)));
                     coordOfSelectedVehicle.add(0, "" +
                             ( (-1 * estimateVehicleSpeed * i) + Integer.parseInt(coordOfSelectedVehicle.get(i - 1)) ) );
                 }
+                // Otherwise, multiply the default speed with the duration step
                 else if (estimateVehicleSpeed < 0)
                 {
 //                    ConsoleLogger.print('d',"Vehicle " + vehicleIndexInCoordArr + " Stop 1st act : computedCoord:" + (-1 * estimateVehicleSpeed * i) + " first coord:" + Integer.parseInt(coordOfSelectedVehicle.get(0)));
@@ -541,22 +515,5 @@ public class RearEndConstructor {
         }
         return vehicleCoordList;
     }
-
-//    private VehicleAttr[] findStrikerAndVictim(int actionWordIndex, VehicleAttr vehicle0, VehicleAttr vehicle1,
-//                                               ArrayList<Integer> impactAtSteps)
-//    {
-//        VehicleAttr[] strikerAndVictim = new VehicleAttr[2];
-//        if (vehicle0.getActionList().get(impactAtSteps.get(actionWordIndex)).endsWith("hit*")) {
-//
-//            strikerAndVictim[0] = vehicle1;
-//            strikerAndVictim[1] = vehicle0;
-//        }
-//        else
-//        {
-//            strikerAndVictim[0] = vehicle0;
-//            strikerAndVictim[1] = vehicle1;
-//        }
-//        return strikerAndVictim;
-//    }
 
 }
