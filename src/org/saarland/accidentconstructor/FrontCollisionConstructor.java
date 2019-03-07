@@ -19,9 +19,21 @@ public class FrontCollisionConstructor {
         df = new DecimalFormat("####.##");
     }
 
+    /*
+     *  Construct trajectory by creating waypoints for vehicles in Forward Impact crash type.
+     *
+     *  General Pattern: a victim parks on the side of the road, or stops on the street, then the strikers moves to the
+     *  victim positions and crashes into the victim.
+     *
+     *  @param
+     *      vehicleList - list of main acting vehicle in the scenario
+     *      parser      - the Ontology containing relevant concepts
+     *      testCase    - contaning weather / lighting properties
+     */
     public ArrayList<ArrayList<String>> constructAccidentScenario(ArrayList<VehicleAttr> vehicleList,
                                                                   OntologyHandler parser,
                                                                   TestCaseInfo testCase) {
+
         ArrayList<ArrayList<String>> constructedCoordVeh = new ArrayList<ArrayList<String>>();
         ArrayList<Integer> impactAtSteps = new ArrayList<Integer>();
         ArrayList<ArrayList<VehicleAttr>> impactedVehiclesAtSteps = new ArrayList<ArrayList<VehicleAttr>>();
@@ -40,7 +52,7 @@ public class FrontCollisionConstructor {
 
         // If there are 2 vehicles, find the victim and striker to construct coordinate.
         if (vehicleList.size() == 2) {
-            // Remove all the victim coord and append only 1 value
+            // Remove all the victim's coord and append only the crash point position
             strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictim(vehicleList.get(0), vehicleList.get(1));
             constructedCoordVeh.get(strikerAndVictim[1].getVehicleId() - 1).clear();
             constructedCoordVeh.get(strikerAndVictim[1].getVehicleId() - 1).add("0");
@@ -54,7 +66,7 @@ public class FrontCollisionConstructor {
         // Find the impact point
         AccidentConstructorUtil.findImpactedStepsAndVehicles(impactAtSteps, impactedVehiclesAtSteps, vehicleList);
 
-        // Set the crash coord
+        // Set the crash coord at 0:0
         ArrayList<String> vehicleCoordStriker = constructedCoordVeh.get(strikerVehicle.getVehicleId() - 1);
         vehicleCoordStriker.set(impactAtSteps.get(0), "0:0");
 
@@ -82,11 +94,14 @@ public class FrontCollisionConstructor {
             // Construct coord before crash
             for (int i = 0; i < impactAtSteps.get(0); i++) {
                 String actionAtI = strikerVehicleActionList.get(i);
+                // If this is a moving or stop action, construct the coord using the predefined speed of the action in
+                // the Ontology
                 if (!actionAtI.startsWith("hit") && !actionAtI.equalsIgnoreCase("endHit")) {
 
                     int estimateActionVelocity = Integer.parseInt(parser.findExactConcept(actionAtI)
                             .getDataProperties().get("velocity"));
 
+                    // Processing moving actions
                     if (estimateActionVelocity > 0) {
                         ConsoleLogger.print('d',"FrontColl Set after impact coord for Striker " + estimateActionVelocity);
                         // Calculate Xcoord value
@@ -101,6 +116,7 @@ public class FrontCollisionConstructor {
 
                         vehicleCoordStriker.set(i, xCoord + ":" + df.format(yCoord));
                     }
+                    // Processing stop/park actions
                     else if (estimateActionVelocity == 0)
                     {
                         ConsoleLogger.print('d',"Set after impact coord for Striker STOP " + estimateActionVelocity);
@@ -280,12 +296,11 @@ public class FrontCollisionConstructor {
 
                     String newYCoord = convertedCoord.split(AccidentParam.defaultCoordDelimiter)[1];
 
-                    // For straight road, need to place the waypoint far away from the road a bit compared to curvy
-                    // road
+                    // For straight road, need to place the waypoint far away from the road a bit compared to curvy road
                     ConsoleLogger.print('d', "Standing Road side " + vehicleAttr.getStandingRoadSide());
                     if (vehicleAttr.getOnStreet() != 1)
                     {
-
+                        // Adjust parking position for straight road
                         if (radius == 0.0) {
 
                             double parkingLineExtraDistance = 0;
@@ -306,7 +321,10 @@ public class FrontCollisionConstructor {
 
                             }
 
-                        } else {
+                        }
+                        // Adjust parking position for curvy road
+                        else
+                        {
                             if (vehicleAttr.getStandingRoadSide().equals("left")) {
                                 newYCoord = AccidentParam.df6Digit.format(Double.parseDouble(convertedCoord.split(AccidentParam.defaultCoordDelimiter)[1]) +
                                         (laneNumber / 2.0 * AccidentParam.laneWidth) + 2);
@@ -326,17 +344,23 @@ public class FrontCollisionConstructor {
 
                     ConsoleLogger.print('d', "convert coord " + convertedCoord);
                     ConsoleLogger.print('d', "newYCoord " + newYCoord);
+
                     String newCoord = AccidentConstructorUtil.updateCoordElementAtDimension(
                             1, convertedCoord, newYCoord, AccidentParam.defaultCoordDelimiter);
+
                     ConsoleLogger.print('d', "newCoord  " + newCoord);
 
-                    // Set the updated impact point to the other car
+                    // Set the updated impact point to the striker car, so the striker and victim have the same crash
+                    // coord
                     for (VehicleAttr otherVehicle : vehicleList) {
                         ConsoleLogger.print('d', "other veh ID " + otherVehicle.getVehicleId());
+
                         if (otherVehicle.getVehicleId() != vehicleAttr.getVehicleId()) {
+
                             HashMap<String, String> otherVehicleNavDict =
                                     NavigationDictionary.selectDictionaryFromTravelingDirection(otherVehicle.getTravellingDirection());
                             ArrayList<String> otherVehicleMovementPath = otherVehicle.getMovementPath();
+
                             for (int j = 0; j < otherVehicleMovementPath.size(); j++) {
                                 String[] pathNodeElements = otherVehicleMovementPath.get(j).split(AccidentParam.defaultCoordDelimiter);
                                 String[] convertedCoordElements = convertedCoord.split(AccidentParam.defaultCoordDelimiter);
@@ -344,14 +368,13 @@ public class FrontCollisionConstructor {
                                 // Check whether this is the crash points between the 2 cars
                                 if (pathNodeElements[0].equals(convertedCoordElements[0])
                                         && pathNodeElements[1].equals(convertedCoordElements[1])) {
-                                    // Update the right grade value (zCoord)
 
+                                    // Update the right grade value (zCoord)
                                     if (!AccidentParam.isGradingConcerned)
                                         newCoord = AccidentConstructorUtil.updateCoordElementAtDimension(
                                             2, newCoord, pathNodeElements[2], AccidentParam.defaultCoordDelimiter);
 
                                     // Adjust the car position far away a bit to ensure crash happens
-
                                     String adjustedCoord = AccidentConstructorUtil.updateCoordElementAtDimension(0, newCoord,
                                             (Double.parseDouble(convertedCoordElements[0]) + 3) + "",
                                             AccidentParam.defaultCoordDelimiter);
@@ -365,6 +388,7 @@ public class FrontCollisionConstructor {
                                             5 // In critical scenario, wp goal is 5m ahead
                                             :
                                             AccidentConstructorUtil.getNonCriticalDistance(); // add extra non-critical distance param
+
                                     String wpGoalCoord = AccidentConstructorUtil.updateCoordElementAtDimension(0, adjustedCoord,
                                             (Double.parseDouble(wpGoalCoordElements[0])
                                                     + extraDistance) + "",
@@ -438,6 +462,17 @@ public class FrontCollisionConstructor {
         return constructedCoordVeh;
     }
 
+    /*
+     *  Append extra traveling distance in the beginning. The extra distance is relative to the velocity of the vehicle
+     *  or traveling actions.
+     *
+     *  @param
+     *      vehicleCoordList - the list of coordinates in each vehicle's trajectory
+     *      vehicleList      - the list of all vehicle objects
+     *      parser           - the Ontology object
+     *      curvyRoad        - specify whether the road is curvy
+     *      radius           - the radius of the road's curvature
+     */
     public ArrayList<ArrayList<String>> appendPrecrashMovementsForVehicle(ArrayList<ArrayList<String>> vehicleCoordList,
                                                                           ArrayList<VehicleAttr> vehicleList,
                                                                           OntologyHandler parser,
@@ -456,11 +491,14 @@ public class FrontCollisionConstructor {
                 continue;
             }
 
+            // Append extra distance of movement based on the simulation steps
             for (int i = 1; i <= AccidentParam.SIMULATION_DURATION; i++)
             {
                 double yCoord = 0;
                 int estimateVehicleSpeed = AccidentConstructorUtil.getVelocityOfAction(vehicleAttr.getActionList().get(0), parser);
                 double xCoord = -100;
+
+                // If this is a travelling action, create extra distance based on the action's speed
                 if (estimateVehicleSpeed > 0 && estimateVehicleSpeed != 1000)
                 {
 //                    ConsoleLogger.print('d',"Vehicle " + vehicleIndexInCoordArr + " Travel 1st act : computedCoord:" + (-1 * estimateVehicleSpeed * i) + " first coord:" + Integer.parseInt(coordOfSelectedVehicle.get(0)));
@@ -468,6 +506,7 @@ public class FrontCollisionConstructor {
                             Double.parseDouble(coordOfSelectedVehicle.get(i - 1).split(":")[0]);
 
                 }
+                // If this is a stop or decelerate speed, use the default speed
                 else if (estimateVehicleSpeed <= 0)
                 {
 //                    ConsoleLogger.print('d',"Vehicle " + vehicleIndexInCoordArr + " Stop 1st act : computedCoord:" + (-1 * estimateVehicleSpeed * i) + " first coord:" + Integer.parseInt(coordOfSelectedVehicle.get(0)));
@@ -475,6 +514,7 @@ public class FrontCollisionConstructor {
 
                 }
 
+                // If this is not a straight road, compute the curvature at the waypoint
                 if (radius != 0)
                 {
                     yCoord = AccidentConstructorUtil.computeXCircleFunc(radius, xCoord);

@@ -25,12 +25,15 @@ public class RearEndConstructor {
     AccidentConstructorUtil accidentConstructorUtil = new AccidentConstructorUtil();
 
     /*
-     *  Construct the waypoint paths for both vehicle in the rear-end scenarios. The waypoint are calculated based on
-     *  the actions of the vehicle. Each action has a predefined speed in the Ontology
+     *  Construct the waypoint paths for both vehicle in the rear-end scenarios. The general pattern is, the striker
+     *  stands behind the victim, then the striker travels with higher speed and eventually crashes into the victim.
      *
-     *  @param:
-     *      vehicleList - The list of vehicle objects in the scenario
-     *      parser      - The ontology containing properties of vehicle's actions and other relevant concepts
+     *  The waypoint are calculated based on the actions of the vehicle. Each action has a predefined speed in the Ontology
+     *
+     *  @param vehicleList The list of vehicle objects in the scenario
+     *  @param parser      The ontology containing properties of vehicle's actions and other relevant concepts
+     *
+     *  @return a list of coordinates (as String) in each vehicle's trajectory
      */
     public ArrayList<ArrayList<String>> constructAccidentScenario(ArrayList<VehicleAttr> vehicleList, OntologyHandler parser) {
         int actionListLength = vehicleList.get(0).getActionList().size();

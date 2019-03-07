@@ -20,6 +20,7 @@ public class SideswipeConstructor {
         df = AccidentParam.df6Digit;
     }
 
+
     public ArrayList<ArrayList<String>> constructAccidentScenario(ArrayList<VehicleAttr> vehicleList,
                                                                   OntologyHandler parser,
                                                                   TestCaseInfo testCase)

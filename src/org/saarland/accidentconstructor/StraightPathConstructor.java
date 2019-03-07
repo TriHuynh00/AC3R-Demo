@@ -37,6 +37,29 @@ public class StraightPathConstructor {
         df = AccidentParam.df6Digit;
     }
 
+    /*
+     *  Construct Straight Paths and Turn Into Paths cases. In general, there are two accident patterns:
+     *
+     *  1) One vehicle stops, then accelerates and hit another moving vehicle
+     *
+     *  AC3R computes the distance between the stopping car and traveling vehicle needed to make the stopping car
+     *  accelerates and hit the travelling vehicle at the crash point.
+     *
+     *  For Straight Paths accidents, in each vehicle's trajectory, an extra waypoint is added after the crash point
+     *  to make the vehicles crash naturally.
+     *
+     *  2) All vehicles travel from the start
+     *
+     *  AC3R computes the time and distance needed for vehicle1 to accelerate to its target speed, along with
+     *  the time and distance of traveling at the target speed in 2 seconds. Next, for vehicle2, AC3R computes
+     *  the time and distance needed to accelerate to the target speed, and subtracts the acceleration time of
+     *  vehicle2 from the total traveling time of vehicle1 to get the time vehicle2 needed to reach the crash point
+     *  and hits vehicle1.
+     *
+     *  The target speed is the travelling speed of the vehicle which AC3R extracts from the crash description,
+     *  if no travelling speed is given, AC3R uses the default speed.
+     *
+     */
     public ArrayList<ArrayList<String>> constructAccidentScenario(ArrayList<VehicleAttr> vehicleList,
                                                                   OntologyHandler parser,
                                                                   TestCaseInfo testCase)
@@ -54,7 +77,10 @@ public class StraightPathConstructor {
         }
 
         constructedCoordVeh = AccidentConstructorUtil.fillCoordOfVehicles(constructedCoordVeh, vehicleList.get(0).getActionList().size());
+
         strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictim(vehicleList.get(0), vehicleList.get(1));
+
+        // Find the index of the impact action in the action lists of both vehicles
         AccidentConstructorUtil.findImpactedStepsAndVehicles(impactAtSteps, impactedVehiclesAtSteps, vehicleList);
 
         // If there are 2 vehicles, construct the only crash point at 0:0
@@ -69,8 +95,9 @@ public class StraightPathConstructor {
             }
 
             ConsoleLogger.print('d',"impactAtSteps size: " + impactAtSteps.size());
+
+            // If an impact action is found, construct the crash coord based on the travelling direction of the vehicles
             if (impactAtSteps.size() >= 1) {
-                // TODO: Locate the impacted coord first by looking at the travelling direction
                 String crashXCoord = "0";
                 String crashYCoord = "0";
 
@@ -89,6 +116,7 @@ public class StraightPathConstructor {
 
                     String travellingDirection = currentVehicle.getTravellingDirection();
                     String otherVehicleTravellingDirection = vehicleList.get(vehicleList.size() - 1 - v).getTravellingDirection();
+
                     // Determine crash coord
                     if ((travellingDirection.equals("NE") || travellingDirection.equals("NW")
                             || travellingDirection.equals("SE") || travellingDirection.equals("SW"))
@@ -218,7 +246,6 @@ public class StraightPathConstructor {
                         radius = Double.parseDouble(vehicleStandingStreet.getStreetPropertyValue("curve_radius").replace("m", ""));
                     }
 
-
                     // If we found a car that initially stopped, calculate the distance between moving and stopped cars
                     if (stoppedCarID != -1 && currentVehicle.getVehicleId() != stoppedCarID)
                     {
@@ -258,10 +285,7 @@ public class StraightPathConstructor {
                         // If extra distance to make the crash non-critical is given, add the distance to the computation
                         distanceCurrVehicleAndCrashPoint += AccidentConstructorUtil.getNonCriticalDistance();
 
-
                         ConsoleLogger.print('d',"distance between moving car and crash point is " + distanceCurrVehicleAndCrashPoint);
-
-
                         ConsoleLogger.print('d',"Curvy Road of street " + vehicleStandingStreet.getStreetPropertyValue("road_ID") + " ? " + curvyRoad);
                         ConsoleLogger.print('d',"Road Shape " + testCase.getTestCaseProp().get("road_shape"));
 
@@ -381,10 +405,12 @@ public class StraightPathConstructor {
 //                                    vehicleCoordList.add(0, vehicleCoordX + ":" + vehicleCoordY);
 //                            } // End processing westbound direction
                             segmentLength = currentVehicle.getVelocity();
+
+                            // For diagonal direction, the near crash length is equal to crashYCoord + nearCrashDistance
                             if (travelDirection.equals("SE") || travelDirection.equals("SW")
                                     || travelDirection.equals("NE") || travelDirection.equals("NW"))
                             {
-                                // For diagonal direction, the near crash length is equal to crashYCoord + nearCrashDistance
+
                                 double newCoord[] = AccidentConstructorUtil.computeNewCoordOfRotatedLine(
                                         Double.parseDouble(currentVehicleYCoord) + segmentLength, roadAngle);
 
@@ -441,6 +467,7 @@ public class StraightPathConstructor {
                         int roadAngle = Integer.parseInt(vehicleStandingStreet.getStreetPropertyValue("road_angle"));
                         double nearCrashDistance = 0;
                         double totalDistance = 0;
+
                         // Newly added part, compute the time based on another vehicle's speed
                         // if this is a striker car, computed as normal
                         if (currentVehicle.equals(strikerAndVictim[0]))
@@ -1015,12 +1042,17 @@ public class StraightPathConstructor {
         }
     }
 
+
+    /*
+     *  Compute the travelling time and distance needed to accelerate up to the target velocity
+     *
+     *  @param velocity  the target velocity used to compute the accelerated distance and time
+     */
+
     private ArrayList<Double> computeDistanceAndTimeWithAcceleration(double velocity)
     {
         ArrayList<Double> distanceAndTime = new ArrayList<Double>();
 
-        double accumulateDistance = 0;
-        double accumulateVelocity = 0;
         double chosenAcceleration = AccidentParam.accelerationTo20Mph;
 
         if (velocity <= 40)
@@ -1033,18 +1065,6 @@ public class StraightPathConstructor {
 
         distanceAndTime.add(acceleratedTravellingDistance);
         distanceAndTime.add(reachVelocityTime);
-//        // Calculate accumulated distance using formula s = v0 + a(n - 0.5) with v0 = 0 and n = i
-//        for (int i = 1; ;i++)
-//        {
-//            accumulateDistance += chosenAcceleration * i - chosenAcceleration / 2;
-//            accumulateVelocity += chosenAcceleration * i;
-//            if (accumulateDistance > distance)
-//            {
-//                return i - 1;
-//            }
-//        }
-
-        // Compute the distance
 
         return distanceAndTime;
     }
