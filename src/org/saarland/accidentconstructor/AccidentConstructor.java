@@ -196,6 +196,7 @@ public class AccidentConstructor {
 
                 if (System.getProperty("enableEnvironmentPropertiesConstruction") != null)
                 {
+                    ConsoleLogger.print('d', "Analyze Weather And Lighting Prop");
                     environmentAnalyzer.analyzeWeatherAndLightingProperties(accidentContext[0], ontologyHandler,
                             accidentConstructor.getTestCase(), accidentConstructor.vehicleList, stanfordCoreferencer);
                 }

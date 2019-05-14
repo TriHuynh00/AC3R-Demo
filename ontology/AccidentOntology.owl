@@ -480,9 +480,9 @@
     
 
 
-    <!-- file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#cloudy -->
+    <!-- file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#cloud -->
 
-    <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#cloudy">
+    <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#cloud">
         <rdf:type rdf:resource="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#weather-leaflvl"/>
     </owl:NamedIndividual>
     
@@ -951,6 +951,14 @@
         <TrafficAccidentOntology:has_object rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</TrafficAccidentOntology:has_object>
         <TrafficAccidentOntology:is_collision_verb rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</TrafficAccidentOntology:is_collision_verb>
         <TrafficAccidentOntology:velocity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1000</TrafficAccidentOntology:velocity>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#rain -->
+
+    <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#rain">
+        <rdf:type rdf:resource="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#weather-leaflvl"/>
     </owl:NamedIndividual>
     
 

@@ -55,29 +55,35 @@ public class EnvironmentAnalyzer {
                 for (AccidentConcept weatherConcept : envPropList) {
                     String weatherConceptName = weatherConcept.getConceptName();
                     weatherConceptName = stemmer.stem(weatherConceptName);
+                    ConsoleLogger.print('d', "Checked Weather Concept " + weatherConceptName);
                     for (String dep : dependencyList)
                     {
-                        if (dep.startsWith(weatherConceptName))
+                        String[] wordPair = AccidentConstructorUtil.getWordPairFromDependency(dep);
+                        for (String word : wordPair)
                         {
-                            String conceptGroup = weatherConcept.getLeafLevelName();
-                            ConsoleLogger.print('d', "Find Weather word " + weatherConceptName);
-                            String currentWeatherCondition = testCase.getEnvPropertyValue(conceptGroup);
-
-                            // Find the negation of this word
-                            boolean hasNegation = AccidentConstructorUtil.findNegationOfToken(weatherConceptName + "-", dependencyList);
-
-                            if (hasNegation) {
-                                ConsoleLogger.print('d', "Has negation of env term " + weatherConceptName);
-                                weatherConceptName = "n_" + weatherConceptName;
-                            }
-
-                            if (currentWeatherCondition.equals("normal")) {
-                                testCase.putValToKey(conceptGroup, weatherConceptName);
-                            }
-                            else
+                            ConsoleLogger.print('d',"Weather/Lighting Word = " + word + "; Concept Name = " + weatherConceptName);
+                            if (word.startsWith(weatherConceptName))
                             {
-                                if (!currentWeatherCondition.contains(weatherConceptName)) {
-                                    testCase.putValToKey(conceptGroup, currentWeatherCondition + " " + weatherConceptName);
+                                String conceptGroup = weatherConcept.getLeafLevelName();
+                                ConsoleLogger.print('d', "Find Weather word " + weatherConceptName);
+                                String currentWeatherCondition = testCase.getEnvPropertyValue(conceptGroup);
+
+                                // Find the negation of this word
+                                boolean hasNegation = AccidentConstructorUtil.findNegationOfToken(weatherConceptName + "-", dependencyList);
+
+                                if (hasNegation) {
+                                    ConsoleLogger.print('d', "Has negation of env term " + weatherConceptName);
+                                    weatherConceptName = "n_" + weatherConceptName;
+                                }
+
+                                if (currentWeatherCondition.equals("normal")) {
+                                    testCase.putValToKey(conceptGroup, weatherConceptName);
+                                }
+                                else
+                                {
+                                    if (!currentWeatherCondition.contains(weatherConceptName)) {
+                                        testCase.putValToKey(conceptGroup, currentWeatherCondition + " " + weatherConceptName);
+                                    }
                                 }
                             }
                         }

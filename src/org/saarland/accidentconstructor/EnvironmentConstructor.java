@@ -103,13 +103,13 @@ public class EnvironmentConstructor {
                     continue;
                 }
                 String weatherTemplate = "";
-                if (effect.equals("rainy"))
+                if (effect.contains("rain"))
                 {
                     ConsoleLogger.print('d',"Construct Rainy Environment");
                     weatherTemplate = AccidentConstructorUtil.loadTemplateContent(AccidentParam.rainyFilePath);
 
                 }
-                else if (effect.equals("cloudy"))
+                else if (effect.startsWith("cloud"))
                 {
                     ConsoleLogger.print('d',"Construct Cloudy Environment");
                     weatherTemplate = AccidentConstructorUtil.loadTemplateContent(AccidentParam.cloudFilePath);

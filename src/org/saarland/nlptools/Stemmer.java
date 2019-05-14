@@ -259,7 +259,7 @@ public class Stemmer implements Function<Word,Word> {
 
     private final void step2() {
         if (ends("y") && vowelinstem()) {
-            b[k] = 'i';
+            b[k] = 'y';
         }
     }
 
