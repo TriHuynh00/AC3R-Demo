@@ -9,6 +9,12 @@
     <version>1.0</version>
 
     <dependencies>
+    	<dependency>
+	       	<groupId>com.lexicalscope.jewelcli</groupId>
+            <artifactId>jewelcli</artifactId>
+            <version>0.8.3</version>
+        </dependency>
+    
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
             <artifactId>owlapi-distribution</artifactId>
