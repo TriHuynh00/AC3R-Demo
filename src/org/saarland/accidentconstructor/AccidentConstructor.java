@@ -109,7 +109,7 @@ public class AccidentConstructor {
         try {
             AC3RCLI result = CliFactory.parseArguments(AC3RCLI.class, args);
             if (result.getReports() != null && !result.getReports().isEmpty()) {
-                selectedFiles = result.getReports().toArray(selectedFiles);
+                selectedFiles = result.getReports().toArray(new File[]{});
                 useGUI = false;
             }
         } catch (ArgumentValidationException e) {
