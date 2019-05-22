@@ -2,6 +2,10 @@ local M = {}
 
 local helper = require('scenario/scenariohelper')
 
+-- This file must be located under lua/ge/extensions
+local helperExtension = require('ac3r/scenarioHelperExtension')
+helperExtension.extend( helper )
+
 local running = false
 
 local checkForscenario_player1Crash = false
