@@ -43,13 +43,13 @@ AC3R needs a base map to load all roads, cars and other objects onto it. The ste
 5. Select the "Default" spawn point
 6. After BeamNG loads the map, press F11 
 7. Look on the Scene Tree panel on the rightmost of BeamNG GUI, expand MissionGroup folder, select grassland terrain
-8. In Transform panel, set position X = -300, Y = -300, Z = 0
-9. In Misc panel, set squareSize = 5, maxHeight = 1, baseTexSize = 1024; lightMapSize = 1024
+8. In **Transform** panel, set position X = -300, Y = -300, Z = 0
+9. In **Misc** panel, set squareSize = 5, maxHeight = 1, baseTexSize = 1024; lightMapSize = 1024
 10. Press F3 to open the Terrain Painter 
-11. Choose New Layer, in Terrain Material panel, scroll down and choose "Grassy", then click "Apply&Select"
+11. Choose "New Layer", in Terrain Material panel, scroll down and choose "Grassy", then click "Apply&Select"
 12. The preview of terrain material display green color, choose "AutoPaint" button to paint the grass layer on the entire map.
-13. Select "File" tab in the menu bar, choose "Save Level As", and select the destination as "C:\Users\[your_username]\BeamNG.drive\levels". Specify the level name as "smallgrid"
-14. Run command "BeamNG.research.x64.exe -userpath C:\Users\[your_username]\Documents\BeamNG.drive -console", and repeat step 1 to 5. If the modified grid map is loaded successfully, then congratulation :D
+13. Select "File" tab in the menu bar, choose "Save Level As", and select the destination as **C:\Users\[your_username]\BeamNG.drive\levels"**. Specify the level name as **smallgrid**
+14. Run command **BeamNG.research.x64.exe -userpath C:\Users\[your_username]\Documents\BeamNG.drive -console**, and repeat step 1 to 5. If the modified grid map is loaded successfully, Congratulation :D
 
 After the base map is saved, create the following folders in **C:\Users\[your_username]\Documents\BeamNG.drive\levels\smallgrid** to store crash damage information from BeamNG and stored results of reconstructed crashes:
 
