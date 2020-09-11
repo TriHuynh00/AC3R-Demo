@@ -13,7 +13,7 @@ public class AccidentParam {
 
     public static String userFolder = System.getProperty("user.home") + "\\Documents\\";
 
-    public static String beamNGUserPath = userFolder + "BeamNG.drive";
+    public static String beamNGUserPath = userFolder + "BeamNG.research";
     public static String environmentFile = beamNGUserPath + "\\levels\\smallgrid\\main\\MissionGroup\\items.level.json";
 
     public static String finalResultLocation = beamNGUserPath + "\\levels\\smallgrid";
