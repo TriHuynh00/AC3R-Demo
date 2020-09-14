@@ -9,7 +9,7 @@
     "difficulty": "10",
 	
 	"vehicles": {
-        "scenario_player0": {"playerUsable": true},
+        "scenario_player1": {"playerUsable": false, "startFocus": true},
         "*": {"playerUsable": false},
     },
 	
