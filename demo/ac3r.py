@@ -1,8 +1,9 @@
 import os
+import sys
 from beamngpy import BeamNGpy, Scenario, Vehicle
 from beamngpy.sensors import Damage
 
-def main():
+def main(scenario_name):
 	# Get environment variables
 	BNG_HOME = os.getenv('BNG_HOME')
 	BNG_RESEARCH = os.getenv('BNG_RESEARCH')
@@ -14,37 +15,49 @@ def main():
 
 	# Find a scenario in the smallgrid level called 'Case4'
 	level = 'smallgrid'
-	scenario_name = 'Case0'
 	scenario = Scenario(level, scenario_name)
 	# Update the scenario instance with its path
 	scenario.find(bng)
 
 	bng.open()
+	print("------- Load Scenario -------")
 	bng.load_scenario(scenario)
+	print("------- Start Scenario -------")
 	bng.start_scenario()
+
 
 	# Gets vehicles placed in the scenario
 	vehicle_bng = 'BeamNGVehicle'
-	model_code = 'JBeam'
-	vehicle_obj = bng.find_objects_class(vehicle_bng)[0] # Gets the first vehicle obj
-	id = str(vehicle_obj.id)
-	model = vehicle_obj.opts[model_code]
-
-	# Creates vehicle and attaches damage sensor
-	vehicle = Vehicle(id, model)
-	damage = Damage()
-	vehicle.attach_sensor('damage', damage)
+	vehicles = create_vehicle(bng.find_objects_class(vehicle_bng))
 
 	# Set simulator to be deterministic mode
 	bng.set_deterministic()
-	bng.connect_vehicle(vehicle)
-	assert vehicle.skt
+	print("------- Connects Vehicle to Scenario -------")
+	for vehicle in vehicles:
+		bng.connect_vehicle(vehicle)
+		assert vehicle.skt
+		print(vehicle.skt)
 
-	# Waiting for 600 steps and get sensor data
-	bng.step(600)
-	sensor = bng.poll_sensors(vehicle)
+	# # Waiting for 600 steps and get sensor data
+	# bng.step(600)
+	# print("------- Print Sensor Data -------")
+	# for vehicle in vehicles:
+	# 	sensor = bng.poll_sensors(vehicle)
+	# 	print(sensors)
 
-	print(sensors['damage'])
+def create_vehicle(vehicle_objs):
+	vehicles = []
+	for v in vehicle_objs:
+		print("------- Create New Vehicle -------")
+		# Creates vehicle with associated id and attaches damage sensor to each vehicle
+		vehicle = Vehicle(str(v.id))
+		print("-------  Attach Sensor -------")
+		damage = Damage()
+		vehicle.attach_sensor('damage', damage)
+		print(vehicle)
+		vehicles.append(vehicle)
+	return vehicles
+
 
 if __name__ == '__main__':
-	main()
+	main(sys.argv[1]) # Ex: python3 ac3r.py Case0
