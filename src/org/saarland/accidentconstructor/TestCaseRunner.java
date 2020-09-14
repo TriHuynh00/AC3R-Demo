@@ -135,11 +135,12 @@ public class TestCaseRunner {
         try
         {
             ConsoleLogger.print('d',"Run BeamNG scenario Name " + scenarioName);
-
+            final String sceneName = scenarioName;
             Thread thread = new Thread(new Runnable() {
+                String sn = sceneName;
                 @Override
                 public void run() {
-                    controlBeamngClient();
+                    controlBeamngClient(sn);
                 }
             });
             thread.start();
@@ -264,15 +265,20 @@ public class TestCaseRunner {
         }
     }
 
-    private void controlBeamngClient() {
+    private void controlBeamngClient(String scenarioName) {
         try {
             while (true)
             {
-                p = Runtime.getRuntime().exec(/*"cmd /C " +*/ FilePathsConfig.BeamNGProgramPath
-                        + " -userpath " + AccidentParam.beamNGUserPath
-                        + " -rhost 127.0.0.1 -rport " + port
-                        + " -lua registerCoreModule('util_researchGE')");
-//                     + " -lua require('scenario/scenariosLoader').startByPath(\"levels/smallgrid/scenarios/" + scenarioName + ".json\")");
+                // String cmdExec = FilePathsConfig.BeamNGProgramPath
+                //         + " -userpath " + AccidentParam.beamNGUserPath
+                //         + " -rhost 127.0.0.1 -rport " + port
+                //         + " -lua registerCoreModule('util_researchGE') "
+                //         + " -lua require('scenario/scenariosLoader').startByPath(\"levels/smallgrid/scenarios/" + scenarioName + ".json\") "
+                //         + " -console";
+                String cmdExec = "python3 " + AccidentParam.beamNGpyPath + " " + scenarioName;
+                ConsoleLogger.print('d', "cmdExec: ");
+                ConsoleLogger.print('d', cmdExec);
+                p = Runtime.getRuntime().exec(cmdExec);
                 ConsoleLogger.print('r', "Listening to BeamNG client");
                 beamngClient = beamngServerSocket.accept();
                 dataInputStream = new DataInputStream(beamngClient.getInputStream());

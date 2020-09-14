@@ -7,7 +7,7 @@ def main(scenario_name):
 	# Get environment variables
 	BNG_HOME = os.getenv('BNG_HOME')
 	BNG_RESEARCH = os.getenv('BNG_RESEARCH')
-	host = 'localhost'
+	host = '127.0.0.1'
 	port = 64256
 
 	# Instantiates a BeamNGpy instance
@@ -39,10 +39,10 @@ def main(scenario_name):
 		print(vehicle.skt)
 
 	# # Waiting for 600 steps and get sensor data
-	# bng.step(600)
+	bng.step(600)
 	# print("------- Print Sensor Data -------")
-	# for vehicle in vehicles:
-	# 	sensor = bng.poll_sensors(vehicle)
+	for vehicle in vehicles:
+		sensor = bng.poll_sensors(vehicle)
 	# 	print(sensors)
 
 def create_vehicle(vehicle_objs):
