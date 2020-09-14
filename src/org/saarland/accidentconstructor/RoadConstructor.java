@@ -1518,14 +1518,14 @@ public class RoadConstructor {
 
             if (i == maxLength - 1 && currentVehicle.getVehicleId() == strikerID)
             {
-                waypointName = "wp_goal";
+                waypointName = "wp_goal_v" + currentVehicle.getVehicleId();
             }
 
             // Set the impact point name as "wp_crash" and only 1 vehicle set this
             if ( (i == maxLength - 2 && testCaseInfo.getCrashType().contains("straight path"))
                     || (i == maxLength - 1 && !testCaseInfo.getCrashType().contains("straight path")))
             {
-                if (!waypointName.equals("wp_goal"))
+                if (!waypointName.equals("wp_goal_v" + currentVehicle.getVehicleId()))
                     waypointName = "wp_crash";
 
                 if (currentVehicle.getVehicleId() != strikerID)
@@ -1636,7 +1636,8 @@ public class RoadConstructor {
                         // TODO: COmpute Trigger Distance using equation
                         .replace("$collisionDistance", AccidentParam.DISTANCE_BETWEEN_CARS + "");
 
-
+                // Collect the collection of waypoint
+                waypointNameList.add(victimVehicle.getWaypointPathNodeName());
                 double leaveTriggerDistance = victimVehicle.getLeaveTriggerDistance();
                 ConsoleLogger.print('d',"Victim Vehicle " + victimVehicle.getVehicleId() + " " + victimVehicle.getLeaveTriggerDistance());
                 if (leaveTriggerDistance != -1)
@@ -2225,7 +2226,7 @@ public class RoadConstructor {
                         String waypointName = "wp";
                         if (i == currentVehiclePath.size() - 1)
                         {
-                            waypointName += "_goal";
+                            waypointName += "_goal_v" + currentVehicle.getVehicleId();
                         }
                         else
                         {
@@ -2329,6 +2330,8 @@ public class RoadConstructor {
                     ConsoleLogger.print('d', "Construct moving car logic for sideswipe, trigger distance " + victimVehicle.getLeaveTriggerDistance());
 
                     luaAITemplate = luaAITemplate.replace("--$OtherVehicleStartToRunCode", carLeaveTriggerTemplate);
+                    // Collect the collection of waypoint
+                    waypointNameList.add(victimVehicle.getWaypointPathNodeName());
                 } // End processing 2 vehicles case
             } // End checking trigger distance
 
