@@ -18,6 +18,7 @@
 	
     
     "prefabs": ["$name"],
-    "radiusMultiplierAI": 2
+    "radiusMultiplierAI": 2,
+    "lapConfig": [$lapConfig]
 },
 ]

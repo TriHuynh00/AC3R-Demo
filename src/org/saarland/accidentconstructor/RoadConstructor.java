@@ -27,6 +27,7 @@ public class RoadConstructor {
     StringBuilder allAIConfigStr = new StringBuilder();
     String allLuaAIConfigContent;
 //    private Street processingRoad; // the Street being processed currently
+    private final ArrayList<String> waypointNameList = new ArrayList<>();
 
     public RoadConstructor(ArrayList<VehicleAttr> vehicleList, TestCaseInfo testCase, OntologyHandler ontologyHandler) throws IOException
     {
@@ -1593,6 +1594,8 @@ public class RoadConstructor {
                     String luaAIConfigTemplate = luaAIConfigStrBuilderTemplate.toString();
                     luaAIConfigTemplate = luaAIConfigTemplate.replace("$waypointNameList",
                             currentVehicle.getWaypointPathNodeName());
+                    // Collect the collection of waypoint
+                    waypointNameList.add(currentVehicle.getWaypointPathNodeName());
 
 
                     luaAIConfigTemplate = luaAIConfigTemplate.replace("$speed",
@@ -2285,6 +2288,8 @@ public class RoadConstructor {
                         luaAIConfigTemplate = luaAIConfigTemplate.replace("$speed", (currentVehicle.getVelocity() / 2) + "");
                         luaAIConfigTemplate = luaAIConfigTemplate.replace("$actorID", currentVehicle.getVehicleId() + "");
                         allAIConfigStr.append(luaAIConfigTemplate + "\n\n");
+                        // Collect collection of waypoint
+                        waypointNameList.add(currentVehicle.getWaypointPathNodeName());
                     }
                 }
             }
@@ -2880,4 +2885,10 @@ public class RoadConstructor {
 //        }
         return roadDivisionName;
     }
+
+
+    public ArrayList<String> getWaypointNameList() {
+        return new ArrayList<String>(waypointNameList);
+    }
+
 }
