@@ -269,13 +269,13 @@ public class TestCaseRunner {
         try {
             while (true)
             {
-                // String cmdExec = FilePathsConfig.BeamNGProgramPath
-                //         + " -userpath " + AccidentParam.beamNGUserPath
-                //         + " -rhost 127.0.0.1 -rport " + port
-                //         + " -lua registerCoreModule('util_researchGE') "
+                String cmdExec = FilePathsConfig.BeamNGProgramPath
+                        + " -userpath " + AccidentParam.beamNGUserPath
+                        + " -rhost 127.0.0.1 -rport " + port
+                        + " -lua registerCoreModule('util_researchGE') ";
                 //         + " -lua require('scenario/scenariosLoader').startByPath(\"levels/smallgrid/scenarios/" + scenarioName + ".json\") "
                 //         + " -console";
-                String cmdExec = "python3 " + AccidentParam.beamNGpyPath + " " + scenarioName;
+                // String cmdExec = "python3 " + AccidentParam.beamNGpyPath + " " + scenarioName;
                 ConsoleLogger.print('d', "cmdExec: ");
                 ConsoleLogger.print('d', cmdExec);
                 p = Runtime.getRuntime().exec(cmdExec);

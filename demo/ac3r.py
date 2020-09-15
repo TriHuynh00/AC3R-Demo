@@ -1,63 +1,65 @@
 import os
 import sys
-from beamngpy import BeamNGpy, Scenario, Vehicle
-from beamngpy.sensors import Damage
+from beamngpy import BeamNGpy, Scenario, Vehicle, setup_logging
+from beamngpy.sensors import Damage, Electrics, GForces
 
-def main(scenario_name):
+
+def beamng():
+	setup_logging()
 	# Get environment variables
 	BNG_HOME = os.getenv('BNG_HOME')
 	BNG_RESEARCH = os.getenv('BNG_RESEARCH')
 	host = '127.0.0.1'
 	port = 64256
-
 	# Instantiates a BeamNGpy instance
-	bng = BeamNGpy(host, port, BNG_HOME, BNG_RESEARCH)
+	beamng = BeamNGpy(host, port, BNG_HOME, BNG_RESEARCH)
+	return beamng
 
+def main(beamng, scenario_name):
 	# Find a scenario in the smallgrid level called 'Case4'
 	level = 'smallgrid'
 	scenario = Scenario(level, scenario_name)
 	# Update the scenario instance with its path
-	scenario.find(bng)
+	scenario.find(beamng)
 
-	bng.open()
-	print("------- Load Scenario -------")
+	bng = beamng.open(launch=True)
+	bng.hide_hud()
+	bng.set_deterministic() # Set simulator to be deterministic mode
+
+	# Load and start the scenario
 	bng.load_scenario(scenario)
-	print("------- Start Scenario -------")
-	bng.start_scenario()
-
-
+	
 	# Gets vehicles placed in the scenario
 	vehicle_bng = 'BeamNGVehicle'
 	vehicles = create_vehicle(bng.find_objects_class(vehicle_bng))
 
-	# Set simulator to be deterministic mode
-	bng.set_deterministic()
-	print("------- Connects Vehicle to Scenario -------")
+	# bng.set_steps_per_second(10)
 	for vehicle in vehicles:
 		bng.connect_vehicle(vehicle)
 		assert vehicle.skt
-		print(vehicle.skt)
 
-	# # Waiting for 600 steps and get sensor data
-	bng.step(600)
-	# print("------- Print Sensor Data -------")
-	for vehicle in vehicles:
-		sensor = bng.poll_sensors(vehicle)
-	# 	print(sensors)
+	bng.step(75, wait=True)
+	bng.start_scenario()
+	for _ in range(64):
+		bng.step(30)
+		s1 = bng.poll_sensors(vehicles[0])
+		s2 = bng.poll_sensors(vehicles[1])
+		print(s1)
+		print(s2)
+		print('------')
 
 def create_vehicle(vehicle_objs):
 	vehicles = []
 	for v in vehicle_objs:
-		print("------- Create New Vehicle -------")
 		# Creates vehicle with associated id and attaches damage sensor to each vehicle
 		vehicle = Vehicle(str(v.id))
-		print("-------  Attach Sensor -------")
 		damage = Damage()
-		vehicle.attach_sensor('damage', damage)
-		print(vehicle)
+		vehicle.attach_sensor('damage', damage) # Attach Sensor
 		vehicles.append(vehicle)
 	return vehicles
 
 
 if __name__ == '__main__':
-	main(sys.argv[1]) # Ex: python3 ac3r.py Case0
+	beamng = beamng()
+	main(beamng, sys.argv[1]) # Ex: python3 ac3r.py Case0
+

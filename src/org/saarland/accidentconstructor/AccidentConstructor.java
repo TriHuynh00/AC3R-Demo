@@ -524,6 +524,9 @@ public class AccidentConstructor {
                     ArrayList<String> waypointNameList = new ArrayList<>();
                     waypointNameList = roadConstructor.getWaypointNameList();
                     String lapConfig = waypointNameList.stream().collect(Collectors.joining(", ")).replace("'", "\"");
+                    ConsoleLogger.print('d', "Lap Config: ");
+                    ConsoleLogger.print('d', lapConfig);
+                    ConsoleLogger.print('d', "End From Accd");
                     // Record the speed limit in the scenario's JSON file, if
                     // speed_limit is not specified, set it as -1
                     if (!strikerAndVictim[0].getStandingStreet().getStreetPropertyValue("speed_limit").equals("")) {
