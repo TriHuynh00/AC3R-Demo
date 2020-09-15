@@ -1,0 +1,9 @@
+diff a/src/org/saarland/accidentconstructor/RoadConstructor.java b/src/org/saarland/accidentconstructor/RoadConstructor.java	(rejected hunks)
+@@ -1688,6 +1688,7 @@
+ //                                                 double radius, String scenarioName)
+     private String constructWaypointsAndVehicles(ArrayList<String> vehiclePath, String scenarioName)
+     {
++        ConsoleLogger.print('d', "vuong constructWaypointsAndVehicles(ArrayList<String> vehiclePath, String scenarioName)");
+         Path waypointFilePath = Paths.get(AccidentParam.waypointFilePath);
+         Path vehicleFilePath = Paths.get(AccidentParam.vehicleFilePath);
+         Path luaPathFollowerFilePath = Paths.get(AccidentParam.luaAIFilePath);

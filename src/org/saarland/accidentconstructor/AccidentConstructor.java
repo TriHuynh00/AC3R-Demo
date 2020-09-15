@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.swing.JFileChooser;
 
@@ -518,6 +519,14 @@ public class AccidentConstructor {
                             String.format("strikerLaneNum is %d ", (int) Math.ceil(strikerLaneNum / 2.0)));
 
                     double speedLimit = -1;
+                    // Record the lapConfig in the scenario's JSON file
+                    // Take the values from RoadConstructor class
+                    ArrayList<String> waypointNameList = new ArrayList<>();
+                    waypointNameList = roadConstructor.getWaypointNameList();
+                    String lapConfig = waypointNameList.stream().collect(Collectors.joining(", ")).replace("'", "\"");
+                    ConsoleLogger.print('d', "Lap Config: ");
+                    ConsoleLogger.print('d', lapConfig);
+                    ConsoleLogger.print('d', "End From Accd");
                     // Record the speed limit in the scenario's JSON file, if
                     // speed_limit is not specified, set it as -1
                     if (!strikerAndVictim[0].getStandingStreet().getStreetPropertyValue("speed_limit").equals("")) {
@@ -528,7 +537,9 @@ public class AccidentConstructor {
                     scenarioTemplateFile = scenarioTemplateFile
                             .replace("$description", accidentContext[0] + "\n" + accidentContext[1])
                             .replace("$strikerID", strikerAndVictim[0].getVehicleId() + "")
-                            .replace("$NLanes", strikerLaneNum + "").replace("$speedLimit", "" + speedLimit);
+                            .replace("$NLanes", strikerLaneNum + "")
+                            .replace("$speedLimit", "" + speedLimit)
+                            .replace("$lapConfig", lapConfig);
 
                     String scenarioPath = AccidentParam.scenarioConfigFilePath + "\\" + scenarioName + ".json";
 

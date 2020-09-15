@@ -13,7 +13,7 @@ public class AccidentParam {
 
     public static String userFolder = System.getProperty("user.home") + "\\Documents\\";
 
-    public static String beamNGUserPath = userFolder + "BeamNG.drive";
+    public static String beamNGUserPath = userFolder + "BeamNG.research";
     public static String environmentFile = beamNGUserPath + "\\levels\\smallgrid\\main\\MissionGroup\\items.level.json";
 
     public static String finalResultLocation = beamNGUserPath + "\\levels\\smallgrid";
@@ -35,6 +35,8 @@ public class AccidentParam {
     public static String lampFilePath                   = templateFilePath + "\\lamp.txt";
     public static String cloudFilePath                  = templateFilePath + "\\cloud.txt";
     public static String pointLightFilePath             = templateFilePath + "\\pointLight.txt";
+
+    public static String beamNGpyPath = userFolder + "AC3R-Demo\\demo\\ac3r.py";
 
     public static DecimalFormat df2Digit = new DecimalFormat("####.##");
     public static DecimalFormat df6Digit = new DecimalFormat("####.######");

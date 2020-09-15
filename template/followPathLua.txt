@@ -3,8 +3,8 @@ local M = {}
 local helper = require('scenario/scenariohelper')
 
 -- This file must be located under lua/ge/extensions
-local helperExtension = require('ac3r/scenarioHelperExtension')
-helperExtension.extend( helper )
+-- local helperExtension = require('ac3r/scenarioHelperExtension')
+-- helperExtension.extend( helper )
 
 local running = false
 
@@ -44,7 +44,7 @@ local function onRaceWaypointReached( data )
   local playerVehicleId = be:getPlayerVehicleID(0)
   --if data.vehicleId == playerVehicleId and data.waypointName == 'brwpstartai' then
 	helper.flashUiMessage('Reach waypoint ', 2)
-	Name('scenario_player1', 'ai.setState({debugMode="speeds"})')
+	--Name('scenario_player1', 'ai.setState({debugMode="speeds"})')
 	--helper.trackVehicle('scenario_player1', 'scenario_player1')
   --end
 end
