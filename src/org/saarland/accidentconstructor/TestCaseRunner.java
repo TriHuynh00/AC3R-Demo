@@ -25,6 +25,7 @@ public class TestCaseRunner {
     private Robot bot;
     private final int scenarioLoadTime = 30000; // ms
     private final int scenarioRunTime = 36000; // ms
+    private ProcessBuilder processBuilder;
     private Process p;
 
     private ServerSocket beamngServerSocket;
@@ -269,25 +270,28 @@ public class TestCaseRunner {
         try {
             while (true)
             {
-                String cmdExec = FilePathsConfig.BeamNGProgramPath
-                        + " -userpath " + AccidentParam.beamNGUserPath
-                        + " -rhost 127.0.0.1 -rport " + port
-                        + " -lua registerCoreModule('util_researchGE') ";
-                //         + " -lua require('scenario/scenariosLoader').startByPath(\"levels/smallgrid/scenarios/" + scenarioName + ".json\") "
-                //         + " -console";
-                // String cmdExec = "python3 " + AccidentParam.beamNGpyPath + " " + scenarioName;
+                // String cmdExec = FilePathsConfig.BeamNGProgramPath
+                        // + " -userpath " + AccidentParam.beamNGUserPath
+                        // + " -rhost 127.0.0.1 -rport " + port
+                        // + " -lua registerCoreModule('util_researchGE') ";
+
+                String cmdExec = "python " + AccidentParam.beamNGpyPath + " " + scenarioName;
                 ConsoleLogger.print('d', "cmdExec: ");
                 ConsoleLogger.print('d', cmdExec);
-                p = Runtime.getRuntime().exec(cmdExec);
+
+                processBuilder = new ProcessBuilder();
+                processBuilder.command("cmd.exe", "/c", cmdExec);
+                p = processBuilder.inheritIO().start();
+
                 ConsoleLogger.print('r', "Listening to BeamNG client");
-                beamngClient = beamngServerSocket.accept();
-                dataInputStream = new DataInputStream(beamngClient.getInputStream());
-                dataOutputStream = new DataOutputStream(beamngClient.getOutputStream());
+                // beamngClient = beamngServerSocket.accept();
+                // dataInputStream = new DataInputStream(beamngClient.getInputStream());
+                // dataOutputStream = new DataOutputStream(beamngClient.getOutputStream());
                 ConsoleLogger.print('r', "BeamNG Client accepted");
 
                 ConsoleLogger.print('r', "Load Scenario");
 
-                startScenario();
+                // startScenario();
 //                while (hasCrashStatus == false)
 //                {
 //                    // Keep looping until a crash file is generated, or scenario is timed out
@@ -295,7 +299,7 @@ public class TestCaseRunner {
 //
 //                hasCrashStatus = false;
 //                Thread.sleep(1000);
-                beamngClient.close();
+                // beamngClient.close();
                 ConsoleLogger.print('r', "Close BeamNG connection ");
                 break;
             }

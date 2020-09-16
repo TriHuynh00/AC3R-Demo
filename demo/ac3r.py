@@ -10,7 +10,7 @@ def beamng():
 	BNG_HOME = os.getenv('BNG_HOME')
 	BNG_RESEARCH = os.getenv('BNG_RESEARCH')
 	host = '127.0.0.1'
-	port = 64256
+	port = 64257
 	# Instantiates a BeamNGpy instance
 	beamng = BeamNGpy(host, port, BNG_HOME, BNG_RESEARCH)
 	return beamng
