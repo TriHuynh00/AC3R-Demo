@@ -38,15 +38,42 @@ def main(beamng, scenario_name):
 		bng.connect_vehicle(vehicle)
 		assert vehicle.skt
 
+	# Wait for 75 steps before start
 	bng.step(75, wait=True)
-	bng.start_scenario()
-	for _ in range(64):
+	bng.start_scenario() # Start scenario
+
+
+	for _ in range(20):
+		# Collects sensor data every 30 steps
 		bng.step(30)
-		s1 = bng.poll_sensors(vehicles[0])
-		s2 = bng.poll_sensors(vehicles[1])
-		print(s1)
-		print(s2)
-		print('------')
+
+		accident_log = {}
+		for vehicle in vehicles:
+			sensor = bng.poll_sensors(vehicle)['damage']
+			if (sensor['damage'] != 0): # Crash detected
+				print("Crash detected!")
+				accident_log.update( { vehicle.vid: sensor['partDamage'] } )
+		
+		empty = not bool(accident_log)
+		if not empty:
+			write_log(accident_log)
+			bng.step(150, wait=True)
+			print("Within time!")
+			close_scenario(bng)
+
+	# Timeout
+	print("Timed out!")
+	close_scenario(bng)
+
+def close_scenario(beamng):
+	beamng.kill_beamng()
+	sys.exit('----- Close BeamNG connection -----')
+
+def write_log(damage):
+	with open('accidentLog.txt', 'w') as f:
+		print(damage, file=f)
+
+	
 
 def create_vehicle(vehicle_objs):
 	vehicles = []
@@ -54,12 +81,22 @@ def create_vehicle(vehicle_objs):
 		# Creates vehicle with associated id and attaches damage sensor to each vehicle
 		vehicle = Vehicle(str(v.id))
 		damage = Damage()
-		vehicle.attach_sensor('damage', damage) # Attach Sensor
+		electrics = Electrics()
+		gForces = GForces()
+
+		# Attach Sensor
+		vehicle.attach_sensor('damage', damage)
+		# vehicle.attach_sensor('electrics', electrics)
+		# vehicle.attach_sensor('gForces', gForces)
 		vehicles.append(vehicle)
 	return vehicles
 
 
 if __name__ == '__main__':
 	beamng = beamng()
-	main(beamng, sys.argv[1]) # Ex: python3 ac3r.py Case0
+
+	# Creates empty log file
+	with open('accidentLog.txt', 'w') as fp: 
+		pass
+	main(beamng, sys.argv[1]) # Ex: python C:\Users\Harvey\Documents\AC3R-Demo\demo\ac3r.py Case0
 
