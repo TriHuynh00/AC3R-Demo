@@ -74,7 +74,7 @@ class BeamNg:
 					sensor = bng.poll_sensors(vehicle)['damage']
 					if (sensor['damage'] != 0): # Crash detected
 						print("Crash detected!")
-						# self.isCrash = True
+						self.isCrash = True
 						accident_log.update( { vehicle.vid: sensor['partDamage'] } )
 						car.damage =  sensor['partDamage']
 			else:
