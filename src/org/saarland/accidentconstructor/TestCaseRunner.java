@@ -133,24 +133,27 @@ public class TestCaseRunner {
 
     private boolean startScenarioUsingShell(String scenarioName)
     {
-        try
-        {
-            ConsoleLogger.print('d',"Run BeamNG scenario Name " + scenarioName);
-            final String sceneName = scenarioName;
-            Thread thread = new Thread(new Runnable() {
-                String sn = sceneName;
-                @Override
-                public void run() {
-                    controlBeamngClient(sn);
-                }
-            });
-            thread.start();
-            ConsoleLogger.print('d', AccidentParam.beamNGUserPath);
+//         try
+//         {
+//             ConsoleLogger.print('d',"Run BeamNG scenario Name " + scenarioName);
+//             final String sceneName = scenarioName;
+//             Thread thread = new Thread(new Runnable() {
+//                 String sn = sceneName;
+//                 @Override
+//                 public void run() {
+//                     controlBeamngClient(sn);
+//                 }
+//             });
+//             thread.start();
+//             ConsoleLogger.print('d', AccidentParam.beamNGUserPath);
 
-//            Thread.sleep(scenarioLoadTime / 2);
-        }
+// //            Thread.sleep(scenarioLoadTime / 2);
+//         }
 
-        catch(Exception e2) {e2.printStackTrace();}
+//         catch(Exception e2) {e2.printStackTrace();}
+
+        ConsoleLogger.print('d',"Run BeamNG scenario Name " + scenarioName);
+        controlBeamngClient(scenarioName);
 
         ConsoleLogger.print('d',"Done executing scenario");
 

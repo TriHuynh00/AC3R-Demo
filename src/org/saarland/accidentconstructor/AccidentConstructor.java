@@ -574,14 +574,18 @@ public class AccidentConstructor {
 
                 /************ BEGIN SCENARIO EXECUTION ***********/
 
-                boolean hasCrash = testCaseRunner.runScenario(scenarioName);
+                // boolean hasCrash = testCaseRunner.runScenario(scenarioName);
 
                 // Add BeamNG Server Socket handling here
 
-                DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList,
-                        ontologyHandler, scenarioName);
+                // DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList,
+                        // ontologyHandler, scenarioName);
 
-                crashAnalyzer.checkWhetherCrashOccur(hasCrash);
+                // crashAnalyzer.checkWhetherCrashOccur(hasCrash);
+                boolean hasCrash = testCaseRunner.runScenario(scenarioName);
+                DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList, ontologyHandler, scenarioName);
+                crashAnalyzer.checkWhetherCrashOccur(true);
+                ConsoleLogger.print('d', "Finish running scenario");
 
                 /************ END SCENARIO EXECUTION ***********/
                 long scenarioEndTime = System.nanoTime() - scenarioStartTime;
