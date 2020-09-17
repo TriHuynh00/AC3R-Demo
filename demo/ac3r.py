@@ -1,65 +1,30 @@
 import os
 import sys
-from beamngpy import BeamNGpy, Scenario, Vehicle, setup_logging
-from beamngpy.sensors import Damage, Electrics, GForces
+from beamngpy import setup_logging
+from BeamNGpy.scenario import BeamNg
 
 
-def beamng():
-	setup_logging()
-	# Get environment variables
-	BNG_HOME = os.getenv('BNG_HOME')
-	BNG_RESEARCH = os.getenv('BNG_RESEARCH')
-	host = '127.0.0.1'
-	port = 64256
-	# Instantiates a BeamNGpy instance
-	beamng = BeamNGpy(host, port, BNG_HOME, BNG_RESEARCH)
-	return beamng
+# Defines log file locations
+scenario = sys.argv[1]
+bng_log = os.path.dirname(__file__) + '\\logCases\\' + scenario + '.txt'
+# Creates empty log file
+with open(bng_log, 'w') as fp:
+	pass
+# Executing the given scenario
+setup_logging()
 
-def main(beamng, scenario_name):
-	# Find a scenario in the smallgrid level called 'Case4'
-	level = 'smallgrid'
-	scenario = Scenario(level, scenario_name)
-	# Update the scenario instance with its path
-	scenario.find(beamng)
+ac3r = BeamNg(bng_log, scenario)
+bng = ac3r.start_beamng()
+ac3r.execute_scenario(bng)
 
-	bng = beamng.open(launch=True)
-	bng.hide_hud()
-	bng.set_deterministic() # Set simulator to be deterministic mode
-
-	# Load and start the scenario
-	bng.load_scenario(scenario)
-	
-	# Gets vehicles placed in the scenario
-	vehicle_bng = 'BeamNGVehicle'
-	vehicles = create_vehicle(bng.find_objects_class(vehicle_bng))
-
-	# bng.set_steps_per_second(10)
-	for vehicle in vehicles:
-		bng.connect_vehicle(vehicle)
-		assert vehicle.skt
-
-	bng.step(75, wait=True)
-	bng.start_scenario()
-	for _ in range(64):
-		bng.step(30)
-		s1 = bng.poll_sensors(vehicles[0])
-		s2 = bng.poll_sensors(vehicles[1])
-		print(s1)
-		print(s2)
-		print('------')
-
-def create_vehicle(vehicle_objs):
-	vehicles = []
-	for v in vehicle_objs:
-		# Creates vehicle with associated id and attaches damage sensor to each vehicle
-		vehicle = Vehicle(str(v.id))
-		damage = Damage()
-		vehicle.attach_sensor('damage', damage) # Attach Sensor
-		vehicles.append(vehicle)
-	return vehicles
-
-
-if __name__ == '__main__':
-	beamng = beamng()
-	main(beamng, sys.argv[1]) # Ex: python3 ac3r.py Case0
-
+record_dir = os.path.expanduser('~') + "\\Documents\\BeamNG.research\\levels\\smallgrid\\damageRecord\\"
+if ac3r.isCrash:
+	for car in ac3r.cars:
+		car.set_description()
+		record_file = scenario + "-" + car.name + "-damageLog.log"
+		with open(record_dir + record_file, 'w') as f:
+			print(car.description, file=f)
+else:
+	record_file = scenario + "-noCrash-damageLog.log"
+	with open(record_dir + record_file, 'w') as f:
+		print(car.description, file=f)
