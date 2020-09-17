@@ -17,7 +17,7 @@ ac3r = BeamNg(bng_log, scenario)
 bng = ac3r.start_beamng()
 ac3r.execute_scenario(bng)
 
-record_dir = os.path.expanduser('~') + "\\Documents\\BeamNG.research\\levels\\smallgrid\\previousRecord\\"
+record_dir = os.path.expanduser('~') + "\\Documents\\BeamNG.research\\levels\\smallgrid\\damageRecord\\"
 if ac3r.isCrash:
 	for car in ac3r.cars:
 		car.set_description()
