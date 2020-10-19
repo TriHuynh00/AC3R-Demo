@@ -14,12 +14,12 @@ class BeamNg:
 		self.bng_log = bng_log
 		self.scenario = scenario
 		self.level = 'smallgrid'
-		self.timeout = 20
+		self.timeout = 50
 		self.isCrash = False
 
 	def create_vehicle(self, vehicles):
 		for i in range(len(vehicles)):
-			vehicle = Vehicle(str(vehicles[i].id))
+			vehicle = Vehicle(str(vehicles[i].id), model='etk800')
 			vehicle.attach_sensor('damage', Damage())
 			self.cars.append(Car(i+1, vehicle)) # Vehicle name is v1, v2,...
 
@@ -75,8 +75,8 @@ class BeamNg:
 					if (sensor['damage'] != 0): # Crash detected
 						print("Crash detected!")
 						self.isCrash = True
-						accident_log.update( { vehicle.vid: sensor['partDamage'] } )
-						car.damage =  sensor['partDamage']
+						accident_log.update( { vehicle.vid: sensor['part_damage'] } )
+						car.damage =  sensor['part_damage']
 			else:
 				self.write_log(accident_log) # Write log file
 				waiting_steps = 175
