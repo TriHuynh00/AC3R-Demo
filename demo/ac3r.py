@@ -27,4 +27,4 @@ if ac3r.isCrash:
 else:
 	record_file = scenario + "-noCrash-damageLog.log"
 	with open(record_dir + record_file, 'w') as f:
-		print(car.description, file=f)
+		print('', file=f)
