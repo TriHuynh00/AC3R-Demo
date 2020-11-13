@@ -29,10 +29,13 @@ class BeamNg:
 	
 	def close_scenario(self, bng):
 		bng.kill_beamng()
+		bng.close()
 		return
 	
 	def start_beamng(self):
 		# Instantiates a BeamNGpy instance
+		print(self.bng_home)
+		print(self.bng_research)
 		return BeamNGpy(self.host, self.port, self.bng_home, self.bng_research)
 
 	def execute_scenario(self, bng):
