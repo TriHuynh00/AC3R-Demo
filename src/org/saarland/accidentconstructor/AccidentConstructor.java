@@ -1,18 +1,12 @@
 package org.saarland.accidentconstructor;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -97,7 +91,7 @@ public class AccidentConstructor {
 
     public interface AC3RCLI {
 
-        @Option(defaultToNull = true, longName = "reports")
+        @Option(defaultToNull = true, longName = "reports", description = "Name or path of reports to be used.")
         public List<File> getReports();
     }
 
@@ -571,6 +565,64 @@ public class AccidentConstructor {
                 }
 
                 long scenarioStartTime = System.nanoTime();
+
+                /************ BEGIN SCENARIO DATA FILE ***********/
+//                if (!useGUI) {
+//
+//                }
+                ConsoleLogger.print('r', "\n\nStart to write scenario data file");
+                String scenarioDataPath = AccidentParam.scenarioConfigFilePath + "\\" + scenarioName + "_data.json";
+                String scenarioData = "{";
+
+                try (FileWriter scenarioDataWriter = new FileWriter(scenarioDataPath)) {
+                    for (Street street : accidentConstructor.testCase.getStreetList()) {
+                        String roadType = "road_type";
+                        String roadShape = "road_shape";
+                        String roadNodeList = "road_node_list";
+
+                        String[] paths = street.getStreetPropertyValue(roadNodeList)
+                                .replaceAll(" ", ",").split(";");
+                        List<String> pathList = Arrays.asList(paths);
+                        ArrayList<String> points = new ArrayList<String>();
+                        for(String point: pathList){
+                            points.add("[" + point + "]");
+                        }
+
+                        scenarioData = scenarioData + "\"" + roadType + "\"" + ": \"" +
+                                street.getStreetPropertyValue(roadType) + "\",";
+                        scenarioData = scenarioData + "\"" + roadShape + "\"" + ": \"" +
+                                street.getStreetPropertyValue(roadShape) + "\",";
+                        scenarioData = scenarioData + "\"" + roadNodeList + "\"" + ": " +
+                                points.toString() + ",";
+                    }
+                    for (VehicleAttr vehicle : accidentConstructor.vehicleList) {
+                        String keyPoint = "\"v" + vehicle.getVehicleId() + "_points\"" + ": ";
+                        ArrayList<String> points = new ArrayList<String>();
+                        String keyVelocity = "\"v" + vehicle.getVehicleId() + "_velocities\"" + ": ";
+                        ArrayList<Integer> velocities = new ArrayList<Integer>();
+
+                        for (String point : vehicle.getMovementPath()) {
+                            point = point.replaceAll(" ", ",");
+                            point = "[" + point + "]";
+                            points.add(point);
+
+                            velocities.add(vehicle.getVelocity());
+                        }
+                        scenarioData = scenarioData + keyPoint + points.toString() + ",";
+                        scenarioData = scenarioData + keyVelocity + velocities.toString() + ",";
+                    }
+                    ConsoleLogger.print('r', scenarioData);
+                    // Replace last char to the } for closing json file
+                    scenarioData = scenarioData.replaceAll(".$", "}");
+                    scenarioDataWriter.write(scenarioData);
+                    ConsoleLogger.print('r', "Successfully wrote to the file.");
+                } catch (IOException e) {
+                    ConsoleLogger.print('r', "An error occurred in writing scenario data file.");
+                    e.printStackTrace();
+                }
+
+
+                /************ END SCENARIO DATA FILE ***********/
 
                 /************ BEGIN SCENARIO EXECUTION ***********/
 
