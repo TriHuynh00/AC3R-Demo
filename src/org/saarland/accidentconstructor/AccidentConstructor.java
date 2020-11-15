@@ -93,6 +93,12 @@ public class AccidentConstructor {
 
         @Option(defaultToNull = true, longName = "reports", description = "Name or path of reports to be used.")
         public List<File> getReports();
+
+        @Option(defaultToNull = true, longName = "path", description = "Path of scenario data will be generated.")
+        public String getScenarioDataPath();
+
+        @Option(helpRequest = true, description = "Usage details on command-line arguments")
+        public boolean getHelp();
     }
 
     public static void main(String[] args) {
@@ -100,12 +106,19 @@ public class AccidentConstructor {
         // Parsing of input parameters
         boolean useGUI = true;
         File[] selectedFiles = null;
+        String scenarioDataPath = "";
 
         try {
             AC3RCLI result = CliFactory.parseArguments(AC3RCLI.class, args);
             if (result.getReports() != null && !result.getReports().isEmpty()) {
                 selectedFiles = result.getReports().toArray(new File[]{});
                 useGUI = false;
+            }
+            if (result.getScenarioDataPath() != null && !result.getScenarioDataPath().isEmpty()) {
+                scenarioDataPath = result.getScenarioDataPath();
+                if (!scenarioDataPath.endsWith("\\")) {
+                    scenarioDataPath = scenarioDataPath + "\\";
+                }
             }
         } catch (ArgumentValidationException e) {
             e.printStackTrace();
@@ -571,7 +584,11 @@ public class AccidentConstructor {
 //
 //                }
                 ConsoleLogger.print('r', "\n\nStart to write scenario data file");
-                String scenarioDataPath = AccidentParam.scenarioConfigFilePath + "\\" + scenarioName + "_data.json";
+                if (scenarioDataPath.isEmpty()) {
+                	scenarioDataPath = AccidentParam.scenarioConfigFilePath + "\\";
+                }
+                ConsoleLogger.print('r', "\n\nThe scenario data file will be written at " + scenarioDataPath);
+                scenarioDataPath = scenarioDataPath + scenarioName + "_data.json"; // Append file name
                 String scenarioData = "{";
 
                 try (FileWriter scenarioDataWriter = new FileWriter(scenarioDataPath)) {
