@@ -625,7 +625,13 @@ public class AccidentConstructor {
 
                             velocities.add(vehicle.getVelocity());
                         }
+
                         scenarioData = scenarioData + keyPoint + points.toString() + ",";
+
+                        if (velocities.size() > 1 ) {
+                            int index = 0; // First element of velocities is always removed
+                            velocities.remove(index); // Delete first velocity by passing index
+                        }
                         scenarioData = scenarioData + keyVelocity + velocities.toString() + ",";
                     }
                     ConsoleLogger.print('r', scenarioData);
