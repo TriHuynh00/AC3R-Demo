@@ -1,0 +1,1 @@
+{'6412': {'etk800_body_wagon': {'name': 'Wagon Unibody', 'damage': 0.0004748338081671415}, 'etk800_bumper_F': {'name': 'Front Bumper', 'damage': 0.2033898305084746}}, '6885': {'etk800_door_FR': {'name': 'Front Right Door', 'damage': 0.027522935779816515}}}

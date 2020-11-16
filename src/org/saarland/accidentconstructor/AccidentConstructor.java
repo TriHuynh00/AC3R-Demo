@@ -3,11 +3,15 @@ package org.saarland.accidentconstructor;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.lang.reflect.Array;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import javax.swing.JFileChooser;
 
@@ -82,8 +86,14 @@ public class AccidentConstructor {
 
     public interface AC3RCLI {
 
-        @Option(defaultToNull = true, longName = "reports")
+        @Option(defaultToNull = true, longName = "reports", description = "Name or path of reports to be used.")
         public List<File> getReports();
+
+        @Option(defaultToNull = true, longName = "path", description = "Path of scenario data will be generated.")
+        public String getScenarioDataPath();
+
+        @Option(helpRequest = true, description = "Usage details on command-line arguments")
+        public boolean getHelp();
     }
 
     public static void main(String[] args) {
@@ -91,6 +101,7 @@ public class AccidentConstructor {
         // Parsing of input parameters
         boolean useGUI = true;
         File[] selectedFiles = null;
+        String scenarioDataPath = "";
 
         FilenameFilter xmlFilter = new FilenameFilter() {
             @Override
@@ -132,6 +143,12 @@ public class AccidentConstructor {
                 selectedFiles = reportFiles.toArray(new File[]{});
                 ConsoleLogger.print('d', "Number of selected files " + selectedFiles.length);
                 useGUI = false;
+            }
+            if (result.getScenarioDataPath() != null && !result.getScenarioDataPath().isEmpty()) {
+                scenarioDataPath = result.getScenarioDataPath();
+                if (!scenarioDataPath.endsWith("\\")) {
+                    scenarioDataPath = scenarioDataPath + "\\";
+                }
             }
         } catch (ArgumentValidationException e) {
             e.printStackTrace();
@@ -562,6 +579,14 @@ public class AccidentConstructor {
                             String.format("strikerLaneNum is %d ", (int) Math.ceil(strikerLaneNum / 2.0)));
 
                     double speedLimit = -1;
+                    // Record the lapConfig in the scenario's JSON file
+                    // Take the values from RoadConstructor class
+                    ArrayList<String> waypointNameList = new ArrayList<>();
+                    waypointNameList = roadConstructor.getWaypointNameList();
+                    String lapConfig = waypointNameList.stream().collect(Collectors.joining(", ")).replace("'", "\"");
+                    ConsoleLogger.print('d', "Lap Config: ");
+                    ConsoleLogger.print('d', lapConfig);
+                    ConsoleLogger.print('d', "End From Accd");
                     // Record the speed limit in the scenario's JSON file, if
                     // speed_limit is not specified, set it as -1
                     if (!strikerAndVictim[0].getStandingStreet().getStreetPropertyValue("speed_limit").equals("")) {
@@ -572,7 +597,9 @@ public class AccidentConstructor {
                     scenarioTemplateFile = scenarioTemplateFile
                             .replace("$description", accidentContext[0] + "\n" + accidentContext[1])
                             .replace("$strikerID", strikerAndVictim[0].getVehicleId() + "")
-                            .replace("$NLanes", strikerLaneNum + "").replace("$speedLimit", "" + speedLimit);
+                            .replace("$NLanes", strikerLaneNum + "")
+                            .replace("$speedLimit", "" + speedLimit)
+                            .replace("$lapConfig", lapConfig);
 
                     String scenarioPath = AccidentParam.scenarioConfigFilePath + "\\" + scenarioName + ".json";
 
@@ -605,16 +632,88 @@ public class AccidentConstructor {
 
                 long scenarioStartTime = System.nanoTime();
 
+                /************ BEGIN SCENARIO DATA FILE ***********/
+//                if (!useGUI) {
+//
+//                }
+                ConsoleLogger.print('r', "\n\nStart to write scenario data file");
+                if (scenarioDataPath.isEmpty()) {
+                	scenarioDataPath = AccidentParam.scenarioConfigFilePath + "\\";
+                }
+                ConsoleLogger.print('r', "\n\nThe scenario data file will be written at " + scenarioDataPath);
+                scenarioDataPath = scenarioDataPath + scenarioName + "_data.json"; // Append file name
+                String scenarioData = "{";
+
+                try (FileWriter scenarioDataWriter = new FileWriter(scenarioDataPath)) {
+                    for (Street street : accidentConstructor.testCase.getStreetList()) {
+                        String roadType = "road_type";
+                        String roadShape = "road_shape";
+                        String roadNodeList = "road_node_list";
+
+                        String[] paths = street.getStreetPropertyValue(roadNodeList)
+                                .replaceAll(" ", ",").split(";");
+                        List<String> pathList = Arrays.asList(paths);
+                        ArrayList<String> points = new ArrayList<String>();
+                        for(String point: pathList){
+                            points.add("[" + point + "]");
+                        }
+
+                        scenarioData = scenarioData + "\"" + roadType + "\"" + ": \"" +
+                                street.getStreetPropertyValue(roadType) + "\",";
+                        scenarioData = scenarioData + "\"" + roadShape + "\"" + ": \"" +
+                                street.getStreetPropertyValue(roadShape) + "\",";
+                        scenarioData = scenarioData + "\"" + roadNodeList + "\"" + ": " +
+                                points.toString() + ",";
+                    }
+                    for (VehicleAttr vehicle : accidentConstructor.vehicleList) {
+                        String keyPoint = "\"v" + vehicle.getVehicleId() + "_points\"" + ": ";
+                        ArrayList<String> points = new ArrayList<String>();
+                        String keyVelocity = "\"v" + vehicle.getVehicleId() + "_velocities\"" + ": ";
+                        ArrayList<Integer> velocities = new ArrayList<Integer>();
+
+                        for (String point : vehicle.getMovementPath()) {
+                            point = point.replaceAll(" ", ",");
+                            point = "[" + point + "]";
+                            points.add(point);
+
+                            velocities.add(vehicle.getVelocity());
+                        }
+
+                        scenarioData = scenarioData + keyPoint + points.toString() + ",";
+
+                        if (velocities.size() > 1 ) {
+                            int index = 0; // First element of velocities is always removed
+                            velocities.remove(index); // Delete first velocity by passing index
+                        }
+                        scenarioData = scenarioData + keyVelocity + velocities.toString() + ",";
+                    }
+                    ConsoleLogger.print('r', scenarioData);
+                    // Replace last char to the } for closing json file
+                    scenarioData = scenarioData.replaceAll(".$", "}");
+                    scenarioDataWriter.write(scenarioData);
+                    ConsoleLogger.print('r', "Successfully wrote to the file.");
+                } catch (IOException e) {
+                    ConsoleLogger.print('r', "An error occurred in writing scenario data file.");
+                    e.printStackTrace();
+                }
+
+
+                /************ END SCENARIO DATA FILE ***********/
+
                 /************ BEGIN SCENARIO EXECUTION ***********/
 
-                boolean hasCrash = testCaseRunner.runScenario(scenarioName);
+                // boolean hasCrash = testCaseRunner.runScenario(scenarioName);
 
                 // Add BeamNG Server Socket handling here
 
-                DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList,
-                        ontologyHandler, scenarioName);
+                // DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList,
+                        // ontologyHandler, scenarioName);
 
-                crashAnalyzer.checkWhetherCrashOccur(hasCrash);
+                // crashAnalyzer.checkWhetherCrashOccur(hasCrash);
+                boolean hasCrash = testCaseRunner.runScenario(scenarioName);
+                DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList, ontologyHandler, scenarioName);
+                crashAnalyzer.checkWhetherCrashOccur(true);
+                ConsoleLogger.print('d', "Finish running scenario");
 
                 /************ END SCENARIO EXECUTION ***********/
                 long scenarioEndTime = System.nanoTime() - scenarioStartTime;
