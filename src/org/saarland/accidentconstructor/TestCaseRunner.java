@@ -308,7 +308,8 @@ public class TestCaseRunner {
             }
 
         } catch (Exception ex) {
-            ConsoleLogger.print('e', "Error at control BeamNG client \n" + ex.toString());
+            ConsoleLogger.print('e', "Error at control BeamNG client \n");
+            ex.printStackTrace();
 
         }
 

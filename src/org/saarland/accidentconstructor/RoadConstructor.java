@@ -380,7 +380,8 @@ public class RoadConstructor {
                 }
             }
         } catch (Exception ex) {
-            environmentFileStrBuilder.append("Error at construction wp and paths \n" + ex.getMessage());
+            environmentFileStrBuilder.append("Error at construction wp and paths \n");
+            ex.printStackTrace();
         }
 
         ConsoleLogger.print('d', "Final Road Str Builder Obj " + environmentFileStrBuilder.toString());

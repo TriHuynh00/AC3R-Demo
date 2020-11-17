@@ -1,10 +1,16 @@
 package org.saarland.accidentconstructor;
 
 import java.io.File;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FilenameFilter;
 import java.lang.reflect.Array;
+import java.io.FilenameFilter;
+import java.lang.reflect.Array;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;

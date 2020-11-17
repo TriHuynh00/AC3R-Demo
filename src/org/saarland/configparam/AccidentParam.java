@@ -8,6 +8,9 @@ public class AccidentParam {
     public static final int DISTANCE_BETWEEN_CARS = 9;
     public static final int ROAD_PIECE_NODE = 4;
     public static final int BEAMNG_PORT = 64256;
+    public static final int UNKNOWN_VEHICLE = 300;
+
+    public static String[] LEFTRIGHTARR = {"left", "right"};
 
     public static String[] cardinalDirectionPair = new String[] {"E/W", "N/S", "NE/SW", "NW/SE"};
 
