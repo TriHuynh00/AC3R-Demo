@@ -36,6 +36,7 @@ public class StanfordCoreferencer {
     private final static String[] specialChars = {",", ".", ":", ";"};
     private final static String[] dependencyArr = {
             "compound",
+            "ccomp",
             "acl",
             "acl:relcl",
             "amod", 
@@ -43,6 +44,7 @@ public class StanfordCoreferencer {
             "appos",
             "case",
             "conj",
+            "conj:and",
             "csubj",
             "dep",
             "neg",
@@ -59,6 +61,7 @@ public class StanfordCoreferencer {
             "nmod:from",
             "nmod:in",
             "nmod:into",
+            "nmod:through",
             "rcmod",
             "nsubj",
             "nsubj:xsubj",

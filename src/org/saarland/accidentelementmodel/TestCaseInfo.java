@@ -119,24 +119,23 @@ public class TestCaseInfo {
         testCaseProp = new HashMap<String, String>();
         testCaseProp.put("weather"        , "normal"); // rainy, sunny, cloudy
         testCaseProp.put("lighting"       , "normal"); // dark, bright, light
-        testCaseProp.put("lane_num"       , ""); // total number of lane
+//        testCaseProp.put("lane_num"       , ""); // total number of lane
         testCaseProp.put("need_trigger"   , "F");
-        testCaseProp.put("road_division"  , "undivided");
-        testCaseProp.put("road_park_line" , ""); // #parking_lines : 0 - none; 1 - left only, 2 - right only, 3 - both
-        testCaseProp.put("road_park_line_fill" , "0"); // specify whether parking line(s) is filled with cars
-        testCaseProp.put("road_type"      , "road");
-        testCaseProp.put("road_shape"     , RoadShape.STRAIGHT);
-        testCaseProp.put("road_grade"     , "level");
-        testCaseProp.put("road_direction" , "2-way");
-        testCaseProp.put("road_grade_deg" , "0");
-        testCaseProp.put("road_material"  , "asphalt");
-        testCaseProp.put("curve_radius"   , "0"); // In Meters
-        testCaseProp.put("curve_direction", "none");
+//        testCaseProp.put("road_division"  , "undivided");
+//        testCaseProp.put("road_park_line" , ""); // #parking_lines : 0 - none; 1 - left only, 2 - right only, 3 - both
+//        testCaseProp.put("road_park_line_fill" , "0"); // specify whether parking line(s) is filled with cars
+//        testCaseProp.put("road_type"      , "road");
+//        testCaseProp.put("road_shape"     , RoadShape.STRAIGHT);
+//        testCaseProp.put("road_grade"     , "level");
+//        testCaseProp.put("road_direction" , "2-way");
+//        testCaseProp.put("road_grade_deg" , "0");
+//        testCaseProp.put("road_material"  , "asphalt");
+//        testCaseProp.put("curve_radius"   , "0"); // In Meters
+//        testCaseProp.put("curve_direction", "none");
         testCaseProp.put("junction_type"  , "none");
         testCaseProp.put("speed_limit"    , "");
 
         obstacleList  = new ArrayList<Obstacle>();
-        accidentFlows = new LinkedList<String>();
         streetList    = new ArrayList<Street>();
     }
 

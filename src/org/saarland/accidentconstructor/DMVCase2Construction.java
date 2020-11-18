@@ -6,7 +6,6 @@ import org.saarland.configparam.AccidentParam;
 import org.saarland.crashanalyzer.CrashScenarioSummarizer;
 import org.saarland.crashanalyzer.DamagedComponentAnalyzer;
 import org.saarland.environmentanalyzer.EnvironmentAnalyzer;
-import org.saarland.environmentanalyzer.RoadAnalyzer;
 import org.saarland.nlptools.StanfordCoreferencer;
 import org.saarland.ontologyparser.OntologyHandler;
 
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
-public class DMVCase1Construction {
+public class DMVCase2Construction {
 
     private OntologyHandler ontologyHandler;
 
@@ -27,15 +26,14 @@ public class DMVCase1Construction {
 
     private TestCaseRunner testCaseRunner;
 
-    private String crashDesc = "A Cruise autonomous vehicle (“Cruise AV”), operating in autonomous mode, was traveling straight " +
-        "through a green light northbound on Fillmore Street at the intersection with Fell Street " +
-        "when another vehicle, traveling westbound and violating a red light on Fell Street, came into the Cruise AV’s path. " +
-        "The driver of the Cruise AV disengaged from autonomous mode, and thereafter, the Cruise AV and the other vehicle made contact, " +
-        "damaging the other vehicle’s left rear door and the Cruise AV’s front bumper assembly, grill, and both front wheel wells. " +
+    private String crashDesc = "A Cruise autonomous vehicle (“Cruise AV”), operating in autonomous mode, was traveling westbound " +
+        "on Duboce Avenue between Guerrero Street and Market Street " +
+        "when another vehicle made contact with the Cruise AV’s left rear corner, " +
+        "damaging the lower left tail lamp assembly and left rear wheel well. " +
         "There were no injuries and police were not called.";
 
     // Construct the environment properties of this case
-    public DMVCase1Construction(OntologyHandler ontoHandler, StanfordCoreferencer stanfordCoreferencer,
+    public DMVCase2Construction(OntologyHandler ontoHandler, StanfordCoreferencer stanfordCoreferencer,
                                 TestCaseRunner testRunner)
     {
         this.ontologyHandler = ontoHandler;
@@ -44,7 +42,7 @@ public class DMVCase1Construction {
         testCaseRunner = testRunner;
     }
 
-    public void constructCase1() {
+    public void constructCase() {
         constructCase1EnvironmentProp();
         contructCase1AccidentDevelopment(stanfordCoreferencer);
         constructBeamNGScenario(crashDesc);
@@ -59,9 +57,9 @@ public class DMVCase1Construction {
         crashDesc = crashDesc.trim();
 
         // Construct Weather and Lighting Props
-        TestCaseInfo testCase1Info = new TestCaseInfo("dmvcase1");
+        TestCaseInfo testCase1Info = new TestCaseInfo("dmvcase2");
         testCase1Info.putValToKey("weather", "clear");
-        testCase1Info.setCrashType("straight path");
+        testCase1Info.setCrashType("rearend");
         accidentConstructor.setTestCase(testCase1Info);
 
         EnvironmentAnalyzer environmentAnalyzer = new EnvironmentAnalyzer();
@@ -71,7 +69,6 @@ public class DMVCase1Construction {
                                                        stanfordCoreferencer);
 
         Street street1 = testCase1Info.getStreetList().get(0);
-        Street street2 = testCase1Info.getStreetList().get(1);
 
         street1.putValToKey("lane_num", "2");
         street1.putValToKey("road_type", "street");
@@ -82,12 +79,12 @@ public class DMVCase1Construction {
 //        street1.putValToKey("road_park_line", "3"); // #parking_lines : 0 - none; 1 - left only, 2 - right only, 3 - both
         street1.putValToKey("road_park_line_fill", "");
 
-        street2.putValToKey("lane_num", "3");
-        street2.putValToKey("road_type", "street");
-        street2.putValToKey("road_shape", RoadShape.STRAIGHT);
-        street2.putValToKey("road_direction", "1-way");
-        street2.putValToKey("curve_radius", "0");
-        street2.putValToKey("road_grade_deg", "0");
+//        street2.putValToKey("lane_num", "2");
+//        street2.putValToKey("road_type", "street");
+//        street2.putValToKey("road_shape", RoadShape.STRAIGHT);
+//        street2.putValToKey("road_direction", "2-way");
+//        street2.putValToKey("curve_radius", "0");
+//        street2.putValToKey("road_grade_deg", "0");
 //        street2.putValToKey("road_park_line", "3");
     }
 
@@ -105,8 +102,8 @@ public class DMVCase1Construction {
         vehicle1.setVehicleId(1);
         vehicle2.setVehicleId(2);
 
-        vehicle1.setColor("red");
-        vehicle2.setColor("blue");
+        vehicle1.setColor("1 1 1");
+        vehicle2.setColor("1 0 1");
 
         vehicle1.setBeamngVehicleModel("etk800");
         vehicle2.setBeamngVehicleModel("etk800");
@@ -139,6 +136,8 @@ public class DMVCase1Construction {
 
         crashDevAnalyzer.constructVehicleActionEventList(actionList, vehicleList);
 
+        accidentConstructor.checkMissingPropertiesVehicles();
+
         if (actionList != null)
         {
             ConsoleLogger.print('d', "Action list has " + actionList.size() + " events");
@@ -155,15 +154,34 @@ public class DMVCase1Construction {
                 vehicle.getVehicleId(), vehicle.getActionList().toString(), vehicle.getDamagedComponents().toString()));
         }
 
-        accidentConstructor.checkMissingPropertiesVehicles();
+
     }
 
     private void constructBeamNGScenario(String crashDescription)
     {
-        ConsoleLogger.print('d', "Straight paths Accident Detected");
-        StraightPathConstructor straightPathConstructor = new StraightPathConstructor();
-        straightPathConstructor.constructAccidentScenario(accidentConstructor.getVehicleList(), ontologyHandler,
-            accidentConstructor.getTestCase());
+        RearEndConstructor rearEndConstructor = new RearEndConstructor(accidentConstructor.getVehicleList(),
+            ontologyHandler, accidentConstructor.getTestCase());
+        rearEndConstructor.constructAccidentScenario(accidentConstructor.getVehicleList(), ontologyHandler);
+
+        // If this is a non-critical case generation, remove the
+        // impact coordinate (last coord), and set
+        // the velocity of striker as the victim's speed + 10%
+        // victim speed
+        if (AccidentConstructorUtil.getNonCriticalDistance() > 0) {
+            VehicleAttr[] strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictimForRearEnd(
+                accidentConstructor.getVehicleList().get(0), accidentConstructor.getVehicleList().get(1),
+                AccidentParam.defaultCoordDelimiter);
+
+            ArrayList<String> strikerCoordList = strikerAndVictim[0].getMovementPath();
+            strikerCoordList.remove(strikerCoordList.size() - 1);
+
+            if (strikerAndVictim[1].getVelocity() > 0
+                && strikerAndVictim[1].getVelocity() < strikerAndVictim[0].getVelocity()) {
+                strikerAndVictim[0].setVelocity((int) (strikerAndVictim[1].getVelocity()
+                    + strikerAndVictim[1].getVelocity() * 0.1));
+            }
+
+        }
 
         String scenarioName = accidentConstructor.getTestCase().getName();
 

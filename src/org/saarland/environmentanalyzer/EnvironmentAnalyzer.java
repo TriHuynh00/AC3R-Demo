@@ -11,9 +11,7 @@ import org.saarland.nlptools.Stemmer;
 import org.saarland.ontologyparser.AccidentConcept;
 import org.saarland.ontologyparser.OntologyHandler;
 import org.saarland.xmlmodules.XMLAccidentCaseParser;
-import sun.awt.image.ImageWatched;
 
-import java.io.StreamTokenizer;
 import java.util.*;
 
 public class EnvironmentAnalyzer {
@@ -105,6 +103,7 @@ public class EnvironmentAnalyzer {
 
         // For forward impact or rear end, no intersection needs to be found
         if (testCase.getCrashType().contains("rear-end") || testCase.getCrashType().contains("rearend")
+                || testCase.getCrashType().contains("rear end")
                 || testCase.getCrashType().contains("forward impact"))
         {
             // Create a single street and set it as East Direction
@@ -681,7 +680,7 @@ public class EnvironmentAnalyzer {
                         } // End process lighting
                         else if (stemmedWord.equals("park")) // Check if a parked vehicle and its position is mentioned
                         {
-                            String connectedWordList = AccidentConstructorUtil.findAllConnectedWords(dependencyList, stemmedWord, stemmedWord, 0, 5);
+                            String connectedWordList = AccidentConstructorUtil.findAllConnectedWordsTopDown(dependencyList, stemmedWord, stemmedWord, 0, 5);
                             ConsoleLogger.print('d', "Environment park found " + connectedWordList);
 
                             // Find vehicle ID first
