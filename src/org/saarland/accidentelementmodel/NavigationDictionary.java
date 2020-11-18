@@ -135,6 +135,8 @@ public class NavigationDictionary {
     public static String createNESWCoordBasedOnNavigation(double segmentLength, double radius, String navigationDirection,
                                                           HashMap<String, String> navigationDict, String delimiter)
     {
+        ConsoleLogger.print('d', String.format("Nav direction is %s, NavDict's modification is %s",
+            navigationDirection, navigationDict.get(navigationDirection)));
         String[] directionCoordConfig = navigationDict.get(navigationDirection).split(";");
         double currXCoord = 0;
         double currYCoord = 0;
@@ -209,7 +211,8 @@ public class NavigationDictionary {
         {
             // If two directions match with a same axis string, they are in the same axis
             if (sameAxisInfo.equals(directionA + SAME_AXIS_SIGN + directionB)
-                || sameAxisInfo.equals(directionB + SAME_AXIS_SIGN + directionA))
+                || sameAxisInfo.equals(directionB + SAME_AXIS_SIGN + directionA)
+                || directionA.equals(directionB))
             {
                 isSameAxis = true;
                 break;

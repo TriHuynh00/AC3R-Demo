@@ -4,6 +4,7 @@ import org.jdom2.JDOMException;
 import org.saarland.accidentelementmodel.Street;
 import org.saarland.accidentelementmodel.VehicleAttr;
 import org.saarland.configparam.AccidentParam;
+import org.saarland.configparam.VelocityCode;
 import org.saarland.ontologyparser.OntologyHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -130,9 +131,15 @@ public class AccidentConstructorUtil {
     }
 
     public static int getVelocityOfAction(String action, OntologyHandler parser) {
-        return Integer.parseInt(parser.findExactConcept(action)
+        try {
+            return Integer.parseInt(parser.findExactConcept(action)
                 .getDataProperties()
                 .get("velocity"));
+        } catch (Exception ex) {
+            ConsoleLogger.print('e', String.format("Velocity of action %s not found, error message: \n %s",
+                action, ex.toString()));
+            return VelocityCode.UNKNOWN;
+        }
     }
 
     public static double computeYCircleFunc(double radius, double xCoord) {
@@ -154,14 +161,43 @@ public class AccidentConstructorUtil {
 
     // Get all the words connected to a given word by searching the dependency list. Return a string of words connected to the
     // given baseWord
-    public static String findAllConnectedWords(LinkedList<String> dependencyList, String baseWord, String currentConnectedWordStr,
-                                               int curDepth, int maxDepth) {
+    public static String findAllConnectedWordsBottomUp(LinkedList<String> dependencyList, String baseWord, String currentConnectedWordStr,
+                                                       int curDepth, int maxDepth) {
 
         if (curDepth >= maxDepth)
         {
             return currentConnectedWordStr;
         }
-        ConsoleLogger.print('d',"Cur depth " + curDepth + " max depth " + maxDepth);
+        //ConsoleLogger.print('d',"Cur depth " + curDepth + " max depth " + maxDepth);
+        for (int i = dependencyList.size() - 1; i >= 0; i--) {
+            String dep = dependencyList.get(i);
+            if (dep.contains(baseWord))
+            {
+                String otherWord = getOtherWordInDep(baseWord, AccidentConstructorUtil.getWordPairFromDependency(dep));
+                if (currentConnectedWordStr.contains(otherWord))
+                {
+                    continue;
+                }
+                else
+                {
+                    currentConnectedWordStr += "," + otherWord;
+                    currentConnectedWordStr = findAllConnectedWordsTopDown(dependencyList, otherWord,
+                            currentConnectedWordStr, curDepth + 1, maxDepth);
+                }
+
+            }
+        }
+        return currentConnectedWordStr;
+    }
+
+    public static String findAllConnectedWordsTopDown(LinkedList<String> dependencyList, String baseWord, String currentConnectedWordStr,
+                                                      int curDepth, int maxDepth) {
+
+        if (curDepth >= maxDepth)
+        {
+            return currentConnectedWordStr;
+        }
+        //ConsoleLogger.print('d',"Cur depth " + curDepth + " max depth " + maxDepth);
         for (String dep : dependencyList) {
             if (dep.contains(baseWord))
             {
@@ -173,8 +209,8 @@ public class AccidentConstructorUtil {
                 else
                 {
                     currentConnectedWordStr += "," + otherWord;
-                    currentConnectedWordStr = findAllConnectedWords(dependencyList, otherWord,
-                            currentConnectedWordStr, curDepth + 1, maxDepth);
+                    currentConnectedWordStr = findAllConnectedWordsTopDown(dependencyList, otherWord,
+                        currentConnectedWordStr, curDepth + 1, maxDepth);
                 }
 
             }
@@ -377,7 +413,7 @@ public class AccidentConstructorUtil {
                 position = Integer.parseInt(token.substring(token.lastIndexOf("-") + 1).trim());
             }
         } catch (Exception ex) {
-            return -1;
+            ConsoleLogger.print('e', "Cannot locate index in token " + token);
         }
         return position;
     }
@@ -797,6 +833,15 @@ public class AccidentConstructorUtil {
             }
         }
         return keywordIsFound;
+    }
+
+    public static VehicleAttr findVehicle(String vehicleName, ArrayList<VehicleAttr> vehicleList) {
+        for (VehicleAttr vehicleAttr : vehicleList) {
+            if (vehicleName.replace("vehicle", "").equalsIgnoreCase("" + vehicleAttr.getVehicleId())) {
+                return vehicleAttr;
+            }
+        }
+        return null;
     }
 }
 

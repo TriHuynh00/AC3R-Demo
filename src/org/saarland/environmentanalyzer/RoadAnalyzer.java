@@ -1,6 +1,5 @@
 package org.saarland.environmentanalyzer;
 
-import org.saarland.accidentconstructor.AccidentConstructor;
 import org.saarland.accidentconstructor.AccidentConstructorUtil;
 import org.saarland.accidentconstructor.ConsoleLogger;
 import org.saarland.accidentelementmodel.NavigationDictionary;
@@ -162,7 +161,7 @@ public class RoadAnalyzer {
                 {
                     directionIsFound = true;
 
-                    String connectedDeps = AccidentConstructorUtil.findAllConnectedWords(sentenceDependencies,
+                    String connectedDeps = AccidentConstructorUtil.findAllConnectedWordsTopDown(sentenceDependencies,
                             directionName, directionName,
                             0, 6);
 
@@ -332,7 +331,7 @@ public class RoadAnalyzer {
                                                      Street chosenStreet)
     {
         // If this is a T-intersection, attempt to find the main / crossing streets
-        String relatedRoadProps = AccidentConstructorUtil.findAllConnectedWords(dependencyList,
+        String relatedRoadProps = AccidentConstructorUtil.findAllConnectedWordsTopDown(dependencyList,
                 roadName, "", 0, 2);
 
         AccidentConcept roadConcept = ontologyHandler.findExactConcept(roadName);
@@ -500,7 +499,7 @@ public class RoadAnalyzer {
                 }
                 else if (laneWord.startsWith("lane"))
                 {
-                    String laneRelatedDeps = AccidentConstructorUtil.findAllConnectedWords(dependencyList, laneWord, "", 0, 1);
+                    String laneRelatedDeps = AccidentConstructorUtil.findAllConnectedWordsTopDown(dependencyList, laneWord, "", 0, 1);
                     String[] wordList = laneRelatedDeps.split(",");
                     ConsoleLogger.print('d', "related deps for lane analysis of roadType: " + laneWord + " is \n "
                             + laneRelatedDeps);

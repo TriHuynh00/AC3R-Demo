@@ -490,6 +490,8 @@ public class RearEndConstructor {
             int vehicleIndexInCoordArr = vehicleAttr.getVehicleId() - 1;
             ArrayList<String> coordOfSelectedVehicle = vehicleCoordList.get(vehicleIndexInCoordArr);
 
+            ConsoleLogger.print('d', "vehicleCoordList is " + coordOfSelectedVehicle.toString());
+
             for (int i = 1; i <= AccidentParam.SIMULATION_DURATION + 1; i++)
             {
                 int estimateVehicleSpeed = Integer.parseInt(parser.findExactConcept(vehicleAttr.getActionList().get(0))

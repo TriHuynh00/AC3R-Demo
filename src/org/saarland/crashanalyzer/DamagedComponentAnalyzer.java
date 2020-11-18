@@ -48,41 +48,55 @@ public class DamagedComponentAnalyzer {
         // Scan for the word left or right in the dependencies
         damagedComponent = AccidentConstructorUtil.getWordFromToken(damagedComponent);
 
-        String otherVehicleName = "";
+        String vehicleName = "";
 
-        for (String dependency : dependencies)
+        String relatedWords = AccidentConstructorUtil.findAllConnectedWordsBottomUp(
+            dependencyList, damagedComponent, damagedComponent, 0, 2);
+
+//        for (String dependency : dependencies)
+        for (String word : relatedWords.split(","))
         {
             // If we found that this word has a connection to another vehicle not the actorID, we know that this component
             // belongs to another vehicle
-            if (dependency.contains("vehicle"))
+//            if (word.contains("vehicle"))
+            if (word.startsWith("vehicle"))
             {
-                String[] wordPair = AccidentConstructorUtil.getWordPairFromDependency(dependency);
-                for (String token : wordPair)
+//                String[] wordPair = AccidentConstructorUtil.getWordPairFromDependency(word);
+//                for (String token : wordPair)
+//                {
+//                    String word = AccidentConstructorUtil.getWordFromToken(token);
+//                    if (word.matches("vehicle\\d+"))
+//                    {
+                        vehicleName = AccidentConstructorUtil.getWordFromToken(word);
+                        ConsoleLogger.print('d',"Found " + vehicleName + " has damage at " + damagedComponent);
+//                    }
+//                }
+            }
+
+            // Record left/right side of impact
+            for (String side : AccidentParam.LEFTRIGHTARR)
+            {
+                if (word.startsWith(side + "-"))
                 {
-                    String word = AccidentConstructorUtil.getWordFromToken(token);
-                    if (word.matches("vehicle\\d+"))
-                    {
-                        otherVehicleName = word;
-                        ConsoleLogger.print('d',"Found other vehicle of component " + damagedComponent);
-                    }
+                    damagedComponent += " " + side;
                 }
             }
-            else if (dependency.contains("left-"))
-            {
-                damagedComponent += " left";
-            }
-            else if (dependency.contains("right-"))
-            {
-                damagedComponent += " right";
-            }
+//            else if (word.startsWith(AccidentParam.LEFTRIGHTARR[0]))
+//            {
+//                damagedComponent += " left";
+//            }
+//            else if (word.contains("right-"))
+//            {
+//                damagedComponent += " right";
+//            }
         }
 
         VehicleAttr damagedVehicle = null;
 
-        if (!otherVehicleName.equals(""))
+        if (!vehicleName.equals(""))
         {
             damagedVehicle = AccidentConstructorUtil.findVehicleBasedOnId(
-                    Integer.parseInt(otherVehicleName.replace("vehicle", "")), vehicleList);
+                    Integer.parseInt(vehicleName.replace("vehicle", "")), vehicleList);
         }
         else
         {
@@ -93,10 +107,20 @@ public class DamagedComponentAnalyzer {
 
         ConsoleLogger.print('d',"Damaged vehicle is " + damagedVehicle.getVehicleId() + " with damaged component " + damagedComponent);
 
-        if (!damagedVehicle.getDamagedComponents().contains(damagedComponent))
-        {
+        // Check if damaged component and position already exists
+        boolean hasDmgComponent = false;
+        for (String dmgComponent : damagedVehicle.getDamagedComponents()) {
+            if (dmgComponent.equals(damagedComponent)) {
+                hasDmgComponent = true;
+                break;
+
+            }
+        }
+
+        if (!hasDmgComponent) {
             damagedVehicle.getDamagedComponents().add(damagedComponent);
-            ConsoleLogger.print('d',"Update Damaged vehicle is " + damagedVehicle.getVehicleId() + " with damaged component " + damagedComponent);
+            ConsoleLogger.print('d', "Update Damaged vehicle is " + damagedVehicle.getVehicleId() +
+                " with damaged component " + damagedComponent);
         }
 
         return damagedComponent;
