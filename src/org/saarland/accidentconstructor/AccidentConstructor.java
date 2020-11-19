@@ -597,6 +597,10 @@ public class AccidentConstructor {
                         String roadShape = "road_shape";
                         String roadNodeList = "road_node_list";
 
+                        String roadTypeLabel = "road_type_" + street.getStreetPropertyValue("road_ID");
+                        String roadShapeLabel = "road_shape_" + street.getStreetPropertyValue("road_ID");
+                        String roadNodeListLabel = "road_node_list_" + street.getStreetPropertyValue("road_ID");
+
                         String[] paths = street.getStreetPropertyValue(roadNodeList)
                                 .replaceAll(" ", ",").split(";");
                         List<String> pathList = Arrays.asList(paths);
@@ -605,13 +609,16 @@ public class AccidentConstructor {
                             points.add("[" + point + "]");
                         }
 
-                        scenarioData = scenarioData + "\"" + roadType + "\"" + ": \"" +
+                        scenarioData = scenarioData + "\"" + roadTypeLabel + "\"" + ": \"" +
                                 street.getStreetPropertyValue(roadType) + "\",";
-                        scenarioData = scenarioData + "\"" + roadShape + "\"" + ": \"" +
+                        scenarioData = scenarioData + "\"" + roadShapeLabel + "\"" + ": \"" +
                                 street.getStreetPropertyValue(roadShape) + "\",";
-                        scenarioData = scenarioData + "\"" + roadNodeList + "\"" + ": " +
+                        scenarioData = scenarioData + "\"" + roadNodeListLabel + "\"" + ": " +
                                 points.toString() + ",";
                     }
+
+                    String crashPoint = "";
+                    Set<String> allVehiclePoints = new HashSet<String>();
                     for (VehicleAttr vehicle : accidentConstructor.vehicleList) {
                         String keyPoint = "\"v" + vehicle.getVehicleId() + "_points\"" + ": ";
                         ArrayList<String> points = new ArrayList<String>();
@@ -622,8 +629,13 @@ public class AccidentConstructor {
                             point = point.replaceAll(" ", ",");
                             point = "[" + point + "]";
                             points.add(point);
-
+                            // Get velocities
                             velocities.add(vehicle.getVelocity());
+                            // Get Crash point
+                            if (allVehiclePoints.add(point) == false) {
+                                crashPoint = point;
+                            }
+
                         }
 
                         scenarioData = scenarioData + keyPoint + points.toString() + ",";
@@ -634,9 +646,10 @@ public class AccidentConstructor {
                         }
                         scenarioData = scenarioData + keyVelocity + velocities.toString() + ",";
                     }
+
+                    scenarioData = scenarioData + "\"crash_point\": " + crashPoint + "}";
+
                     ConsoleLogger.print('r', scenarioData);
-                    // Replace last char to the } for closing json file
-                    scenarioData = scenarioData.replaceAll(".$", "}");
                     scenarioDataWriter.write(scenarioData);
                     ConsoleLogger.print('r', "Successfully wrote to the file.");
                 } catch (IOException e) {
@@ -2721,4 +2734,8 @@ public class AccidentConstructor {
         return subjectVehicle;
     }
 
+
+    private void findCrashPoint() {
+
+    }
 }
