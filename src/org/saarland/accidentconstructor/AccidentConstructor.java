@@ -591,6 +591,17 @@ public class AccidentConstructor {
                 scenarioDataPath = scenarioDataPath + scenarioName + "_data.json"; // Append file name
                 String scenarioData = "{";
 
+                // Convert Rotation Matrix to Quaternions and Euler Angles - [[rot_quat], [degree]]
+                String headEastDeg = "[[0.00993774, 0.03947598, -0.70593404,  0.7071068], [-89.9886708]]";
+                String headWestDeg = "[[-0.00993774, -0.03947598, 0.70593404, 0.7071068], [89.98865298]]";
+                String headNorthDeg = "[[-1.40540931e-02, -5.58274572e-02,  9.98341513e-01, -4.37275224e-08], [-179.91005051]]";
+                String headSouthDeg = "[[3.45267143e-04, 0.00000000e+00, 0.00000000e+00, 9.99999940e-01], [0]]";
+                String headSouthWestDeg = "[[-0.00593952, -0.02359371,  0.42191736,  0.90630778], [49.93972267]]";
+                String baseOrientation = "[[0.00673789,  0.02676513, -0.47863063,  0.87758244], [-57.25936284]]";
+                // Crash Point
+                String crashPoint = "";
+                Set<String> allVehiclePoints = new HashSet<String>();
+
                 try (FileWriter scenarioDataWriter = new FileWriter(scenarioDataPath)) {
                     for (Street street : accidentConstructor.testCase.getStreetList()) {
                         String roadType = "road_type";
@@ -617,8 +628,6 @@ public class AccidentConstructor {
                                 points.toString() + ",";
                     }
 
-                    String crashPoint = "";
-                    Set<String> allVehiclePoints = new HashSet<String>();
                     for (VehicleAttr vehicle : accidentConstructor.vehicleList) {
                         String keyPoint = "\"v" + vehicle.getVehicleId() + "_points\"" + ": ";
                         ArrayList<String> points = new ArrayList<String>();
@@ -645,6 +654,30 @@ public class AccidentConstructor {
                             velocities.remove(index); // Delete first velocity by passing index
                         }
                         scenarioData = scenarioData + keyVelocity + velocities.toString() + ",";
+
+                        // Get rotation degree
+                        String travelDirection = vehicle.getTravellingDirection();
+                        String rotationDegree = "\"v" + vehicle.getVehicleId() + "_rot_degree\": ";
+                        switch (travelDirection) {
+                            case "W":
+                                rotationDegree = rotationDegree + headWestDeg;
+                                break;
+                            case "N":
+                                rotationDegree = rotationDegree + headNorthDeg;
+                                break;
+                            case "E":
+                                rotationDegree = rotationDegree + headEastDeg;
+                                break;
+                            case "S":
+                                rotationDegree = rotationDegree + headSouthDeg;
+                                break;
+                            case "SW":
+                                rotationDegree = rotationDegree + headSouthWestDeg;
+                                break;
+                            default:
+                                rotationDegree = rotationDegree + baseOrientation;
+                        }
+                        scenarioData = scenarioData + rotationDegree + ",";
                     }
 
                     scenarioData = scenarioData + "\"crash_point\": " + crashPoint + "}";
