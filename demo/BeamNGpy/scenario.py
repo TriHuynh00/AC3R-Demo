@@ -14,7 +14,7 @@ class BeamNg:
 		self.bng_log = bng_log
 		self.scenario = scenario
 		self.level = 'smallgrid'
-		self.timeout = 50
+		self.timeout = 75
 		self.isCrash = False
 
 	def create_vehicle(self, vehicles):
