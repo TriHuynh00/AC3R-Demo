@@ -1,18 +1,12 @@
 package org.saarland.accidentconstructor;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -97,8 +91,14 @@ public class AccidentConstructor {
 
     public interface AC3RCLI {
 
-        @Option(defaultToNull = true, longName = "reports")
+        @Option(defaultToNull = true, longName = "reports", description = "Name or path of reports to be used.")
         public List<File> getReports();
+
+        @Option(defaultToNull = true, longName = "path", description = "Path of scenario data will be generated.")
+        public String getScenarioDataPath();
+
+        @Option(helpRequest = true, description = "Usage details on command-line arguments")
+        public boolean getHelp();
     }
 
     public static void main(String[] args) {
@@ -106,12 +106,19 @@ public class AccidentConstructor {
         // Parsing of input parameters
         boolean useGUI = true;
         File[] selectedFiles = null;
+        String scenarioDataPath = "";
 
         try {
             AC3RCLI result = CliFactory.parseArguments(AC3RCLI.class, args);
             if (result.getReports() != null && !result.getReports().isEmpty()) {
                 selectedFiles = result.getReports().toArray(new File[]{});
                 useGUI = false;
+            }
+            if (result.getScenarioDataPath() != null && !result.getScenarioDataPath().isEmpty()) {
+                scenarioDataPath = result.getScenarioDataPath();
+                if (!scenarioDataPath.endsWith("\\")) {
+                    scenarioDataPath = scenarioDataPath + "\\";
+                }
             }
         } catch (ArgumentValidationException e) {
             e.printStackTrace();
@@ -571,6 +578,14 @@ public class AccidentConstructor {
                 }
 
                 long scenarioStartTime = System.nanoTime();
+
+                /************ BEGIN SCENARIO DATA FILE ***********/
+//                if (!useGUI) {
+//
+//                }
+                accidentConstructor.generateScenarioJSONData(scenarioDataPath, scenarioName);
+
+                /************ END SCENARIO DATA FILE ***********/
 
                 /************ BEGIN SCENARIO EXECUTION ***********/
 
@@ -2646,4 +2661,113 @@ public class AccidentConstructor {
         return subjectVehicle;
     }
 
+
+    private void generateScenarioJSONData(String scenarioDataPath, String scenarioName) {
+        ConsoleLogger.print('r', "\n\nStart to write scenario data file");
+        if (scenarioDataPath.isEmpty()) {
+            scenarioDataPath = AccidentParam.scenarioConfigFilePath + "\\";
+        }
+        ConsoleLogger.print('r', "\n\nThe scenario data file will be written at " + scenarioDataPath);
+        scenarioDataPath = scenarioDataPath + scenarioName + "_data.json"; // Append file name
+        String scenarioData = "{";
+
+        // Convert Rotation Matrix to Quaternions and Euler Angles - [[rot_quat], [degree]]
+        String headEastDeg = "[[0.00993774, 0.03947598, -0.70593404,  0.7071068], [-89.9886708]]";
+        String headWestDeg = "[[-0.00993774, -0.03947598, 0.70593404, 0.7071068], [89.98865298]]";
+        String headNorthDeg = "[[-1.40540931e-02, -5.58274572e-02,  9.98341513e-01, -4.37275224e-08], [-179.91005051]]";
+        String headSouthDeg = "[[3.45267143e-04, 0.00000000e+00, 0.00000000e+00, 9.99999940e-01], [0]]";
+        String headSouthWestDeg = "[[-0.00593952, -0.02359371,  0.42191736,  0.90630778], [49.93972267]]";
+        String baseOrientation = "[[0.00673789,  0.02676513, -0.47863063,  0.87758244], [-57.25936284]]";
+        // Crash Point
+        String crashPoint = "";
+        Set<String> allVehiclePoints = new HashSet<String>();
+
+        try (FileWriter scenarioDataWriter = new FileWriter(scenarioDataPath)) {
+            for (Street street : this.testCase.getStreetList()) {
+                String roadType = "road_type";
+                String roadShape = "road_shape";
+                String roadNodeList = "road_node_list";
+
+                String roadTypeLabel = "road_type_" + street.getStreetPropertyValue("road_ID");
+                String roadShapeLabel = "road_shape_" + street.getStreetPropertyValue("road_ID");
+                String roadNodeListLabel = "road_node_list_" + street.getStreetPropertyValue("road_ID");
+
+                String[] paths = street.getStreetPropertyValue(roadNodeList)
+                        .replaceAll(" ", ",").split(";");
+                List<String> pathList = Arrays.asList(paths);
+                ArrayList<String> points = new ArrayList<String>();
+                for(String point: pathList){
+                    points.add("[" + point + "]");
+                }
+
+                scenarioData = scenarioData + "\"" + roadTypeLabel + "\"" + ": \"" +
+                        street.getStreetPropertyValue(roadType) + "\",";
+                scenarioData = scenarioData + "\"" + roadShapeLabel + "\"" + ": \"" +
+                        street.getStreetPropertyValue(roadShape) + "\",";
+                scenarioData = scenarioData + "\"" + roadNodeListLabel + "\"" + ": " +
+                        points.toString() + ",";
+            }
+
+            for (VehicleAttr vehicle : this.vehicleList) {
+                String keyPoint = "\"v" + vehicle.getVehicleId() + "_points\"" + ": ";
+                ArrayList<String> points = new ArrayList<String>();
+                String keyVelocity = "\"v" + vehicle.getVehicleId() + "_velocities\"" + ": ";
+                ArrayList<Integer> velocities = new ArrayList<Integer>();
+
+                for (String point : vehicle.getMovementPath()) {
+                    point = point.replaceAll(" ", ",");
+                    point = "[" + point + "]";
+                    points.add(point);
+                    // Get velocities
+                    velocities.add(vehicle.getVelocity());
+                    // Get Crash point
+                    if (allVehiclePoints.add(point) == false) {
+                        crashPoint = point;
+                    }
+
+                }
+
+                scenarioData = scenarioData + keyPoint + points.toString() + ",";
+
+                if (velocities.size() > 1 ) {
+                    int index = 0; // First element of velocities is always removed
+                    velocities.remove(index); // Delete first velocity by passing index
+                }
+                scenarioData = scenarioData + keyVelocity + velocities.toString() + ",";
+
+                // Get rotation degree
+                String travelDirection = vehicle.getTravellingDirection();
+                String rotationDegree = "\"v" + vehicle.getVehicleId() + "_rot_degree\": ";
+                switch (travelDirection) {
+                    case "W":
+                        rotationDegree = rotationDegree + headWestDeg;
+                        break;
+                    case "N":
+                        rotationDegree = rotationDegree + headNorthDeg;
+                        break;
+                    case "E":
+                        rotationDegree = rotationDegree + headEastDeg;
+                        break;
+                    case "S":
+                        rotationDegree = rotationDegree + headSouthDeg;
+                        break;
+                    case "SW":
+                        rotationDegree = rotationDegree + headSouthWestDeg;
+                        break;
+                    default:
+                        rotationDegree = rotationDegree + baseOrientation;
+                }
+                scenarioData = scenarioData + rotationDegree + ",";
+            }
+
+            scenarioData = scenarioData + "\"crash_point\": " + crashPoint + "}";
+
+            ConsoleLogger.print('r', scenarioData);
+            scenarioDataWriter.write(scenarioData);
+            ConsoleLogger.print('r', "Successfully wrote to the file.");
+        } catch (IOException e) {
+            ConsoleLogger.print('r', "An error occurred in writing scenario data file.");
+            e.printStackTrace();
+        }
+    }
 }

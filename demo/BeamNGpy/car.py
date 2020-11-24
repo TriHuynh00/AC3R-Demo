@@ -15,7 +15,8 @@ CART_PARTS_DICT = {
   'Front Right Door': 'MR',
   'Front Left Door': 'ML',
   'Rear Right Door': 'MR',
-  'Rear Left Door': 'ML'
+  'Rear Left Door': 'ML',
+  'Wagon Right Taillight': 'MR'
 }
 
 class Car:
