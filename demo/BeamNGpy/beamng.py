@@ -5,7 +5,7 @@ from beamngpy.sensors import Damage
 from BeamNGpy.car import Car
 
 class BeamNg:
-	def __init__(self, bng_log, scenario):
+	def __init__(self, bng_log=None, scenario=None):
 		self.bng_home = os.getenv('BNG_HOME')
 		self.bng_research = os.getenv('BNG_RESEARCH')
 		self.host = '127.0.0.1'

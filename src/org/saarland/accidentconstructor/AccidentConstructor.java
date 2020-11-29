@@ -2794,6 +2794,14 @@ public class AccidentConstructor {
 
             }
 
+            String roadNum = "\"road_num\"";
+            roadNum = roadNum + ":" + this.testCase.getStreetList().size() + ",";
+            scenarioData = scenarioData + roadNum + "\n";
+
+            String vehicleNum = "\"vehicle_num\"";
+            vehicleNum = vehicleNum + ":" + this.vehicleList.size() + ",";
+            scenarioData = scenarioData + vehicleNum + "\n";
+
             String vehicleCrashPoint = "\"crash_point\"";
             vehicleCrashPoint = vehicleCrashPoint + ":" + crashPoint + "}";
             scenarioData = scenarioData + vehicleCrashPoint;

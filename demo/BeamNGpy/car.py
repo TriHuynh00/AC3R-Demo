@@ -20,11 +20,15 @@ CART_PARTS_DICT = {
 }
 
 class Car:
-	def __init__(self, id, vehicle):
+	def __init__(self, id, vehicle=None, **args):
 		self.name = "v" + str(id)
 		self.vehicle = vehicle
-		self.damage = {}
+		self.damage = args.get('damage') if args.get('damage') else {}
 		self.description = ''
+		self.velocities = args.get('velocities')
+		self.rot_degree = args.get('rot_degree')
+		self.travelling_dir = args.get('travelling_dir')
+
 
 	def set_damage(self, damage):
 		self.damage = damage
@@ -45,3 +49,6 @@ class Car:
 			value = self.damage[key]['damage']
 			tmp_description += ":" + position + "-" + str(value)
 		self.description = tmp_description
+
+	def __str__(self):
+		return str(self.__class__) + ": " + str(self.__dict__)
