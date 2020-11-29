@@ -22,12 +22,15 @@ CART_PARTS_DICT = {
 class Car:
 	def __init__(self, id, vehicle=None, **args):
 		self.name = "v" + str(id)
+		self.id = id
 		self.vehicle = vehicle
 		self.damage = args.get('damage') if args.get('damage') else {}
 		self.description = ''
-		self.velocities = args.get('velocities')
-		self.rot_degree = args.get('rot_degree')
-		self.travelling_dir = args.get('travelling_dir')
+		self.velocities = args.get('velocities') if args.get('velocities') else []
+		self.rot_degree = args.get('rot_degree') if args.get('rot_degree') else [] 
+		self.travelling_dir = args.get('travelling_dir') if args.get('travelling_dir') else [] 
+		self.points = args.get('points') if args.get('points') else []
+		self.color = args.get('color') if args.get('color') else ""
 
 
 	def set_damage(self, damage):
