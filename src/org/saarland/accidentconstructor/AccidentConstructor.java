@@ -2688,9 +2688,9 @@ public class AccidentConstructor {
                 String roadShape = "road_shape";
                 String roadNodeList = "road_node_list";
 
-                String roadTypeLabel = "\"road_type_" + street.getStreetPropertyValue("road_ID") + "\"";
-                String roadShapeLabel = "\"road_shape_" + street.getStreetPropertyValue("road_ID") + "\"";
-                String roadNodeListLabel = "\"road_node_list_" + street.getStreetPropertyValue("road_ID") + "\"";
+                String roadTypeLabel = "\"r" + street.getStreetPropertyValue("road_ID") + "_road_type" + "\"";
+                String roadShapeLabel = "\"r" + street.getStreetPropertyValue("road_ID") + "_road_shape" + "\"";
+                String roadNodeListLabel = "\"r" + street.getStreetPropertyValue("road_ID") + "_road_node_list" + "\"";
 
                 String[] paths = street.getStreetPropertyValue(roadNodeList)
                         .replaceAll(" ", ",").split(";");
@@ -2775,6 +2775,13 @@ public class AccidentConstructor {
                 // Update scenario JSON data
                 vehicleRotDeg = vehicleRotDeg + ":" + rotDeg + ",";
                 scenarioData = scenarioData + vehicleRotDeg + "\n";
+
+                // Get color of each vehicle
+                String vehicleColor = vehicleName + "_color\"";
+                String dataVehicleColor = "\"" + vehicle.getColor() + "\"";
+                // Update scenario JSON data
+                vehicleColor = vehicleColor + ":" + dataVehicleColor + ",";
+                scenarioData = scenarioData + vehicleColor + "\n";
 
                 // Get travelling direction of each vehicle
                 String vehicleTravellingDir = vehicleName + "_travelling_dir\"";
