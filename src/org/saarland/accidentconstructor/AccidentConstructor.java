@@ -2669,7 +2669,7 @@ public class AccidentConstructor {
         }
         ConsoleLogger.print('r', "\n\nThe scenario data file will be written at " + scenarioDataPath);
         scenarioDataPath = scenarioDataPath + scenarioName + "_data.json"; // Append file name
-        String scenarioData = "{";
+        String scenarioData = "{"; // Starting json file
 
         // Convert Rotation Matrix to Quaternions and Euler Angles - [[rot_quat], [degree]]
         String headEastDeg = "[[0.00993774, 0.03947598, -0.70593404,  0.7071068], [-89.9886708]]";
@@ -2679,7 +2679,7 @@ public class AccidentConstructor {
         String headSouthWestDeg = "[[-0.00593952, -0.02359371,  0.42191736,  0.90630778], [49.93972267]]";
         String baseOrientation = "[[0.00673789,  0.02676513, -0.47863063,  0.87758244], [-57.25936284]]";
         // Crash Point
-        String crashPoint = "";
+        String crashPoint = "\"\"";
         Set<String> allVehiclePoints = new HashSet<String>();
 
         try (FileWriter scenarioDataWriter = new FileWriter(scenarioDataPath)) {
@@ -2688,9 +2688,9 @@ public class AccidentConstructor {
                 String roadShape = "road_shape";
                 String roadNodeList = "road_node_list";
 
-                String roadTypeLabel = "road_type_" + street.getStreetPropertyValue("road_ID");
-                String roadShapeLabel = "road_shape_" + street.getStreetPropertyValue("road_ID");
-                String roadNodeListLabel = "road_node_list_" + street.getStreetPropertyValue("road_ID");
+                String roadTypeLabel = "\"road_type_" + street.getStreetPropertyValue("road_ID") + "\"";
+                String roadShapeLabel = "\"road_shape_" + street.getStreetPropertyValue("road_ID") + "\"";
+                String roadNodeListLabel = "\"road_node_list_" + street.getStreetPropertyValue("road_ID") + "\"";
 
                 String[] paths = street.getStreetPropertyValue(roadNodeList)
                         .replaceAll(" ", ",").split(";");
@@ -2700,67 +2700,103 @@ public class AccidentConstructor {
                     points.add("[" + point + "]");
                 }
 
-                scenarioData = scenarioData + "\"" + roadTypeLabel + "\"" + ": \"" +
-                        street.getStreetPropertyValue(roadType) + "\",";
-                scenarioData = scenarioData + "\"" + roadShapeLabel + "\"" + ": \"" +
-                        street.getStreetPropertyValue(roadShape) + "\",";
-                scenarioData = scenarioData + "\"" + roadNodeListLabel + "\"" + ": " +
-                        points.toString() + ",";
+                // Structuring data format for road properties in JSON
+                String dataRoadType = "\"" + street.getStreetPropertyValue(roadType) + "\"";
+                roadType = roadTypeLabel + ":" + dataRoadType + ",";
+
+                String dataRoadShape = "\"" + street.getStreetPropertyValue(roadShape) + "\"";
+                roadShape = roadShapeLabel + ":" + dataRoadShape + ",";
+
+                roadNodeList = roadNodeListLabel + ":" + points.toString() + ",";
+
+                // Update scenario JSON data
+                scenarioData = scenarioData + roadType + "\n";
+                scenarioData = scenarioData + roadShape + "\n";
+                scenarioData = scenarioData + roadNodeList + "\n";
             }
 
             for (VehicleAttr vehicle : this.vehicleList) {
-                String keyPoint = "\"v" + vehicle.getVehicleId() + "_points\"" + ": ";
+                String vehicleName = "\"v" + vehicle.getVehicleId();
+                String vehiclePoints = vehicleName + "_points\"";
+                String vehicleVelocities = vehicleName + "_velocities\"";
+
+                // Collecting data for vehicle points and vehicle velocities
                 ArrayList<String> points = new ArrayList<String>();
-                String keyVelocity = "\"v" + vehicle.getVehicleId() + "_velocities\"" + ": ";
                 ArrayList<Integer> velocities = new ArrayList<Integer>();
 
                 for (String point : vehicle.getMovementPath()) {
                     point = point.replaceAll(" ", ",");
                     point = "[" + point + "]";
                     points.add(point);
-                    // Get velocities
+                    // Get velocities for each vehicle
                     velocities.add(vehicle.getVelocity());
-                    // Get Crash point
-                    if (allVehiclePoints.add(point) == false) {
+                    // Get Crash point because HashSet doesn't allow duplicates.
+                    if (!allVehiclePoints.add(point)) {
                         crashPoint = point;
                     }
 
                 }
-
-                scenarioData = scenarioData + keyPoint + points.toString() + ",";
+                // Update scenario JSON data
+                vehiclePoints = vehiclePoints + ":" + points.toString() + ",";
+                scenarioData = scenarioData + vehiclePoints + "\n";
 
                 if (velocities.size() > 1 ) {
                     int index = 0; // First element of velocities is always removed
                     velocities.remove(index); // Delete first velocity by passing index
                 }
-                scenarioData = scenarioData + keyVelocity + velocities.toString() + ",";
+                // Update scenario JSON data
+                vehicleVelocities = vehicleVelocities + ":" + velocities.toString() + ",";
+                scenarioData = scenarioData + vehicleVelocities + "\n";
 
                 // Get rotation degree
                 String travelDirection = vehicle.getTravellingDirection();
-                String rotationDegree = "\"v" + vehicle.getVehicleId() + "_rot_degree\": ";
+                String vehicleRotDeg = vehicleName + "_rot_degree\"";
+
+                String rotDeg = "";
                 switch (travelDirection) {
                     case "W":
-                        rotationDegree = rotationDegree + headWestDeg;
+                        rotDeg = headWestDeg;
                         break;
                     case "N":
-                        rotationDegree = rotationDegree + headNorthDeg;
+                        rotDeg = headNorthDeg;
                         break;
                     case "E":
-                        rotationDegree = rotationDegree + headEastDeg;
+                        rotDeg = headEastDeg;
                         break;
                     case "S":
-                        rotationDegree = rotationDegree + headSouthDeg;
+                        rotDeg = headSouthDeg;
                         break;
                     case "SW":
-                        rotationDegree = rotationDegree + headSouthWestDeg;
+                        rotDeg = headSouthWestDeg;
                         break;
                     default:
-                        rotationDegree = rotationDegree + baseOrientation;
+                        rotDeg = baseOrientation;
                 }
-                scenarioData = scenarioData + rotationDegree + ",";
+                // Update scenario JSON data
+                vehicleRotDeg = vehicleRotDeg + ":" + rotDeg + ",";
+                scenarioData = scenarioData + vehicleRotDeg + "\n";
+
+                // Get travelling direction of each vehicle
+                String vehicleTravellingDir = vehicleName + "_travelling_dir\"";
+                String dataTravellingDir = "\"" + travelDirection + "\"";
+                // Update scenario JSON data
+                vehicleTravellingDir = vehicleTravellingDir + ":" + dataTravellingDir + ",";
+                scenarioData = scenarioData + vehicleTravellingDir + "\n";
+
+                // Get damage components of each vehicle
+                String damageComponentData = vehicle.getDamagedComponents().size() == 0  ?
+                        "any" : vehicle.getDamagedComponents().get(0);
+                damageComponentData = "\"" + damageComponentData + "\"";
+                String vehicleDamageComponents = vehicleName + "_damage_components\"";
+                // Update scenario JSON data
+                vehicleDamageComponents = vehicleDamageComponents + ":" + damageComponentData + ",";
+                scenarioData = scenarioData + vehicleDamageComponents + "\n";
+
             }
 
-            scenarioData = scenarioData + "\"crash_point\": " + crashPoint + "}";
+            String vehicleCrashPoint = "\"crash_point\"";
+            vehicleCrashPoint = vehicleCrashPoint + ":" + crashPoint + "}";
+            scenarioData = scenarioData + vehicleCrashPoint;
 
             ConsoleLogger.print('r', scenarioData);
             scenarioDataWriter.write(scenarioData);
