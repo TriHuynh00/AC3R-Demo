@@ -1,3 +1,4 @@
+import csv
 import sys
 import json
 from BeamNGpy.accident_case import AccidentCase
@@ -7,6 +8,30 @@ from BeamNGpy.car import Car
 # list into a tuple 
 def convert(list): 
     return tuple(list) 
+
+# Process CSV file
+def process_csv_file(csv_mode, csv_path, pos_crash_dict = None):
+    # csv_mode is 'w' for writing or 'a' for appending
+
+    csv_columns = [
+        'chromosome',
+        'v1_speed', 'v1_waypoint', 
+        'v2_speed','v2_waypoint', 
+        'striker_damage', 'victim_damage',
+        'striker_distance', 'victim_distance', 
+        'striker_rotation', 'victim_rotation', 
+        'fitness_value'
+    ]
+    try:
+        with open(csv_path, csv_mode, encoding='utf-8') as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=csv_columns, delimiter=',', lineterminator='\n')
+            if (csv_mode == 'w'):
+                writer.writeheader()
+            else:
+                writer.writerow(pos_crash_dict)
+                print(pos_crash_dict)
+    except IOError:
+        print("I/O error")
 
 # Read JSON data
 def read_json_data(scenario_path):

@@ -2,12 +2,16 @@ import os
 import sys
 import json
 from BeamNGpy.beamng import BeamNg
-from BeamNGpy.libs import read_json_data
+from BeamNGpy.libs import read_json_data, process_csv_file
 from beamngpy import BeamNGpy, Scenario, Road, Vehicle, setup_logging
 
 # Define json data file
 scenario_path = os.getcwd() + '\\accidentCasesJSON\\' + sys.argv[1]
 accident_case = read_json_data(scenario_path)
+
+# Create csv file
+csv_path = os.getcwd() + '\\BeamNGpy\\assets\\pos_crash_analysis.csv'
+process_csv_file(csv_mode = 'w', csv_path = csv_path)
 
 # Executing the scenario
 ac3r = BeamNg()
@@ -32,7 +36,6 @@ for car in car_list:
     rot_quat = car.rot_degree[0]
     vehicle = Vehicle(vid, model=model, licence=licence, color=color)
     scenario.add_vehicle(vehicle, pos=pos, rot=None, rot_quat=rot_quat)
-    
 
 scenario.make(beamng)
 bng = beamng.open(launch=True)
