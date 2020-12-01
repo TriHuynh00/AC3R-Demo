@@ -2,7 +2,7 @@ import os
 import sys
 from beamngpy import BeamNGpy, Scenario, Vehicle, setup_logging
 from beamngpy.sensors import Damage
-from BeamNGpy.car import Car
+from car import Car
 
 class BeamNg:
 	def __init__(self, bng_log=None, scenario=None):

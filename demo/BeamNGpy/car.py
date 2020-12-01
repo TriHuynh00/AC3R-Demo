@@ -1,4 +1,5 @@
 from beamngpy import Vehicle
+from beamngpy.sensors import Damage
 
 CART_PARTS_DICT = {
   'Tailgate': 'R',
@@ -32,6 +33,12 @@ class Car:
 		self.points = args.get('points') if args.get('points') else []
 		self.color = args.get('color') if args.get('color') else ""
 
+	def set_damage_sensor(self):
+		damage_sensor = Damage()
+		self.vehicle.attach_sensor('damage_' + self.name, damage_sensor)
+
+	def set_vehicle(self, vehicle):
+		self.vehicle = vehicle
 
 	def set_damage(self, damage):
 		self.damage = damage
