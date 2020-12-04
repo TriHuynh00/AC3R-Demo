@@ -2,10 +2,10 @@ import os
 import sys
 from beamngpy import BeamNGpy, Scenario, Vehicle, setup_logging
 from beamngpy.sensors import Damage
-from BeamNGpy.car import Car
+from car import Car
 
 class BeamNg:
-	def __init__(self, bng_log, scenario):
+	def __init__(self, bng_log=None, scenario=None):
 		self.bng_home = os.getenv('BNG_HOME')
 		self.bng_research = os.getenv('BNG_RESEARCH')
 		self.host = '127.0.0.1'
@@ -34,8 +34,8 @@ class BeamNg:
 	
 	def start_beamng(self):
 		# Instantiates a BeamNGpy instance
-		print(self.bng_home)
-		print(self.bng_research)
+		# print(self.bng_home)
+		# print(self.bng_research)
 		return BeamNGpy(self.host, self.port, self.bng_home, self.bng_research)
 
 	def execute_scenario(self, bng):
