@@ -3,11 +3,11 @@ import sys
 import json
 import math
 import numpy as np
-from accident_case import AccidentCase
-from street import Street
-from car import Car
+from BeamNGpy.models.accident_case import AccidentCase
+from BeamNGpy.models.street import Street
+from BeamNGpy.models.car import Car
 
-from CrashHelper.crash_simulation_helper import getV1BeamNGCoordinaes, getV2BeamNGCoordinaes
+from BeamNGpy.helpers.crash_simulation_helper import getV1BeamNGCoordinaes, getV2BeamNGCoordinaes
 
 # list into a tuple 
 def convert(list): 
