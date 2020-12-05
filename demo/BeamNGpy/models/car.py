@@ -61,5 +61,14 @@ class Car:
             tmp_description += ":" + position + "-" + str(value)
         self.description = tmp_description
 
+    def get_rot_quat(self):
+        return self.rot_degree[0]
+
+    def get_rot_degree(self):
+        return self.rot_degree[1]
+
+    def get_velocities(self):
+        return self.velocities
+
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)

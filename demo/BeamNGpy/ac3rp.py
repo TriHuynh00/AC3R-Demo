@@ -1,26 +1,28 @@
-import random
+import os
 import csv
 import sys
 import json
-import os
 import time
-from beamngpy import Scenario, Road, Vehicle, setup_logging
+from datetime import datetime
+from beamngpy import BeamNGpy, Scenario, Road, Vehicle, setup_logging
 from beamngpy.sensors import Damage
-
-from BeamNGpy.helpers.crash_simulation_helper import AngleBtw2Points
-from BeamNGpy.helpers.vehicle_state_helper import DamageExtraction, DistanceExtraction, RotationExtraction
-
-from beamng import BeamNg
-from libs import read_json_data, process_csv_file, generate_random_population, decoding_of_parameter, path_generator
-
-# Define json data file
-scenario_path = os.getcwd() + '\\assets\\' + sys.argv[1]
-accident_case = read_json_data(scenario_path)
+from algorithm_helper import generateRandomPopulation, decoding_of_parameter, tournament_parent_selection, crossover_mutation
+from libs import read_json_data, path_generator
+from crash_simulation_helper import AngleBtw2Points
+from vehicle_state_helper import DamageExtraction, DistanceExtraction, RotationExtraction
 
 # ----------------------------- create csv file --------------------------
 pos_crash_dict = {}
-csv_path = os.getcwd() + '\\assets\\' + "pos_crash_analysis.csv"
-process_csv_file("w", csv_path)
+
+csv_columns = ['chromosome', 'v1_speed', 'v1_waypoint', 'v2_speed', 'v2_waypoint', 'striker_damage', 'victim_damage',
+               'striker_distance', 'victim_distance', 'striker_rotation', 'victim_rotation', 'fitness_value']
+csv_file = "pos_crash_analysis.csv"
+try:
+    with open(csv_file, 'w', encoding='utf-8') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=csv_columns, delimiter=',', lineterminator='\n')
+        writer.writeheader()
+except IOError:
+    print("I/O error")
 
 
 # -------------------------------------------------------------------------
@@ -29,7 +31,7 @@ def saveDictionaryToCsvFile():
     csv_columns = ['chromosome', 'v1_speed', 'v1_waypoint', 'v2_speed', 'v2_waypoint', 'striker_damage',
                    'victim_damage', 'striker_distance', 'victim_distance', 'striker_rotation', 'victim_rotation',
                    'fitness_value']
-    csv_file = "assets\\pos_crash_analysis.csv"
+    csv_file = "pos_crash_analysis.csv"
     try:
         with open(csv_file, 'a', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=csv_columns, delimiter=',', lineterminator='\n')
@@ -47,7 +49,7 @@ crash_fitness_function = False
 distance_fitness_function = False
 rotation_fitness_function = False
 # read fitness function json file.
-with open('assets\\fitness_function_1.json') as json_file:
+with open('fitness_function_1.json') as json_file:
     data = json.load(json_file)
 
     actual_striker_damage = data['actual_striker_damage']
@@ -63,21 +65,20 @@ with open('assets\\fitness_function_1.json') as json_file:
     print(rotation_fitness_function)
 
 # --------------------------------------------------------------------------
+# Define json data file
+scenario_path = os.getcwd() + '\\assets\\' + sys.argv[1]
+accident_case = read_json_data(scenario_path)
 
-# beamng = BeamNGpy('localhost', 64256, home='F:\Softwares\BeamNG_Research_SVN')
-# scenario = Scenario('GridMap', 'crash_simulation_1')
 setup_logging()
-ac3r = BeamNg()
-beamng = ac3r.init_beamNG()
+beamng = BeamNGpy('127.0.0.1', 64256, home=os.getenv('BNG_HOME'))
 scenario = Scenario('smallgrid', 'crash_simulation_1')
 
-collision_point = []
-four_way = []
+# JSON READ: Collect Crash point
+impact_x = accident_case.crash_point[0]
+impact_y = accident_case.crash_point[1]
+impact_z = accident_case.crash_point[2]
 
-ac3r = BeamNg()
-beamng = ac3r.init_beamNG()
-scenario = Scenario('smallgrid', 'test_01')
-
+# JSON READ: Build scenario's streets
 street_list = accident_case.street_list
 for street in street_list:
     road_rid = 'road_' + str(street.id)
@@ -86,26 +87,29 @@ for street in street_list:
     road.nodes.extend(nodes)
     scenario.add_road(road)
 
+collision_point = []
+four_way = []
+
+# 4 Way intersection
+
+# JSON READ: Build scenario's vehicle
 car_list = accident_case.car_list
+vehicle_dict = {}
 for car in car_list:
     vid = "scenario_player_" + str(car.id)
     model = "etk800"
     color = car.color
     licence = car.name
-    pos = car.points[0]
-    rot_quat = car.rot_degree[0]
     vehicle = Vehicle(vid, model=model, licence=licence, color=color)
     car.set_vehicle(vehicle)
-
-    scenario.add_vehicle(vehicle, pos=pos, rot=None, rot_quat=rot_quat)
-
-vehicleStriker = ''
-vehicleVictim = ''
-for car in car_list:
-    if (car.id == 1):
-        vehicleStriker = car.vehicle
+    if car.id == 1:
+        vehicle_dict['striker'] = car
     else:
-        vehicleVictim = car.vehicle
+        vehicle_dict['victim'] = car
+
+# Using by beamng
+vehicleStriker = vehicle_dict['striker'].vehicle
+vehicleVictim = vehicle_dict['victim'].vehicle
 
 damageStriker = Damage()
 vehicleStriker.attach_sensor('damagesS', damageStriker)
@@ -113,14 +117,8 @@ damageVictim = Damage()
 vehicleVictim.attach_sensor('damagesV', damageVictim)
 
 # roads for striker and victim vehicle.
-# road_striker = [(241, 72),(238, 143)]
-# road_victim =  [(167, 139),(238, 143)]
-
-# road_striker = [(-2.0,17.880000000000006),(-2.0,2.0)]
-# road_victim =  [(20.88,18.88),(-2.0,2.0)]
-
-road_striker = [(-2.0, 86.84551724137933, 0), (-2.0, 2.0, 0)]
-road_victim = [(89.845517, 87.845517, 0), (-2.0, 2.0, 0)]
+road_striker = [vehicle_dict['striker'].points[0], (impact_x, impact_y)]
+road_victim = [vehicle_dict['victim'].points[0], (impact_x, impact_y)]
 
 # actual_striker_damage = "F"
 # actual_victim_damage = "R"
@@ -132,13 +130,17 @@ damages = list()
 
 populations_fitness = {}  # fitness function to store fitness values of chromosomes.
 
+
+# ----------------------------- genetic algorithm helper --------------------
+
+
+
+# --------------------------- genetic algorithm helper  ----------------------
+
 # initial population
-populations = generate_random_population(5, 10)
+populations = generateRandomPopulation(5, 10)
 print('initial population')
 print(populations)
-
-impact_y = 2
-impact_x = -2
 
 # code to run the simulation and set the fitness of the function.
 for population in populations:
@@ -148,7 +150,7 @@ for population in populations:
     striker_speeds = []
     victim_speeds = []
 
-    beamng_parameters = decoding_of_parameter(population)
+    beamng_parameters = decoding_of_parameter(population, impact_x, impact_y, road_striker, road_victim)
     striker_speeds.append(beamng_parameters[0])
     striker_points.append(beamng_parameters[1])
     victim_speeds.append(beamng_parameters[2])
@@ -170,7 +172,7 @@ for population in populations:
     pos_crash_dict["v2_waypoint"] = victim_points[0]
 
     striker_population = {
-        'speed': 56,  # starting speed
+        'speed': vehicle_dict['striker'].get_velocities()[0],  # starting speed
         'col_speed': beamng_parameters[0],  # collision speed
         # starting point
         'pos_x': beamng_parameters[1][0],
@@ -180,14 +182,14 @@ for population in populations:
         'col_x': beamng_parameters[4][0],
         'col_y': beamng_parameters[4][1],
         'col_z': 0,
-        # rotation coordinate 
+        # rotation coordinate
         'rot_x': 0,
         'rot_y': 0,
-        'rot_z': 0,
+        'rot_z': vehicle_dict['striker'].get_rot_degree(),
     }
 
     victim_population = {
-        'speed': 56,  # starting speed
+        'speed': vehicle_dict['victim'].get_velocities()[0],  # starting speed
         'col_speed': beamng_parameters[2],  # collision speed
         # starting point
         'pos_x': beamng_parameters[3][0],
@@ -200,7 +202,7 @@ for population in populations:
         # rotation coordinate
         'rot_x': 0,
         'rot_y': 0,
-        'rot_z': 90,
+        'rot_z': vehicle_dict['victim'].get_rot_degree(),
     }
 
     scenario.add_vehicle(
@@ -215,8 +217,8 @@ for population in populations:
     )
 
     # Generate path for striker and victim
-    striker_path = path_generator(striker_population, num_points=10, extra_points=2)
-    victim_path = path_generator(victim_population, num_points=10, extra_points=2, is_striker=False)
+    striker_path = path_generator(striker_population)
+    victim_path = path_generator(victim_population)
 
     scenario.make(beamng)
     bng = beamng.open(launch=True)
@@ -321,14 +323,13 @@ for population in populations:
 
                 break
 
-    #     bng.kill_beamng()
+        bng.kill_beamng()
 
     finally:
-        break
-    #     bng.close()
+        bng.close()
 
 # ---------------------------- save genetic algorithm iteration-----------------------------------------
-f = open("assets//genetic_algorithm_iteration.csv", "w+")
+f = open("genetic_algorithm_iteration.csv", "w+")
 # -------------- save genetic algorithm iterator -------------------------------------
 lines = ""
 for k, v in populations_fitness.items():
@@ -338,77 +339,22 @@ lines = lines[:-1]
 f.writelines(lines + '\n')
 print(lines)
 
+print('\n\n --------------------------------')
+print('Start 2nd loop')
+print('--------------------------------\n\n')
 
-## -------------------------------- genetic algorithm helper --------------------------
+
+# -------------------------------- genetic algorithm helper --------------------------
 
 # exit()
 
-def tournament_parent_selection(populations, n=2, tsize=3):
-    global populations_fitness
-    print('tournament selection')
-    selected_candidates = []
-    for i in range(n):
-        fittest_population_in_tournament = None
-        candidates = random.sample(populations, tsize)  # tsize = 20% of population.
-        print(candidates)
-        current = None
-        for candidate in candidates:
-            if fittest_population_in_tournament is None:
-                fittest_population_in_tournament = populations_fitness[
-                    tuple(candidate)]  # assign the fitness of current chromosome.
-                current = candidate
 
-            if populations_fitness[tuple(candidate)] > fittest_population_in_tournament:
-                current = candidate
-
-        selected_candidates.append(current)
-
-    print(selected_candidates)
-    return selected_candidates  # it becomes the matinn pool
-    # https://towardsdatascience.com/evolution-of-a-salesman-a-complete-genetic-algorithm-tutorial-for-python-6fe5d2b3ca35
-
-
-def mutation(chromosome):
-    print("mutation")
-    chromosome = expand_chromosome(chromosome)
-    chromosome[random.randint(0, len(chromosome) - 1)] = random.randint(min(chromosome), max(chromosome) - 1)
-    random.shuffle(chromosome)
-    return shrink_chromosome(chromosome)
-
-
-def crossover(chromosome1, chromosome2):
-    print("crossover")
-    crossover_point = random.randint(1, len(expand_chromosome(chromosome1)) - 1)
-
-    chromosome1 = expand_chromosome(chromosome1)
-    chromosome2 = expand_chromosome(chromosome2)
-    # Create children. np.hstack joins two arrays
-    child = np.hstack((chromosome1[0:crossover_point],
-                       chromosome2[crossover_point:]))
-    return shrink_chromosome(child)
-
-
-def crossover_mutation(selected_parents):
-    print("crossover mutation")
-    # https://stackoverflow.com/questions/20161980/difference-between-exploration-and-exploitation-in-genetic-algorithm?rq=1
-    population_next = []
-    n = 1
-    for i in range(int(len(selected_parents) / 2)):
-        for j in range(n):  # number of children
-            chromosome1, chromosome2 = selected_parents[i], selected_parents[len(selected_parents) - 1 - i]
-            childs = crossover(chromosome1, chromosome2)
-            population_next.append(mutation(childs))
-
-    print(population_next)
-    return population_next
-
-
-## -------------------------------- genetic algorithm helper --------------------------
+# -------------------------------- genetic algorithm helper --------------------------
 
 # iteration of genetic algorithm.
 for _ in range(20):  # Number of Generations to be Iterated.
     print("genetic algorithm simulation")
-    selected_parents = tournament_parent_selection(populations)
+    selected_parents = tournament_parent_selection(populations, populations_fitness)
     next_population = crossover_mutation(selected_parents=selected_parents)
     print("population")
     print(populations)
@@ -423,7 +369,7 @@ for _ in range(20):  # Number of Generations to be Iterated.
         striker_speeds = []
         victim_speeds = []
 
-        beamng_parameters = decoding_of_parameter(population)
+        beamng_parameters = decoding_of_parameter(population, impact_x, impact_y, road_striker, road_victim)
         print(beamng_parameters)
         striker_speeds.append(beamng_parameters[0])
         striker_points.append(beamng_parameters[1])
@@ -445,14 +391,14 @@ for _ in range(20):  # Number of Generations to be Iterated.
             'col_x': beamng_parameters[4][0],
             'col_y': beamng_parameters[4][1],
             'col_z': 0,
-            # rotation coordinate 
+            # rotation coordinate
             'rot_x': 0,
             'rot_y': 0,
-            'rot_z': 180,
+            'rot_z': vehicle_dict['striker'].get_rot_degree(),
         }
 
         victim_population = {
-            'speed': 56,  # starting speed
+            'speed': vehicle_dict['victim'].get_velocities()[0],  # starting speed
             'col_speed': beamng_parameters[2],  # collision speed
             # starting point
             'pos_x': beamng_parameters[3][0],
@@ -465,7 +411,7 @@ for _ in range(20):  # Number of Generations to be Iterated.
             # rotation coordinate
             'rot_x': 0,
             'rot_y': 0,
-            'rot_z': -90,
+            'rot_z': vehicle_dict['victim'].get_rot_degree(),
         }
 
         scenario.add_vehicle(
@@ -488,8 +434,8 @@ for _ in range(20):  # Number of Generations to be Iterated.
 
         scenario.make(beamng)
 
-        striker_path = path_generator(striker_population, num_points=10, extra_points=3)
-        victim_path = path_generator(victim_population, num_points=10, extra_points=3, is_striker=False)
+        striker_path = path_generator(striker_population)
+        victim_path = path_generator(victim_population)
 
         bng = beamng.open(launch=True)
         bng.set_deterministic()
@@ -621,7 +567,7 @@ for _ in range(20):  # Number of Generations to be Iterated.
         lines = lines[:-1]
         f.writelines(lines + '\n')
 
-        ## -------------------------------- genetic algorithm helper --------------------------
+        # -------------------------------- genetic algorithm helper --------------------------
 
         # iteratoin of genetic algorithm finished.
 
