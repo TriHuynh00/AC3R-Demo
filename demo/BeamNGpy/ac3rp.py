@@ -3,12 +3,13 @@ import csv
 import sys
 import json
 import time
+import numpy as np
 from datetime import datetime
 from beamngpy import BeamNGpy, Scenario, Road, Vehicle, setup_logging
 from beamngpy.sensors import Damage
 from algorithm_helper import generateRandomPopulation, decoding_of_parameter, tournament_parent_selection, crossover_mutation
 from libs import read_json_data, path_generator
-from crash_simulation_helper import AngleBtw2Points
+from crash_simulation_helper import AngleBtw2Points, find_cosin
 from vehicle_state_helper import DamageExtraction, DistanceExtraction, RotationExtraction
 
 # ----------------------------- create csv file --------------------------
@@ -142,6 +143,9 @@ populations = generateRandomPopulation(5, 10)
 print('initial population')
 print(populations)
 
+base_point = np.array(vehicle_dict['striker'].points[0])
+middle_point = np.array([impact_x, impact_y, 0])
+
 # code to run the simulation and set the fitness of the function.
 for population in populations:
     collision_points = []
@@ -171,6 +175,9 @@ for population in populations:
     pos_crash_dict["v2_speed"] = victim_speeds[0]
     pos_crash_dict["v2_waypoint"] = victim_points[0]
 
+    mutated_point = np.array([beamng_parameters[1][0], beamng_parameters[1][1], 0])
+    mutated_angle = find_cosin(base_point, middle_point, mutated_point)
+
     striker_population = {
         'speed': vehicle_dict['striker'].get_velocities()[0],  # starting speed
         'col_speed': beamng_parameters[0],  # collision speed
@@ -185,9 +192,11 @@ for population in populations:
         # rotation coordinate
         'rot_x': 0,
         'rot_y': 0,
-        'rot_z': vehicle_dict['striker'].get_rot_degree(),
+        'rot_z': mutated_angle,
     }
 
+    mutated_point = np.array([beamng_parameters[3][0], beamng_parameters[3][1], 0])
+    mutated_angle = find_cosin(base_point, middle_point, mutated_point)
     victim_population = {
         'speed': vehicle_dict['victim'].get_velocities()[0],  # starting speed
         'col_speed': beamng_parameters[2],  # collision speed
@@ -202,8 +211,13 @@ for population in populations:
         # rotation coordinate
         'rot_x': 0,
         'rot_y': 0,
-        'rot_z': vehicle_dict['victim'].get_rot_degree(),
+        'rot_z': mutated_angle,
     }
+
+    print('\n =========== angle =========')
+    print('striker: ', str(striker_population['rot_z']))
+    print('victim: ', str(victim_population['rot_z']))
+    print('=========== angle ========= \n')
 
     scenario.add_vehicle(
         vehicleStriker,
@@ -352,7 +366,7 @@ print('--------------------------------\n\n')
 # -------------------------------- genetic algorithm helper --------------------------
 
 # iteration of genetic algorithm.
-for _ in range(20):  # Number of Generations to be Iterated.
+for _ in range(5):  # Number of Generations to be Iterated.
     print("genetic algorithm simulation")
     selected_parents = tournament_parent_selection(populations, populations_fitness)
     next_population = crossover_mutation(selected_parents=selected_parents)
