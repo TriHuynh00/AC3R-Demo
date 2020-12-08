@@ -390,8 +390,13 @@ for _ in range(5):  # Number of Generations to be Iterated.
         striker_alpha = AngleBtw2Points(road_striker[0], road_striker[1])
         victim_alpha = AngleBtw2Points(road_victim[0], road_victim[1])
 
+        striker_target_vector = np.array([beamng_parameters[4][0], beamng_parameters[4][1], 0]) - \
+                                np.array([beamng_parameters[1][0], beamng_parameters[1][1], 0])
+        victim_target_vector = np.array([beamng_parameters[4][0], beamng_parameters[4][1], 0]) - \
+                               np.array([beamng_parameters[3][0], beamng_parameters[3][1], 0])
+
         striker_population = {
-            'speed': beamng_parameters[0],  # starting speed
+            'speed': vehicle_dict['striker'].get_velocities()[0],  # starting speed
             'col_speed': beamng_parameters[0],  # collision speed
             # starting point
             'pos_x': beamng_parameters[1][0],
@@ -404,7 +409,7 @@ for _ in range(5):  # Number of Generations to be Iterated.
             # rotation coordinate
             'rot_x': 0,
             'rot_y': 0,
-            'rot_z': vehicle_dict['striker'].get_rot_degree(),
+            'rot_z': angle_between(head_south_vector, striker_target_vector, vehicle_dict['striker'].get_direction()),
         }
 
         victim_population = {
@@ -421,7 +426,7 @@ for _ in range(5):  # Number of Generations to be Iterated.
             # rotation coordinate
             'rot_x': 0,
             'rot_y': 0,
-            'rot_z': vehicle_dict['victim'].get_rot_degree(),
+            'rot_z': angle_between(head_south_vector, victim_target_vector, vehicle_dict['victim'].get_direction()),
         }
 
         scenario.add_vehicle(
