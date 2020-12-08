@@ -95,10 +95,13 @@ def getV2BeamNGCoordinaes(total_distance_v2, width, road_b):
     return beamng_pos
 
 
-def find_cosin(a, b, c):
-    ba = a - b
-    bc = c - b
-    cosine_angle = np.dot(ba, bc) / (np.linalg.norm(ba) * np.linalg.norm(bc))
-    angle = np.arccos(cosine_angle)
+def unit_vector(vector):
+    """ Returns the unit vector of the vector.  """
+    return vector / np.linalg.norm(vector)
 
-    return np.degrees(angle)
+def angle_between(v1, v2):
+    """ Returns the angle in radians between vectors 'v1' and 'v2' """
+    v1_u = unit_vector(v1)
+    v2_u = unit_vector(v2)
+    return np.degrees(np.arccos(np.clip(np.dot(v1_u, v2_u), -1.0, 1.0)))
+

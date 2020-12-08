@@ -37,6 +37,10 @@ public class AccidentConstructor {
 
     private String[] actorKeywords = { "vehicle", "pedestrian" };
 
+    private ProcessBuilder processBuilder;
+
+    private Process p;
+
     private ArrayList<VehicleAttr> vehicleList;
 
     private String accidentType = "";
@@ -584,6 +588,7 @@ public class AccidentConstructor {
 //
 //                }
                 accidentConstructor.generateScenarioJSONData(scenarioDataPath, scenarioName);
+                accidentConstructor.controlBeamNgAlgorithm(scenarioName);
 
                 /************ END SCENARIO DATA FILE ***********/
 
@@ -2819,6 +2824,51 @@ public class AccidentConstructor {
         } catch (IOException e) {
             ConsoleLogger.print('r', "An error occurred in writing scenario data file.");
             e.printStackTrace();
+        }
+    }
+
+    private void controlBeamNgAlgorithm(String scenarioName) {
+        try {
+            while (true)
+            {
+                // String cmdExec = FilePathsConfig.BeamNGProgramPath
+                // + " -userpath " + AccidentParam.beamNGUserPath
+                // + " -rhost 127.0.0.1 -rport " + port
+                // + " -lua registerCoreModule('util_researchGE') ";
+
+                String cmdExec = "python " + AccidentParam.beamNGpyPlusPath + " " + scenarioName + "_data.json";
+                ConsoleLogger.print('d', "cmdExec: ");
+                ConsoleLogger.print('d', cmdExec);
+
+                processBuilder = new ProcessBuilder();
+                processBuilder.command("cmd.exe", "/c", cmdExec);
+                p = processBuilder.inheritIO().start();
+
+                ConsoleLogger.print('r', "Listening to BeamNG client");
+                // beamngClient = beamngServerSocket.accept();
+                // dataInputStream = new DataInputStream(beamngClient.getInputStream());
+                // dataOutputStream = new DataOutputStream(beamngClient.getOutputStream());
+                ConsoleLogger.print('r', "BeamNG Client accepted");
+
+                ConsoleLogger.print('r', "Load Scenario");
+
+                // startScenario();
+//                while (hasCrashStatus == false)
+//                {
+//                    // Keep looping until a crash file is generated, or scenario is timed out
+//                }
+//
+//                hasCrashStatus = false;
+//                Thread.sleep(1000);
+                // beamngClient.close();
+                ConsoleLogger.print('r', "Close BeamNG connection ");
+                break;
+            }
+            System.exit(0);
+
+        } catch (Exception ex) {
+            ConsoleLogger.print('e', "Error at control BeamNG client \n" + ex.toString());
+
         }
     }
 }
