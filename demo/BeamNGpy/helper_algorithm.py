@@ -1,7 +1,7 @@
 import math
 import random
 import numpy as np
-from crash_simulation_helper import getV1BeamNGCoordinaes, getV2BeamNGCoordinaes
+from helper_crash import getV1BeamNGCoordinaes, getV2BeamNGCoordinaes
 
 
 def generateRandomPopulation(N=5, Gene=10):

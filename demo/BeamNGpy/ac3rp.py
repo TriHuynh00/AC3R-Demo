@@ -4,13 +4,13 @@ import sys
 import json
 import time
 import numpy as np
-from datetime import datetime
 from beamngpy import BeamNGpy, Scenario, Road, Vehicle, setup_logging
 from beamngpy.sensors import Damage
-from algorithm_helper import generateRandomPopulation, decoding_of_parameter, tournament_parent_selection, crossover_mutation
+from datetime import datetime
 from libs import read_json_data, path_generator
-from crash_simulation_helper import AngleBtw2Points, find_cosin
-from vehicle_state_helper import DamageExtraction, DistanceExtraction, RotationExtraction
+from helper_algorithm import generateRandomPopulation, decoding_of_parameter, tournament_parent_selection, crossover_mutation
+from helper_crash import AngleBtw2Points, angle_between
+from helper_vehicle import DamageExtraction, DistanceExtraction, RotationExtraction
 
 # ----------------------------- create csv file --------------------------
 pos_crash_dict = {}
@@ -50,23 +50,22 @@ crash_fitness_function = False
 distance_fitness_function = False
 rotation_fitness_function = False
 # read fitness function json file.
-with open('fitness_function_1.json') as json_file:
-    data = json.load(json_file)
 
-    actual_striker_damage = data['actual_striker_damage']
-    actual_victim_damage = data['actual_victim_damage']
-    crash_fitness_function = data['crash_fitness_function']
-    distance_fitness_function = data['distance_fitness_function']
-    rotation_fitness_function = data['rotation_fitness_function']
+actual_striker_damage = "F"
+actual_victim_damage = "R"
+crash_fitness_function = True
+distance_fitness_function = False
+rotation_fitness_function = False
 
-    print(actual_striker_damage)
-    print(actual_victim_damage)
-    print(crash_fitness_function)
-    print(distance_fitness_function)
-    print(rotation_fitness_function)
+print(actual_striker_damage)
+print(actual_victim_damage)
+print(crash_fitness_function)
+print(distance_fitness_function)
+print(rotation_fitness_function)
 
 # --------------------------------------------------------------------------
 # Define json data file
+# scenario_path = os.getcwd() + '\\demo\\BeamNGpy\\assets\\' + sys.argv[1]
 scenario_path = os.getcwd() + '\\assets\\' + sys.argv[1]
 accident_case = read_json_data(scenario_path)
 
@@ -91,7 +90,11 @@ for street in street_list:
 collision_point = []
 four_way = []
 
-# 4 Way intersection
+# Define basic vector to find angle
+head_south_vector = np.array([0, -1, 0])
+head_north_vector = np.array([0, 1, 0])
+head_east_vector = np.array([1, 0, 0])
+head_west_vector = np.array([-1, 0, 0])
 
 # JSON READ: Build scenario's vehicle
 car_list = accident_case.car_list
@@ -131,20 +134,10 @@ damages = list()
 
 populations_fitness = {}  # fitness function to store fitness values of chromosomes.
 
-
-# ----------------------------- genetic algorithm helper --------------------
-
-
-
-# --------------------------- genetic algorithm helper  ----------------------
-
 # initial population
 populations = generateRandomPopulation(5, 10)
 print('initial population')
 print(populations)
-
-base_point = np.array(vehicle_dict['striker'].points[0])
-middle_point = np.array([impact_x, impact_y, 0])
 
 # code to run the simulation and set the fitness of the function.
 for population in populations:
@@ -175,8 +168,10 @@ for population in populations:
     pos_crash_dict["v2_speed"] = victim_speeds[0]
     pos_crash_dict["v2_waypoint"] = victim_points[0]
 
-    mutated_point = np.array([beamng_parameters[1][0], beamng_parameters[1][1], 0])
-    mutated_angle = find_cosin(base_point, middle_point, mutated_point)
+    striker_target_vector = np.array([beamng_parameters[4][0], beamng_parameters[4][1], 0]) - \
+                            np.array([beamng_parameters[1][0], beamng_parameters[1][1], 0])
+    victim_target_vector  = np.array([beamng_parameters[4][0], beamng_parameters[4][1], 0]) - \
+                            np.array([beamng_parameters[3][0], beamng_parameters[3][1], 0])
 
     striker_population = {
         'speed': vehicle_dict['striker'].get_velocities()[0],  # starting speed
@@ -192,11 +187,9 @@ for population in populations:
         # rotation coordinate
         'rot_x': 0,
         'rot_y': 0,
-        'rot_z': mutated_angle,
+        'rot_z': angle_between(head_south_vector, striker_target_vector, vehicle_dict['striker'].get_direction()),
     }
 
-    mutated_point = np.array([beamng_parameters[3][0], beamng_parameters[3][1], 0])
-    mutated_angle = find_cosin(base_point, middle_point, mutated_point)
     victim_population = {
         'speed': vehicle_dict['victim'].get_velocities()[0],  # starting speed
         'col_speed': beamng_parameters[2],  # collision speed
@@ -211,10 +204,12 @@ for population in populations:
         # rotation coordinate
         'rot_x': 0,
         'rot_y': 0,
-        'rot_z': mutated_angle,
+        'rot_z': angle_between(head_south_vector, victim_target_vector, vehicle_dict['victim'].get_direction()),
     }
 
     print('\n =========== angle =========')
+    print(striker_population)
+    print(victim_population)
     print('striker: ', str(striker_population['rot_z']))
     print('victim: ', str(victim_population['rot_z']))
     print('=========== angle ========= \n')
@@ -356,6 +351,7 @@ print(lines)
 print('\n\n --------------------------------')
 print('Start 2nd loop')
 print('--------------------------------\n\n')
+exit()
 
 
 # -------------------------------- genetic algorithm helper --------------------------

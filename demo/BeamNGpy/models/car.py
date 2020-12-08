@@ -70,5 +70,11 @@ class Car:
     def get_velocities(self):
         return self.velocities
 
+    def get_points(self):
+        return self.points
+
+    def get_direction(self):
+        return self.travelling_dir
+
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
