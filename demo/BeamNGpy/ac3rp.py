@@ -65,8 +65,8 @@ print(rotation_fitness_function)
 
 # --------------------------------------------------------------------------
 # Define json data file
-# scenario_path = os.getcwd() + '\\demo\\BeamNGpy\\assets\\' + sys.argv[1]
-scenario_path = os.getcwd() + '\\assets\\' + sys.argv[1]
+scenario_path = os.getcwd() + '\\demo\\BeamNGpy\\assets\\' + sys.argv[1]
+# scenario_path = os.getcwd() + '\\assets\\' + sys.argv[1]
 accident_case = read_json_data(scenario_path)
 
 setup_logging()
