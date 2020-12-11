@@ -70,7 +70,7 @@ scenario_path = os.getcwd() + '\\demo\\BeamNGpy\\assets\\' + sys.argv[1]
 accident_case = read_json_data(scenario_path)
 
 setup_logging()
-beamng = BeamNGpy('127.0.0.1', 64256, home=os.getenv('BNG_HOME'))
+bng = BeamNGpy('127.0.0.1', 64258, home=os.getenv('BNG_HOME'))
 scenario = Scenario('smallgrid', 'crash_simulation_1')
 
 # JSON READ: Collect Crash point
@@ -229,8 +229,8 @@ for population in populations:
     striker_path = path_generator(striker_population)
     victim_path = path_generator(victim_population)
 
-    scenario.make(beamng)
-    bng = beamng.open(launch=True)
+    scenario.make(bng)
+    bng.open(launch=True)
     bng.set_deterministic()
 
     try:
@@ -446,12 +446,12 @@ for _ in range(5):  # Number of Generations to be Iterated.
         pos_crash_dict["v2_speed"] = victim_speeds[0]
         pos_crash_dict["v2_waypoint"] = victim_points[0]
 
-        scenario.make(beamng)
+        scenario.make(bng)
 
         striker_path = path_generator(striker_population)
         victim_path = path_generator(victim_population)
 
-        bng = beamng.open(launch=True)
+        bng.open(launch=True)
         bng.set_deterministic()
 
         try:
