@@ -200,15 +200,15 @@ public class AccidentConstructor {
 
 
         // Test plain textual crash description
-        if (System.getProperty("CRASHDBTYPE", "NMVCSS").equals("DMV")) {
-            useGUI = false;
-
-            DMVCase1Construction case1Construction = new DMVCase1Construction(ontologyHandler, stanfordCoreferencer,
-                                                                              testCaseRunner);
-            case1Construction.constructCase();
-
-            return;
-        }
+//        if (System.getProperty("CRASHDBTYPE", "NMVCSS").equals("DMV")) {
+//            useGUI = false;
+//
+//            DMVCase1Construction case1Construction = new DMVCase1Construction(ontologyHandler, stanfordCoreferencer,
+//                                                                              testCaseRunner);
+//            case1Construction.constructCase();
+//
+//            return;
+//        }
 
         if (useGUI) {
 
