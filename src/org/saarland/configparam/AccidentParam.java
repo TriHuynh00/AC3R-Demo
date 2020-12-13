@@ -37,6 +37,7 @@ public class AccidentParam {
     public static String pointLightFilePath             = templateFilePath + "\\pointLight.txt";
 
     public static String beamNGpyPath = userFolder + "AC3R-Demo\\demo\\ac3r.py";
+    public static String beamNGpyPlusPath = userFolder + "AC3R-Demo\\demo\\BeamNGpy\\ac3rp.py";
 
     public static DecimalFormat df2Digit = new DecimalFormat("####.##");
     public static DecimalFormat df6Digit = new DecimalFormat("####.######");
