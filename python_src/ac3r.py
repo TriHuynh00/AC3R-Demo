@@ -1,7 +1,7 @@
 import os
 import sys
 from beamngpy import setup_logging
-from BeamNGpy.scenario import BeamNg
+# from BeamNGpy.scenario import BeamNg
 
 
 # Defines log file locations
