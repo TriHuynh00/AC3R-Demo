@@ -40,7 +40,12 @@ public class AccidentParam {
     public static String cloudFilePath                  = templateFilePath + "\\cloud.txt";
     public static String pointLightFilePath             = templateFilePath + "\\pointLight.txt";
 
+
     public static String beamNGpyPath = "D:\\University\\MasterProgram\\Thesis\\Draft\\AC3RGithub\\demo\\ac3r.py";
+
+//    public static String beamNGpyPath = userFolder + "AC3R-Demo\\demo\\ac3r.py";
+    public static String beamNGpyPlusPath = "D:\\University\\MasterProgram\\Thesis\\Draft\\AC3RGithub\\demo\\BeamNGpy\\ac3rp.py";
+
 
     public static DecimalFormat df2Digit = new DecimalFormat("####.##");
     public static DecimalFormat df6Digit = new DecimalFormat("####.######");

@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import javax.swing.JFileChooser;
+import javax.swing.*;
 
 //import org.jdom2.Element;
 import org.saarland.accidentdevelopmentanalyzer.CrashDevAnalyzer;
@@ -40,6 +40,10 @@ import com.lexicalscope.jewel.cli.Option;
 public class AccidentConstructor {
 
     private String[] actorKeywords = { "vehicle", "pedestrian" };
+
+    private ProcessBuilder processBuilder;
+
+    private Process p;
 
     private ArrayList<VehicleAttr> vehicleList;
 
@@ -398,11 +402,31 @@ public class AccidentConstructor {
                 ConsoleLogger.print('d', "After pruning actions for scenario " + scenarioName);
 
                 for (VehicleAttr vehicle : accidentConstructor.vehicleList) {
+                    String vehicleActionList = vehicle.getActionList().toString();
                     ConsoleLogger.print('d',
-                            "Vehicle " + vehicle.getVehicleId() + " Actions : " + vehicle.getActionList().toString());
+                            "Vehicle " + vehicle.getVehicleId() + " Actions : " + vehicleActionList);
+                    if (vehicleActionList.contains("turn") || vehicleActionList.contains("drift")) {
+                        ArrayList<Integer> recordedTurnActionIndexList = new ArrayList<Integer>();
+                        for (int y = 0; y < vehicle.getActionList().size(); y++) {
+                            if (vehicle.getActionList().get(y).contains("turn")
+                                || vehicle.getActionList().get(y).contains("drift")) {
+                                String turnSide = vehicle.getActionDescriptionList().get(y).getVerbProps().get(0);
+
+                                vehicle.getActionList().set(y, "turn " + turnSide);
+                            }
+                        }
+
+                    }
                 }
 
-                // if (blockSignal) continue;
+                ConsoleLogger.print('d', "After post processing actions for scenario " + scenarioName);
+                for (VehicleAttr vehicle : accidentConstructor.vehicleList) {
+                    String vehicleActionList = vehicle.getActionList().toString();
+                    ConsoleLogger.print('d',
+                        "Vehicle " + vehicle.getVehicleId() + " Actions : " + vehicleActionList);
+                }
+
+                    // if (blockSignal) continue;
                 boolean foundAccidentType = false;
 
                 ConsoleLogger.print('d', "Street List Before Constructing Coord");
@@ -636,67 +660,8 @@ public class AccidentConstructor {
 //                if (!useGUI) {
 //
 //                }
-                ConsoleLogger.print('r', "\n\nStart to write scenario data file");
-                if (scenarioDataPath.isEmpty()) {
-                	scenarioDataPath = AccidentParam.scenarioConfigFilePath + "\\";
-                }
-                ConsoleLogger.print('r', "\n\nThe scenario data file will be written at " + scenarioDataPath);
-                scenarioDataPath = scenarioDataPath + scenarioName + "_data.json"; // Append file name
-                String scenarioData = "{";
-
-                try (FileWriter scenarioDataWriter = new FileWriter(scenarioDataPath)) {
-                    for (Street street : accidentConstructor.testCase.getStreetList()) {
-                        String roadType = "road_type";
-                        String roadShape = "road_shape";
-                        String roadNodeList = "road_node_list";
-
-                        String[] paths = street.getStreetPropertyValue(roadNodeList)
-                                .replaceAll(" ", ",").split(";");
-                        List<String> pathList = Arrays.asList(paths);
-                        ArrayList<String> points = new ArrayList<String>();
-                        for(String point: pathList){
-                            points.add("[" + point + "]");
-                        }
-
-                        scenarioData = scenarioData + "\"" + roadType + "\"" + ": \"" +
-                                street.getStreetPropertyValue(roadType) + "\",";
-                        scenarioData = scenarioData + "\"" + roadShape + "\"" + ": \"" +
-                                street.getStreetPropertyValue(roadShape) + "\",";
-                        scenarioData = scenarioData + "\"" + roadNodeList + "\"" + ": " +
-                                points.toString() + ",";
-                    }
-                    for (VehicleAttr vehicle : accidentConstructor.vehicleList) {
-                        String keyPoint = "\"v" + vehicle.getVehicleId() + "_points\"" + ": ";
-                        ArrayList<String> points = new ArrayList<String>();
-                        String keyVelocity = "\"v" + vehicle.getVehicleId() + "_velocities\"" + ": ";
-                        ArrayList<Integer> velocities = new ArrayList<Integer>();
-
-                        for (String point : vehicle.getMovementPath()) {
-                            point = point.replaceAll(" ", ",");
-                            point = "[" + point + "]";
-                            points.add(point);
-
-                            velocities.add(vehicle.getVelocity());
-                        }
-
-                        scenarioData = scenarioData + keyPoint + points.toString() + ",";
-
-                        if (velocities.size() > 1 ) {
-                            int index = 0; // First element of velocities is always removed
-                            velocities.remove(index); // Delete first velocity by passing index
-                        }
-                        scenarioData = scenarioData + keyVelocity + velocities.toString() + ",";
-                    }
-                    ConsoleLogger.print('r', scenarioData);
-                    // Replace last char to the } for closing json file
-                    scenarioData = scenarioData.replaceAll(".$", "}");
-                    scenarioDataWriter.write(scenarioData);
-                    ConsoleLogger.print('r', "Successfully wrote to the file.");
-                } catch (IOException e) {
-                    ConsoleLogger.print('r', "An error occurred in writing scenario data file.");
-                    e.printStackTrace();
-                }
-
+                accidentConstructor.generateScenarioJSONData(scenarioDataPath, scenarioName);
+//                accidentConstructor.controlBeamNgAlgorithm(scenarioName);
 
                 /************ END SCENARIO DATA FILE ***********/
 
@@ -2316,9 +2281,11 @@ public class AccidentConstructor {
 
     private void superPrune(ArrayList<VehicleAttr> vehicleList) {
         LinkedList<LinkedList<String>> vehicleActionList = new LinkedList<LinkedList<String>>();
+        LinkedList<LinkedList<ActionDescription>> vehicleActionDescriptionList = new LinkedList<LinkedList<ActionDescription>>();
 
         for (int i = 0; i < vehicleList.size(); i++) {
             vehicleActionList.add(vehicleList.get(i).getActionList());
+            vehicleActionDescriptionList.add(vehicleList.get(i).getActionDescriptionList());
         }
 
         for (int c = 0; c < vehicleActionList.size(); c++) {
@@ -2330,6 +2297,7 @@ public class AccidentConstructor {
                     for (int e = 0; e < vehicleActionList.size(); e++) {
                         for (int k = vehicleActionList.get(e).size() - 1; k > i; k--) {
                             vehicleActionList.get(e).remove(k);
+                            vehicleActionDescriptionList.get(e).remove(k);
                             ConsoleLogger.print('d', "Removed VehicleList e=" + e + " k=" + k);
                         }
                     }
@@ -2356,9 +2324,13 @@ public class AccidentConstructor {
         }
 
         LinkedList<LinkedList<String>> vehicleActionList = new LinkedList<LinkedList<String>>();
+        LinkedList<LinkedList<ActionDescription>> vehicleActionDescriptionList
+            = new LinkedList<LinkedList<ActionDescription>>();
+
 
         for (int i = 0; i < vehicleList.size(); i++) {
             vehicleActionList.add(vehicleList.get(i).getActionList());
+            vehicleActionDescriptionList.add(vehicleList.get(i).getActionDescriptionList());
         }
 
         for (int i = vehicleActionList.get(0).size() - 1; i > 0 && vehicleActionList.get(0).size() > 2; i--) {
@@ -2396,10 +2368,10 @@ public class AccidentConstructor {
                     prunable = false;
                     break;
                 } else {
-                    ConsoleLogger.print('d', "Else condition");
+                    ConsoleLogger.print('d', "Else condition in prune action tree");
                     // If the previous action is a stop or park action, leave it
                     // like that
-                    if (ontoParser.findExactConcept(vehicleActionList.get(c).get(i - 1)).getDataProperties()
+                    if (ontoParser.findExactConcept(vehicleActionList.get(c).get(i - 1).split(" ")[0]).getDataProperties()
                             .get("velocity").equals("0")) {
                         prunable = false;
                         break;
@@ -2416,6 +2388,9 @@ public class AccidentConstructor {
             } else {
                 for (LinkedList<String> actionList : vehicleActionList) {
                     actionList.remove(i - 1);
+                }
+                for (LinkedList<ActionDescription> actionDescritionList : vehicleActionDescriptionList) {
+                    actionDescritionList.remove(i - 1);
                 }
             }
         } // End looping through action list
@@ -2804,7 +2779,209 @@ public class AccidentConstructor {
                 "Suspected Vehicle Len: " + suspectedVehicles.size() + " Subject Vehicle " + subjectVehicle);
         return subjectVehicle;
     }
+    private void generateScenarioJSONData(String scenarioDataPath, String scenarioName) {
+        ConsoleLogger.print('r', "\n\nStart to write scenario data file");
+        if (scenarioDataPath.isEmpty()) {
+            scenarioDataPath = AccidentParam.scenarioConfigFilePath + "\\";
+        }
+        ConsoleLogger.print('r', "\n\nThe scenario data file will be written at " + scenarioDataPath);
+        scenarioDataPath = scenarioDataPath + scenarioName + "_data.json"; // Append file name
+        String scenarioData = "{"; // Starting json file
 
+        // Convert Rotation Matrix to Quaternions and Euler Angles - [[rot_quat], [degree]]
+        String headEastDeg = "[[0.00993774, 0.03947598, -0.70593404,  0.7071068], [-89.9886708]]";
+        String headWestDeg = "[[-0.00993774, -0.03947598, 0.70593404, 0.7071068], [89.98865298]]";
+        String headNorthDeg = "[[-1.40540931e-02, -5.58274572e-02,  9.98341513e-01, -4.37275224e-08], [-179.91005051]]";
+        String headSouthDeg = "[[3.45267143e-04, 0.00000000e+00, 0.00000000e+00, 9.99999940e-01], [0]]";
+        String headSouthWestDeg = "[[-0.00593952, -0.02359371,  0.42191736,  0.90630778], [49.93972267]]";
+        String baseOrientation = "[[0.00673789,  0.02676513, -0.47863063,  0.87758244], [-57.25936284]]";
+        // Crash Point
+        String crashPoint = "\"\"";
+        Set<String> allVehiclePoints = new HashSet<String>();
 
+        try (FileWriter scenarioDataWriter = new FileWriter(scenarioDataPath)) {
+            for (Street street : this.testCase.getStreetList()) {
+                String roadType = "road_type";
+                String roadShape = "road_shape";
+                String roadNodeList = "road_node_list";
+
+                String roadTypeLabel = "\"r" + street.getStreetPropertyValue("road_ID") + "_road_type" + "\"";
+                String roadShapeLabel = "\"r" + street.getStreetPropertyValue("road_ID") + "_road_shape" + "\"";
+                String roadNodeListLabel = "\"r" + street.getStreetPropertyValue("road_ID") + "_road_node_list" + "\"";
+
+                String[] paths = street.getStreetPropertyValue(roadNodeList)
+                        .replaceAll(" ", ",").split(";");
+                List<String> pathList = Arrays.asList(paths);
+                ArrayList<String> points = new ArrayList<String>();
+                for(String point: pathList){
+                    points.add("[" + point + "]");
+                }
+
+                // Structuring data format for road properties in JSON
+                String dataRoadType = "\"" + street.getStreetPropertyValue(roadType) + "\"";
+                roadType = roadTypeLabel + ":" + dataRoadType + ",";
+
+                String dataRoadShape = "\"" + street.getStreetPropertyValue(roadShape) + "\"";
+                roadShape = roadShapeLabel + ":" + dataRoadShape + ",";
+
+                roadNodeList = roadNodeListLabel + ":" + points.toString() + ",";
+
+                // Update scenario JSON data
+                scenarioData = scenarioData + roadType + "\n";
+                scenarioData = scenarioData + roadShape + "\n";
+                scenarioData = scenarioData + roadNodeList + "\n";
+            }
+
+            for (VehicleAttr vehicle : this.vehicleList) {
+                String vehicleName = "\"v" + vehicle.getVehicleId();
+                String vehiclePoints = vehicleName + "_points\"";
+                String vehicleVelocities = vehicleName + "_velocities\"";
+
+                // Collecting data for vehicle points and vehicle velocities
+                ArrayList<String> points = new ArrayList<String>();
+                ArrayList<Integer> velocities = new ArrayList<Integer>();
+
+                for (String point : vehicle.getMovementPath()) {
+                    point = point.replaceAll(" ", ",");
+                    point = "[" + point + "]";
+                    points.add(point);
+                    // Get velocities for each vehicle
+                    velocities.add(vehicle.getVelocity());
+                    // Get Crash point because HashSet doesn't allow duplicates.
+                    if (!allVehiclePoints.add(point)) {
+                        crashPoint = point;
+                    }
+
+                }
+                // Update scenario JSON data
+                vehiclePoints = vehiclePoints + ":" + points.toString() + ",";
+                scenarioData = scenarioData + vehiclePoints + "\n";
+
+                if (velocities.size() > 1 ) {
+                    int index = 0; // First element of velocities is always removed
+                    velocities.remove(index); // Delete first velocity by passing index
+                }
+                // Update scenario JSON data
+                vehicleVelocities = vehicleVelocities + ":" + velocities.toString() + ",";
+                scenarioData = scenarioData + vehicleVelocities + "\n";
+
+                // Get rotation degree
+                String travelDirection = vehicle.getTravellingDirection();
+                String vehicleRotDeg = vehicleName + "_rot_degree\"";
+
+                String rotDeg = "";
+                switch (travelDirection) {
+                    case "W":
+                        rotDeg = headWestDeg;
+                        break;
+                    case "N":
+                        rotDeg = headNorthDeg;
+                        break;
+                    case "E":
+                        rotDeg = headEastDeg;
+                        break;
+                    case "S":
+                        rotDeg = headSouthDeg;
+                        break;
+                    case "SW":
+                        rotDeg = headSouthWestDeg;
+                        break;
+                    default:
+                        rotDeg = baseOrientation;
+                }
+                // Update scenario JSON data
+                vehicleRotDeg = vehicleRotDeg + ":" + rotDeg + ",";
+                scenarioData = scenarioData + vehicleRotDeg + "\n";
+
+                // Get color of each vehicle
+                String vehicleColor = vehicleName + "_color\"";
+                String dataVehicleColor = "\"" + vehicle.getColor() + "\"";
+                // Update scenario JSON data
+                vehicleColor = vehicleColor + ":" + dataVehicleColor + ",";
+                scenarioData = scenarioData + vehicleColor + "\n";
+
+                // Get travelling direction of each vehicle
+                String vehicleTravellingDir = vehicleName + "_travelling_dir\"";
+                String dataTravellingDir = "\"" + travelDirection + "\"";
+                // Update scenario JSON data
+                vehicleTravellingDir = vehicleTravellingDir + ":" + dataTravellingDir + ",";
+                scenarioData = scenarioData + vehicleTravellingDir + "\n";
+
+                // Get damage components of each vehicle
+                String damageComponentData = vehicle.getDamagedComponents().size() == 0  ?
+                        "any" : vehicle.getDamagedComponents().get(0);
+                damageComponentData = "\"" + damageComponentData + "\"";
+                String vehicleDamageComponents = vehicleName + "_damage_components\"";
+                // Update scenario JSON data
+                vehicleDamageComponents = vehicleDamageComponents + ":" + damageComponentData + ",";
+                scenarioData = scenarioData + vehicleDamageComponents + "\n";
+
+            }
+
+            String roadNum = "\"road_num\"";
+            roadNum = roadNum + ":" + this.testCase.getStreetList().size() + ",";
+            scenarioData = scenarioData + roadNum + "\n";
+
+            String vehicleNum = "\"vehicle_num\"";
+            vehicleNum = vehicleNum + ":" + this.vehicleList.size() + ",";
+            scenarioData = scenarioData + vehicleNum + "\n";
+
+            String vehicleCrashPoint = "\"crash_point\"";
+            vehicleCrashPoint = vehicleCrashPoint + ":" + crashPoint + "}";
+            scenarioData = scenarioData + vehicleCrashPoint;
+
+            ConsoleLogger.print('r', scenarioData);
+            scenarioDataWriter.write(scenarioData);
+            ConsoleLogger.print('r', "Successfully wrote to the file.");
+        } catch (IOException e) {
+            ConsoleLogger.print('r', "An error occurred in writing scenario data file.");
+            e.printStackTrace();
+        }
+    }
+
+    private void controlBeamNgAlgorithm(String scenarioName) {
+        try {
+            while (true)
+            {
+                // String cmdExec = FilePathsConfig.BeamNGProgramPath
+                // + " -userpath " + AccidentParam.beamNGUserPath
+                // + " -rhost 127.0.0.1 -rport " + port
+                // + " -lua registerCoreModule('util_researchGE') ";
+
+                String cmdExec = "python " + AccidentParam.beamNGpyPlusPath + " " + scenarioName + "_data.json";
+                ConsoleLogger.print('d', "cmdExec: ");
+                ConsoleLogger.print('d', cmdExec);
+
+                processBuilder = new ProcessBuilder();
+                processBuilder.command("cmd.exe", "/c", cmdExec);
+                p = processBuilder.inheritIO().start();
+
+                ConsoleLogger.print('r', "Listening to BeamNG client");
+                // beamngClient = beamngServerSocket.accept();
+                // dataInputStream = new DataInputStream(beamngClient.getInputStream());
+                // dataOutputStream = new DataOutputStream(beamngClient.getOutputStream());
+                ConsoleLogger.print('r', "BeamNG Client accepted");
+
+                ConsoleLogger.print('r', "Load Scenario");
+
+                // startScenario();
+//                while (hasCrashStatus == false)
+//                {
+//                    // Keep looping until a crash file is generated, or scenario is timed out
+//                }
+//
+//                hasCrashStatus = false;
+//                Thread.sleep(1000);
+                // beamngClient.close();
+                ConsoleLogger.print('r', "Close BeamNG connection ");
+                break;
+            }
+            System.exit(0);
+
+        } catch (Exception ex) {
+            ConsoleLogger.print('e', "Error at control BeamNG client \n" + ex.toString());
+
+        }
+    }
 
 }
