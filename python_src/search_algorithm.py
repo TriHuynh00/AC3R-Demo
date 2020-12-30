@@ -9,11 +9,6 @@ from deap import tools, creator, base
 
 from ac3r import execute_scenario
 
-class CrashScenario:
-    """
-    This class represent the content of an individual of the population we evolve
-    """
-    pass
 
 
 class AC3RPlusSearch:

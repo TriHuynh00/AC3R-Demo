@@ -70,13 +70,17 @@ def run(police_report):
 @click.argument('scenario_file', type=click.Path(exists=True))
 def run_from_scenario(scenario_file):
     """
-    Take a JSON scenario file and run the entire algorithm
+    Take a JSON scenario file and run the entire search algorithm
     """
-    _run_ac3rplus_from_scenario(scenario_file)
+    # From the JSON file create a CrashScenario object, this includes transforming the waypoint representation
+    #   into a trajectory segment representation
+    original_crash_scenario = _
+    _run_ac3rplus_from_scenario(original_crash_scenario)
 
 
-def _run_ac3rplus_from_scenario(scenario_file):
-    # Add here the configuration of the search algorithm
+def _run_ac3rplus_from_scenario(original_crash_scenario):
+
+
 
     
     pass

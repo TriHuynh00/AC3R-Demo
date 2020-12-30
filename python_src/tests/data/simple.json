@@ -1,0 +1,69 @@
+{
+  "roads": [
+    {
+      "name" : "road1",
+      "road_type": "roadway",
+      "road_shape": "I",
+      "road_node_list": [
+        [0.0, 20.0, 0.0, 8.0],
+        [100.0, 20.0, 0.0, 8.0]
+      ]
+    },
+    {
+      "name" : "road2",
+      "road_shape": "I",
+      "road_type": "roadway",
+      "road_node_list": [
+        [96.0, 40.0, 0.0, 8.0],
+        [96.0, 0.0, 0.0, 8.0]
+      ]
+    }
+  ],
+  "crash_point": [-2.0, 2.0, 0],
+  "vehicles": [
+    {
+      "name": "v1",
+      "model": null,
+      "color": "1 0.9 0",
+      "damage_components": ["side", "left"],
+	  "driving-actions": [
+        {
+          "name": "follow",
+          "trajectory": [
+            [10.0, 18.0, 0.0],
+            [92.0, 18.0, 0.0]
+          ]
+        },
+        { "name" : "turn-right",
+          "trajectory" : [
+            [92.0, 18.0, 0.0],
+            [93.41, 17.41, 0.0],
+            [94.0, 16.0, 0.0]
+          ]
+        },
+        {
+          "name": "follow",
+          "trajectory": [
+            [94.0, 16.0, 0.0],
+            [94.0, 0.0, 0.0]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "v2",
+      "model": null,
+      "color": "1 0 0",
+      "damage_components": ["front", "right"],
+	  "driving-actions": [
+        {
+          "name": "follow",
+          "trajectory": [
+            [94.0, 36.0, 0.0],
+            [94.0, 0.0, 0.0]
+          ]
+        }
+      ]
+    }
+  ]
+}
