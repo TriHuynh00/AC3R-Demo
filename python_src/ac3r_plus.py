@@ -1,20 +1,42 @@
 # from self_driving.road_polygon import RoadPolygon
 from shapely.geometry import LineString
 from scipy.interpolate import splev, splprep
-from numpy import repeat, linspace, array
+from numpy import repeat, linspace, array, sqrt, inf, cross, dot
 from numpy.ma import arange
 
 from shapely.geometry import LineString, Point
 from shapely.affinity import translate, rotate, scale
 
 from scipy.spatial import geometric_slerp
-from math import sin, cos, radians, degrees, atan2
+from math import sin, cos, radians, degrees, atan2, copysign
 
 # Constants
 rounding_precision = 3
 interpolation_distance = 1
 smoothness = 0
 min_num_nodes = 20
+
+
+def _find_radius_and_center(p1, p2, p3):
+    """
+    Returns the center and radius of the circle passing the given 3 points.
+    In case the 3 points form a line, returns (None, infinity).
+    """
+    temp = p2.x * p2.x + p2.y * p2.y
+    bc = (p1.x * p1.x + p1.y * p1.y - temp) / 2
+    cd = (temp - p3.x * p3.x - p3.y * p3.y) / 2
+    det = (p1.x - p2.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p2.y)
+
+    if abs(det) < 1.0e-6:
+        return inf, None
+
+    # Center of circle
+    cx = (bc * (p2.y - p3.y) - cd * (p1.y - p2.y)) / det
+    cy = ((p1.x - p2.x) * cd - (p2.x - p3.x) * bc) / det
+
+    radius = sqrt((cx - p1.x) ** 2 + (cy - p1.y) ** 2)
+
+    return radius, Point(cx, cy)
 
 
 def _interpolate(road_nodes):
@@ -26,9 +48,9 @@ def _interpolate(road_nodes):
     old_width_vals = [t[3] for t in road_nodes]
 
     # This is an approximation based on whatever input is given
-    road_lenght = LineString([(t[0], t[1]) for t in road_nodes]).length
+    road_length = LineString([(t[0], t[1]) for t in road_nodes]).length
 
-    num_nodes = int(road_lenght / interpolation_distance)
+    num_nodes = int(road_length / interpolation_distance)
     if num_nodes < min_num_nodes:
         num_nodes = min_num_nodes
 
@@ -59,6 +81,71 @@ def _interpolate(road_nodes):
                     [round(v, rounding_precision) for v in new_y_vals],
                     [round(v, rounding_precision) for v in new_z_vals],
                     [round(v, rounding_precision) for v in new_width_vals]))
+
+
+def _compute_initial_state(driving_actions):
+    # "driving-actions": [
+    #         {
+    #           "name": "follow",
+    #           "trajectory": [
+    #             [10.0, 18.0, 0.0],
+    #             [92.0, 18.0, 0.0]
+    #           ]
+    #         },
+    # Get the points defining the initial part of the first driving actions for the vehicle
+    trajectory_points = driving_actions[0]["trajectory"][0]
+
+    initial_location = (trajectory_points[0][0], trajectory_points[0][1])
+
+    if len(trajectory_points) == 2:
+        initial_point = Point(trajectory_points[0][0], trajectory_points[0][1])
+        final_point = Point(trajectory_points[1][0], trajectory_points[1][1])
+    elif len(trajectory_points) == 3:
+        # Find the circle
+        initial_arc_point = Point(trajectory_points[0][0], trajectory_points[0][1])
+        middle_arc_point = Point(trajectory_points[1][0], trajectory_points[1][1])
+        final_arc_point = Point(trajectory_points[2][0], trajectory_points[2][1])
+        #
+        radius, center = _find_radius_and_center(initial_arc_point, middle_arc_point, final_arc_point)
+        # Take the vector from the center to the initial point
+        the_radius_vector = LineString([center, initial_arc_point])
+        # Translate that to the origin
+        the_radius_vector = translate(the_radius_vector, xoff=-center.x, yoff=-center.y)
+
+        # We really care only about the sign to understand which of the two tangents to take
+        # Find the angle between: the vectors center-initial_point, center-final_point
+        # initialize arrays
+        A = array([initial_arc_point.x - center.x, initial_arc_point.y - center.y])
+        B = array([final_arc_point.x - center.x, final_arc_point.y - center.y])
+        # For us clockwise must be positive so we need to invert the sign
+        direction = -1.0 * copysign(1.0, cross(A, B))
+        angle_between_segments = atan2(abs(cross(A, B)), dot(A, B))
+        #
+        the_angle = degrees(direction * angle_between_segments)
+        if the_angle >= 0.0:
+            the_radius_vector = rotate(the_radius_vector, 90.0, (0, 0), use_radians=False)
+        else:
+            the_radius_vector = rotate(the_radius_vector, -90.0, (0, 0), use_radians=False)
+
+        # This should be the origin !
+        # initial_point = Point(the_radius_vector.coords[0])
+        initial_point = Point(0, 0)
+        final_point = Point(the_radius_vector.coords[-1])
+    else:
+        raise Exception("Not enough points to compute the initial state of vehicle")
+
+    # Find the angle between: the vectors center-initial_point, center-final_point
+    # initialize arrays
+    NORTH = array([0, 1])
+    B = array([final_point.x - initial_point.x, final_point.y - initial_point.y])
+    # For us clockwise must be positive so we need to invert the sign
+    direction = copysign(1.0, cross(NORTH, B))
+    angle_between_segments = atan2(abs(cross(NORTH, B)), dot(NORTH, B))
+    #
+    intial_rotation = degrees(direction * angle_between_segments)
+
+    return initial_location, intial_rotation
+
 
 
 class Road:
@@ -98,49 +185,108 @@ class Vehicle:
         # 	  "driving-actions": [
         #         {
         #           "name": "follow",
-        #           "trajectory": [
+        #           "trajectory": [[
         #             [10.0, 18.0, 0.0],
         #             [92.0, 18.0, 0.0]
-        #           ]
+        #           ]]
         #         },
         #         { "name" : "turn-right",
-        #           "trajectory" : [
+        #           "trajectory" : [[
         #             [92.0, 18.0, 0.0],
         #             [93.41, 17.41, 0.0],
         #             [94.0, 16.0, 0.0]
-        #           ]
+        #           ]]
         #         },
         #         {
         #           "name": "follow",
-        #           "trajectory": [
+        #           "trajectory": [[
         #             [94.0, 16.0, 0.0],
         #             [94.0, 0.0, 0.0]
-        #           ]
+        #           ]]
         #         }
         #       ]
         #     },
 
-        # segments.append({"type": "straight", "lenght": 100.0})
+        # segments.append({"type": "straight", "length": 100.0})
         # # SX
         # segments.append({"type": "turn", "angle": -60.0, "radius": 50.0})
-        # segments.append({"type": "straight", "lenght": 30.0})
+        # segments.append({"type": "straight", "length": 30.0})
         # # DX
         # segments.append({"type": "turn", "angle": 60.0, "radius": 50.0})
-        # segments.append({"type": "straight", "lenght": 20.0})
+
         # # SX
         # segments.append({"type": "turn", "angle": -90.0, "radius": 10.0})
-
-        # Extract the initial location and rotation from the trajectory
-        initial_location = vehicle_dict["driving-actions"][0]["trajectory"][0]
-        ## TODO rotation is extracted by first interpolating the points
+        # Extract all the actions
 
         driving_actions = []
+
+        for driving_action_dict in vehicle_dict["driving-actions"]:
+
+            trajectory_segments = []
+
+            # Iterate all the trajectory_list, i.e., list of poitns that define the segments
+            for trajectory_list in driving_action_dict["trajectory"]:
+
+                if len(trajectory_list) == 1:
+                    raise Exception("Note enough points in trajectory_dict")
+                elif len(trajectory_list) == 2:
+                    # Straight segment - Note we care about length only at this point
+                    # Rotation is implied by the previous elements or initial rotation
+                    initial_point = Point(trajectory_list[0][0], trajectory_list[0][1])
+                    final_point = Point(trajectory_list[1][0], trajectory_list[1][1])
+
+                    trajectory_segments.append({
+                        "type": "straight",
+                        "length": initial_point.distance( final_point)
+                    })
+
+                elif len(trajectory_list) == 3:
+
+                    initial_point = Point(trajectory_list[0][0], trajectory_list[0][1])
+                    middle_point = Point(trajectory_list[1][0], trajectory_list[1][1])
+                    final_point = Point(trajectory_list[2][0], trajectory_list[2][1])
+
+                    # Interpolate the arc and find the corresponding values...
+                    radius, center = _find_radius_and_center(initial_point, middle_point, final_point)
+
+                    # Find the angle between: the vectors center-initial_point, center-final_point
+                    # initialize arrays
+                    A = array([initial_point.x - center.x, initial_point.y - center.y])
+                    B = array([final_point.x - center.x, final_point.y - center.y])
+                    # For us clockwise must be positive so we need to invert the sign
+                    direction = -1.0 * copysign(1.0, cross(A, B))
+                    angle_between_segments = atan2(abs(cross(A, B)), dot(A, B))
+                    #
+                    the_angle = degrees(direction * angle_between_segments)
+
+                    trajectory_segments.append({
+                        "type": "turn",
+                        "angle": the_angle,
+                        "radius": radius
+                    })
+
+                else:
+                    raise Exception("Too many points in the trajectory_dict")
+
+            # TODO Refactor to class
+            driving_actions.append({
+                "name": driving_action_dict["name"],
+                "trajectory_segments": trajectory_segments
+            })
+
+        # Extract the initial location: the first point of the trajectory
+        initial_location, initial_rotation = _compute_initial_state(vehicle_dict["driving-actions"])
+
+
+        # Extract the initial rotation. The rotation the first point of the trajectory
+        ## TODO rotation is extracted by first interpolating the points
+
         return Vehicle(vehicle_dict["name"], initial_location, initial_rotation, driving_actions)
 
     # Rotation defined against NORTH = [0, 1]
     def __init__(self, name, initial_location, initial_rotation, driving_actions):
         self.name = name
-        self.initial_location = initial_location
+        self.initial_location = Point(initial_location[0], initial_location[1])
         self.initial_rotation = initial_rotation
         self.driving_actions = driving_actions
 
@@ -151,23 +297,23 @@ class Vehicle:
         # Collect the trajectory segments from the driving actions
         segments = []
         for driving_action in self.driving_actions:
-            segments.extend(driving_action.trajectory_segments)
+            segments.extend(driving_action["trajectory_segments"])
 
         last_rotation = self.initial_rotation
-        trajectory_points = [self.initial_point]
+        trajectory_points = [self.initial_location]
         for s in segments:
             # Generate the segment
             segment = None
             if s["type"] == 'straight':
-                # Create an vertical line of given lenght
-                segment = LineString([(0, y) for y in linspace(0, s["lenght"], 8)])
+                # Create an vertical line of given length
+                segment = LineString([(0, y) for y in linspace(0, s["length"], 8)])
             elif s["type"] == 'turn':
                 # Generate the points over the circle with 1.0 radius
                 # Vector (0,1)
                 start = array([cos(radians(90.0)), sin(radians(90.0))])
                 # Compute this using the angle
                 end = array([cos(radians(90.0 - s["angle"])), sin(radians(90.0 - s["angle"]))])
-                # Interpolate over 4 points
+                # Interpolate over 8 points
                 t_vals = linspace(0, 1, 8)
                 result = geometric_slerp(start, end, t_vals)
                 segment = LineString([Point(p[0], p[1]) for p in result])

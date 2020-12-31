@@ -44,8 +44,21 @@ class RoadVisualizer:
         plt.pause(0.001)
 
 
-class CarTrajectoryVisualizer:
-    pass
+class VehicleTrajectoryVisualizer:
+
+    def __init__(self, the_figure):
+        self.the_figure = the_figure
+
+    def visualize(self, vehicle):
+        # Be sure we plot on the right figure
+        plt.figure(self.the_figure.number)
+
+        trajectory_points = vehicle.generate_trajectory()
+
+        xs = [p[0] for p in trajectory_points]
+        ys = [p[1] for p in trajectory_points]
+
+        plt.plot(xs, ys, '-')
 
 
 class CrashScenarioVisualizer:

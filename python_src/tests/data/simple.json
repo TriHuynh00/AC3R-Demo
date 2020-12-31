@@ -29,24 +29,24 @@
 	  "driving-actions": [
         {
           "name": "follow",
-          "trajectory": [
+          "trajectory": [[
             [10.0, 18.0, 0.0],
             [92.0, 18.0, 0.0]
-          ]
+          ]]
         },
         { "name" : "turn-right",
-          "trajectory" : [
+          "trajectory" : [[
             [92.0, 18.0, 0.0],
             [93.41, 17.41, 0.0],
             [94.0, 16.0, 0.0]
-          ]
+          ]]
         },
         {
           "name": "follow",
-          "trajectory": [
+          "trajectory": [[
             [94.0, 16.0, 0.0],
             [94.0, 0.0, 0.0]
-          ]
+          ]]
         }
       ]
     },
@@ -58,10 +58,10 @@
 	  "driving-actions": [
         {
           "name": "follow",
-          "trajectory": [
+          "trajectory": [[
             [94.0, 36.0, 0.0],
             [94.0, 0.0, 0.0]
-          ]
+          ]]
         }
       ]
     }

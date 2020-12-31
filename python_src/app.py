@@ -74,9 +74,9 @@ def run_from_scenario(scenario_file):
     """
     # From the JSON file create a CrashScenario object, this includes transforming the waypoint representation
     #   into a trajectory segment representation
-    original_crash_scenario = _
-    _run_ac3rplus_from_scenario(original_crash_scenario)
-
+    # original_crash_scenario = _
+    # _run_ac3rplus_from_scenario(original_crash_scenario)
+    pass
 
 def _run_ac3rplus_from_scenario(original_crash_scenario):
 
