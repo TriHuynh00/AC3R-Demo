@@ -7,7 +7,11 @@ from visualization import RoadVisualizer, VehicleTrajectoryVisualizer
 
 class RoadVisualizationTest(unittest.TestCase):
 
-    # TODO FIX SIMPLE as each driving action is a LIST of segments, not just one segment !!!
+    #
+    # TODO: For some weird reason while computing arcs and such there's some approximation that makes a 90 deg turn into an 89 deg turn !!
+    # TODO: Add one test where the car starts on a non straight road
+    # TODO: Add one test where the first road segment is straight but not horizontal: try vertical, try rotated by some deg
+    #
 
     def test_load_roads_from_simple_and_visualize_them(self):
 
