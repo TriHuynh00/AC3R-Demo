@@ -233,6 +233,7 @@ public class CrashDevAnalyzer {
                                                     String turnSide = AccidentConstructorUtil.getWordFromToken(relatedWordsArr[k]);
                                                     actionDescription.getVerbProps().add(turnSide);
                                                     foundDirection = true;
+//                                                    actionDescription.setVerb(action + " " + turnSide);
                                                     ConsoleLogger.print('d', String.format("Found turn side of %s is %s",
                                                         action, turnSide));
                                                     break;
@@ -462,6 +463,7 @@ public class CrashDevAnalyzer {
     }
 
     public void constructVehicleActionEventList(LinkedList<ActionDescription> actionList, ArrayList<VehicleAttr> vehicleList) {
+
         for (ActionDescription actionDesc : actionList)
         {
             String subject = actionDesc.getSubject().trim();
@@ -494,12 +496,16 @@ public class CrashDevAnalyzer {
                         int objVehicleID = Integer.parseInt(objVehicleName.replace("vehicle", ""));
                         VehicleAttr objVehicle = AccidentConstructorUtil.findVehicleBasedOnId(objVehicleID, vehicleList);
                         objVehicle.getActionList().add("hit*");
+                        objVehicle.getActionDescriptionList().add(actionDesc);
                     }
                     referredVehicle.getActionList().add("hit");
+                    referredVehicle.getActionDescriptionList().add(actionDesc);
+
                 }
                 else
                 {
                     referredVehicle.getActionList().add(verb);
+                    referredVehicle.getActionDescriptionList().add(actionDesc);
                 }
             }
         }
@@ -552,6 +558,7 @@ public class CrashDevAnalyzer {
                 actionList.set(i, temp);
             }
         }
+
     }
 
     private boolean checkVerbPropsMatched(LinkedList<String> verbPropList1, LinkedList<String> verbPropList2)

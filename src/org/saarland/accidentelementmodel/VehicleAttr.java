@@ -2,6 +2,7 @@ package org.saarland.accidentelementmodel;
 
 import org.saarland.configparam.AccidentParam;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -41,7 +42,10 @@ public class VehicleAttr {
 
     private LinkedList<String> actionList;
 
+    private LinkedList<ActionDescription> actionDescriptionList = new LinkedList<ActionDescription>();
+
     private ArrayList<String> movementPath;
+
     private String waypointPathNodeName;
 
     private double leaveTriggerDistance = -1;
@@ -156,9 +160,18 @@ public class VehicleAttr {
         return actionList;
     }
 
+    public LinkedList<ActionDescription> getActionDescriptionList() {
+        return actionDescriptionList;
+    }
+
     public void setActionList(LinkedList<String> newActionList) {
         this.actionList = newActionList;
     }
+
+    public void setActionDescriptionList(LinkedList<ActionDescription> newActionDescriptionList) {
+        this.actionDescriptionList = newActionDescriptionList;
+    }
+
 
     public ArrayList<String> getMovementPath() {
         return movementPath;

@@ -64,6 +64,7 @@ public class AccidentParam {
 
     public static String defaultCoordDelimiter = ":";
     public static String beamngCoordDelimiter = " ";
+    public static String STREET_NODE_DELIMITER = ";";
 
     /************ MATERIAL TEXTURE **************/
 

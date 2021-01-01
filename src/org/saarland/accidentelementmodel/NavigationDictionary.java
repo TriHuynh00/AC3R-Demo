@@ -28,20 +28,26 @@ public class NavigationDictionary {
 
     public static final String NAVIGATION_MAP_DELIMITER = ";";
 
-    public static final String PERPENDICULAR_SIGN = "+";
+    public static final String TURN_DIRECTION_DELIMITER = ":";
+
+    public static final String POSSIBLE_TURN_DIRECTION_DELIMITER = ",";
 
     public static String[] sameAxisDirectionDict = new String[] {"N-S", "E-W", "NE-SW", "NW-SE"};
 
     /*
-     * Showing perpendicular directions of a given cardinal direction, on the left of "+" sign is
+     * Showing possible turn directions of a given cardinal direction, on the left of "+" sign is
      * the given cardinal direction, on the right side are the relative left and right directions
-     * in the form "left,right"
+     * in the form "left;right"
      */
-    public static String[] perpendicularDirectionDict = new String[] {
-            "N+W,E",
-            "S+E,W",
-            "E+N,S",
-            "W+S,N",
+    public static String[] turnDirectionDict = new String[] {
+            "N:W,NW,SW;E,NE,SE",
+            "S:E,NE,SE;W,NW,SW",
+            "E:N,NE,NW;S,SE,SW",
+            "W:S,SE,SW;N,NE,NW",
+            "NE:N,NW,W;E,SE,S",
+            "NW:W,SW,S;N,NE,E",
+            "SE:E,N,NE;S,W,SW",
+            "SW:S,E,SE;N,W,NW"
     };
 
     public static HashMap<String, String> NorthNavDict = new HashMap<String, String>();
@@ -165,7 +171,34 @@ public class NavigationDictionary {
             finalCoord += delimiter + "0";
         return finalCoord;
     }
-    
+
+    // Find the possible left and right turn direction of a given moving direction
+    public static String getTurnDirectionOfMovingDirection(String movingDirection, String turnDirection)
+    {
+
+        for (String directionDictEntry : turnDirectionDict)
+        {
+            ConsoleLogger.print('d',"Direction Dict Entry = " + directionDictEntry);
+            String[] baseDirectionAndTurnDirections
+                = directionDictEntry.split(TURN_DIRECTION_DELIMITER);
+            ConsoleLogger.print('d', "BaseDur&TurnDir = " + baseDirectionAndTurnDirections[0] + " "
+                + baseDirectionAndTurnDirections[1]);
+            if (baseDirectionAndTurnDirections[0].equalsIgnoreCase(movingDirection))
+            {
+                String[] leftAndRightTurnDirections =
+                    baseDirectionAndTurnDirections[1].split(NAVIGATION_MAP_DELIMITER);
+                ConsoleLogger.print('d',
+                    "leftAndRightTurnDirections = " + leftAndRightTurnDirections[0] + " " + leftAndRightTurnDirections[1]);
+                if (turnDirection.equals("left")) {
+                    return leftAndRightTurnDirections[0];
+                } else if (turnDirection.equals("right")) {
+                    return leftAndRightTurnDirections[1];
+                }
+            }
+        }
+        return "No turn for " + movingDirection;
+    }
+
     public static HashMap<String, String> selectDictionaryFromTravelingDirection(String roadCardinalDirection)
     {
         HashMap<String, String> navigationDict = null;
@@ -209,7 +242,7 @@ public class NavigationDictionary {
         boolean isSameAxis = false;
         for (String sameAxisInfo : sameAxisDirectionDict)
         {
-            // If two directions match with a same axis string, they are in the same axis
+            // If two directions match with the same axis string, they are in the same axis
             if (sameAxisInfo.equals(directionA + SAME_AXIS_SIGN + directionB)
                 || sameAxisInfo.equals(directionB + SAME_AXIS_SIGN + directionA)
                 || directionA.equals(directionB))
@@ -220,5 +253,25 @@ public class NavigationDictionary {
         }
         ConsoleLogger.print('d', directionA + " and " + directionB + " is in same axis? " + isSameAxis);
         return isSameAxis;
+    }
+
+    /*
+     *   Find if two given directions are opposite
+     */
+    public static boolean isDirectionsOpposite(String directionA, String directionB)
+    {
+        boolean isOpposite = false;
+        for (String sameAxisInfo : sameAxisDirectionDict)
+        {
+            // If two directions match with the same axis string, they are in the same axis
+            if (sameAxisInfo.equals(directionA + SAME_AXIS_SIGN + directionB)
+                || sameAxisInfo.equals(directionB + SAME_AXIS_SIGN + directionA))
+            {
+                isOpposite = true;
+                break;
+            }
+        }
+        ConsoleLogger.print('d', directionA + " and " + directionB + " is opposite? " + isOpposite);
+        return isOpposite;
     }
 }

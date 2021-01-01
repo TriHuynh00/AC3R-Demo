@@ -1,11 +1,13 @@
 package org.saarland.environmentanalyzer;
 
+import org.saarland.accidentconstructor.AccidentConstructor;
 import org.saarland.accidentconstructor.AccidentConstructorUtil;
 import org.saarland.accidentconstructor.ConsoleLogger;
 import org.saarland.accidentelementmodel.RoadShape;
 import org.saarland.accidentelementmodel.Street;
 import org.saarland.accidentelementmodel.TestCaseInfo;
 import org.saarland.accidentelementmodel.VehicleAttr;
+import org.saarland.configparam.AccidentParam;
 import org.saarland.nlptools.StanfordCoreferencer;
 import org.saarland.nlptools.Stemmer;
 import org.saarland.ontologyparser.AccidentConcept;
@@ -151,6 +153,8 @@ public class EnvironmentAnalyzer {
                 roadAnalyzer.constructRoadByRoadType(paragraph1);
                 roadAnalyzer.analyzeRoadDirection(intersectionType, paragraph2, stanfordCoreferencer);
             }
+
+
         } // End checking intersection
 
 

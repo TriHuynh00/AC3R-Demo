@@ -316,6 +316,7 @@ public class AccidentConstructor {
                 environmentAnalyzer.extractBasicRoadProperties(accidentContext[0], accidentContext[1], ontologyHandler,
                         accidentConstructor.getTestCase(), accidentConstructor.vehicleList, stanfordCoreferencer);
 
+
                 // if (blockSignal) continue;
 
                 // String[] environmentParagraph = accidentContext[0].split("\\.
@@ -348,6 +349,10 @@ public class AccidentConstructor {
                             street.getStreetPropertyValue("road_type"), street.getStreetPropertyValue("lane_num"),
                             street.getStreetPropertyValue("road_direction")));
                 }
+
+                RoadConstructor baseRoadConstructor = new RoadConstructor(accidentConstructor.vehicleList,
+                    accidentConstructor.testCase, ontologyHandler);
+                baseRoadConstructor.constructBaseRoad();
 
                 /******************************************
                  ******** END ENVIRONMENT ANALYSIS ********
@@ -401,6 +406,7 @@ public class AccidentConstructor {
 
                 ConsoleLogger.print('d', "After pruning actions for scenario " + scenarioName);
 
+                // Add the turn side into a turn or drift action
                 for (VehicleAttr vehicle : accidentConstructor.vehicleList) {
                     String vehicleActionList = vehicle.getActionList().toString();
                     ConsoleLogger.print('d',
@@ -411,7 +417,6 @@ public class AccidentConstructor {
                             if (vehicle.getActionList().get(y).contains("turn")
                                 || vehicle.getActionList().get(y).contains("drift")) {
                                 String turnSide = vehicle.getActionDescriptionList().get(y).getVerbProps().get(0);
-
                                 vehicle.getActionList().set(y, "turn " + turnSide);
                             }
                         }
@@ -660,6 +665,14 @@ public class AccidentConstructor {
 //                if (!useGUI) {
 //
 //                }
+
+                // Map action to road segment
+                for (VehicleAttr vehicle : accidentConstructor.vehicleList) {
+                    ConsoleLogger.print('d',
+                        "vehicle " + vehicle.getVehicleId() +
+                        " action & coord = " + accidentConstructor.mapActionToRoadSegment(vehicle));
+                }
+
                 accidentConstructor.generateScenarioJSONData(scenarioDataPath, scenarioName);
 //                accidentConstructor.controlBeamNgAlgorithm(scenarioName);
 
@@ -2779,6 +2792,7 @@ public class AccidentConstructor {
                 "Suspected Vehicle Len: " + suspectedVehicles.size() + " Subject Vehicle " + subjectVehicle);
         return subjectVehicle;
     }
+
     private void generateScenarioJSONData(String scenarioDataPath, String scenarioName) {
         ConsoleLogger.print('r', "\n\nStart to write scenario data file");
         if (scenarioDataPath.isEmpty()) {
@@ -2916,6 +2930,7 @@ public class AccidentConstructor {
                 vehicleDamageComponents = vehicleDamageComponents + ":" + damageComponentData + ",";
                 scenarioData = scenarioData + vehicleDamageComponents + "\n";
 
+
             }
 
             String roadNum = "\"road_num\"";
@@ -2982,6 +2997,113 @@ public class AccidentConstructor {
             ConsoleLogger.print('e', "Error at control BeamNG client \n" + ex.toString());
 
         }
+    }
+
+    private HashMap<String, String> mapActionToRoadSegment(VehicleAttr vehicle) {
+
+        // Loop through each action to determine road segment
+        LinkedList<String> vehicleActionList = vehicle.getActionList();
+        ArrayList<String> vehiclePath = vehicle.getMovementPath();
+        HashMap<String, String> actionAndCoordinate = new HashMap<String, String>();
+
+        LinkedList<String> turnActionAndCoord = new LinkedList<String>();
+        LinkedList<String> impactActionAndCoord = new LinkedList<String>();
+        LinkedList<String> followActionAndCoord = new LinkedList<String>();
+        LinkedList<String> stopActionAndCoord = new LinkedList<String>();
+
+        int currentCoordIndex = vehiclePath.size() >= 2 ? vehiclePath.size() - 2 : vehiclePath.size() - 1;
+
+        // Loop through each actin
+        for (int i = vehicleActionList.size() - 2; i >= 0; i--) {
+            String currentAction = vehicleActionList.get(i);
+            ConsoleLogger.print('d', "current Action is " + currentAction);
+            // if the action is a turn, map 3 points
+            if (currentAction.startsWith("turn")
+                && currentCoordIndex - 1 >= 0 && currentCoordIndex + 1 < vehiclePath.size()) {
+
+                turnActionAndCoord.add(String.format("{\"type\": \"turn\"," +
+                    "\"start\":\"%s\", " +
+                    "\"middle\":\"%s\", " +
+                    "\"end\":\"%s\"}",
+                    vehiclePath.get(currentCoordIndex - 1),
+                    vehiclePath.get(currentCoordIndex),
+                    vehiclePath.get(currentCoordIndex + 1)));
+
+                if (impactActionAndCoord.isEmpty()) {
+                    impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
+                        "\"start\":\"%s\", " +
+                        "\"middle\":\"None\", " +
+                        "\"end\":\"None\"}",
+                        vehiclePath.get(vehiclePath.size() - 2)));
+                }
+                currentCoordIndex -= 1;
+            } else {
+
+                int velocity = Integer.parseInt(
+                    ontoParser.findExactConcept(currentAction).getDataProperties().get("velocity"));
+                int turnAngle = Integer.parseInt(
+                    ontoParser.findExactConcept(currentAction).getDataProperties().get("turn_angle"));
+                // If this is a moving action, make a segment from previous
+                if ((velocity > 0 || velocity < 0) && velocity < 1000) {
+                    if (turnAngle == 0 && currentCoordIndex - 1 >= 0) {
+                        followActionAndCoord.add(String.format("{\"type\": \"straight\"," +
+                                "\"start\":\"%s\", " +
+                                "\"middle\":\"None\", " +
+                                "\"end\":\"%s\"}",
+                            vehiclePath.get(currentCoordIndex - 1),
+                            vehiclePath.get(currentCoordIndex)));
+
+                        // set the impact as the 2nd last point in vehicle path for non-rear-end cases
+                        if (!testCase.getCrashType().contains("rear end")
+                            || !testCase.getCrashType().contains("rear-end")
+                            || !testCase.getCrashType().contains("rearend")) {
+                            if (impactActionAndCoord.isEmpty() && currentCoordIndex - 2 >= 0) {
+                                impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
+                                        "\"start\":\"%s\", " +
+                                        "\"middle\":\"None\", " +
+                                        "\"end\":\"None\"}",
+                                    vehiclePath.get(vehiclePath.size() - 2)));
+
+                            }
+                        } else { // set the impact as the last point in vehicle path for rear-end cases
+                            if (impactActionAndCoord.isEmpty()) {
+                                impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
+                                        "\"start\":\"%s\", " +
+                                        "\"middle\":\"None\", " +
+                                        "\"end\":\"None\"}",
+                                    vehiclePath.get(vehiclePath.size() - 1)));
+                            }
+
+                        }
+                        currentCoordIndex--;
+
+
+                    }
+                } else if (velocity == 0) {
+                    stopActionAndCoord.add(String.format("{\"type\": \"stop\"," +
+                        "\"start\":\"%s\", " +
+                        "\"middle\":\"None\", " +
+                        "\"end\":\"None\"}",
+                    vehiclePath.get(currentCoordIndex)));
+
+                    if (impactActionAndCoord.isEmpty()) {
+                        impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
+                            "\"start\":\"%s\", " +
+                            "\"middle\":\"None\", " +
+                            "\"end\":\"None\"}",
+                        vehiclePath.get(vehiclePath.size() - 1)));
+                    }
+
+                    currentCoordIndex--;
+                }
+            }
+        }
+        actionAndCoordinate.put("follow", followActionAndCoord.toString());
+        actionAndCoordinate.put("turn", turnActionAndCoord.toString());
+        actionAndCoordinate.put("stop", stopActionAndCoord.toString());
+        actionAndCoordinate.put("impact", impactActionAndCoord.toString());
+
+        return actionAndCoordinate;
     }
 
 }
