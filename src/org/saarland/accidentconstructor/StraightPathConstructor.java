@@ -627,7 +627,6 @@ public class StraightPathConstructor {
 
                 // Append an extra distance to ensure crash happens. extra distance shows the intended moving direction
                 // of the car
-
                 for (int v = 0; v < vehicleList.size(); v++) {
                     VehicleAttr currentVehicle = vehicleList.get(v);
 
@@ -714,32 +713,46 @@ public class StraightPathConstructor {
 
                             double extraXCoord = 0;
                             double extraYCoord = 0;
-                            if (travelDirection.equals("W")) {
-
-                                extraXCoord = Double.parseDouble(crashXCoord) - extraDistance;
-                                extraYCoord = Double.parseDouble(crashYCoord);
-
-//                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
-                            } // End processing westbound direction
-                            else if (travelDirection.equals("E")) {
-                                extraXCoord = Double.parseDouble(crashXCoord) + extraDistance;
-                                extraYCoord = Double.parseDouble(crashYCoord);
-
-//                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
-                            } // End processing eastbound direction
-                            else if (travelDirection.equals("N")) {
-                                extraXCoord = Double.parseDouble(crashXCoord);
-                                extraYCoord = Double.parseDouble(crashYCoord) + extraDistance;
-
-//                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
-                            } // End processing northbound direction
-                            else if (travelDirection.equals("S"))
+//                            if (travelDirection.equals("W")) {
+//
+//                                extraXCoord = Double.parseDouble(crashXCoord) - extraDistance;
+//                                extraYCoord = Double.parseDouble(crashYCoord);
+//
+////                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
+//                            } // End processing westbound direction
+//                            else if (travelDirection.equals("E")) {
+//                                extraXCoord = Double.parseDouble(crashXCoord) + extraDistance;
+//                                extraYCoord = Double.parseDouble(crashYCoord);
+//
+////                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
+//                            } // End processing eastbound direction
+//                            else if (travelDirection.equals("N")) {
+//                                extraXCoord = Double.parseDouble(crashXCoord);
+//                                extraYCoord = Double.parseDouble(crashYCoord) + extraDistance;
+//
+////                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
+//                            } // End processing northbound direction
+                            //else
+                            if (travelDirection.equals("N") || travelDirection.equals("S")
+                                || travelDirection.equals("E") || travelDirection.equals("W"))
                             {
-                                if (!isCurrentVehicleTurn && isSingleRoad.equals("F")) {
-                                    extraXCoord = Double.parseDouble(crashXCoord);
-                                    extraYCoord = Double.parseDouble(crashYCoord) - extraDistance;
+                                double radius = Double.parseDouble(
+                                    vehicleStandingStreet.getStreetPropertyValue("curve_radius")
+                                    .replace("m", ""));
 
-                                    // If this is a single road piece, append the road based on other road direction
+                                // If this is a continuous road, let the car move to the other end of the intersection
+                                if (!isCurrentVehicleTurn && isSingleRoad.equals("F")) {
+                                    String afterCrashCoord = NavigationDictionary.createNESWCoordBasedOnNavigation(
+                                        extraDistance, radius, "forward",
+                                        NavigationDictionary.selectDictionaryFromTravelingDirection(travelDirection),
+                                        AccidentParam.defaultCoordDelimiter
+                                    );
+                                    String[] afterCrashCoordXYZ = afterCrashCoord.split(AccidentParam.defaultCoordDelimiter);
+                                    extraXCoord = Double.parseDouble(crashXCoord) + Double.parseDouble(afterCrashCoordXYZ[0]);
+                                    extraYCoord = Double.parseDouble(crashYCoord) + Double.parseDouble(afterCrashCoordXYZ[1]);
+
+                                    // If the current vehicle runs on a non-continuous road,
+                                    // choose a random turn and append the new coordinate based on the coordinate
                                 } else if (!isCurrentVehicleTurn && isSingleRoad.equals("T")) {
                                     for (Street otherStreet : testCase.getStreetList()) {
                                         // skip if see the same road
@@ -752,11 +765,12 @@ public class StraightPathConstructor {
                                         ConsoleLogger.print('d', "opposite angle of other street " + oppositeAngle);
 
                                         // Make the new crash coord further to avoid waypoint conflict
-                                        double newCoord[] = AccidentConstructorUtil.computeNewCoordOfRotatedLine(Math.abs(extraYCoord),
+                                        double newCoord[] = AccidentConstructorUtil.computeNewCoordOfRotatedLine(Math.abs(extraDistance),
                                                 oppositeAngle);
 
                                         extraXCoord = newCoord[0];
                                         extraYCoord = newCoord[1];
+                                        break;
                                     }
                                 } else if (isCurrentVehicleTurn) {
                                     System.out.println("Turn Street nodes = " + turnStreet.getStreetPropertyValue("road_node_list") );
