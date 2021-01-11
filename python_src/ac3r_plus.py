@@ -175,6 +175,7 @@ class Vehicle:
 
     @staticmethod
     def from_dict(vehicle_dict):
+        # TODO This code seems to be a bit buggy !
         # Interpolate the road points to get the road
         # "vehicles": [
         #     {
@@ -290,7 +291,13 @@ class Vehicle:
         self.initial_rotation = initial_rotation
         self.driving_actions = driving_actions
 
+
     def generate_trajectory(self):
+
+        # First generate the trajectory, then rotate it according to NORTH
+        # Each piece is generated directly at the origin, rotated and moved in place
+
+
         # starting from the initial position and rotation render the vehicle trajectory using the information
         # stored as driving actions
 
@@ -299,53 +306,73 @@ class Vehicle:
         for driving_action in self.driving_actions:
             segments.extend(driving_action["trajectory_segments"])
 
+        last_location = self.initial_location
         last_rotation = self.initial_rotation
+
         trajectory_points = [self.initial_location]
+
         for s in segments:
             # Generate the segment
             segment = None
             if s["type"] == 'straight':
-                # Create an vertical line of given length
-                segment = LineString([(0, y) for y in linspace(0, s["length"], 8)])
+                # Create an horizontal line of given length from the origin
+                segment = LineString([(x, 0) for x in linspace(0, s["length"], 8)])
+                # Rotate it
+                segment = rotate(segment, last_rotation, (0,0))
+                # Move it
+                segment = translate(segment, last_location.x, last_location.y)
+                # Update last rotation and last location
+                last_rotation = last_rotation # Straight segments do not change the rotation
+                last_location = Point(list(segment.coords)[-1])
+
             elif s["type"] == 'turn':
                 # Generate the points over the circle with 1.0 radius
-                # Vector (0,1)
-                start = array([cos(radians(90.0)), sin(radians(90.0))])
-                # Compute this using the angle
-                end = array([cos(radians(90.0 - s["angle"])), sin(radians(90.0 - s["angle"]))])
+                # # Vector (0,1)
+                # start = array([cos(radians(90.0)), sin(radians(90.0))])
+                # # Compute this using the angle
+                # end = array([cos(radians(90.0 - s["angle"])), sin(radians(90.0 - s["angle"]))])
+                start = array([1, 0])
+
+                # Make sure that positive is
+                # TODO Pay attention to left/right positive/negative
+                end = array([cos(radians(s["angle"])), sin(radians(s["angle"]))])
                 # Interpolate over 8 points
                 t_vals = linspace(0, 1, 8)
                 result = geometric_slerp(start, end, t_vals)
                 segment = LineString([Point(p[0], p[1]) for p in result])
 
-                # Translate to origin
-                segment = translate(segment, 0.0, -1.0, 0.0)
+                # Translate that back to origin
+                segment = translate(segment, -1.0, 0.0)
                 # Rotate
                 if s["angle"] > 0:
-                    segment = rotate(segment, +90.0, (0.0, 0.0), use_radians=False)
-                else:
                     segment = rotate(segment, -90.0, (0.0, 0.0), use_radians=False)
-                # Scale to radius
+                else:
+                    segment = rotate(segment, +90.0, (0.0, 0.0), use_radians=False)
+
+                # Scale to radius on both x and y
                 segment = scale(segment, s["radius"], s["radius"], 1.0, (0.0, 0.0))
+                # Rotate it
+                segment = rotate(segment, last_rotation, (0, 0))
+                # Translate it
+                segment = translate(segment, last_location.x, last_location.y)
+                # Update last rotation and last location
+                last_rotation = last_rotation + s["angle"]  # Straight segments do not change the rotation
+                last_location = Point(list(segment.coords)[-1])
 
-            # Place the segment in the right position by rotating and translating it. Might not be accurate
             if segment is not None:
-                # Rotate this piece
-                segment = rotate(segment, last_rotation, (0.0, 0.0), use_radians=False)
-                # Translate this piece to be attached to the last point generated
-                segment = translate(segment, trajectory_points[-1].x, trajectory_points[-1].y)
-                # Copy the points into the trajectory. Might not be accurate
-                trajectory_points.extend([Point(x, y) for x, y in segment.coords[:]])
-                # update the last_rotation based on the last two points of the trajectory
+                trajectory_points.extend([Point(x, y) for x, y in list(segment.coords)])
 
-                delta_x = trajectory_points[-1].x - trajectory_points[-2].x
-                delta_y = trajectory_points[-1].y - trajectory_points[-2].y
+        the_trajectory = LineString([(p.x, p.y) for p in trajectory_points])
 
-                # Make sure we account for the North vector
-                last_rotation = degrees(atan2(delta_y, delta_x)) - 90.0
+        # Make sure we use as reference the NORTH
+        the_trajectory = translate(the_trajectory, - self.initial_location.x, - self.initial_location.y)
+        # Rotate by -90 deg
+        the_trajectory = rotate(the_trajectory, +90.0, (0,0))
+        # Translate it back
+        the_trajectory = translate(the_trajectory, + self.initial_location.x, + self.initial_location.y)
 
         # Return triplet
-        return [(p.x, p.y, 0.0) for p in trajectory_points]
+        return [(p[0], p[1], 0.0) for p in list(the_trajectory.coords)]
 
 
 class CrashScenario:

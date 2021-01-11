@@ -58,7 +58,7 @@ class VehicleTrajectoryVisualizer:
         xs = [p[0] for p in trajectory_points]
         ys = [p[1] for p in trajectory_points]
 
-        plt.plot(xs, ys, '-')
+        plt.plot(xs, ys, 'o-')
 
 
 class CrashScenarioVisualizer:
