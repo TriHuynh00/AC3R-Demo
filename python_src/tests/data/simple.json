@@ -1,4 +1,5 @@
 {
+  "name": "simple",
   "roads": [
     {
       "name" : "road1",

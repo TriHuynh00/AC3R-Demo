@@ -15,6 +15,7 @@ rounding_precision = 3
 interpolation_distance = 1
 smoothness = 0
 min_num_nodes = 20
+NORTH = array([0, 1])
 
 
 def _find_radius_and_center(p1, p2, p3):
@@ -37,6 +38,7 @@ def _find_radius_and_center(p1, p2, p3):
     radius = sqrt((cx - p1.x) ** 2 + (cy - p1.y) ** 2)
 
     return radius, Point(cx, cy)
+
 
 def _interpolate(road_nodes, sampling_unit=interpolation_distance):
     """
@@ -79,10 +81,10 @@ def _interpolate(road_nodes, sampling_unit=interpolation_distance):
 
         # Return the 4-tuple with default z and defatul road width
         return list(zip([round(v, rounding_precision) for v in new_x_vals],
-                    [round(v, rounding_precision) for v in new_y_vals],
-                    [round(v, rounding_precision) for v in new_z_vals],
-                    [round(v, rounding_precision) for v in new_width_vals]))
-    else :
+                        [round(v, rounding_precision) for v in new_y_vals],
+                        [round(v, rounding_precision) for v in new_z_vals],
+                        [round(v, rounding_precision) for v in new_width_vals]))
+    else:
         return list(zip([round(v, rounding_precision) for v in new_x_vals],
                         [round(v, rounding_precision) for v in new_y_vals]))
 
@@ -140,20 +142,34 @@ def _compute_initial_state(driving_actions):
 
     # Find the angle between: the vectors center-initial_point, center-final_point
     # initialize arrays
-    NORTH = array([0, 1])
     B = array([final_point.x - initial_point.x, final_point.y - initial_point.y])
     # For us clockwise must be positive so we need to invert the sign
     direction = copysign(1.0, cross(NORTH, B))
     angle_between_segments = atan2(abs(cross(NORTH, B)), dot(NORTH, B))
     #
-    intial_rotation = degrees(direction * angle_between_segments)
+    initial_rotation = degrees(direction * angle_between_segments)
+    return initial_location, initial_rotation
 
-    return initial_location, intial_rotation
+
+def _find_angle_with_north(p1, p2):
+    # print("N", _find_angle_with_north(Point(0, 0), Point(0, 1)))
+    # print("E", _find_angle_with_north(Point(0, 0), Point(1, 0)))
+    # print("S", _find_angle_with_north(Point(0, 0), Point(0, -1)))
+    # print("W", _find_angle_with_north(Point(0, 0), Point(-1, 0)))
+    # NORTH = 0 | EAST = -90 | SOUTH = -180 | WEST = 90
+    # Find the angle between given vector and the NORTH vector
+    target_vector = array([p2.x - p1.x, p2.y - p1.y])
+    angle_between_segments = atan2(abs(cross(NORTH, target_vector)), dot(NORTH, target_vector))
+    direction = copysign(1.0, cross(NORTH, target_vector))
+
+    return degrees(direction * angle_between_segments)
+
 
 def f7(seq):
     seen = set()
     seen_add = seen.add
     return [x for x in seq if not (x in seen or seen_add(x))]
+
 
 class Road:
 
@@ -245,7 +261,7 @@ class Vehicle:
 
                     trajectory_segments.append({
                         "type": "straight",
-                        "length": initial_point.distance( final_point)
+                        "length": initial_point.distance(final_point)
                     })
 
                 elif len(trajectory_list) == 3:
@@ -285,19 +301,27 @@ class Vehicle:
         # Extract the initial location: the first point of the trajectory
         initial_location, initial_rotation = _compute_initial_state(vehicle_dict["driving-actions"])
 
-
         # Extract the initial rotation. The rotation the first point of the trajectory
         ## TODO rotation is extracted by first interpolating the points
 
-        return Vehicle(vehicle_dict["name"], initial_location, initial_rotation, driving_actions)
+        rot_quat = vehicle_dict["rot_quat"] if "rot_quat" in vehicle_dict else R.from_euler('z', initial_rotation,
+                                                                                            degrees=True).as_quat()
+
+        return Vehicle(vehicle_dict["name"],
+                       initial_location,
+                       initial_rotation,
+                       driving_actions,
+                       vehicle_dict["color"],
+                       rot_quat)
 
     # Rotation defined against NORTH = [0, 1]
-    def __init__(self, name, initial_location, initial_rotation, driving_actions):
+    def __init__(self, name, initial_location, initial_rotation, driving_actions, color, rot_quat):
         self.name = name
         self.initial_location = Point(initial_location[0], initial_location[1])
         self.initial_rotation = initial_rotation
         self.driving_actions = driving_actions
-
+        self.color = color
+        self.rot_quat = rot_quat
 
     def generate_trajectory(self):
         # First generate the trajectory, then rotate it according to NORTH
@@ -323,11 +347,11 @@ class Vehicle:
                 # Create an horizontal line of given length from the origin
                 segment = LineString([(x, 0) for x in linspace(0, s["length"], 8)])
                 # Rotate it
-                segment = rotate(segment, last_rotation, (0,0))
+                segment = rotate(segment, last_rotation, (0, 0))
                 # Move it
                 segment = translate(segment, last_location.x, last_location.y)
                 # Update last rotation and last location
-                last_rotation = last_rotation # Straight segments do not change the rotation
+                last_rotation = last_rotation  # Straight segments do not change the rotation
                 last_location = Point(list(segment.coords)[-1])
 
             elif s["type"] == 'turn':
@@ -372,7 +396,7 @@ class Vehicle:
         # Make sure we use as reference the NORTH
         the_trajectory = translate(the_trajectory, - self.initial_location.x, - self.initial_location.y)
         # Rotate by -90 deg
-        the_trajectory = rotate(the_trajectory, +90.0, (0,0))
+        the_trajectory = rotate(the_trajectory, +90.0, (0, 0))
         # Translate it back
         the_trajectory = translate(the_trajectory, + self.initial_location.x, + self.initial_location.y)
 
@@ -396,19 +420,18 @@ class CrashScenario:
         # if three points are given, that's an arc
 
         roads = []
-        for road_dict in ac3r_json_data.vehicles["roads"]:
+        for road_dict in ac3r_json_data["roads"]:
             roads.append(Road.from_dict(road_dict))
 
-        # for vehicle_data in ac3r_json_data.vehicles["vehicles"]:
-        #
-        #     pass
+        vehicles = []
+        for vehicle_dict in ac3r_json_data["vehicles"]:
+            vehicles.append(Vehicle.from_dict(vehicle_dict))
 
+        return CrashScenario(ac3r_json_data["name"], roads, vehicles, ac3r_json_data["crash_point"])
 
-        pass
-
-    def __init__(self, id, roads, vehicles, crash_point, original_scenario=False):
+    def __init__(self, name, roads, vehicles, crash_point, original_scenario=False):
         # Meta Data
-        self.id = id
+        self.name = name
         self.original_scenario = original_scenario
 
         # Road Geometry
@@ -417,6 +440,3 @@ class CrashScenario:
         # Vehicle Information and trajectory
         self.vehicles = vehicles
         self.crash_point = crash_point
-
-
-
