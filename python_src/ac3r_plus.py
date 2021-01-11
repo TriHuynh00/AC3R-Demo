@@ -38,19 +38,17 @@ def _find_radius_and_center(p1, p2, p3):
 
     return radius, Point(cx, cy)
 
-
-def _interpolate(road_nodes):
+def _interpolate(road_nodes, sampling_unit=interpolation_distance):
     """
         Interpolate the road points using cubic splines and ensure we handle 4F tuples for compatibility
     """
     old_x_vals = [t[0] for t in road_nodes]
     old_y_vals = [t[1] for t in road_nodes]
-    old_width_vals = [t[3] for t in road_nodes]
 
     # This is an approximation based on whatever input is given
     road_length = LineString([(t[0], t[1]) for t in road_nodes]).length
 
-    num_nodes = int(road_length / interpolation_distance)
+    num_nodes = int(road_length / sampling_unit)
     if num_nodes < min_num_nodes:
         num_nodes = min_num_nodes
 
@@ -73,14 +71,20 @@ def _interpolate(road_nodes):
     new_x_vals, new_y_vals = splev(unew, pos_tck)
     new_z_vals = repeat(0.0, len(unew))
 
-    width_tck, width_u = splprep([pos_u, old_width_vals], s=smoothness, k=k)
-    _, new_width_vals = splev(unew, width_tck)
+    if len(road_nodes[0]) > 2:
+        # Recompute width
+        old_width_vals = [t[3] for t in road_nodes]
+        width_tck, width_u = splprep([pos_u, old_width_vals], s=smoothness, k=k)
+        _, new_width_vals = splev(unew, width_tck)
 
-    # Return the 4-tuple with default z and defatul road width
-    return list(zip([round(v, rounding_precision) for v in new_x_vals],
+        # Return the 4-tuple with default z and defatul road width
+        return list(zip([round(v, rounding_precision) for v in new_x_vals],
                     [round(v, rounding_precision) for v in new_y_vals],
                     [round(v, rounding_precision) for v in new_z_vals],
                     [round(v, rounding_precision) for v in new_width_vals]))
+    else :
+        return list(zip([round(v, rounding_precision) for v in new_x_vals],
+                        [round(v, rounding_precision) for v in new_y_vals]))
 
 
 def _compute_initial_state(driving_actions):
@@ -146,7 +150,10 @@ def _compute_initial_state(driving_actions):
 
     return initial_location, intial_rotation
 
-
+def f7(seq):
+    seen = set()
+    seen_add = seen.add
+    return [x for x in seq if not (x in seen or seen_add(x))]
 
 class Road:
 
@@ -293,13 +300,11 @@ class Vehicle:
 
 
     def generate_trajectory(self):
-
         # First generate the trajectory, then rotate it according to NORTH
         # Each piece is generated directly at the origin, rotated and moved in place
+        # Finally we rotate everything to NORTH.
 
-
-        # starting from the initial position and rotation render the vehicle trajectory using the information
-        # stored as driving actions
+        # Interpolate and re-sample the points before returning
 
         # Collect the trajectory segments from the driving actions
         segments = []
@@ -362,7 +367,7 @@ class Vehicle:
             if segment is not None:
                 trajectory_points.extend([Point(x, y) for x, y in list(segment.coords)])
 
-        the_trajectory = LineString([(p.x, p.y) for p in trajectory_points])
+        the_trajectory = LineString(f7([(p.x, p.y) for p in trajectory_points]))
 
         # Make sure we use as reference the NORTH
         the_trajectory = translate(the_trajectory, - self.initial_location.x, - self.initial_location.y)
@@ -371,8 +376,11 @@ class Vehicle:
         # Translate it back
         the_trajectory = translate(the_trajectory, + self.initial_location.x, + self.initial_location.y)
 
+        # Interpolate and resample uniformly - Make sure no duplicates are there. Hopefully we do not change the order
+        # TODO Sampling unit is 5 meters for the moment. Can be changed later
+        interpolated_points = _interpolate([(p[0], p[1]) for p in list(the_trajectory.coords)], sampling_unit=5)
         # Return triplet
-        return [(p[0], p[1], 0.0) for p in list(the_trajectory.coords)]
+        return interpolated_points
 
 
 class CrashScenario:
