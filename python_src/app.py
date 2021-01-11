@@ -100,50 +100,49 @@ def run_from_scenario(scenario_file):
     # JSON READ: Building scenario's vehicle
     bng_vehicles = []
     bng_scripts = []
+    #
+    # v0 = crash_scenario.vehicles[0]
+    # vehicle_nodes = v0.generate_trajectory()
+    # print("Trajectory Generate")
+    # print(vehicle_nodes)
+    # print("=========")
+    #
+    # segment_x_0 = [segment[0] for segment in vehicle_nodes]
+    # segment_y_0 = [segment[1] for segment in vehicle_nodes]
+    # plt.plot(segment_x_0, segment_y_0, 'black')  # plotting t, a separately
+    # plt.scatter(segment_x_0, segment_y_0, c='b')
+    # v1 = crash_scenario.vehicles[1]
+    # print("Finish car 1")
+    # print("-========")
+    # vehicle_nodes = v1.generate_trajectory()
+    # segment_x_1 = [segment[0] for segment in vehicle_nodes]
+    # segment_y_1 = [segment[1] for segment in vehicle_nodes]
+    #
+    #
+    # plt.plot(segment_x_1, segment_y_1, 'black')  # plotting t, b separately
+    # plt.scatter(segment_x_1, segment_y_1, c='r')
+    # plt.show()
+    #
+    # print("Finish plotting")
+    # exit()
 
-    v0 = crash_scenario.vehicles[0]
-    vehicle_nodes = v0.generate_trajectory()
-    print("Trajectory Generate")
-    print(vehicle_nodes)
-    print("=========")
-
-    segment_x_0 = [segment[0] for segment in vehicle_nodes]
-    segment_y_0 = [segment[1] for segment in vehicle_nodes]
-    plt.plot(segment_x_0, segment_y_0, 'black')  # plotting t, a separately
-    plt.scatter(segment_x_0, segment_y_0, c='b')
-    v1 = crash_scenario.vehicles[1]
-    print("Finish car 1")
-    print("-========")
-    vehicle_nodes = v1.generate_trajectory()
-    segment_x_1 = [segment[0] for segment in vehicle_nodes]
-    segment_y_1 = [segment[1] for segment in vehicle_nodes]
-
-
-    plt.plot(segment_x_1, segment_y_1, 'black')  # plotting t, b separately
-    plt.scatter(segment_x_1, segment_y_1, c='r')
-    plt.show()
-
-    print("Finish plotting")
-    exit()
-
-    vehicle = crash_scenario.vehicles[0]
-    # for vehicle in crash_scenario.vehicles:
-    vehicle_nodes = vehicle.generate_trajectory()
-    bng_vehicle = Vehicle("scenario_player_" + str(vehicle.name),
-                          model="etk800", licence=vehicle.name, color=vehicle.color)
-    bng_vehicle.attach_sensor('damage', Damage())
-    bng_vehicles.append({
-        'vehicle': bng_vehicle,
-        'pos': vehicle_nodes[0],
-        'rot': None,
-        'rot_quat': vehicle.rot_quat
-    })
-    road_pf = RoadProfiler(vehicle.color)
-    script = road_pf.compute_ai_script(vehicle_nodes, 20)
-    bng_scripts.append({
-        'script': script,  # Script for ai_set_script
-        'road_pf': road_pf  # Color of road profile
-    })
+    for vehicle in crash_scenario.vehicles:
+        vehicle_nodes = vehicle.generate_trajectory()
+        bng_vehicle = Vehicle("scenario_player_" + str(vehicle.name),
+                              model="etk800", licence=vehicle.name, color=vehicle.color)
+        bng_vehicle.attach_sensor('damage', Damage())
+        bng_vehicles.append({
+            'vehicle': bng_vehicle,
+            'pos': vehicle_nodes[0],
+            'rot': None,
+            'rot_quat': vehicle.rot_quat
+        })
+        road_pf = RoadProfiler(vehicle.color)
+        script = road_pf.compute_ai_script(vehicle_nodes, 20)
+        bng_scripts.append({
+            'script': script,  # Script for ai_set_script
+            'road_pf': road_pf  # Color of road profile
+        })
 
     # BeamNG Executor
     ac3r = BeamNg()
