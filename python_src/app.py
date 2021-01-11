@@ -100,9 +100,12 @@ def run_from_scenario(scenario_file):
     # JSON READ: Building scenario's vehicle
     bng_vehicles = []
     bng_scripts = []
-    #
+
     # v0 = crash_scenario.vehicles[0]
-    # vehicle_nodes = v0.generate_trajectory()
+    # vehicle_trajectory = v0.generate_trajectory()
+    # vehicle_nodes = []
+    # for vehicle_node in vehicle_trajectory:
+    #     vehicle_nodes.extend(vehicle_node["points"])
     # print("Trajectory Generate")
     # print(vehicle_nodes)
     # print("=========")
@@ -114,7 +117,10 @@ def run_from_scenario(scenario_file):
     # v1 = crash_scenario.vehicles[1]
     # print("Finish car 1")
     # print("-========")
-    # vehicle_nodes = v1.generate_trajectory()
+    # vehicle_trajectory = v1.generate_trajectory()
+    # vehicle_nodes = []
+    # for vehicle_node in vehicle_trajectory:
+    #     vehicle_nodes.extend(vehicle_node["points"])
     # segment_x_1 = [segment[0] for segment in vehicle_nodes]
     # segment_y_1 = [segment[1] for segment in vehicle_nodes]
     #
@@ -127,7 +133,10 @@ def run_from_scenario(scenario_file):
     # exit()
 
     for vehicle in crash_scenario.vehicles:
-        vehicle_nodes = vehicle.generate_trajectory()
+        vehicle_trajectory = vehicle.generate_trajectory()
+        vehicle_nodes = []
+        for vehicle_node in vehicle_trajectory:
+            vehicle_nodes.extend(vehicle_node["points"])
         bng_vehicle = Vehicle("scenario_player_" + str(vehicle.name),
                               model="etk800", licence=vehicle.name, color=vehicle.color)
         bng_vehicle.attach_sensor('damage', Damage())
@@ -138,9 +147,8 @@ def run_from_scenario(scenario_file):
             'rot_quat': vehicle.rot_quat
         })
         road_pf = RoadProfiler(vehicle.color)
-        script = road_pf.compute_ai_script(vehicle_nodes, 20)
         bng_scripts.append({
-            'script': script,  # Script for ai_set_script
+            'script': road_pf.compute_ai_script(vehicle_trajectory), # Script for ai_set_script
             'road_pf': road_pf  # Color of road profile
         })
 

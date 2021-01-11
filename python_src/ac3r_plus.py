@@ -1,6 +1,7 @@
 # from self_driving.road_polygon import RoadPolygon
 from shapely.geometry import LineString
 from scipy.interpolate import splev, splprep
+from scipy.spatial.transform import Rotation as R
 from numpy import repeat, linspace, array, sqrt, inf, cross, dot
 from numpy.ma import arange
 
@@ -9,6 +10,8 @@ from shapely.affinity import translate, rotate, scale
 
 from scipy.spatial import geometric_slerp
 from math import sin, cos, radians, degrees, atan2, copysign
+
+import matplotlib.pyplot as plt
 
 # Constants
 rounding_precision = 3
@@ -261,7 +264,8 @@ class Vehicle:
 
                     trajectory_segments.append({
                         "type": "straight",
-                        "length": initial_point.distance(final_point)
+                        "length": initial_point.distance(final_point),
+                        "speed": driving_action_dict["speed"]
                     })
 
                 elif len(trajectory_list) == 3:
@@ -286,7 +290,8 @@ class Vehicle:
                     trajectory_segments.append({
                         "type": "turn",
                         "angle": the_angle,
-                        "radius": radius
+                        "radius": radius,
+                        "speed": driving_action_dict["speed"]
                     })
 
                 else:
@@ -339,6 +344,8 @@ class Vehicle:
         last_rotation = self.initial_rotation
 
         trajectory_points = [self.initial_location]
+        the_trajectories = []
+        speeds = []
 
         for s in segments:
             # Generate the segment
@@ -353,6 +360,18 @@ class Vehicle:
                 # Update last rotation and last location
                 last_rotation = last_rotation  # Straight segments do not change the rotation
                 last_location = Point(list(segment.coords)[-1])
+
+                x, y = [], []
+                for p in list(segment.coords):
+                    x.append(p[0])
+                    y.append(p[1])
+                # plot
+                # plt.plot(x, y, 'b-')
+                # plt.plot(x, y, 'r.')
+                # plt.plot(*[initial_point.x, initial_point.y], 'r.')
+                # plt.plot(*[middle_point.x, middle_point.y], 'r.')
+                # plt.plot(*[final_point.x, final_point.y], 'r.')
+                # plt.show()
 
             elif s["type"] == 'turn':
                 # Generate the points over the circle with 1.0 radius
@@ -388,23 +407,62 @@ class Vehicle:
                 last_rotation = last_rotation + s["angle"]  # Straight segments do not change the rotation
                 last_location = Point(list(segment.coords)[-1])
 
+                x, y = [], []
+                for p in list(segment.coords):
+                    x.append(p[0])
+                    y.append(p[1])
+                # plot
+                # plt.plot(x, y, 'b-')
+                # plt.plot(x, y, 'r.')
+                # plt.plot(*[initial_point.x, initial_point.y], 'r.')
+                # plt.plot(*[middle_point.x, middle_point.y], 'r.')
+                # plt.plot(*[final_point.x, final_point.y], 'r.')
+                # plt.show()
+
             if segment is not None:
-                trajectory_points.extend([Point(x, y) for x, y in list(segment.coords)])
+                tmp_trajectory_points = [Point(x, y) for x, y in list(segment.coords)]
+                tmp_trajectory = _rotate_trajectory_to_north(
+                    LineString(f7([(p.x, p.y) for p in tmp_trajectory_points])),
+                    self.initial_location)
+                the_trajectories.append(tmp_trajectory)
+                speeds.append(s["speed"])
+                # trajectory_points.extend([Point(x, y) for x, y in list(segment.coords)])
 
-        the_trajectory = LineString(f7([(p.x, p.y) for p in trajectory_points]))
+        trajectories = []
+        for trajectory, speed in zip(the_trajectories, speeds):
+            points = [(p[0], p[1]) for p in list(trajectory.coords)]
+            trajectories.append({
+                "points": points,
+                "speed": speed
+            })
 
-        # Make sure we use as reference the NORTH
-        the_trajectory = translate(the_trajectory, - self.initial_location.x, - self.initial_location.y)
-        # Rotate by -90 deg
-        the_trajectory = rotate(the_trajectory, +90.0, (0, 0))
-        # Translate it back
-        the_trajectory = translate(the_trajectory, + self.initial_location.x, + self.initial_location.y)
+        return trajectories
 
-        # Interpolate and resample uniformly - Make sure no duplicates are there. Hopefully we do not change the order
-        # TODO Sampling unit is 5 meters for the moment. Can be changed later
-        interpolated_points = _interpolate([(p[0], p[1]) for p in list(the_trajectory.coords)], sampling_unit=5)
-        # Return triplet
-        return interpolated_points
+        # the_trajectory = LineString(f7([(p.x, p.y) for p in trajectory_points]))
+        #
+        # # Make sure we use as reference the NORTH
+        # the_trajectory = translate(the_trajectory, - self.initial_location.x, - self.initial_location.y)
+        # # Rotate by -90 deg
+        # the_trajectory = rotate(the_trajectory, +90.0, (0, 0))
+        # # Translate it back
+        # the_trajectory = translate(the_trajectory, + self.initial_location.x, + self.initial_location.y)
+        #
+        # # Interpolate and resample uniformly - Make sure no duplicates are there. Hopefully we do not change the order
+        # # TODO Sampling unit is 5 meters for the moment. Can be changed later
+        # interpolated_points = _interpolate([(p[0], p[1]) for p in list(the_trajectory.coords)], sampling_unit=5)
+        # # Return triplet
+        # return interpolated_points
+
+
+def _rotate_trajectory_to_north(the_trajectory, initial_location):
+    # Make sure we use as reference the NORTH
+    the_trajectory = translate(the_trajectory, - initial_location.x, - initial_location.y)
+    # Rotate by -90 deg
+    the_trajectory = rotate(the_trajectory, +90.0, (0, 0))
+    # Translate it back
+    the_trajectory = translate(the_trajectory, + initial_location.x, + initial_location.y)
+
+    return the_trajectory
 
 
 class CrashScenario:

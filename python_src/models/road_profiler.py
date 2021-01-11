@@ -52,7 +52,39 @@ class RoadProfiler:
         plt.scatter(x, y, c='red')
         plt.show()
 
-    def compute_ai_script(self, vehicle_nodes, speed):
+    def compute_ai_script(self, vehicle_trajectories):
+        segment_times = [0]
+        segment_x = []
+        segment_y = []
+        for vehicle_node in vehicle_trajectories:
+            speed = vehicle_node["speed"]
+            vehicle_nodes = vehicle_node["points"]
+
+            segment_x.extend([segment[0] for segment in vehicle_nodes])
+            segment_y.extend([segment[1] for segment in vehicle_nodes])
+
+            for segments in pairs(vehicle_nodes):
+                segment_length = self._compute_road_length(segments[0], segments[1])
+                if segment_length == 0: continue
+                segment_speed = speed / 3.6
+                segment_time = segment_length / segment_speed
+                # print(segment_length, segment_speed, segment_time)
+                segment_times.append(segment_time + segment_times[-1])
+
+        script = list()
+        for x, y, t in zip(segment_x, segment_y, segment_times):
+            node = {
+                'x': x,
+                'y': y,
+                'z': 0,
+                't': t
+            }
+            script.append(node)
+            self.points.append([node['x'], node['y'], node['z']])
+            self.spheres.append([node['x'], node['y'], node['z'], 0.25])
+            self.sphere_colors.append(self.color)
+        return script
+
         segment_x = [segment[0] for segment in vehicle_nodes]
         segment_y = [segment[1] for segment in vehicle_nodes]
 
