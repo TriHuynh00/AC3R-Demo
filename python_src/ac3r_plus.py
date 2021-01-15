@@ -11,14 +11,11 @@ from shapely.affinity import translate, rotate, scale
 from scipy.spatial import geometric_slerp
 from math import sin, cos, radians, degrees, atan2, copysign
 
-import matplotlib.pyplot as plt
-
 # Constants
 rounding_precision = 3
 interpolation_distance = 1
 smoothness = 0
 min_num_nodes = 20
-NORTH = array([0, 1])
 
 
 def _find_radius_and_center(p1, p2, p3):
@@ -41,7 +38,6 @@ def _find_radius_and_center(p1, p2, p3):
     radius = sqrt((cx - p1.x) ** 2 + (cy - p1.y) ** 2)
 
     return radius, Point(cx, cy)
-
 
 def _interpolate(road_nodes, sampling_unit=interpolation_distance):
     """
@@ -84,10 +80,10 @@ def _interpolate(road_nodes, sampling_unit=interpolation_distance):
 
         # Return the 4-tuple with default z and defatul road width
         return list(zip([round(v, rounding_precision) for v in new_x_vals],
-                        [round(v, rounding_precision) for v in new_y_vals],
-                        [round(v, rounding_precision) for v in new_z_vals],
-                        [round(v, rounding_precision) for v in new_width_vals]))
-    else:
+                    [round(v, rounding_precision) for v in new_y_vals],
+                    [round(v, rounding_precision) for v in new_z_vals],
+                    [round(v, rounding_precision) for v in new_width_vals]))
+    else :
         return list(zip([round(v, rounding_precision) for v in new_x_vals],
                         [round(v, rounding_precision) for v in new_y_vals]))
 
@@ -159,7 +155,6 @@ def f7(seq):
     seen = set()
     seen_add = seen.add
     return [x for x in seq if not (x in seen or seen_add(x))]
-
 
 class Road:
 
@@ -251,7 +246,7 @@ class Vehicle:
 
                     trajectory_segments.append({
                         "type": "straight",
-                        "length": initial_point.distance(final_point)
+                        "length": initial_point.distance( final_point)
                     })
 
                 elif len(trajectory_list) == 3:
@@ -290,6 +285,7 @@ class Vehicle:
 
         # Extract the initial location: the first point of the trajectory
         initial_location, initial_rotation = _compute_initial_state(vehicle_dict["driving-actions"])
+
 
         # Extract the initial rotation. The rotation the first point of the trajectory
         ## TODO rotation is extracted by first interpolating the points
@@ -430,3 +426,6 @@ class CrashScenario:
         # Vehicle Information and trajectory
         self.vehicles = vehicles
         self.crash_point = crash_point
+
+
+
