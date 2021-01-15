@@ -145,28 +145,15 @@ def _compute_initial_state(driving_actions):
 
     # Find the angle between: the vectors center-initial_point, center-final_point
     # initialize arrays
+    NORTH = array([0, 1])
     B = array([final_point.x - initial_point.x, final_point.y - initial_point.y])
     # For us clockwise must be positive so we need to invert the sign
     direction = copysign(1.0, cross(NORTH, B))
     angle_between_segments = atan2(abs(cross(NORTH, B)), dot(NORTH, B))
     #
-    initial_rotation = degrees(direction * angle_between_segments)
-    return initial_location, initial_rotation
+    intial_rotation = degrees(direction * angle_between_segments)
 
-
-def _find_angle_with_north(p1, p2):
-    # print("N", _find_angle_with_north(Point(0, 0), Point(0, 1)))
-    # print("E", _find_angle_with_north(Point(0, 0), Point(1, 0)))
-    # print("S", _find_angle_with_north(Point(0, 0), Point(0, -1)))
-    # print("W", _find_angle_with_north(Point(0, 0), Point(-1, 0)))
-    # NORTH = 0 | EAST = -90 | SOUTH = -180 | WEST = 90
-    # Find the angle between given vector and the NORTH vector
-    target_vector = array([p2.x - p1.x, p2.y - p1.y])
-    angle_between_segments = atan2(abs(cross(NORTH, target_vector)), dot(NORTH, target_vector))
-    direction = copysign(1.0, cross(NORTH, target_vector))
-
-    return degrees(direction * angle_between_segments)
-
+    return initial_location, intial_rotation
 
 def f7(seq):
     seen = set()
@@ -264,8 +251,7 @@ class Vehicle:
 
                     trajectory_segments.append({
                         "type": "straight",
-                        "length": initial_point.distance(final_point),
-                        "speed": driving_action_dict["speed"]
+                        "length": initial_point.distance(final_point)
                     })
 
                 elif len(trajectory_list) == 3:
@@ -290,8 +276,7 @@ class Vehicle:
                     trajectory_segments.append({
                         "type": "turn",
                         "angle": the_angle,
-                        "radius": radius,
-                        "speed": driving_action_dict["speed"]
+                        "radius": radius
                     })
 
                 else:
@@ -344,8 +329,6 @@ class Vehicle:
         last_rotation = self.initial_rotation
 
         trajectory_points = [self.initial_location]
-        the_trajectories = []
-        speeds = []
 
         for s in segments:
             # Generate the segment
@@ -354,24 +337,12 @@ class Vehicle:
                 # Create an horizontal line of given length from the origin
                 segment = LineString([(x, 0) for x in linspace(0, s["length"], 8)])
                 # Rotate it
-                segment = rotate(segment, last_rotation, (0, 0))
+                segment = rotate(segment, last_rotation, (0,0))
                 # Move it
                 segment = translate(segment, last_location.x, last_location.y)
                 # Update last rotation and last location
-                last_rotation = last_rotation  # Straight segments do not change the rotation
+                last_rotation = last_rotation # Straight segments do not change the rotation
                 last_location = Point(list(segment.coords)[-1])
-
-                x, y = [], []
-                for p in list(segment.coords):
-                    x.append(p[0])
-                    y.append(p[1])
-                # plot
-                # plt.plot(x, y, 'b-')
-                # plt.plot(x, y, 'r.')
-                # plt.plot(*[initial_point.x, initial_point.y], 'r.')
-                # plt.plot(*[middle_point.x, middle_point.y], 'r.')
-                # plt.plot(*[final_point.x, final_point.y], 'r.')
-                # plt.show()
 
             elif s["type"] == 'turn':
                 # Generate the points over the circle with 1.0 radius
@@ -407,62 +378,23 @@ class Vehicle:
                 last_rotation = last_rotation + s["angle"]  # Straight segments do not change the rotation
                 last_location = Point(list(segment.coords)[-1])
 
-                x, y = [], []
-                for p in list(segment.coords):
-                    x.append(p[0])
-                    y.append(p[1])
-                # plot
-                # plt.plot(x, y, 'b-')
-                # plt.plot(x, y, 'r.')
-                # plt.plot(*[initial_point.x, initial_point.y], 'r.')
-                # plt.plot(*[middle_point.x, middle_point.y], 'r.')
-                # plt.plot(*[final_point.x, final_point.y], 'r.')
-                # plt.show()
-
             if segment is not None:
-                tmp_trajectory_points = [Point(x, y) for x, y in list(segment.coords)]
-                tmp_trajectory = _rotate_trajectory_to_north(
-                    LineString(f7([(p.x, p.y) for p in tmp_trajectory_points])),
-                    self.initial_location)
-                the_trajectories.append(tmp_trajectory)
-                speeds.append(s["speed"])
-                # trajectory_points.extend([Point(x, y) for x, y in list(segment.coords)])
+                trajectory_points.extend([Point(x, y) for x, y in list(segment.coords)])
 
-        trajectories = []
-        for trajectory, speed in zip(the_trajectories, speeds):
-            points = [(p[0], p[1]) for p in list(trajectory.coords)]
-            trajectories.append({
-                "points": points,
-                "speed": speed
-            })
+        the_trajectory = LineString(f7([(p.x, p.y) for p in trajectory_points]))
 
-        return trajectories
+        # Make sure we use as reference the NORTH
+        the_trajectory = translate(the_trajectory, - self.initial_location.x, - self.initial_location.y)
+        # Rotate by -90 deg
+        the_trajectory = rotate(the_trajectory, +90.0, (0,0))
+        # Translate it back
+        the_trajectory = translate(the_trajectory, + self.initial_location.x, + self.initial_location.y)
 
-        # the_trajectory = LineString(f7([(p.x, p.y) for p in trajectory_points]))
-        #
-        # # Make sure we use as reference the NORTH
-        # the_trajectory = translate(the_trajectory, - self.initial_location.x, - self.initial_location.y)
-        # # Rotate by -90 deg
-        # the_trajectory = rotate(the_trajectory, +90.0, (0, 0))
-        # # Translate it back
-        # the_trajectory = translate(the_trajectory, + self.initial_location.x, + self.initial_location.y)
-        #
-        # # Interpolate and resample uniformly - Make sure no duplicates are there. Hopefully we do not change the order
-        # # TODO Sampling unit is 5 meters for the moment. Can be changed later
-        # interpolated_points = _interpolate([(p[0], p[1]) for p in list(the_trajectory.coords)], sampling_unit=5)
-        # # Return triplet
-        # return interpolated_points
-
-
-def _rotate_trajectory_to_north(the_trajectory, initial_location):
-    # Make sure we use as reference the NORTH
-    the_trajectory = translate(the_trajectory, - initial_location.x, - initial_location.y)
-    # Rotate by -90 deg
-    the_trajectory = rotate(the_trajectory, +90.0, (0, 0))
-    # Translate it back
-    the_trajectory = translate(the_trajectory, + initial_location.x, + initial_location.y)
-
-    return the_trajectory
+        # Interpolate and resample uniformly - Make sure no duplicates are there. Hopefully we do not change the order
+        # TODO Sampling unit is 5 meters for the moment. Can be changed later
+        interpolated_points = _interpolate([(p[0], p[1]) for p in list(the_trajectory.coords)], sampling_unit=5)
+        # Return triplet
+        return interpolated_points
 
 
 class CrashScenario:
