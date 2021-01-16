@@ -5,6 +5,14 @@ class BNGVehicle:
         self.rot = rot
         self.rot_quat = rot_quat
         self.road_pf = road_pf
+        self.positions = []
+        self.damage = []
+
+    def collect_positions(self, position):
+        self.positions.append(position)
+
+    def collect_damage(self, damage):
+        self.damage.append(damage)
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
