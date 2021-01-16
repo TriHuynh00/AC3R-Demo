@@ -468,6 +468,14 @@ public class AccidentConstructorUtil {
         return true;
     }
 
+    public static String displayAs6DecimalNum(double num) {
+        try {
+            return AccidentParam.df6Digit.format(num);
+        } catch (Exception ex) {
+            return "Not convertible to 6 decimal digit";
+        }
+    }
+
     public static String readValueOfATag(String tagName, String currentFilePath)
             throws IOException, JDOMException, SAXException, ParserConfigurationException {
         File inputFile = new File(currentFilePath);
@@ -626,6 +634,7 @@ public class AccidentConstructorUtil {
         return direction;
     }
 
+    // Find a new (x,y) coordinate of a given length, rorated by an angle
     public static double[] computeNewCoordOfRotatedLine(double length, int angle)
     {
         double newCoord[] = new double[2];
@@ -639,7 +648,7 @@ public class AccidentConstructorUtil {
         // Compute x by taking length * sin(angle)
         newCoord[0] = length * sinAngleValue;
 
-        // Compute y by taking length * sin(angle)
+        // Compute y by taking length * cos(angle)
         newCoord[1] = length * cosAngleValue;
 
         return newCoord;
@@ -906,11 +915,7 @@ public class AccidentConstructorUtil {
             return true;
         } else if (pointAdjustment.equals("0") && targetCoord == centerCoord) {
             return true;
-        } else if (pointAdjustment.equals("+") && targetCoord > centerCoord) {
-            return true;
-        } else {
-            return false;
-        }
+        } else return pointAdjustment.equals("+") && targetCoord > centerCoord;
     }
 
     public static VehicleAttr findVehicle(String vehicleName, ArrayList<VehicleAttr> vehicleList) {

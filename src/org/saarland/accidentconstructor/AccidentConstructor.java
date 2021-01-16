@@ -91,13 +91,13 @@ public class AccidentConstructor {
     public interface AC3RCLI {
 
         @Option(defaultToNull = true, longName = "reports", description = "Name or path of reports to be used.")
-        public List<File> getReports();
+        List<File> getReports();
 
         @Option(defaultToNull = true, longName = "path", description = "Path of scenario data will be generated.")
-        public String getScenarioDataPath();
+        String getScenarioDataPath();
 
         @Option(helpRequest = true, description = "Usage details on command-line arguments")
-        public boolean getHelp();
+        boolean getHelp();
     }
 
     public static void main(String[] args) {
@@ -2855,6 +2855,8 @@ public class AccidentConstructor {
                 ArrayList<String> points = new ArrayList<String>();
                 ArrayList<Integer> velocities = new ArrayList<Integer>();
 
+                scenarioData += vehicleName + "\" : {\n";
+
                 for (String point : vehicle.getMovementPath()) {
                     point = point.replaceAll(" ", ",");
                     point = "[" + point + "]";
@@ -2930,7 +2932,26 @@ public class AccidentConstructor {
                 vehicleDamageComponents = vehicleDamageComponents + ":" + damageComponentData + ",";
                 scenarioData = scenarioData + vehicleDamageComponents + "\n";
 
+                // Append Driving Actions
+                HashMap<String, String> vehicleActionAndCoord = mapActionToRoadSegment(vehicle);
 
+                scenarioData += "driving-actions : [ \n";
+
+                for (Map.Entry<String, String> entry : vehicleActionAndCoord.entrySet()) {
+                    if(entry.getValue().contains("type") ) {
+                        scenarioData += "\t{\n \t\t'name' : \"" + entry.getKey().toString() + "\",\n";
+
+                        scenarioData += "\t\t'trajectory' : [ " + entry.getValue() + " ],\n";
+
+                        scenarioData += "\t\t'speed': " + vehicle.getVelocity();
+
+                        scenarioData += "\n\t}\n";
+                    }
+                }
+                scenarioData += "]\n";
+
+                // Close vehicle object
+                scenarioData += "},\n";
             }
 
             String roadNum = "\"road_num\"";
@@ -3013,7 +3034,7 @@ public class AccidentConstructor {
 
         int currentCoordIndex = vehiclePath.size() >= 2 ? vehiclePath.size() - 2 : vehiclePath.size() - 1;
 
-        // Loop through each actin
+        // Loop through each action
         for (int i = vehicleActionList.size() - 2; i >= 0; i--) {
             String currentAction = vehicleActionList.get(i);
             ConsoleLogger.print('d', "current Action is " + currentAction);
@@ -3021,13 +3042,20 @@ public class AccidentConstructor {
             if (currentAction.startsWith("turn")
                 && currentCoordIndex - 1 >= 0 && currentCoordIndex + 1 < vehiclePath.size()) {
 
-                turnActionAndCoord.add(String.format("{\"type\": \"turn\"," +
-                    "\"start\":\"%s\", " +
-                    "\"middle\":\"%s\", " +
-                    "\"end\":\"%s\"}",
+                String actionAndCoord = String.format("{\"type\": \"turn\"," +
+                        "\"start\":\"%s\", " +
+                        "\"middle\":\"%s\", " +
+                        "\"end\":\"%s\"}",
                     vehiclePath.get(currentCoordIndex - 1),
                     vehiclePath.get(currentCoordIndex),
-                    vehiclePath.get(currentCoordIndex + 1)));
+                    vehiclePath.get(currentCoordIndex + 1));
+
+
+                if (turnActionAndCoord.isEmpty()) {
+                    turnActionAndCoord.add(actionAndCoord);
+                } else {
+                    turnActionAndCoord.add("," + actionAndCoord);
+                }
 
                 if (impactActionAndCoord.isEmpty()) {
                     impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
@@ -3046,12 +3074,19 @@ public class AccidentConstructor {
                 // If this is a moving action, make a segment from previous
                 if ((velocity > 0 || velocity < 0) && velocity < 1000) {
                     if (turnAngle == 0 && currentCoordIndex - 1 >= 0) {
-                        followActionAndCoord.add(String.format("{\"type\": \"straight\"," +
+
+                        String actionAndCoord = String.format("{\"type\": \"straight\"," +
                                 "\"start\":\"%s\", " +
                                 "\"middle\":\"None\", " +
                                 "\"end\":\"%s\"}",
                             vehiclePath.get(currentCoordIndex - 1),
-                            vehiclePath.get(currentCoordIndex)));
+                            vehiclePath.get(currentCoordIndex));
+
+                        if (followActionAndCoord.isEmpty()) {
+                            followActionAndCoord.add(actionAndCoord);
+                        } else {
+                            followActionAndCoord.add("," + actionAndCoord);
+                        }
 
                         // set the impact as the 2nd last point in vehicle path for non-rear-end cases
                         if (!testCase.getCrashType().contains("rear end")
@@ -3063,7 +3098,6 @@ public class AccidentConstructor {
                                         "\"middle\":\"None\", " +
                                         "\"end\":\"None\"}",
                                     vehiclePath.get(vehiclePath.size() - 2)));
-
                             }
                         } else { // set the impact as the last point in vehicle path for rear-end cases
                             if (impactActionAndCoord.isEmpty()) {
