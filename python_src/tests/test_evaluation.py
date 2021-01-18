@@ -11,17 +11,22 @@ CRASHED = 1
 NO_CRASH = 0
 
 scenario_1 = {
-    'v1_trajectory': ScriptFactory(-2, 86.84551724137933, -2, 17.880000000000006).compute_scripts(speeds=[35]),
-    '': [89.845517, 87.845517, 0],
-    'v2_trajectory': ScriptFactory(89.845517, 87.845517, 20.88, 18.88).compute_scripts(speeds=[55])
+    'v1_speed': [35],
+    'v1_trajectory': [-2, 86.84551724137933, -2, 17.880000000000006],
+    'v2_speed': [55],
+    'v2_trajectory': [89.845517, 87.845517, 20.88, 18.88]
 }
 scenario_2 = {
-    'v1_trajectory': ScriptFactory(-2, 86.84551724137933, -2, 17.880000000000006).compute_scripts(speeds=[30]),
-    'v2_trajectory': ScriptFactory(89.845517, 87.845517, 20.88, 18.88).compute_scripts(speeds=[30])
+    'v1_speed': [30],
+    'v1_trajectory': [-2, 86.84551724137933, -2, 17.880000000000006],
+    'v2_speed': [30],
+    'v2_trajectory': [89.845517, 87.845517, 20.88, 18.88]
 }
 scenario_3 = {
-    'v1_trajectory': ScriptFactory(-2, 86.84551724137933, -2, 17.880000000000006).compute_scripts(speeds=[35, 55]),
-    'v2_trajectory': ScriptFactory(89.845517, 87.845517, 20.88, 18.88).compute_scripts(speeds=[55, 75])
+    'v1_speed': [35, 55],
+    'v1_trajectory': [-2, 86.84551724137933, -2, 17.880000000000006],
+    'v2_speed': [55, 75],
+    'v2_trajectory': [89.845517, 87.845517, 20.88, 18.88]
 }
 
 
@@ -38,7 +43,14 @@ def execute_scenario(scenario):
 
     bng_vehicles = []
     for vehicle in crash_scenario.vehicles:
-        trajectory = scenario['v1_trajectory'] if vehicle.name == 'v1' else scenario['v2_trajectory']
+        trajectory = []
+        if vehicle.name == 'v1':
+            p = scenario['v1_trajectory']
+            trajectory = ScriptFactory(p[0], p[1], p[2], p[3]).compute_scripts(speeds=scenario['v1_speed'])
+        else:
+            p = scenario['v2_trajectory']
+            trajectory = ScriptFactory(p[0], p[1], p[2], p[3]).compute_scripts(speeds=scenario['v2_speed'])
+
         initial_position = (trajectory[0][0], trajectory[0][1], 0)
         v = Vehicle("scenario_player_" + str(vehicle.name),
                     model="etk800", licence=vehicle.name, color=vehicle.color)
@@ -77,3 +89,42 @@ class EvaluationTest(unittest.TestCase):
         distance, status = evl.evaluate_simulation()
 
         self.assertEqual(8, int(distance), "Distance between vehicles should be around 8")
+
+    def test_mutate_scenario_by_status(self):
+        status = NO_CRASH
+
+        speed_inc = 0
+        while status == NO_CRASH:
+            scenario_2['v2_speed'][0] = scenario_2['v2_speed'][0] + speed_inc
+            bng_roads, bng_vehicles = execute_scenario(scenario_2)
+
+            # Execute crash scenario
+            simulation = Simulation(bng_roads, bng_vehicles)
+            simulation.execute_scenario()
+            simulation_result = simulation.get_result()
+
+            evl = Evaluation(simulation_result)
+            distance, status = evl.evaluate_simulation()
+            if status == NO_CRASH:
+                speed_inc = speed_inc + 1
+        self.assertEqual(CRASHED, status, "Crash detected in mutated scenario")
+
+    def test_mutate_scenario_by_distance(self):
+        distance = 1
+        speed_inc = 1
+        slow, fast = 'v1_speed', 'v1_speed'
+        while distance > 0:
+            scenario_2[slow][0] = scenario_2[slow][0] + speed_inc
+            scenario_2[fast][0] = scenario_2[fast][0] - speed_inc
+            bng_roads, bng_vehicles = execute_scenario(scenario_2)
+            print(scenario_2)
+
+            # Execute crash scenario
+            simulation = Simulation(bng_roads, bng_vehicles)
+            simulation.execute_scenario()
+            simulation_result = simulation.get_result()
+
+            evl = Evaluation(simulation_result)
+            distance, status, slow, fast = evl.evaluate_simulation()
+            print(distance, status)
+        self.assertEqual(CRASHED, status, "Crash detected in mutated scenario")

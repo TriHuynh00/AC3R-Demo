@@ -4,6 +4,7 @@ from beamngpy import BeamNGpy, Scenario
 CRASHED = 1
 NO_CRASH = 0
 
+
 class Simulation:
     def __init__(self, bng_roads, bng_vehicles):
         self.result = CRASHED
@@ -59,7 +60,7 @@ class Simulation:
         bng_instance.set_deterministic()
 
         # 3 minutes for each scenario
-        timeout = 180
+        timeout = 900
         is_crash = False
 
         try:
@@ -78,7 +79,7 @@ class Simulation:
 
             # Update the vehicle information
             for _ in range(timeout):
-                bng_instance.step(10)
+                bng_instance.step(1)
                 for bng_vehicle in bng_vehicles:
                     # Find the position of moving car
                     self.collect_vehicle_position(bng_vehicle)
