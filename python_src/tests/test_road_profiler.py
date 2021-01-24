@@ -1,6 +1,5 @@
 import unittest
-from road_profiler import RoadProfiler
-from script import ScriptFactory
+from models import RoadProfiler, ScriptFactory
 
 
 class RoadProfilerTest(unittest.TestCase):

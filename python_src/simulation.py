@@ -1,4 +1,5 @@
 import os
+import time
 from beamngpy import BeamNGpy, Scenario
 
 CRASHED = 1
@@ -59,8 +60,8 @@ class Simulation:
         bng_instance.open(launch=True)
         bng_instance.set_deterministic()
 
-        # 3 minutes for each scenario
-        timeout = 900
+        # 60 seconds for each scenario
+        timeout = time.time() + 60 * 1
         is_crash = False
 
         try:
@@ -78,7 +79,7 @@ class Simulation:
                 vehicle.ai_set_script(road_pf.script, cling=False)
 
             # Update the vehicle information
-            for _ in range(timeout):
+            while time.time() < timeout:
                 bng_instance.step(1)
                 for bng_vehicle in bng_vehicles:
                     # Find the position of moving car
