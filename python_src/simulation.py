@@ -60,8 +60,8 @@ class Simulation:
         bng_instance.open(launch=True)
         bng_instance.set_deterministic()
 
-        # 60 seconds for each scenario
-        timeout = time.time() + 60 * 1
+        # 45 seconds for each scenario
+        timeout = time.time() + 45
         is_crash = False
 
         try:

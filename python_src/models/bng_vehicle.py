@@ -19,5 +19,13 @@ class BNGVehicle:
     def collect_damage(self, damage):
         self.damage.append(damage)
 
+    def get_damage(self):
+        tmp_comp = self.damage[0]
+        dam_comp = {}
+        for k in tmp_comp:
+            v = tmp_comp[k]
+            dam_comp[v['name']] = v['damage']
+        return dam_comp
+
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
