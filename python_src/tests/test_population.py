@@ -1,4 +1,3 @@
-import json
 import unittest
 from fitness import Population, Individual
 from simulation import Simulation

@@ -5,7 +5,6 @@ from fitness import Individual
 from beamngpy import Road, Vehicle
 from beamngpy.sensors import Damage
 
-SOURCE_DIR = "C:\\Users\\Harvey\\Documents\\AC3R-Demo\\python_src\\tests\\data"
 
 def sample_individuals():
     individual_1 = Individual({"status": 0, "distance": 30})
@@ -50,13 +49,13 @@ def sample_scenarios():
 
 
 def collect_police_report():
-    with open(SOURCE_DIR + "\\sample_report.json") as file:
+    with open("./data/sample_report.json") as file:
         report_data = json.load(file)
     return report_data
 
 
 def collect_scenario_data(scenario):
-    with open(SOURCE_DIR + "\\Case6_data.json") as file:
+    with open("./data/Case6_data.json") as file:
         scenario_data = json.load(file)
     crash_scenario = CrashScenario.from_json(scenario_data)
     # JSON READ: Building scenario's streets

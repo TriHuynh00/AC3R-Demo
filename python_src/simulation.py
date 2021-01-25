@@ -42,7 +42,7 @@ class Simulation:
             'status': self.status
         }
 
-    def execute_scenario(self):
+    def execute_scenario(self, timeout=None):
         bng_roads = self.bng_roads
         bng_vehicles = self.bng_vehicles
         # Init BeamNG simulation
@@ -60,8 +60,9 @@ class Simulation:
         bng_instance.open(launch=True)
         bng_instance.set_deterministic()
 
-        # 45 seconds for each scenario
-        timeout = time.time() + 45
+        if timeout is None:
+            # 45 seconds for each scenario
+            timeout = time.time() + 45
         is_crash = False
 
         try:

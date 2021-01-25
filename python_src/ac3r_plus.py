@@ -280,7 +280,8 @@ class Vehicle:
             # TODO Refactor to class
             driving_actions.append({
                 "name": driving_action_dict["name"],
-                "trajectory_segments": trajectory_segments
+                "trajectory_segments": trajectory_segments,
+                "speed": driving_action_dict["speed"]
             })
 
         # Extract the initial location: the first point of the trajectory
@@ -325,6 +326,7 @@ class Vehicle:
         last_rotation = self.initial_rotation
 
         trajectory_points = [self.initial_location]
+        len_coor = []
 
         for s in segments:
             # Generate the segment
@@ -375,6 +377,7 @@ class Vehicle:
                 last_location = Point(list(segment.coords)[-1])
 
             if segment is not None:
+                len_coor.append(len(list(segment.coords)))
                 trajectory_points.extend([Point(x, y) for x, y in list(segment.coords)])
 
         the_trajectory = LineString(f7([(p.x, p.y) for p in trajectory_points]))
@@ -389,8 +392,30 @@ class Vehicle:
         # Interpolate and resample uniformly - Make sure no duplicates are there. Hopefully we do not change the order
         # TODO Sampling unit is 5 meters for the moment. Can be changed later
         interpolated_points = _interpolate([(p[0], p[1]) for p in list(the_trajectory.coords)], sampling_unit=5)
+
+        # Concat the speed to the point
+        trajectory_points = list(the_trajectory.coords)
+        start = 0
+        sls = []
+        sl_coor = []
+        for s in len_coor:
+            sl_coor.append([start, start + s])
+            start = sl_coor[-1][1] - 1
+        for s in sl_coor:
+            sls.append(LineString(trajectory_points[s[0]:s[1]]))
+        speeds = []
+        for a in self.driving_actions:
+            speeds.append(a['speed'])
+
+        trajectory_points = []
+        for line, speed in zip(sls, speeds):
+            for p in interpolated_points:
+                point = Point(p[0], p[1])
+                if point.distance(line) < 0.5 and p not in trajectory_points:
+                    trajectory_points.append((p[0], p[1], speed))
+
         # Return triplet
-        return interpolated_points
+        return trajectory_points
 
 
 class CrashScenario:
