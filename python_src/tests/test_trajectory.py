@@ -8,8 +8,8 @@ from models import RoadProfiler, BNGVehicle
 from simulation import Simulation
 
 
-def collect_scenario_data():
-    with open("./data/Case6_data.json") as file:
+def collect_scenario_data(source):
+    with open(source) as file:
         scenario_data = json.load(file)
     crash_scenario = CrashScenario.from_json(scenario_data)
     # JSON READ: Building scenario's streets
@@ -35,8 +35,10 @@ def collect_scenario_data():
 
 class TrajectoryTest(unittest.TestCase):
     def test_generate_trajectory(self):
-        timeout = time.time() + 60*2 # 2mins
-        bng_roads, bng_vehicles = collect_scenario_data()
-        simulation = Simulation(bng_roads, bng_vehicles)
-        simulation.execute_scenario(timeout)
+        sources = ["./data/Case6_data.json", "./data/Case6_mod.json", "./data/Case1_data.json", "./data/Case0_data.json"]
+        for s in sources:
+            timeout = time.time() + 60*1 # 2mins
+            bng_roads, bng_vehicles = collect_scenario_data(s)
+            simulation = Simulation(bng_roads, bng_vehicles)
+            simulation.execute_scenario(timeout)
         self.assertEqual(0,0)

@@ -1,5 +1,6 @@
 package org.saarland.accidentconstructor;
 
+import java.awt.*;
 import java.io.*;
 import java.lang.reflect.Array;
 
@@ -7,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -2877,7 +2879,7 @@ public class AccidentConstructor {
             String vDriving = formatJSONKey("driving_actions") + "[ ";
 
             for (Map.Entry<String, LinkedList> entry : vehicleActionAndCoord.entrySet()) {
-                if (entry.getKey().toString() == "follow" || entry.getKey().toString() == "turn") {
+                if (entry.getKey().toString() == "follow" || entry.getKey().toString() == "turn" || entry.getKey().toString() == "stop") {
                     for (Object st : entry.getValue()) {
                         String trajectory = (String)st;
                         vDriving += '{';
@@ -3045,11 +3047,11 @@ public class AccidentConstructor {
                     }
                 } else if (velocity == 0) {
                     stopActionAndCoord.add(String.format("[%s]",
-                            vehiclePath.get(currentCoordIndex)));
+                            vehiclePath.get(currentCoordIndex).replaceAll(" ", ",")));
 
                     if (impactActionAndCoord.isEmpty()) {
                         impactActionAndCoord.add(String.format("[%s]",
-                                vehiclePath.get(vehiclePath.size() - 1)));
+                                vehiclePath.get(vehiclePath.size() - 1).replaceAll(" ", ",")));
                     }
 
                     currentCoordIndex--;

@@ -73,11 +73,13 @@ class Simulation:
             for bng_vehicle in bng_vehicles:
                 vehicle = bng_vehicle.vehicle
                 road_pf = bng_vehicle.road_pf
-                bng_instance.add_debug_line(road_pf.points, road_pf.sphere_colors,
-                                            spheres=road_pf.spheres, sphere_colors=road_pf.sphere_colors,
-                                            cling=True, offset=0.1)
-                vehicle.ai_set_mode('manual')
-                vehicle.ai_set_script(road_pf.script, cling=False)
+                # ai_set_script not working for parking vehicle
+                if len(road_pf.script) > 2:
+                    bng_instance.add_debug_line(road_pf.points, road_pf.sphere_colors,
+                                                spheres=road_pf.spheres, sphere_colors=road_pf.sphere_colors,
+                                                cling=True, offset=0.1)
+                    vehicle.ai_set_mode('manual')
+                    vehicle.ai_set_script(road_pf.script, cling=False)
 
             # Update the vehicle information
             while time.time() < timeout:

@@ -16,4 +16,7 @@
 "color":"0 0.3 0",
 "rot_quat":[0.00993774, 0.03947598, -0.70593404, 0.7071068],
 "damage_components":"side right",
-"driving_actions":[]}]}
+"driving_actions":[ {
+"name":"stop",
+"trajectory":[[[0.0,-2.0,0]]],
+"speed":20}]}]}
