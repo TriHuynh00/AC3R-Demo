@@ -237,15 +237,15 @@ public class AccidentConstructor {
         if (selectedFiles == null) {
             return;
         }
-        
-        
+
+
         for (File selectedFile : selectedFiles) {
             String scenarioName = "";
             try {
                 long startTime = System.nanoTime();
                 String accidentFilePath = selectedFile.getAbsolutePath().replace("\\", "/");// FilePathsConfig.accidentFolderLocation
-                                                                                            // +
-                                                                                            // "CustomSideSwipe_Case1.xml";
+                // +
+                // "CustomSideSwipe_Case1.xml";
 
                 // TODO: check if the scenario actually exists
                 scenarioName = accidentFilePath.substring(accidentFilePath.lastIndexOf("/") + 1).replace(".xml", "");
@@ -351,7 +351,7 @@ public class AccidentConstructor {
                 }
 
                 RoadConstructor baseRoadConstructor = new RoadConstructor(accidentConstructor.vehicleList,
-                    accidentConstructor.testCase, ontologyHandler);
+                        accidentConstructor.testCase, ontologyHandler);
                 baseRoadConstructor.constructBaseRoad();
 
                 /******************************************
@@ -380,7 +380,7 @@ public class AccidentConstructor {
                             .findDependencies(sentence);
 
                     crashDevAnalyzer.analyzeCrashDevelopment(relevantTaggedWordsAndDependencies,
-                        accidentConstructor.vehicleList, actionList);
+                            accidentConstructor.vehicleList, actionList);
 
 //                    actionChain = accidentConstructor.extractActionChains(
 //                        relevantTaggedWordsAndDependencies, ontologyHandler, stemmer, environmentAnalyzer);
@@ -415,7 +415,7 @@ public class AccidentConstructor {
                         ArrayList<Integer> recordedTurnActionIndexList = new ArrayList<Integer>();
                         for (int y = 0; y < vehicle.getActionList().size(); y++) {
                             if (vehicle.getActionList().get(y).contains("turn")
-                                || vehicle.getActionList().get(y).contains("drift")) {
+                                    || vehicle.getActionList().get(y).contains("drift")) {
                                 String turnSide = vehicle.getActionDescriptionList().get(y).getVerbProps().get(0);
                                 vehicle.getActionList().set(y, "turn " + turnSide);
                             }
@@ -428,10 +428,10 @@ public class AccidentConstructor {
                 for (VehicleAttr vehicle : accidentConstructor.vehicleList) {
                     String vehicleActionList = vehicle.getActionList().toString();
                     ConsoleLogger.print('d',
-                        "Vehicle " + vehicle.getVehicleId() + " Actions : " + vehicleActionList);
+                            "Vehicle " + vehicle.getVehicleId() + " Actions : " + vehicleActionList);
                 }
 
-                    // if (blockSignal) continue;
+                // if (blockSignal) continue;
                 boolean foundAccidentType = false;
 
                 ConsoleLogger.print('d', "Street List Before Constructing Coord");
@@ -506,8 +506,8 @@ public class AccidentConstructor {
                     sideswipeConstructor.constructAccidentScenario(accidentConstructor.vehicleList, ontologyHandler,
                             accidentConstructor.testCase);
                 } else // if
-                       // (accidentConstructor.accidentType.contains("straight
-                       // paths"))
+                // (accidentConstructor.accidentType.contains("straight
+                // paths"))
                 {
                     foundAccidentType = true;
                     ConsoleLogger.print('d', "Straight paths Accident Detected");
@@ -669,11 +669,12 @@ public class AccidentConstructor {
                 // Map action to road segment
                 for (VehicleAttr vehicle : accidentConstructor.vehicleList) {
                     ConsoleLogger.print('d',
-                        "vehicle " + vehicle.getVehicleId() +
-                        " action & coord = " + accidentConstructor.mapActionToRoadSegment(vehicle));
+                            "vehicle " + vehicle.getVehicleId() +
+                                    " action & coord = " + accidentConstructor.mapActionToRoadSegment(vehicle));
                 }
 
                 accidentConstructor.generateScenarioJSONData(scenarioDataPath, scenarioName);
+                System.exit(0);
 //                accidentConstructor.controlBeamNgAlgorithm(scenarioName);
 
                 /************ END SCENARIO DATA FILE ***********/
@@ -685,7 +686,7 @@ public class AccidentConstructor {
                 // Add BeamNG Server Socket handling here
 
                 // DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList,
-                        // ontologyHandler, scenarioName);
+                // ontologyHandler, scenarioName);
 
                 // crashAnalyzer.checkWhetherCrashOccur(hasCrash);
                 boolean hasCrash = testCaseRunner.runScenario(scenarioName);
@@ -779,7 +780,7 @@ public class AccidentConstructor {
                             for (String actorDependency : dependencyList) {
                                 if (actorDependency.startsWith("nmod:of") && actorDependency.contains(actionAndActor[1])
                                         && (actorDependency.contains("vehicle")
-                                                || actorDependency.contains("pedestrian"))) {
+                                        || actorDependency.contains("pedestrian"))) {
                                     String[] actorWordPair = AccidentConstructorUtil
                                             .getWordPairFromDependency(actorDependency);
                                     if (actorWordPair[1].startsWith("vehicle")) {
@@ -973,10 +974,10 @@ public class AccidentConstructor {
 
                                         } // End assign direction to actor
                                     } // End checking if both concepts are null
-                                      // or not
+                                    // or not
 
                                 } // End looping through the direction
-                                  // dependency
+                                // dependency
 
                             }
                             // Processing direction + "bound" travel word
@@ -1212,11 +1213,11 @@ public class AccidentConstructor {
                                                                             .setSubject(actionDescription.getSubject()
                                                                                     + " " + relatedWordWithIndex);
                                                                 } else // Add
-                                                                       // the
-                                                                       // vehicle
-                                                                       // into
-                                                                       // obj
-                                                                       // list
+                                                                // the
+                                                                // vehicle
+                                                                // into
+                                                                // obj
+                                                                // list
                                                                 {
                                                                     verbPropList.add(vehicleName + "<>" + relatedWord);
                                                                     verbPropList.remove(relatedWordWithIndex);
@@ -1243,23 +1244,23 @@ public class AccidentConstructor {
                                                             if (travellingVehicle != null) {
                                                                 assignDirectionToRoad(otherWord, travellingVehicle);
                                                             } // End checking if
-                                                              // a vehicle is
-                                                              // detected
+                                                            // a vehicle is
+                                                            // detected
                                                         } // End checking
-                                                          // vehicle direction
+                                                        // vehicle direction
                                                         else if (!otherWord.startsWith("mph")) {
                                                             verbPropList.add(otherWord);
                                                         }
 
                                                     }
                                                 } // End checking if this
-                                                  // dependency contains the
-                                                  // related word
+                                                // dependency contains the
+                                                // related word
                                             } // End looping through
-                                              // dependencies of related word
+                                            // dependencies of related word
 
                                         } // End checking the relation of a word
-                                          // to a verb
+                                        // to a verb
                                     } // End else of processing the depedencies
                                 } // End checking dependency has target action
                             } // End for dependency loop
@@ -1349,10 +1350,10 @@ public class AccidentConstructor {
                         }
                     }
                 } // End check if dependency starts with nsubj
-                  // If we cannot find the impact from the actor, try to search
-                  // from the collided object
-                  // TODO: Check if the impact action is already found in this
-                  // sentence
+                // If we cannot find the impact from the actor, try to search
+                // from the collided object
+                // TODO: Check if the impact action is already found in this
+                // sentence
                 else if (dependency.startsWith("dobj")) {
                     String[] wordPair = AccidentConstructorUtil.getWordPairFromDependency(dependency);
 
@@ -1366,7 +1367,7 @@ public class AccidentConstructor {
                         if (wordConcept != null && wordConcept.getLeafLevelName().equals("vehicle_action")) {
                             wordPair[m] = word.replace(AccidentConstructorUtil.getWordFromToken(word), stemmedWord);
                         } else // Find any possible relation between this word
-                               // and the name of a vehicle
+                        // and the name of a vehicle
                         {
                             ConsoleLogger.print('d', "Checking Names of word " + word);
                             String suspectVehicleName = AccidentConstructorUtil.getWordFromToken(word);
@@ -1434,11 +1435,11 @@ public class AccidentConstructor {
 
                     // Check if both word is in the concept
                     if ((conceptWord0 != null) && // ||
-                                                  // wordPair[0].matches("vehicle\\d+-\\d+"))
-                                                  // &&
+                            // wordPair[0].matches("vehicle\\d+-\\d+"))
+                            // &&
                             (conceptWord1 != null)) { // ||
-                                                      // wordPair[1].matches("vehicle\\d+-\\d+"))
-                                                      // ) {
+                        // wordPair[1].matches("vehicle\\d+-\\d+"))
+                        // ) {
                         String action = "";
                         String objectWord = "";
                         String impactedVehicle = "";
@@ -1464,11 +1465,11 @@ public class AccidentConstructor {
                         }
 
                         if (// wordPair[1].matches("vehicle\\d+-\\d+") ||
-                        (conceptWord1 != null
-                                && conceptWord1.getLeafLevelName().equalsIgnoreCase("vehicle_impact_side"))) {
+                                (conceptWord1 != null
+                                        && conceptWord1.getLeafLevelName().equalsIgnoreCase("vehicle_impact_side"))) {
                             objectWord = wordPair[1];
                         } else if (// wordPair[1].matches("vehicle\\d+-\\d+") ||
-                        (conceptWord0.getLeafLevelName().equalsIgnoreCase("vehicle_impact_side"))) {
+                                (conceptWord0.getLeafLevelName().equalsIgnoreCase("vehicle_impact_side"))) {
                             objectWord = wordPair[0];
                         }
 
@@ -1644,7 +1645,7 @@ public class AccidentConstructor {
                                     if (verbProp.contains(impactedVehicle)) {
                                         foundSameAction = true;
                                         break; // Found the exact same action
-                                               // description
+                                        // description
                                     }
                                 }
 
@@ -1670,7 +1671,7 @@ public class AccidentConstructor {
                         inferParkingPosition(dependency, dependencyList, tagWordList);
                     }
                 } // End checking other dependencies type other than nsubj and
-                  // dobj
+                // dobj
 
             } catch (Exception ex) {
                 ConsoleLogger.print('e', "Error at extract Action chain " + ex.toString());
@@ -1685,7 +1686,7 @@ public class AccidentConstructor {
     }
 
     private String constructVehicleActionList(LinkedList<ActionDescription> storylineActionList,
-            OntologyHandler parser) {
+                                              OntologyHandler parser) {
         for (ActionDescription actDes : storylineActionList) {
             ConsoleLogger.print('d', "--------------------------");
             ConsoleLogger.print('d', "Actor " + actDes.getSubject() + " Action " + actDes.getVerb() + " Verb Prop List "
@@ -1949,7 +1950,7 @@ public class AccidentConstructor {
     }
 
     private String constructVehicleActionList2(LinkedList<ActionDescription> storylineActionList,
-            OntologyHandler parser) {
+                                               OntologyHandler parser) {
         for (ActionDescription actDes : storylineActionList) {
             ConsoleLogger.print('d', "--------------------------");
             ConsoleLogger.print('d', "Actor " + actDes.getSubject() + " Action " + actDes.getVerb() + " Verb Prop List "
@@ -2338,7 +2339,7 @@ public class AccidentConstructor {
 
         LinkedList<LinkedList<String>> vehicleActionList = new LinkedList<LinkedList<String>>();
         LinkedList<LinkedList<ActionDescription>> vehicleActionDescriptionList
-            = new LinkedList<LinkedList<ActionDescription>>();
+                = new LinkedList<LinkedList<ActionDescription>>();
 
 
         for (int i = 0; i < vehicleList.size(); i++) {
@@ -2430,9 +2431,9 @@ public class AccidentConstructor {
                     rightDirectionStreet.putValToKey("road_navigation", direction);
                 }
             } // End checking if there are only 2 streets
-              // If there is only 1 street found, assign the direction of the
-              // vehicle to the
-              // road, if the street has no specified direction
+            // If there is only 1 street found, assign the direction of the
+            // vehicle to the
+            // road, if the street has no specified direction
             else if (testCase.getStreetList().size() == 1) {
                 Street onlyStreet = testCase.getStreetList().get(0);
 
@@ -2565,7 +2566,7 @@ public class AccidentConstructor {
     }
 
     private void inferParkingPosition(String dependency, LinkedList<String> dependencyList,
-            LinkedList<String> tagWordList) {
+                                      LinkedList<String> tagWordList) {
         ConsoleLogger.print('d', "Infer Parking Pos ");
         // Check for unknown parking car
         for (VehicleAttr vehicle : vehicleList) {
@@ -2683,7 +2684,7 @@ public class AccidentConstructor {
     /*
      * Replace space by underscore in certain compound words. For example:
      * "stop sign" becomes "stop_sigh"
-     * 
+     *
      * @param paragraph: The input paragraph string of which compound words are
      * modified
      */
@@ -2721,7 +2722,7 @@ public class AccidentConstructor {
      *
      */
     private String findSuspectedVehicle(LinkedList<String> dependencyList, LinkedList<String> tagWordList,
-            String impactedVehicle, DamagedComponentAnalyzer damagedComponentAnalyzer) {
+                                        String impactedVehicle, DamagedComponentAnalyzer damagedComponentAnalyzer) {
         // Get other vehicle except the impacted vehicle in the sentence, set
         // the other vehicle as striker (subject)
         HashSet<String> suspectedVehicles = new HashSet<String>();
@@ -2793,6 +2794,113 @@ public class AccidentConstructor {
         return subjectVehicle;
     }
 
+    private static String formatJSONKey(String str) {
+        return "\n\"" + str + "\"" + ":";
+    }
+    private static String formatJSONValueString(String str) {
+        return "\"" + str + "\",";
+    }
+
+    private static String removeLastChar(String str) {
+        return removeLastChars(str, 1);
+    }
+
+    private static String removeLastChars(String str, int chars) {
+        return str.substring(0, str.length() - chars);
+    }
+
+    private String writeRoadObjects(ArrayList<Street> streetList) {
+        String roadData = "";
+        for (Street street : streetList) {
+            roadData += '{';
+            // Structuring data format for road properties in JSON
+            String roadName = formatJSONKey("name") + formatJSONValueString("road" + street.getStreetPropertyValue("road_ID"));
+            String roadType = formatJSONKey("road_type") + formatJSONValueString(street.getStreetPropertyValue("road_type"));
+            String roadShape = formatJSONKey("road_shape") + formatJSONValueString(street.getStreetPropertyValue("road_shape"));
+            String roadNodeList = "road_node_list";
+            String[] paths = street.getStreetPropertyValue(roadNodeList)
+                    .replaceAll(" ", ",").split(";");
+            List<String> pathList = Arrays.asList(paths);
+            ArrayList<String> points = new ArrayList<String>();
+            /* Now we only take 1st and last elements of road node list */
+            points.add('[' + pathList.get(0) + ']');
+            points.add('[' + pathList.get(pathList.size() - 1) + ']');
+            /* Following code will take all elements to json data but not now
+            for(String point: pathList){
+                points.add("[" + point + "]");
+            }
+            */
+            roadNodeList = formatJSONKey(roadNodeList) + points.toString();
+
+            // Update scenario JSON data
+            roadData += roadName + roadType + roadShape + roadNodeList + "\n";
+            roadData += "},";
+        }
+        return removeLastChar(roadData);
+    }
+
+    private String writeVehicleObjects(ArrayList<VehicleAttr> vehicleList) {
+        String vehicleData = "";
+        for (VehicleAttr vehicle : vehicleList) {
+            vehicleData += '{';
+            String vName = formatJSONKey("name") + formatJSONValueString("vehicle" + vehicle.getVehicleId());
+            String vColor = formatJSONKey("color") + formatJSONValueString(vehicle.getColor());
+
+            // Get rotation degree
+            String travelDirection = vehicle.getTravellingDirection();
+            String rotDeg = "";
+            switch (travelDirection) {
+                case "W":
+                    rotDeg = "[-0.00993774, -0.03947598, 0.70593404, 0.7071068]";
+                    break;
+                case "N":
+                    rotDeg = "[-1.40540931e-02, -5.58274572e-02,  9.98341513e-01, -4.37275224e-08]";
+                    break;
+                case "E":
+                    rotDeg = "[0.00993774, 0.03947598, -0.70593404,  0.7071068]";
+                    break;
+                case "S":
+                    rotDeg = "[3.45267143e-04, 0.00000000e+00, 0.00000000e+00, 9.99999940e-01]";
+                    break;
+                case "SW":
+                    rotDeg = "[-0.00593952, -0.02359371,  0.42191736,  0.90630778]";
+                    break;
+                default:
+                    rotDeg = "[0.00673789,  0.02676513, -0.47863063,  0.87758244]";
+            }
+            String vRotQuat = formatJSONKey("rot_quat") + formatJSONValueString(rotDeg);
+
+            // Get damage components of each vehicle
+            String damageComponentData = vehicle.getDamagedComponents().size() == 0  ?
+                    "any" : vehicle.getDamagedComponents().get(0);
+            String vDamage = formatJSONKey("damage_components") + formatJSONValueString(damageComponentData);
+
+            // Append Driving Actions
+            HashMap<String, String> vehicleActionAndCoord = mapActionToRoadSegment(vehicle);
+            String vDriving = formatJSONKey("driving_actions") + '[';
+
+            for (Map.Entry<String, String> entry : vehicleActionAndCoord.entrySet()) {
+                if(entry.getValue().contains("type") ) {
+                    vDriving += '{';
+
+                    vDriving += formatJSONKey("name") + formatJSONValueString(entry.getKey().toString());
+
+                    vDriving += formatJSONKey("trajectory") + "[" + entry.getValue() + "],";
+
+                    vDriving += formatJSONKey("speed") + vehicle.getVelocity();
+
+                    vDriving += "},";
+                }
+            }
+            vDriving = removeLastChar(vDriving) + "]";
+
+            vehicleData += vName + vColor + vRotQuat + vDamage + vDriving;
+            vehicleData += "},";
+        }
+        vehicleData = removeLastChar(vehicleData);
+        return vehicleData;
+    }
+
     private void generateScenarioJSONData(String scenarioDataPath, String scenarioName) {
         ConsoleLogger.print('r', "\n\nStart to write scenario data file");
         if (scenarioDataPath.isEmpty()) {
@@ -2801,170 +2909,17 @@ public class AccidentConstructor {
         ConsoleLogger.print('r', "\n\nThe scenario data file will be written at " + scenarioDataPath);
         scenarioDataPath = scenarioDataPath + scenarioName + "_data.json"; // Append file name
         String scenarioData = "{"; // Starting json file
-
-        // Convert Rotation Matrix to Quaternions and Euler Angles - [[rot_quat], [degree]]
-        String headEastDeg = "[[0.00993774, 0.03947598, -0.70593404,  0.7071068], [-89.9886708]]";
-        String headWestDeg = "[[-0.00993774, -0.03947598, 0.70593404, 0.7071068], [89.98865298]]";
-        String headNorthDeg = "[[-1.40540931e-02, -5.58274572e-02,  9.98341513e-01, -4.37275224e-08], [-179.91005051]]";
-        String headSouthDeg = "[[3.45267143e-04, 0.00000000e+00, 0.00000000e+00, 9.99999940e-01], [0]]";
-        String headSouthWestDeg = "[[-0.00593952, -0.02359371,  0.42191736,  0.90630778], [49.93972267]]";
-        String baseOrientation = "[[0.00673789,  0.02676513, -0.47863063,  0.87758244], [-57.25936284]]";
-        // Crash Point
-        String crashPoint = "\"\"";
-        Set<String> allVehiclePoints = new HashSet<String>();
+        scenarioData += formatJSONKey("name") + formatJSONValueString(scenarioName);
 
         try (FileWriter scenarioDataWriter = new FileWriter(scenarioDataPath)) {
-            for (Street street : this.testCase.getStreetList()) {
-                String roadType = "road_type";
-                String roadShape = "road_shape";
-                String roadNodeList = "road_node_list";
+            /* Start writing road objects */
+            scenarioData += formatJSONKey("roads") + '[' + writeRoadObjects(this.testCase.getStreetList()) + "],";
 
-                String roadTypeLabel = "\"r" + street.getStreetPropertyValue("road_ID") + "_road_type" + "\"";
-                String roadShapeLabel = "\"r" + street.getStreetPropertyValue("road_ID") + "_road_shape" + "\"";
-                String roadNodeListLabel = "\"r" + street.getStreetPropertyValue("road_ID") + "_road_node_list" + "\"";
+            /* Start writing vehicle objects */
+            scenarioData += formatJSONKey("vehicles") + '[' + writeVehicleObjects(this.vehicleList) + "],";
 
-                String[] paths = street.getStreetPropertyValue(roadNodeList)
-                        .replaceAll(" ", ",").split(";");
-                List<String> pathList = Arrays.asList(paths);
-                ArrayList<String> points = new ArrayList<String>();
-                for(String point: pathList){
-                    points.add("[" + point + "]");
-                }
-
-                // Structuring data format for road properties in JSON
-                String dataRoadType = "\"" + street.getStreetPropertyValue(roadType) + "\"";
-                roadType = roadTypeLabel + ":" + dataRoadType + ",";
-
-                String dataRoadShape = "\"" + street.getStreetPropertyValue(roadShape) + "\"";
-                roadShape = roadShapeLabel + ":" + dataRoadShape + ",";
-
-                roadNodeList = roadNodeListLabel + ":" + points.toString() + ",";
-
-                // Update scenario JSON data
-                scenarioData = scenarioData + roadType + "\n";
-                scenarioData = scenarioData + roadShape + "\n";
-                scenarioData = scenarioData + roadNodeList + "\n";
-            }
-
-            for (VehicleAttr vehicle : this.vehicleList) {
-                String vehicleName = "\"v" + vehicle.getVehicleId();
-                String vehiclePoints = vehicleName + "_points\"";
-                String vehicleVelocities = vehicleName + "_velocities\"";
-
-                // Collecting data for vehicle points and vehicle velocities
-                ArrayList<String> points = new ArrayList<String>();
-                ArrayList<Integer> velocities = new ArrayList<Integer>();
-
-                scenarioData += vehicleName + "\" : {\n";
-
-                for (String point : vehicle.getMovementPath()) {
-                    point = point.replaceAll(" ", ",");
-                    point = "[" + point + "]";
-                    points.add(point);
-                    // Get velocities for each vehicle
-                    velocities.add(vehicle.getVelocity());
-                    // Get Crash point because HashSet doesn't allow duplicates.
-                    if (!allVehiclePoints.add(point)) {
-                        crashPoint = point;
-                    }
-
-                }
-                // Update scenario JSON data
-                vehiclePoints = vehiclePoints + ":" + points.toString() + ",";
-                scenarioData = scenarioData + vehiclePoints + "\n";
-
-                if (velocities.size() > 1 ) {
-                    int index = 0; // First element of velocities is always removed
-                    velocities.remove(index); // Delete first velocity by passing index
-                }
-                // Update scenario JSON data
-                vehicleVelocities = vehicleVelocities + ":" + velocities.toString() + ",";
-                scenarioData = scenarioData + vehicleVelocities + "\n";
-
-                // Get rotation degree
-                String travelDirection = vehicle.getTravellingDirection();
-                String vehicleRotDeg = vehicleName + "_rot_degree\"";
-
-                String rotDeg = "";
-                switch (travelDirection) {
-                    case "W":
-                        rotDeg = headWestDeg;
-                        break;
-                    case "N":
-                        rotDeg = headNorthDeg;
-                        break;
-                    case "E":
-                        rotDeg = headEastDeg;
-                        break;
-                    case "S":
-                        rotDeg = headSouthDeg;
-                        break;
-                    case "SW":
-                        rotDeg = headSouthWestDeg;
-                        break;
-                    default:
-                        rotDeg = baseOrientation;
-                }
-                // Update scenario JSON data
-                vehicleRotDeg = vehicleRotDeg + ":" + rotDeg + ",";
-                scenarioData = scenarioData + vehicleRotDeg + "\n";
-
-                // Get color of each vehicle
-                String vehicleColor = vehicleName + "_color\"";
-                String dataVehicleColor = "\"" + vehicle.getColor() + "\"";
-                // Update scenario JSON data
-                vehicleColor = vehicleColor + ":" + dataVehicleColor + ",";
-                scenarioData = scenarioData + vehicleColor + "\n";
-
-                // Get travelling direction of each vehicle
-                String vehicleTravellingDir = vehicleName + "_travelling_dir\"";
-                String dataTravellingDir = "\"" + travelDirection + "\"";
-                // Update scenario JSON data
-                vehicleTravellingDir = vehicleTravellingDir + ":" + dataTravellingDir + ",";
-                scenarioData = scenarioData + vehicleTravellingDir + "\n";
-
-                // Get damage components of each vehicle
-                String damageComponentData = vehicle.getDamagedComponents().size() == 0  ?
-                        "any" : vehicle.getDamagedComponents().get(0);
-                damageComponentData = "\"" + damageComponentData + "\"";
-                String vehicleDamageComponents = vehicleName + "_damage_components\"";
-                // Update scenario JSON data
-                vehicleDamageComponents = vehicleDamageComponents + ":" + damageComponentData + ",";
-                scenarioData = scenarioData + vehicleDamageComponents + "\n";
-
-                // Append Driving Actions
-                HashMap<String, String> vehicleActionAndCoord = mapActionToRoadSegment(vehicle);
-
-                scenarioData += "driving-actions : [ \n";
-
-                for (Map.Entry<String, String> entry : vehicleActionAndCoord.entrySet()) {
-                    if(entry.getValue().contains("type") ) {
-                        scenarioData += "\t{\n \t\t'name' : \"" + entry.getKey().toString() + "\",\n";
-
-                        scenarioData += "\t\t'trajectory' : [ " + entry.getValue() + " ],\n";
-
-                        scenarioData += "\t\t'speed': " + vehicle.getVelocity();
-
-                        scenarioData += "\n\t}\n";
-                    }
-                }
-                scenarioData += "]\n";
-
-                // Close vehicle object
-                scenarioData += "},\n";
-            }
-
-            String roadNum = "\"road_num\"";
-            roadNum = roadNum + ":" + this.testCase.getStreetList().size() + ",";
-            scenarioData = scenarioData + roadNum + "\n";
-
-            String vehicleNum = "\"vehicle_num\"";
-            vehicleNum = vehicleNum + ":" + this.vehicleList.size() + ",";
-            scenarioData = scenarioData + vehicleNum + "\n";
-
-            String vehicleCrashPoint = "\"crash_point\"";
-            vehicleCrashPoint = vehicleCrashPoint + ":" + crashPoint + "}";
-            scenarioData = scenarioData + vehicleCrashPoint;
+            /* End json file */
+            scenarioData += '}';
 
             ConsoleLogger.print('r', scenarioData);
             scenarioDataWriter.write(scenarioData);
@@ -3040,15 +2995,15 @@ public class AccidentConstructor {
             ConsoleLogger.print('d', "current Action is " + currentAction);
             // if the action is a turn, map 3 points
             if (currentAction.startsWith("turn")
-                && currentCoordIndex - 1 >= 0 && currentCoordIndex + 1 < vehiclePath.size()) {
+                    && currentCoordIndex - 1 >= 0 && currentCoordIndex + 1 < vehiclePath.size()) {
 
                 String actionAndCoord = String.format("{\"type\": \"turn\"," +
-                        "\"start\":\"%s\", " +
-                        "\"middle\":\"%s\", " +
-                        "\"end\":\"%s\"}",
-                    vehiclePath.get(currentCoordIndex - 1),
-                    vehiclePath.get(currentCoordIndex),
-                    vehiclePath.get(currentCoordIndex + 1));
+                                "\"start\":\"%s\", " +
+                                "\"middle\":\"%s\", " +
+                                "\"end\":\"%s\"}",
+                        vehiclePath.get(currentCoordIndex - 1),
+                        vehiclePath.get(currentCoordIndex),
+                        vehiclePath.get(currentCoordIndex + 1));
 
 
                 if (turnActionAndCoord.isEmpty()) {
@@ -3059,53 +3014,52 @@ public class AccidentConstructor {
 
                 if (impactActionAndCoord.isEmpty()) {
                     impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
-                        "\"start\":\"%s\", " +
-                        "\"middle\":\"None\", " +
-                        "\"end\":\"None\"}",
-                        vehiclePath.get(vehiclePath.size() - 2)));
+                                    "\"start\":\"%s\", " +
+                                    "\"middle\":\"None\", " +
+                                    "\"end\":\"None\"}",
+                            vehiclePath.get(vehiclePath.size() - 2)));
                 }
                 currentCoordIndex -= 1;
             } else {
 
                 int velocity = Integer.parseInt(
-                    ontoParser.findExactConcept(currentAction).getDataProperties().get("velocity"));
+                        ontoParser.findExactConcept(currentAction).getDataProperties().get("velocity"));
                 int turnAngle = Integer.parseInt(
-                    ontoParser.findExactConcept(currentAction).getDataProperties().get("turn_angle"));
+                        ontoParser.findExactConcept(currentAction).getDataProperties().get("turn_angle"));
                 // If this is a moving action, make a segment from previous
                 if ((velocity > 0 || velocity < 0) && velocity < 1000) {
                     if (turnAngle == 0 && currentCoordIndex - 1 >= 0) {
 
                         String actionAndCoord = String.format("{\"type\": \"straight\"," +
-                                "\"start\":\"%s\", " +
-                                "\"middle\":\"None\", " +
-                                "\"end\":\"%s\"}",
-                            vehiclePath.get(currentCoordIndex - 1),
-                            vehiclePath.get(currentCoordIndex));
+                                        "\"start\":\"%s\", " +
+                                        "\"end\":\"%s\"}",
+                                vehiclePath.get(currentCoordIndex - 1),
+                                vehiclePath.get(currentCoordIndex));
 
-                        if (followActionAndCoord.isEmpty()) {
-                            followActionAndCoord.add(actionAndCoord);
-                        } else {
-                            followActionAndCoord.add("," + actionAndCoord);
-                        }
+//                        if (followActionAndCoord.isEmpty()) {
+                        followActionAndCoord.add(actionAndCoord);
+//                        } else {
+//                            followActionAndCoord.add("," + actionAndCoord);
+//                        }
 
                         // set the impact as the 2nd last point in vehicle path for non-rear-end cases
                         if (!testCase.getCrashType().contains("rear end")
-                            || !testCase.getCrashType().contains("rear-end")
-                            || !testCase.getCrashType().contains("rearend")) {
+                                || !testCase.getCrashType().contains("rear-end")
+                                || !testCase.getCrashType().contains("rearend")) {
                             if (impactActionAndCoord.isEmpty() && currentCoordIndex - 2 >= 0) {
                                 impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
-                                        "\"start\":\"%s\", " +
-                                        "\"middle\":\"None\", " +
-                                        "\"end\":\"None\"}",
-                                    vehiclePath.get(vehiclePath.size() - 2)));
+                                                "\"start\":\"%s\", " +
+                                                "\"middle\":\"None\", " +
+                                                "\"end\":\"None\"}",
+                                        vehiclePath.get(vehiclePath.size() - 2)));
                             }
                         } else { // set the impact as the last point in vehicle path for rear-end cases
                             if (impactActionAndCoord.isEmpty()) {
                                 impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
-                                        "\"start\":\"%s\", " +
-                                        "\"middle\":\"None\", " +
-                                        "\"end\":\"None\"}",
-                                    vehiclePath.get(vehiclePath.size() - 1)));
+                                                "\"start\":\"%s\", " +
+                                                "\"middle\":\"None\", " +
+                                                "\"end\":\"None\"}",
+                                        vehiclePath.get(vehiclePath.size() - 1)));
                             }
 
                         }
@@ -3115,17 +3069,17 @@ public class AccidentConstructor {
                     }
                 } else if (velocity == 0) {
                     stopActionAndCoord.add(String.format("{\"type\": \"stop\"," +
-                        "\"start\":\"%s\", " +
-                        "\"middle\":\"None\", " +
-                        "\"end\":\"None\"}",
-                    vehiclePath.get(currentCoordIndex)));
+                                    "\"start\":\"%s\", " +
+                                    "\"middle\":\"None\", " +
+                                    "\"end\":\"None\"}",
+                            vehiclePath.get(currentCoordIndex)));
 
                     if (impactActionAndCoord.isEmpty()) {
                         impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
-                            "\"start\":\"%s\", " +
-                            "\"middle\":\"None\", " +
-                            "\"end\":\"None\"}",
-                        vehiclePath.get(vehiclePath.size() - 1)));
+                                        "\"start\":\"%s\", " +
+                                        "\"middle\":\"None\", " +
+                                        "\"end\":\"None\"}",
+                                vehiclePath.get(vehiclePath.size() - 1)));
                     }
 
                     currentCoordIndex--;
