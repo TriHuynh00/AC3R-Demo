@@ -80,10 +80,10 @@ def _interpolate(road_nodes, sampling_unit=interpolation_distance):
 
         # Return the 4-tuple with default z and defatul road width
         return list(zip([round(v, rounding_precision) for v in new_x_vals],
-                    [round(v, rounding_precision) for v in new_y_vals],
-                    [round(v, rounding_precision) for v in new_z_vals],
-                    [round(v, rounding_precision) for v in new_width_vals]))
-    else :
+                        [round(v, rounding_precision) for v in new_y_vals],
+                        [round(v, rounding_precision) for v in new_z_vals],
+                        [round(v, rounding_precision) for v in new_width_vals]))
+    else:
         return list(zip([round(v, rounding_precision) for v in new_x_vals],
                         [round(v, rounding_precision) for v in new_y_vals]))
 
@@ -136,6 +136,8 @@ def _compute_initial_state(driving_actions):
         # initial_point = Point(the_radius_vector.coords[0])
         initial_point = Point(0, 0)
         final_point = Point(the_radius_vector.coords[-1])
+    elif len(trajectory_points) == 1:
+        return initial_location, 0
     else:
         raise Exception("Not enough points to compute the initial state of vehicle")
 
@@ -237,7 +239,10 @@ class Vehicle:
             for trajectory_list in driving_action_dict["trajectory"]:
 
                 if len(trajectory_list) == 1:
-                    raise Exception("Note enough points in trajectory_dict")
+                    trajectory_segments.append({
+                        "type": "parking",
+                        "length": 0
+                    })
                 elif len(trajectory_list) == 2:
                     # Straight segment - Note we care about length only at this point
                     # Rotation is implied by the previous elements or initial rotation
@@ -246,7 +251,7 @@ class Vehicle:
 
                     trajectory_segments.append({
                         "type": "straight",
-                        "length": initial_point.distance( final_point)
+                        "length": initial_point.distance(final_point)
                     })
 
                 elif len(trajectory_list) == 3:
@@ -331,15 +336,17 @@ class Vehicle:
         for s in segments:
             # Generate the segment
             segment = None
+            if s["type"] == "parking":
+                return [(last_location.x, last_location.y, self.driving_actions[0]['speed'])]
             if s["type"] == 'straight':
                 # Create an horizontal line of given length from the origin
                 segment = LineString([(x, 0) for x in linspace(0, s["length"], 8)])
                 # Rotate it
-                segment = rotate(segment, last_rotation, (0,0))
+                segment = rotate(segment, last_rotation, (0, 0))
                 # Move it
                 segment = translate(segment, last_location.x, last_location.y)
                 # Update last rotation and last location
-                last_rotation = last_rotation # Straight segments do not change the rotation
+                last_rotation = last_rotation  # Straight segments do not change the rotation
                 last_location = Point(list(segment.coords)[-1])
 
             elif s["type"] == 'turn':
@@ -438,9 +445,9 @@ class CrashScenario:
         for vehicle_dict in ac3r_json_data["vehicles"]:
             vehicles.append(Vehicle.from_dict(vehicle_dict))
 
-        return CrashScenario(ac3r_json_data["name"], roads, vehicles, ac3r_json_data["crash_point"])
+        return CrashScenario(ac3r_json_data["name"], roads, vehicles)
 
-    def __init__(self, name, roads, vehicles, crash_point, original_scenario=False):
+    def __init__(self, name, roads, vehicles, original_scenario=False):
         # Meta Data
         self.name = name
         self.original_scenario = original_scenario
@@ -450,6 +457,3 @@ class CrashScenario:
 
         # Vehicle Information and trajectory
         self.vehicles = vehicles
-
-
-
