@@ -37,7 +37,7 @@
           "color": "1 0.9 0",
           "damage_components": ["side", "left"],
           "rot_quat":[3.45267143e-04, 0.00000000e+00, 0.00000000e+00, 9.99999940e-01],
-          "driving-actions": [
+          "driving_actions": [
             {
                 "name": "follow",
                 "trajectory": [[
@@ -130,7 +130,7 @@
           "color": "1 0 0",
           "damage_components": ["front", "right"],
           "rot_quat":[-0.00593952, -0.02359371,  0.42191736,  0.90630778],
-          "driving-actions": [
+          "driving_actions": [
             {
                 "name": "follow",
                 "trajectory": [[

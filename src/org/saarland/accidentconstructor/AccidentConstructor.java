@@ -2845,27 +2845,27 @@ public class AccidentConstructor {
 
             // Get rotation degree
             String travelDirection = vehicle.getTravellingDirection();
-            String rotDeg = "";
+            ArrayList<Double> rotDeg;
             switch (travelDirection) {
                 case "W":
-                    rotDeg = "[-0.00993774, -0.03947598, 0.70593404, 0.7071068]";
+                    rotDeg = new ArrayList<>(Arrays.asList(-0.00993774, -0.03947598, 0.70593404, 0.7071068));
                     break;
                 case "N":
-                    rotDeg = "[-1.40540931e-02, -5.58274572e-02,  9.98341513e-01, -4.37275224e-08]";
+                    rotDeg = new ArrayList<>(Arrays.asList(-1.40540931e-02, -5.58274572e-02,  9.98341513e-01, -4.37275224e-08));
                     break;
                 case "E":
-                    rotDeg = "[0.00993774, 0.03947598, -0.70593404,  0.7071068]";
+                    rotDeg = new ArrayList<>(Arrays.asList(0.00993774, 0.03947598, -0.70593404,  0.7071068));
                     break;
                 case "S":
-                    rotDeg = "[3.45267143e-04, 0.00000000e+00, 0.00000000e+00, 9.99999940e-01]";
+                    rotDeg = new ArrayList<>(Arrays.asList(3.45267143e-04, 0.00000000e+00, 0.00000000e+00, 9.99999940e-01));
                     break;
                 case "SW":
-                    rotDeg = "[-0.00593952, -0.02359371,  0.42191736,  0.90630778]";
+                    rotDeg = new ArrayList<>(Arrays.asList(-0.00593952, -0.02359371,  0.42191736,  0.90630778));
                     break;
                 default:
-                    rotDeg = "[0.00673789,  0.02676513, -0.47863063,  0.87758244]";
+                    rotDeg = new ArrayList<>(Arrays.asList(0.00673789,  0.02676513, -0.47863063,  0.87758244));
             }
-            String vRotQuat = formatJSONKey("rot_quat") + formatJSONValueString(rotDeg);
+            String vRotQuat = formatJSONKey("rot_quat") + rotDeg.toString() + ",";
 
             // Get damage components of each vehicle
             String damageComponentData = vehicle.getDamagedComponents().size() == 0  ?
@@ -2874,20 +2874,22 @@ public class AccidentConstructor {
 
             // Append Driving Actions
             HashMap<String, LinkedList> vehicleActionAndCoord = mapActionToRoadSegment(vehicle);
-            String vDriving = formatJSONKey("driving_actions") + '[';
+            String vDriving = formatJSONKey("driving_actions") + "[ ";
 
             for (Map.Entry<String, LinkedList> entry : vehicleActionAndCoord.entrySet()) {
-                for (Object st : entry.getValue()) {
-                    String trajectory = (String)st;
-                    vDriving += '{';
+                if (entry.getKey().toString() == "follow" || entry.getKey().toString() == "turn") {
+                    for (Object st : entry.getValue()) {
+                        String trajectory = (String)st;
+                        vDriving += '{';
 
-                    vDriving += formatJSONKey("name") + formatJSONValueString(entry.getKey().toString());
+                        vDriving += formatJSONKey("name") + formatJSONValueString(entry.getKey().toString());
 
-                    vDriving += formatJSONKey("trajectory") + "[[" + trajectory + "]],";
+                        vDriving += formatJSONKey("trajectory") + "[[" + trajectory + "]],";
 
-                    vDriving += formatJSONKey("speed") + vehicle.getVelocity();
+                        vDriving += formatJSONKey("speed") + vehicle.getVelocity();
 
-                    vDriving += "},";
+                        vDriving += "},";
+                    }
                 }
             }
             vDriving = removeLastChar(vDriving) + "]";
@@ -2919,7 +2921,6 @@ public class AccidentConstructor {
             /* End json file */
             scenarioData += '}';
 
-            ConsoleLogger.print('r', scenarioData);
             scenarioDataWriter.write(scenarioData);
             ConsoleLogger.print('r', "Successfully wrote to the file.");
         } catch (IOException e) {

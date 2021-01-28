@@ -229,7 +229,7 @@ class Vehicle:
 
         driving_actions = []
 
-        for driving_action_dict in vehicle_dict["driving-actions"]:
+        for driving_action_dict in vehicle_dict["driving_actions"]:
 
             trajectory_segments = []
 
@@ -285,7 +285,7 @@ class Vehicle:
             })
 
         # Extract the initial location: the first point of the trajectory
-        initial_location, initial_rotation = _compute_initial_state(vehicle_dict["driving-actions"])
+        initial_location, initial_rotation = _compute_initial_state(vehicle_dict["driving_actions"])
 
 
         # Extract the initial rotation. The rotation the first point of the trajectory
@@ -450,7 +450,6 @@ class CrashScenario:
 
         # Vehicle Information and trajectory
         self.vehicles = vehicles
-        self.crash_point = crash_point
 
 
 

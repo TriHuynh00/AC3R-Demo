@@ -9,23 +9,17 @@
 "vehicles":[{
 "name":"vehicle1",
 "color":"0 0.3 0",
-"rot_quat":"[0.00993774, 0.03947598, -0.70593404,  0.7071068]",
+"rot_quat":[0.00993774, 0.03947598, -0.70593404, 0.7071068],
 "damage_components":"any",
-"driving_actions":[{
-"name":"impact",
-"trajectory":[[[0,-2.0,0]]],
-"speed":30},{
+"driving_actions":[ {
 "name":"follow",
 "trajectory":[[[-20,-2.0,0], [0,-2.0,0]]],
 "speed":30}]},{
 "name":"vehicle2",
 "color":"1 1 1",
-"rot_quat":"[0.00993774, 0.03947598, -0.70593404,  0.7071068]",
+"rot_quat":[0.00993774, 0.03947598, -0.70593404, 0.7071068],
 "damage_components":"rear",
-"driving_actions":[{
-"name":"impact",
-"trajectory":[[[10,-2.0,0]]],
-"speed":20},{
+"driving_actions":[ {
 "name":"follow",
 "trajectory":[[[-10,-2.0,0], [10,-2.0,0]]],
 "speed":20}]}]}
