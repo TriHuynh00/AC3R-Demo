@@ -1,0 +1,47 @@
+{
+"name":"Case6",
+"roads":[{
+"name":"road1",
+"road_type":"roadway",
+"road_shape":"I",
+"road_node_list":[[240.0,240.0,0,12.0], [-240.0,-240.0,0,12.0]]
+},{
+"name":"road2",
+"road_type":"roadway",
+"road_shape":"I",
+"road_node_list":[[240.0,0.0,0,12.0], [0,0,0,12.0]]
+},{
+"name":"road3",
+"road_type":"roadway",
+"road_shape":"I",
+"road_node_list":[[0.0,240.0,0,8.0], [0.0,-240.0,0,8.0]]
+}],
+"vehicles":[{
+"name":"vehicle2",
+"color":"1 0 0",
+"rot_quat":"[-0.00593952, -0.02359371,  0.42191736,  0.90630778]",
+"damage_components":"front",
+"driving_actions":[{
+"name":"impact",
+"trajectory":[[[-2.0,2.0,0]]],
+"speed":20},{
+"name":"follow",
+"trajectory":[[[20.88,18.88,0], [-2.0,2.0,0]]],
+"speed":20},{
+"name":"follow",
+"trajectory":[[[89.845517,87.845517,0], [20.88,18.88,0]]],
+"speed":20}]},{
+"name":"vehicle1",
+"color":"1 0.9 0",
+"rot_quat":"[3.45267143e-04, 0.00000000e+00, 0.00000000e+00, 9.99999940e-01]",
+"damage_components":"side left",
+"driving_actions":[{
+"name":"impact",
+"trajectory":[[[-2.0,2.0,0]]],
+"speed":20},{
+"name":"turn",
+"trajectory":[[[-2.0,17.88,0], [-2.0,2.0,0], [0,-15,0]]],
+"speed":20},{
+"name":"follow",
+"trajectory":[[[-2.0,86.84551724137931,0], [-2.0,17.88,0]]],
+"speed":20}]}]}

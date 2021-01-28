@@ -671,6 +671,7 @@ public class AccidentConstructor {
                 }
 
                 accidentConstructor.generateScenarioJSONData(scenarioDataPath, scenarioName);
+                System.exit(0);
 //                accidentConstructor.controlBeamNgAlgorithm(scenarioName);
 
                 /************ END SCENARIO DATA FILE ***********/
@@ -2910,7 +2911,7 @@ public class AccidentConstructor {
 
         try (FileWriter scenarioDataWriter = new FileWriter(scenarioDataPath)) {
             /* Start writing road objects */
-//            scenarioData += formatJSONKey("roads") + '[' + writeRoadObjects(this.testCase.getStreetList()) + "],";
+            scenarioData += formatJSONKey("roads") + '[' + writeRoadObjects(this.testCase.getStreetList()) + "],";
 
             /* Start writing vehicle objects */
             scenarioData += formatJSONKey("vehicles") + '[' + writeVehicleObjects(this.vehicleList) + "]";
