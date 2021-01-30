@@ -16,8 +16,8 @@ class Population:
         return self.individuals[-1]
 
     # Calculate fitness of each individual
-    def calculate_fitness(self):
+    def calculate_fitness(self, report_data):
         for i in range(len(self.individuals)):
-            self.individuals[i].cal_fitness()
-        self.individuals = sorted(self.individuals, key=lambda x: x.fitness, reverse=True)
+            self.individuals[i].cal_fitness(report_data)
+        self.individuals = sorted(self.individuals, key=lambda x: x.score, reverse=True)
         self.get_fittest()

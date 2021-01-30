@@ -1,17 +1,8 @@
 import json
 from ac3r_plus import CrashScenario
 from models import RoadProfiler, ScriptFactory, BNGVehicle
-from fitness import Individual
 from beamngpy import Road, Vehicle
 from beamngpy.sensors import Damage
-
-
-def sample_individuals():
-    individual_1 = Individual({"status": 0, "distance": 30})
-    individual_2 = Individual({"status": 0, "distance": 20})
-    individual_3 = Individual({"status": 0, "distance": 10})
-    individual_4 = Individual({"status": 1, "distance": 10})
-    return [individual_4, individual_1, individual_2, individual_3]
 
 
 def sample_scenarios():
@@ -45,7 +36,7 @@ def sample_scenarios():
         'v2_speed': [55],
         'v2_trajectory': [89.845517, 87.845517, 20.88, 18.88]
     }
-    return [scenario_1, scenario_2, scenario_3, scenario_4, scenario_5]
+    return [scenario_1, scenario_2, scenario_3]
 
 
 def collect_police_report():
@@ -55,7 +46,7 @@ def collect_police_report():
 
 
 def collect_scenario_data(scenario):
-    with open("./data/Case6_data.json") as file:
+    with open("./data/Case6_mod.json") as file:
         scenario_data = json.load(file)
     crash_scenario = CrashScenario.from_json(scenario_data)
     # JSON READ: Building scenario's streets
@@ -82,4 +73,4 @@ def collect_scenario_data(scenario):
         road_pf.compute_ai_script(trajectory, vehicle.color)
         bng_vehicles.append(BNGVehicle(v, initial_position, None, vehicle.rot_quat, road_pf))
 
-    return bng_roads, bng_vehicles
+    return crash_scenario, bng_roads, bng_vehicles

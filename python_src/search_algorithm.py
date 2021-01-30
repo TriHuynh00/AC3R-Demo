@@ -1,14 +1,11 @@
-### Implement the classes needed for the search algorithm
+# Implement the classes needed for the search algorithm
 
 import logging
-module_logger = logging.getLogger('Search Algorithm')
-
-
 import random
 from deap import tools, creator, base
+from ac3r_plus import CrashScenario
 
-from ac3r import execute_scenario
-
+module_logger = logging.getLogger('Search Algorithm')
 
 
 class AC3RPlusSearch:
@@ -27,11 +24,12 @@ class AC3RPlusSearch:
         creator.create("Individual", CrashScenario, fitness=creator.FitnessMax)
 
         self.toolbox = base.Toolbox()
+        self.toolbox.register("individual", tools.initRepeat(), creator.Individual)
+        self.toolbox.register("population", tools.initRepeat(), list, self.toolbox.individual)
 
         # Define the common search operator
         # self.toolbox.register("mutate", crossover.crossover)
         # self.toolbox.register("mate", crossover.crossover)
-
         # Define the evaluation function
         # self.toolbox.register("evaluate", crossover.crossover)
 
@@ -40,7 +38,6 @@ class AC3RPlusSearch:
         pass
 
     def generate_random_individual_from(self, original_scenario):
-
         def _f():
             module_logger.debug("Creating a random scenario from %s", original_scenario)
             # Randomly mutate a scenario according to the "mutate" function registered before
@@ -74,7 +71,3 @@ class AC3RPlusSearch:
 
         # TODO What is the size of the population?
         # Start the generation ?
-
-
-
-

@@ -2,8 +2,7 @@ import os
 import sys
 import numpy as np
 from beamngpy import Scenario, Road, Vehicle
-from beamng import BeamNg
-from road_factory import RoadFactory
+# from road_factory import RoadFactory
 from libs import read_json_data, path_generator
 
 # --------------------------------------------------------------------------
