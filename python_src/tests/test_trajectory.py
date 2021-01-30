@@ -38,7 +38,7 @@ class TrajectoryTest(unittest.TestCase):
         sources = ["./data/Case6_data.json", "./data/Case6_mod.json", "./data/Case1_data.json", "./data/Case0_data.json"]
         for s in sources:
             timeout = time.time() + 60*1 # 2mins
-            bng_roads, bng_vehicles = collect_scenario_data(s)
+            crash_scenario, bng_roads, bng_vehicles = collect_scenario_data(s)
             simulation = Simulation(bng_roads, bng_vehicles)
             simulation.execute_scenario(timeout)
-        self.assertEqual(0,0)
+        self.assertEqual(0, 0)

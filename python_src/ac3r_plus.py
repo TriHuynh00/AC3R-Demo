@@ -426,6 +426,8 @@ class Vehicle:
         # Return triplet
         return trajectory_points
 
+    def __str__(self):
+        return str(self.__class__) + ": " + str(self.__dict__)
 
 class CrashScenario:
 
