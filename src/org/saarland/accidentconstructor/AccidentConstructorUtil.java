@@ -1,10 +1,13 @@
 package org.saarland.accidentconstructor;
 
 import org.jdom2.JDOMException;
+import org.saarland.accidentelementmodel.NavigationDictionary;
 import org.saarland.accidentelementmodel.Street;
 import org.saarland.accidentelementmodel.VehicleAttr;
 import org.saarland.configparam.AccidentParam;
+import org.saarland.configparam.VelocityCode;
 import org.saarland.ontologyparser.OntologyHandler;
+import org.semanticweb.owlapi.vocab.DublinCoreVocabulary;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -16,9 +19,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class AccidentConstructorUtil {
 
@@ -130,9 +131,15 @@ public class AccidentConstructorUtil {
     }
 
     public static int getVelocityOfAction(String action, OntologyHandler parser) {
-        return Integer.parseInt(parser.findExactConcept(action)
+        try {
+            return Integer.parseInt(parser.findExactConcept(action)
                 .getDataProperties()
                 .get("velocity"));
+        } catch (Exception ex) {
+            ConsoleLogger.print('e', String.format("Velocity of action %s not found, error message: \n %s",
+                action, ex.toString()));
+            return VelocityCode.UNKNOWN;
+        }
     }
 
     public static double computeYCircleFunc(double radius, double xCoord) {
@@ -154,14 +161,43 @@ public class AccidentConstructorUtil {
 
     // Get all the words connected to a given word by searching the dependency list. Return a string of words connected to the
     // given baseWord
-    public static String findAllConnectedWords(LinkedList<String> dependencyList, String baseWord, String currentConnectedWordStr,
-                                               int curDepth, int maxDepth) {
+    public static String findAllConnectedWordsBottomUp(LinkedList<String> dependencyList, String baseWord, String currentConnectedWordStr,
+                                                       int curDepth, int maxDepth) {
 
         if (curDepth >= maxDepth)
         {
             return currentConnectedWordStr;
         }
-        ConsoleLogger.print('d',"Cur depth " + curDepth + " max depth " + maxDepth);
+        //ConsoleLogger.print('d',"Cur depth " + curDepth + " max depth " + maxDepth);
+        for (int i = dependencyList.size() - 1; i >= 0; i--) {
+            String dep = dependencyList.get(i);
+            if (dep.contains(baseWord))
+            {
+                String otherWord = getOtherWordInDep(baseWord, AccidentConstructorUtil.getWordPairFromDependency(dep));
+                if (currentConnectedWordStr.contains(otherWord))
+                {
+                    continue;
+                }
+                else
+                {
+                    currentConnectedWordStr += "," + otherWord;
+                    currentConnectedWordStr = findAllConnectedWordsTopDown(dependencyList, otherWord,
+                            currentConnectedWordStr, curDepth + 1, maxDepth);
+                }
+
+            }
+        }
+        return currentConnectedWordStr;
+    }
+
+    public static String findAllConnectedWordsTopDown(LinkedList<String> dependencyList, String baseWord, String currentConnectedWordStr,
+                                                      int curDepth, int maxDepth) {
+
+        if (curDepth >= maxDepth)
+        {
+            return currentConnectedWordStr;
+        }
+        //ConsoleLogger.print('d',"Cur depth " + curDepth + " max depth " + maxDepth);
         for (String dep : dependencyList) {
             if (dep.contains(baseWord))
             {
@@ -173,8 +209,8 @@ public class AccidentConstructorUtil {
                 else
                 {
                     currentConnectedWordStr += "," + otherWord;
-                    currentConnectedWordStr = findAllConnectedWords(dependencyList, otherWord,
-                            currentConnectedWordStr, curDepth + 1, maxDepth);
+                    currentConnectedWordStr = findAllConnectedWordsTopDown(dependencyList, otherWord,
+                        currentConnectedWordStr, curDepth + 1, maxDepth);
                 }
 
             }
@@ -377,7 +413,7 @@ public class AccidentConstructorUtil {
                 position = Integer.parseInt(token.substring(token.lastIndexOf("-") + 1).trim());
             }
         } catch (Exception ex) {
-            return -1;
+            ConsoleLogger.print('e', "Cannot locate index in token " + token);
         }
         return position;
     }
@@ -430,6 +466,14 @@ public class AccidentConstructorUtil {
             return false;
         }
         return true;
+    }
+
+    public static String displayAs6DecimalNum(double num) {
+        try {
+            return AccidentParam.df6Digit.format(num);
+        } catch (Exception ex) {
+            return "Not convertible to 6 decimal digit";
+        }
     }
 
     public static String readValueOfATag(String tagName, String currentFilePath)
@@ -590,6 +634,7 @@ public class AccidentConstructorUtil {
         return direction;
     }
 
+    // Find a new (x,y) coordinate of a given length, rorated by an angle
     public static double[] computeNewCoordOfRotatedLine(double length, int angle)
     {
         double newCoord[] = new double[2];
@@ -603,7 +648,7 @@ public class AccidentConstructorUtil {
         // Compute x by taking length * sin(angle)
         newCoord[0] = length * sinAngleValue;
 
-        // Compute y by taking length * sin(angle)
+        // Compute y by taking length * cos(angle)
         newCoord[1] = length * cosAngleValue;
 
         return newCoord;
@@ -797,6 +842,103 @@ public class AccidentConstructorUtil {
             }
         }
         return keywordIsFound;
+    }
+
+    // Find the point in the turning street which the vehicle should turn into based on its turn direction
+    public static double[] findTurningPointInTurningStreet(Street turnStreet, String turnDirection, String movingDirection) {
+        String turnStreetNodes = turnStreet.getStreetPropertyValue("road_node_list");
+
+        String[] nodeList = turnStreetNodes.replace("[", "").split(AccidentParam.STREET_NODE_DELIMITER);
+
+        String[] centerNodeCoord = nodeList.length == AccidentParam.ROAD_PIECE_NODE * 2 + 1 ?
+            nodeList[nodeList.length / 2].trim().split(AccidentParam.beamngCoordDelimiter)
+            : nodeList[nodeList.length - 1].trim().split(AccidentParam.beamngCoordDelimiter);
+        double[] centerNode = {
+            Double.parseDouble(centerNodeCoord[0]),
+            Double.parseDouble(centerNodeCoord[1]),
+            Double.parseDouble(centerNodeCoord[2])};
+
+        String[] beforeCenterNodeCoord = nodeList.length == AccidentParam.ROAD_PIECE_NODE * 2 + 1 ?
+            nodeList[nodeList.length / 2 - 1].trim().split(AccidentParam.beamngCoordDelimiter)
+            : nodeList[nodeList.length - 2].trim().split(AccidentParam.beamngCoordDelimiter);
+        double[] beforeCenterNode = {
+            Double.parseDouble(beforeCenterNodeCoord[0]),
+            Double.parseDouble(beforeCenterNodeCoord[1]),
+            Double.parseDouble(beforeCenterNodeCoord[2])};
+
+        String[] afterCenterNodeCoord = nodeList.length == AccidentParam.ROAD_PIECE_NODE * 2 + 1 ?
+            nodeList[nodeList.length / 2 + 1].trim().split(AccidentParam.beamngCoordDelimiter)
+            : centerNodeCoord;
+
+        double[] afterCenterNode = {
+            Double.parseDouble(afterCenterNodeCoord[0]),
+            Double.parseDouble(afterCenterNodeCoord[1]),
+            Double.parseDouble(afterCenterNodeCoord[2])};
+
+        // If this is a continuous road (8 nodes + center node), use NavigationDictionary to
+        // find the turning point based on the moving direction and turn direction
+        if (nodeList.length == AccidentParam.ROAD_PIECE_NODE * 2 + 1) {
+            HashMap<String, String> navDictionary = NavigationDictionary
+                .selectDictionaryFromTravelingDirection(movingDirection);
+
+            // pointAdjustment[0] is xCoord Adjustment, '+' for increase xCoord, '-' for decrease xCoord
+            // pointAdjustment[1] is yCoord Adjustment, '+' for increase yCoord, '-' for decrease yCoord
+            String[] pointAdjustment = navDictionary.get(turnDirection)
+                .split(NavigationDictionary.NAVIGATION_MAP_DELIMITER);
+
+            // xCoord of beforeCenter point < xCoord of centerPoint
+            // if yCoord also matches with the pointAdjustment requirement, return the beforeCenterNodeCoord
+            // Otherwise return the afterCenterNodeCoord
+            if (checkCoordForTurningPoint(beforeCenterNode[0], centerNode[0], pointAdjustment[0])
+                && checkCoordForTurningPoint(beforeCenterNode[1], centerNode[1], pointAdjustment[1])) {
+                ConsoleLogger.print('d', "Return before center node " + Arrays.toString(beforeCenterNodeCoord) + " as turning point" );
+                return beforeCenterNode;
+            }
+            ConsoleLogger.print('d', "Return after center node " + afterCenterNodeCoord + " as turning point ");
+            return afterCenterNode;
+
+        }
+        // For non-continuous road, take the point next to the crash point as there is no other option
+        else if (nodeList.length ==  AccidentParam.ROAD_PIECE_NODE + 1)
+        {
+            return beforeCenterNode;
+        }
+
+        return new double[] {-1000, -1000, -1000};
+    }
+
+    // Check the requirement for yCoord of turning point, return true if the yCoord of the targetYCoord
+    // matches with the condition of the pointAdjustment String.
+    private static boolean checkCoordForTurningPoint(double targetCoord, double centerCoord, String pointAdjustment)
+    {
+        if (pointAdjustment.equals("-") && targetCoord < centerCoord) {
+            return true;
+        } else if (pointAdjustment.equals("0") && targetCoord == centerCoord) {
+            return true;
+        } else return pointAdjustment.equals("+") && targetCoord > centerCoord;
+    }
+
+    public static VehicleAttr findVehicle(String vehicleName, ArrayList<VehicleAttr> vehicleList) {
+        for (VehicleAttr vehicleAttr : vehicleList) {
+            if (vehicleName.replace("vehicle", "").equalsIgnoreCase("" + vehicleAttr.getVehicleId())) {
+                return vehicleAttr;
+            }
+        }
+        return null;
+    }
+
+    public static String getActionBeforeImpact(VehicleAttr vehicle) {
+        String actionBeforeImpact = "";
+
+        // Find whether the action before hit is turn
+        for (int z = vehicle.getActionList().size() - 1; z >= 0 ; z--)
+        {
+            if (vehicle.getActionList().get(z).startsWith("hit"))
+            {
+                actionBeforeImpact = vehicle.getActionList().get(z - 1);
+            }
+        }
+        return actionBeforeImpact;
     }
 }
 

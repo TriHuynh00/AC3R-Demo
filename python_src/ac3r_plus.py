@@ -1,6 +1,7 @@
 # from self_driving.road_polygon import RoadPolygon
 from shapely.geometry import LineString
 from scipy.interpolate import splev, splprep
+from scipy.spatial.transform import Rotation as R
 from numpy import repeat, linspace, array, sqrt, inf, cross, dot
 from numpy.ma import arange
 
@@ -15,6 +16,8 @@ rounding_precision = 3
 interpolation_distance = 1
 smoothness = 0
 min_num_nodes = 20
+CRASHED = 1
+NO_CRASH = 0
 
 
 def _find_radius_and_center(p1, p2, p3):
@@ -79,10 +82,10 @@ def _interpolate(road_nodes, sampling_unit=interpolation_distance):
 
         # Return the 4-tuple with default z and defatul road width
         return list(zip([round(v, rounding_precision) for v in new_x_vals],
-                    [round(v, rounding_precision) for v in new_y_vals],
-                    [round(v, rounding_precision) for v in new_z_vals],
-                    [round(v, rounding_precision) for v in new_width_vals]))
-    else :
+                        [round(v, rounding_precision) for v in new_y_vals],
+                        [round(v, rounding_precision) for v in new_z_vals],
+                        [round(v, rounding_precision) for v in new_width_vals]))
+    else:
         return list(zip([round(v, rounding_precision) for v in new_x_vals],
                         [round(v, rounding_precision) for v in new_y_vals]))
 
@@ -135,6 +138,8 @@ def _compute_initial_state(driving_actions):
         # initial_point = Point(the_radius_vector.coords[0])
         initial_point = Point(0, 0)
         final_point = Point(the_radius_vector.coords[-1])
+    elif len(trajectory_points) == 1:
+        return initial_location, 0
     else:
         raise Exception("Not enough points to compute the initial state of vehicle")
 
@@ -228,7 +233,7 @@ class Vehicle:
 
         driving_actions = []
 
-        for driving_action_dict in vehicle_dict["driving-actions"]:
+        for driving_action_dict in vehicle_dict["driving_actions"]:
 
             trajectory_segments = []
 
@@ -236,7 +241,10 @@ class Vehicle:
             for trajectory_list in driving_action_dict["trajectory"]:
 
                 if len(trajectory_list) == 1:
-                    raise Exception("Note enough points in trajectory_dict")
+                    trajectory_segments.append({
+                        "type": "parking",
+                        "length": 0
+                    })
                 elif len(trajectory_list) == 2:
                     # Straight segment - Note we care about length only at this point
                     # Rotation is implied by the previous elements or initial rotation
@@ -245,7 +253,7 @@ class Vehicle:
 
                     trajectory_segments.append({
                         "type": "straight",
-                        "length": initial_point.distance( final_point)
+                        "length": initial_point.distance(final_point)
                     })
 
                 elif len(trajectory_list) == 3:
@@ -279,25 +287,35 @@ class Vehicle:
             # TODO Refactor to class
             driving_actions.append({
                 "name": driving_action_dict["name"],
-                "trajectory_segments": trajectory_segments
+                "trajectory_segments": trajectory_segments,
+                "speed": driving_action_dict["speed"]
             })
 
         # Extract the initial location: the first point of the trajectory
-        initial_location, initial_rotation = _compute_initial_state(vehicle_dict["driving-actions"])
+        initial_location, initial_rotation = _compute_initial_state(vehicle_dict["driving_actions"])
 
 
         # Extract the initial rotation. The rotation the first point of the trajectory
         ## TODO rotation is extracted by first interpolating the points
 
-        return Vehicle(vehicle_dict["name"], initial_location, initial_rotation, driving_actions)
+        rot_quat = vehicle_dict["rot_quat"] if "rot_quat" in vehicle_dict else R.from_euler('z', initial_rotation,
+                                                                                            degrees=True).as_quat()
+
+        return Vehicle(vehicle_dict["name"],
+                       initial_location,
+                       initial_rotation,
+                       driving_actions,
+                       vehicle_dict["color"],
+                       rot_quat)
 
     # Rotation defined against NORTH = [0, 1]
-    def __init__(self, name, initial_location, initial_rotation, driving_actions):
+    def __init__(self, name, initial_location, initial_rotation, driving_actions, color, rot_quat):
         self.name = name
         self.initial_location = Point(initial_location[0], initial_location[1])
         self.initial_rotation = initial_rotation
         self.driving_actions = driving_actions
-
+        self.color = color
+        self.rot_quat = rot_quat
 
     def generate_trajectory(self):
         # First generate the trajectory, then rotate it according to NORTH
@@ -315,19 +333,22 @@ class Vehicle:
         last_rotation = self.initial_rotation
 
         trajectory_points = [self.initial_location]
+        len_coor = []
 
         for s in segments:
             # Generate the segment
             segment = None
+            if s["type"] == "parking":
+                return [(last_location.x, last_location.y, self.driving_actions[0]['speed'])]
             if s["type"] == 'straight':
                 # Create an horizontal line of given length from the origin
                 segment = LineString([(x, 0) for x in linspace(0, s["length"], 8)])
                 # Rotate it
-                segment = rotate(segment, last_rotation, (0,0))
+                segment = rotate(segment, last_rotation, (0, 0))
                 # Move it
                 segment = translate(segment, last_location.x, last_location.y)
                 # Update last rotation and last location
-                last_rotation = last_rotation # Straight segments do not change the rotation
+                last_rotation = last_rotation  # Straight segments do not change the rotation
                 last_location = Point(list(segment.coords)[-1])
 
             elif s["type"] == 'turn':
@@ -365,6 +386,7 @@ class Vehicle:
                 last_location = Point(list(segment.coords)[-1])
 
             if segment is not None:
+                len_coor.append(len(list(segment.coords)))
                 trajectory_points.extend([Point(x, y) for x, y in list(segment.coords)])
 
         the_trajectory = LineString(f7([(p.x, p.y) for p in trajectory_points]))
@@ -379,11 +401,42 @@ class Vehicle:
         # Interpolate and resample uniformly - Make sure no duplicates are there. Hopefully we do not change the order
         # TODO Sampling unit is 5 meters for the moment. Can be changed later
         interpolated_points = _interpolate([(p[0], p[1]) for p in list(the_trajectory.coords)], sampling_unit=5)
-        # Return triplet
-        return interpolated_points
 
+        # Concat the speed to the point
+        trajectory_points = list(the_trajectory.coords)
+        start = 0
+        sls = []
+        sl_coor = []
+        for s in len_coor:
+            sl_coor.append([start, start + s])
+            start = sl_coor[-1][1] - 1
+        for s in sl_coor:
+            sls.append(LineString(trajectory_points[s[0]:s[1]]))
+        speeds = []
+        for a in self.driving_actions:
+            speeds.append(a['speed'])
+
+        trajectory_points = []
+        for line, speed in zip(sls, speeds):
+            for p in interpolated_points:
+                point = Point(p[0], p[1])
+                if point.distance(line) < 0.5 and p not in trajectory_points:
+                    trajectory_points.append((p[0], p[1], speed))
+
+        # Return triplet
+        return trajectory_points
+
+    def __str__(self):
+        return str(self.__class__) + ": " + str(self.__dict__)
 
 class CrashScenario:
+
+    @staticmethod
+    def key_exist_in_list(k, lis):
+        for d in lis:
+            if d['name'] == k:
+                return True
+        return False
 
     @staticmethod
     def from_json(ac3r_json_data):
@@ -396,19 +449,18 @@ class CrashScenario:
         # if three points are given, that's an arc
 
         roads = []
-        for road_dict in ac3r_json_data.vehicles["roads"]:
+        for road_dict in ac3r_json_data["roads"]:
             roads.append(Road.from_dict(road_dict))
 
-        # for vehicle_data in ac3r_json_data.vehicles["vehicles"]:
-        #
-        #     pass
+        vehicles = []
+        for vehicle_dict in ac3r_json_data["vehicles"]:
+            vehicles.append(Vehicle.from_dict(vehicle_dict))
 
+        return CrashScenario(ac3r_json_data["name"], roads, vehicles)
 
-        pass
-
-    def __init__(self, id, roads, vehicles, crash_point, original_scenario=False):
+    def __init__(self, name, roads, vehicles, original_scenario=False):
         # Meta Data
-        self.id = id
+        self.name = name
         self.original_scenario = original_scenario
 
         # Road Geometry
@@ -416,7 +468,32 @@ class CrashScenario:
 
         # Vehicle Information and trajectory
         self.vehicles = vehicles
-        self.crash_point = crash_point
 
+        # Scenario score
+        self.score = 0
 
+        self.sim_report = None
 
+    def cal_fitness(self, police_report=None):
+        report = self.sim_report
+        status = report.status
+        if police_report is None or status == NO_CRASH:
+            v1 = report.vehicles[0]
+            v2 = report.vehicles[1]
+            p1 = Point(v1.positions[-1][0], v1.positions[-1][1])
+            p2 = Point(v2.positions[-1][0], v2.positions[-1][1])
+            self.score = -p1.distance(p2)
+        elif status == CRASHED:
+            point = 1
+            for v in report.vehicles:
+                police_data = police_report[v.vehicle.vid] # Extract data from report to compare
+                v_damage = v.get_damage()
+                for k in v_damage:
+                    if self.key_exist_in_list(k, police_data): # Damage component exists in police report
+                        point += 1
+            self.score = point
+        # Remove unnecessary attribute
+        delattr(self, 'sim_report')
+
+    def __str__(self):
+        return str(self.__class__) + ": " + str(self.__dict__)

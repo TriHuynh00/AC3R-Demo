@@ -480,6 +480,16 @@
     
 
 
+    <!-- file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#clip -->
+
+    <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#clip">
+        <rdf:type rdf:resource="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#vehicle_action-leaflvl"/>
+        <TrafficAccidentOntology:is_collision_verb rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</TrafficAccidentOntology:is_collision_verb>
+        <TrafficAccidentOntology:velocity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1000</TrafficAccidentOntology:velocity>
+    </owl:NamedIndividual>
+    
+
+
     <!-- file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#cloud -->
 
     <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#cloud">
@@ -753,6 +763,16 @@
     
 
 
+    <!-- file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#hit -->
+
+    <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#hit">
+        <rdf:type rdf:resource="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#vehicle_action-leaflvl"/>
+        <TrafficAccidentOntology:is_collision_verb rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</TrafficAccidentOntology:is_collision_verb>
+        <TrafficAccidentOntology:velocity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1000</TrafficAccidentOntology:velocity>
+    </owl:NamedIndividual>
+    
+
+
     <!-- file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#impact -->
 
     <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#impact">
@@ -925,6 +945,17 @@
     
 
 
+    <!-- file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#pass -->
+
+    <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#pass">
+        <rdf:type rdf:resource="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#vehicle_action-leaflvl"/>
+        <TrafficAccidentOntology:is_collision_verb rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</TrafficAccidentOntology:is_collision_verb>
+        <TrafficAccidentOntology:turn_angle rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</TrafficAccidentOntology:turn_angle>
+        <TrafficAccidentOntology:velocity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">20</TrafficAccidentOntology:velocity>
+    </owl:NamedIndividual>
+    
+
+
     <!-- file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#pavement -->
 
     <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#pavement">
@@ -944,6 +975,17 @@
     
 
 
+    <!-- file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#pull -->
+
+    <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#pull">
+        <rdf:type rdf:resource="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#vehicle_action-leaflvl"/>
+        <TrafficAccidentOntology:is_collision_verb rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</TrafficAccidentOntology:is_collision_verb>
+        <TrafficAccidentOntology:turn_angle rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</TrafficAccidentOntology:turn_angle>
+        <TrafficAccidentOntology:velocity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">20</TrafficAccidentOntology:velocity>
+    </owl:NamedIndividual>
+    
+
+
     <!-- file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#push -->
 
     <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#push">
@@ -958,14 +1000,6 @@
     <!-- file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#rain -->
 
     <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#rain">
-        <rdf:type rdf:resource="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#weather-leaflvl"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#rainy -->
-
-    <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#rainy">
         <rdf:type rdf:resource="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#weather-leaflvl"/>
     </owl:NamedIndividual>
     
@@ -1286,6 +1320,17 @@
         <rdf:type rdf:resource="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#car_model-leaflvl"/>
         <TrafficAccidentOntology:jbeam>van</TrafficAccidentOntology:jbeam>
         <TrafficAccidentOntology:partconfig>vehicles/van/offroad_alt.pc</TrafficAccidentOntology:partconfig>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#wait -->
+
+    <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#wait">
+        <rdf:type rdf:resource="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#vehicle_action-leaflvl"/>
+        <TrafficAccidentOntology:is_collision_verb rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</TrafficAccidentOntology:is_collision_verb>
+        <TrafficAccidentOntology:turn_angle rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</TrafficAccidentOntology:turn_angle>
+        <TrafficAccidentOntology:velocity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</TrafficAccidentOntology:velocity>
     </owl:NamedIndividual>
     
 

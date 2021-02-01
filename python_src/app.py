@@ -5,6 +5,12 @@
 import click
 import logging as log
 import sys
+import json
+from simulation import Simulation
+from beamngpy import Road, Vehicle
+from beamngpy.sensors import Damage
+from ac3r_plus import CrashScenario
+from models import RoadProfiler, ScriptFactory, BNGVehicle
 
 
 def _log_exception(extype, value, trace):
@@ -22,7 +28,7 @@ def _set_up_logging(log_to, debug):
 
     if log_to is not None:
         file_handler = log.FileHandler(log_to, 'a', 'utf-8')
-        log_handlers.append( file_handler )
+        log_handlers.append(file_handler)
         start_msg += " ".join(["writing to file: ", str(log_to)])
 
     log_level = log.DEBUG if debug else log.INFO
@@ -45,7 +51,8 @@ def _invoke_ac3r():
 
 @click.group()
 # Logging options
-@click.option('--log-to', required=False, type=click.Path(exists=False), help="File to Log to. If not specified logs will show only on the console")
+@click.option('--log-to', required=False, type=click.Path(exists=False),
+              help="File to Log to. If not specified logs will show only on the console")
 @click.option('--debug', required=False, is_flag=True, default=False, help="Activate debugging (more logging)")
 def cli(log_to, debug):
     """
@@ -76,14 +83,23 @@ def run_from_scenario(scenario_file):
     #   into a trajectory segment representation
     # original_crash_scenario = _
     # _run_ac3rplus_from_scenario(original_crash_scenario)
-    pass
+
+    with open(scenario_file) as file:
+        scenario_data = json.load(file)
+    crash_scenario = CrashScenario.from_json(scenario_data)
+    # JSON READ: Building scenario's streets
+    bng_roads = []
+    for road in crash_scenario.roads:
+        bng_road = Road('road_asphalt_2lane', rid=road.name)
+        bng_road.nodes.extend(road.road_nodes)
+        bng_roads.append(bng_road)
+
+    # JSON READ: Building scenario's vehicle
+
 
 def _run_ac3rplus_from_scenario(original_crash_scenario):
-
-
-
-    
     pass
+
 
 # make sure we invoke cli
 if __name__ == '__main__':

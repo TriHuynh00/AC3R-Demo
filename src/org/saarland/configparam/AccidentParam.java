@@ -8,12 +8,16 @@ public class AccidentParam {
     public static final int DISTANCE_BETWEEN_CARS = 9;
     public static final int ROAD_PIECE_NODE = 4;
     public static final int BEAMNG_PORT = 64256;
+    public static final int UNKNOWN_VEHICLE = 300;
+
+    public static String[] LEFTRIGHTARR = {"left", "right"};
 
     public static String[] cardinalDirectionPair = new String[] {"E/W", "N/S", "NE/SW", "NW/SE"};
 
     public static String userFolder = System.getProperty("user.home") + "\\Documents\\";
-
+//    public static String userFolder = "D:\\Games\\";
     public static String beamNGUserPath = userFolder + "BeamNG.research";
+//    public static String beamNGUserPath = userFolder + "BeamNG.research.v1.7.0.1";
     public static String environmentFile = beamNGUserPath + "\\levels\\smallgrid\\main\\MissionGroup\\items.level.json";
 
     public static String finalResultLocation = beamNGUserPath + "\\levels\\smallgrid";
@@ -36,7 +40,12 @@ public class AccidentParam {
     public static String cloudFilePath                  = templateFilePath + "\\cloud.txt";
     public static String pointLightFilePath             = templateFilePath + "\\pointLight.txt";
 
-    public static String beamNGpyPath = userFolder + "AC3R-Demo\\demo\\ac3r.py";
+
+    public static String beamNGpyPath = "D:\\University\\MasterProgram\\Thesis\\Draft\\AC3RGithub\\demo\\ac3r.py";
+
+//    public static String beamNGpyPath = userFolder + "AC3R-Demo\\demo\\ac3r.py";
+    public static String beamNGpyPlusPath = "D:\\University\\MasterProgram\\Thesis\\Draft\\AC3RGithub\\demo\\BeamNGpy\\ac3rp.py";
+
 
     public static DecimalFormat df2Digit = new DecimalFormat("####.##");
     public static DecimalFormat df6Digit = new DecimalFormat("####.######");
@@ -55,6 +64,7 @@ public class AccidentParam {
 
     public static String defaultCoordDelimiter = ":";
     public static String beamngCoordDelimiter = " ";
+    public static String STREET_NODE_DELIMITER = ";";
 
     /************ MATERIAL TEXTURE **************/
 

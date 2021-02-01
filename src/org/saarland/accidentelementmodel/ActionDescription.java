@@ -31,7 +31,9 @@ public class ActionDescription {
         this.verbProps = verbProps;
     }
 
-    public ActionDescription(){}
+    public ActionDescription(){
+        verbProps = new LinkedList<String>();
+    }
 
     public ActionDescription(String actor, String action, LinkedList<String> affectedObj)
     {

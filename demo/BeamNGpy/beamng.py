@@ -1,7 +1,7 @@
 import os
 from beamngpy import BeamNGpy, Scenario, Vehicle
 from beamngpy.sensors import Damage
-from models import Car
+from BeamNGpy.models import Car
 
 
 class BeamNg:
@@ -31,7 +31,7 @@ class BeamNg:
         bng.kill_beamng()
         bng.close()
 
-    def init_beamng(self):
+    def init_beamNG(self):
         # Instantiates a BeamNGpy instance
         # print(self.bng_home)
         # print(self.bng_research)

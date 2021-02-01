@@ -1,0 +1,28 @@
+{
+"name":"Case1",
+"roads":[{
+"name":"road1",
+"road_type":"roadway",
+"road_shape":"I",
+"road_node_list":[[-240.0,0.0,0,8.0], [240.0,0.0,0,8.0]]
+}],
+"vehicles":[{
+"name":"vehicle1",
+"color":"0.871 0.878 0.871",
+"rot_quat":[0.00993774, 0.03947598, -0.70593404, 0.7071068],
+"damage_components":"front",
+"driving_actions":[ {
+"name":"follow",
+"trajectory":[[[-20.0,-2.0,0], [3.0,-6.0,0]]],
+"speed":20},{
+"name":"follow",
+"trajectory":[[[-40.0,-2.0,0], [-20.0,-2.0,0]]],
+"speed":20}]},{
+"name":"vehicle2",
+"color":"1 1 1",
+"rot_quat":[0.00993774, 0.03947598, -0.70593404, 0.7071068],
+"damage_components":"back",
+"driving_actions":[ {
+"name":"stop",
+"trajectory":[[[0.0,-6.0,0]]],
+"speed":20}]}]}

@@ -1,0 +1,7 @@
+{
+	"crash_fitness_function": true,
+	"distance_fitness_function": false,
+	"rotation_fitness_function": false,
+	"actual_striker_damage": "F",
+	"actual_victim_damage": "R"
+}

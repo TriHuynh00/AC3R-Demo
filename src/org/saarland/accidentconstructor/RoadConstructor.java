@@ -59,6 +59,152 @@ public class RoadConstructor {
         return maxXCoordVehicleID;
     }
 
+    public void constructBaseRoad() {
+        ArrayList<Street> streetList = testCaseInfo.getStreetList();
+        StringBuilder environmentFileStrBuilder = new StringBuilder();
+        //        StringBuilder environmentFileTemplate = new StringBuilder();
+
+        Path headerFilePath = Paths.get(AccidentParam.headerFilePath);
+
+        // Construct the header of BeamNG prefab file
+        try
+        {
+            environmentFileStrBuilder.append(AccidentConstructorUtil.loadTemplateContent(AccidentParam.headerFilePath));
+        }
+        catch (Exception ex)
+        {
+            ConsoleLogger.print('e',"Error at constructing header of BeamNG file " + ex);
+        }
+
+        for (int s = 0; s < streetList.size(); s++) {
+            Street road = streetList.get(s);
+
+            String roadGradeDirection = road.getStreetProp().get("road_grade");
+            String roadGradeDeg = road.getStreetProp().get("road_grade_deg");
+            int laneNumber = Integer.parseInt(road.getStreetProp().get("lane_num"));
+            String radiusStr = road.getStreetProp().get("curve_radius");
+
+            boolean isPavementNeeded = false;
+            // Detect if pavement is needed
+            for (VehicleAttr vehicle : vehicleList) {
+                ConsoleLogger.print('d', "Vehicle " + vehicle.getVehicleId() + " onStreet " + vehicle.getOnStreet());
+                if (vehicle.getOnStreet() == 0) {
+                    isPavementNeeded = true;
+                    break;
+                }
+            }
+            double radius = Double.parseDouble(radiusStr.replace("m", ""));
+
+            double gradeDegree = 2.0;
+            double gradeIncrement = 0;
+
+            // Check if the grade contains the degree or not
+            if (roadGradeDeg.endsWith("%")) {
+                try {
+                    gradeDegree = Double.parseDouble(roadGradeDeg.replace("%", ""));
+                } catch (Exception e) {
+                    ConsoleLogger.print('d', "Exception at convert grade " + e);
+                }
+            }
+
+            // Road Construction
+
+            HashMap<String, String> navigationDict;
+
+            String roadCardinalDirection = road.getStreetPropertyValue("road_navigation");
+
+            boolean isSingleRoadPiece = road.getStreetPropertyValue("is_single_road_piece").equalsIgnoreCase("T");
+
+            if (streetList.size() == 1) {
+                navigationDict = NavigationDictionary.EastNavDict;
+            } else {
+                switch (roadCardinalDirection) {
+                    case "N":
+                        navigationDict = NavigationDictionary.NorthNavDict;
+                        break;
+                    case "S":
+                        navigationDict = NavigationDictionary.SouthNavDict;
+                        break;
+                    case "E":
+                        navigationDict = NavigationDictionary.EastNavDict;
+                        break;
+                    case "W":
+                        navigationDict = NavigationDictionary.WestNavDict;
+                        break;
+                    case "NE":
+                        navigationDict = NavigationDictionary.NorthEastNavDict;
+                        break;
+                    case "NW":
+                        navigationDict = NavigationDictionary.NorthWestNavDict;
+                        break;
+                    case "SE":
+                        navigationDict = NavigationDictionary.SouthEastNavDict;
+                        break;
+                    case "SW":
+                        navigationDict = NavigationDictionary.SouthWestNavDict;
+                        break;
+                    default:
+                        navigationDict = NavigationDictionary.EastNavDict;
+                        break;
+                }
+            }
+
+            // Construct coords of the road
+            ArrayList<String> roadCoordList = new ArrayList<String>();
+
+            if (!AccidentParam.isGradingConcerned)
+                roadCoordList.add("0 0 0");
+
+            // Add nodes to construct the road, if the road is a single road piece i.e. the road ends at an intersection,
+            // then construct a short road. Otherwise construct a road spanning across the intersection
+            for (int i = 1; i <= AccidentParam.ROAD_PIECE_NODE; i++) {
+                double segmentLength = i * distanceBetweenBaseRoadNodes;
+
+                String finalCoord = constructRoadNodeByDirection(navigationDict, segmentLength, radius, roadCardinalDirection,
+                    Integer.parseInt(road.getStreetPropertyValue("road_angle")), "backward");
+
+                ConsoleLogger.print('d', "finalCoord is " + finalCoord);
+
+                roadCoordList.add(0, finalCoord);
+
+                // If this road extends beyond the intersection, add more nodes to it
+                if (!isSingleRoadPiece) {
+                    String extendedCoord = constructRoadNodeByDirection(navigationDict, segmentLength, radius, roadCardinalDirection,
+                        Integer.parseInt(road.getStreetPropertyValue("road_angle")), "forward");
+
+
+                    roadCoordList.add(roadCoordList.size(), extendedCoord);
+                }
+
+            } // End adding road nodes
+
+            ConsoleLogger.print('d', "New Road Coord list is " + roadCoordList.toString());
+
+            road.putValToKey("road_node_list", roadCoordList.toString().replace(",", AccidentParam.STREET_NODE_DELIMITER)
+                .replace("[", "").replace("]", ""));
+
+            ConsoleLogger.print('d', "Road Coord List is " + roadCoordList);
+
+            StringBuilder nodeListStr = new StringBuilder();
+
+            for (String roadNode : roadCoordList) {
+                nodeListStr.append("\t\tNode = \"" + roadNode + "\";\n");
+            }
+
+            nodeListStr.append("\n");
+
+            try {
+                // Update to environment file
+                environmentFileStrBuilder.append(constructRoadTemplates(roadCoordList.get(0), nodeListStr.toString(),
+                    roadCoordList, laneNumber, isPavementNeeded, road));
+
+                environmentFileStrBuilder.append("\n ");
+            } catch (Exception ex) {
+                environmentFileStrBuilder.append("Error in constructing Environment " + ex);
+            }
+        }
+    }
+
 //    public void constructRoadNodes(String roadGradeDirection, String roadGradeDeg, int laneNumber, String radiusStr, String scenarioName) {
     public String constructRoadNodes(String scenarioName) {
 
@@ -101,164 +247,162 @@ public class RoadConstructor {
 //            }
         }
 
-        ArrayList<Street> streetList = testCaseInfo.getStreetList();
+//        ArrayList<Street> streetList = testCaseInfo.getStreetList();
         StringBuilder environmentFileStrBuilder = new StringBuilder();
-        //        StringBuilder environmentFileTemplate = new StringBuilder();
+        StringBuilder environmentFileTemplate = new StringBuilder();
 
         Path headerFilePath = Paths.get(AccidentParam.headerFilePath);
-
-        // Construct the header of BeamNG prefab file
-        try
-        {
-            environmentFileStrBuilder.append(AccidentConstructorUtil.loadTemplateContent(AccidentParam.headerFilePath));
-        }
-        catch (Exception ex)
-        {
-            ConsoleLogger.print('e',"Error at constructing header of BeamNG file " + ex);
-        }
-
-        for (int s = 0; s < streetList.size(); s++) {
-            Street road = streetList.get(s);
-
-            String roadGradeDirection = road.getStreetProp().get("road_grade");
-            String roadGradeDeg = road.getStreetProp().get("road_grade_deg");
-            int laneNumber = Integer.parseInt(road.getStreetProp().get("lane_num"));
-            String radiusStr = road.getStreetProp().get("curve_radius");
-
-            boolean isPavementNeeded = false;
-            // Detect if pavement is needed
-            for (VehicleAttr vehicle : vehicleList)
-            {
-                ConsoleLogger.print('d',"Vehicle " + vehicle.getVehicleId() + " onStreet " + vehicle.getOnStreet());
-                if (vehicle.getOnStreet() == 0)
-                {
-                    isPavementNeeded = true;
-                    break;
-                }
-            }
-            double radius = Double.parseDouble(radiusStr.replace("m", ""));
-
-            double gradeDegree = 2.0;
-            double gradeIncrement = 0;
-
-            // Check if the grade contains the degree or not
-            if (roadGradeDeg.endsWith("%"))
-            {
-                try
-                {
-                    gradeDegree = Double.parseDouble(roadGradeDeg.replace("%", ""));
-                }
-                catch (Exception e)
-                {
-                    ConsoleLogger.print('d',"Exception at convert grade " + e);
-                }
-            }
-
-            // Road Construction
-
-            HashMap<String, String> navigationDict;
-
-            String roadCardinalDirection = road.getStreetPropertyValue("road_navigation");
-
-            boolean isSingleRoadPiece = road.getStreetPropertyValue("is_single_road_piece").equalsIgnoreCase("T");
-
-            if (streetList.size() == 1)
-            {
-                navigationDict = NavigationDictionary.EastNavDict;
-            }
-            else {
-                switch (roadCardinalDirection) {
-                    case "N":
-                        navigationDict = NavigationDictionary.NorthNavDict;
-                        break;
-                    case "S":
-                        navigationDict = NavigationDictionary.SouthNavDict;
-                        break;
-                    case "E":
-                        navigationDict = NavigationDictionary.EastNavDict;
-                        break;
-                    case "W":
-                        navigationDict = NavigationDictionary.WestNavDict;
-                        break;
-                    case "NE":
-                        navigationDict = NavigationDictionary.NorthEastNavDict;
-                        break;
-                    case "NW":
-                        navigationDict = NavigationDictionary.NorthWestNavDict;
-                        break;
-                    case "SE":
-                        navigationDict = NavigationDictionary.SouthEastNavDict;
-                        break;
-                    case "SW":
-                        navigationDict = NavigationDictionary.SouthWestNavDict;
-                        break;
-                    default:
-                        navigationDict = NavigationDictionary.EastNavDict;
-                        break;
-                }
-            }
-
-            // Construct coords of the road
-            ArrayList<String> roadCoordList = new ArrayList<String>();
-
-            if (!AccidentParam.isGradingConcerned)
-                roadCoordList.add("0 0 0");
-
-            // Add nodes to construct the road, if the road is a single road piece i.e. the road ends at an intersection,
-            // then construct a short road. Otherwise construct a road spanning across the intersection
-            for (int i = 1; i <= AccidentParam.ROAD_PIECE_NODE; i++)
-            {
-                double segmentLength = i * distanceBetweenBaseRoadNodes;
-
-                String finalCoord = constructRoadNodeByDirection(navigationDict, segmentLength, radius, roadCardinalDirection,
-                        Integer.parseInt(road.getStreetPropertyValue("road_angle")), "backward");
-
-                ConsoleLogger.print('d', "finalCoord is " + finalCoord);
-
-                roadCoordList.add(0, finalCoord);
-
-                // If this road extends beyond the intersection, add more nodes to it
-                if (!isSingleRoadPiece)
-                {
-                    String extendedCoord = constructRoadNodeByDirection(navigationDict, segmentLength, radius, roadCardinalDirection,
-                        Integer.parseInt(road.getStreetPropertyValue("road_angle")), "forward");
-
-
-                    roadCoordList.add(roadCoordList.size(), extendedCoord);
-                }
-
-            } // End adding road nodes
-
-            ConsoleLogger.print('d', "New Road Coord list is " + roadCoordList.toString());
-
-            road.putValToKey("road_node_list", roadCoordList.toString().replace(",", ";")
-                    .replace("[", "").replace("]", ""));
-
-            ConsoleLogger.print('d',"Road Coord List is " + roadCoordList);
-
-            StringBuilder nodeListStr = new StringBuilder();
-
-            for (String roadNode : roadCoordList) {
-                nodeListStr.append("\t\tNode = \"" + roadNode + "\";\n");
-            }
-
-            nodeListStr.append("\n");
-
-            try
-            {
-                // Update to environment file
-                environmentFileStrBuilder.append(constructRoadTemplates(roadCoordList.get(0), nodeListStr.toString(),
-                        roadCoordList, laneNumber, isPavementNeeded, road));
-
-                environmentFileStrBuilder.append("\n ");
-            }
-            catch (Exception ex)
-            {
-                environmentFileStrBuilder.append("Error in constructing Environment " + ex);
-            }
-
-
-        }
+//
+//        // Construct the header of BeamNG prefab file
+//        try
+//        {
+//            environmentFileStrBuilder.append(AccidentConstructorUtil.loadTemplateContent(AccidentParam.headerFilePath));
+//        }
+//        catch (Exception ex)
+//        {
+//            ConsoleLogger.print('e',"Error at constructing header of BeamNG file " + ex);
+//        }
+//
+//        for (int s = 0; s < streetList.size(); s++) {
+//            Street road = streetList.get(s);
+//
+//            String roadGradeDirection = road.getStreetProp().get("road_grade");
+//            String roadGradeDeg = road.getStreetProp().get("road_grade_deg");
+//            int laneNumber = Integer.parseInt(road.getStreetProp().get("lane_num"));
+//            String radiusStr = road.getStreetProp().get("curve_radius");
+//
+//            boolean isPavementNeeded = false;
+//            // Detect if pavement is needed
+//            for (VehicleAttr vehicle : vehicleList)
+//            {
+//                ConsoleLogger.print('d',"Vehicle " + vehicle.getVehicleId() + " onStreet " + vehicle.getOnStreet());
+//                if (vehicle.getOnStreet() == 0)
+//                {
+//                    isPavementNeeded = true;
+//                    break;
+//                }
+//            }
+//            double radius = Double.parseDouble(radiusStr.replace("m", ""));
+//
+//            double gradeDegree = 2.0;
+//            double gradeIncrement = 0;
+//
+//            // Check if the grade contains the degree or not
+//            if (roadGradeDeg.endsWith("%"))
+//            {
+//                try
+//                {
+//                    gradeDegree = Double.parseDouble(roadGradeDeg.replace("%", ""));
+//                }
+//                catch (Exception e)
+//                {
+//                    ConsoleLogger.print('d',"Exception at convert grade " + e);
+//                }
+//            }
+//
+//            // Road Construction
+//
+//            HashMap<String, String> navigationDict;
+//
+//            String roadCardinalDirection = road.getStreetPropertyValue("road_navigation");
+//
+//            boolean isSingleRoadPiece = road.getStreetPropertyValue("is_single_road_piece").equalsIgnoreCase("T");
+//
+//            if (streetList.size() == 1)
+//            {
+//                navigationDict = NavigationDictionary.EastNavDict;
+//            }
+//            else {
+//                switch (roadCardinalDirection) {
+//                    case "N":
+//                        navigationDict = NavigationDictionary.NorthNavDict;
+//                        break;
+//                    case "S":
+//                        navigationDict = NavigationDictionary.SouthNavDict;
+//                        break;
+//                    case "E":
+//                        navigationDict = NavigationDictionary.EastNavDict;
+//                        break;
+//                    case "W":
+//                        navigationDict = NavigationDictionary.WestNavDict;
+//                        break;
+//                    case "NE":
+//                        navigationDict = NavigationDictionary.NorthEastNavDict;
+//                        break;
+//                    case "NW":
+//                        navigationDict = NavigationDictionary.NorthWestNavDict;
+//                        break;
+//                    case "SE":
+//                        navigationDict = NavigationDictionary.SouthEastNavDict;
+//                        break;
+//                    case "SW":
+//                        navigationDict = NavigationDictionary.SouthWestNavDict;
+//                        break;
+//                    default:
+//                        navigationDict = NavigationDictionary.EastNavDict;
+//                        break;
+//                }
+//            }
+//
+//            // Construct coords of the road
+//            ArrayList<String> roadCoordList = new ArrayList<String>();
+//
+//            if (!AccidentParam.isGradingConcerned)
+//                roadCoordList.add("0 0 0");
+//
+//            // Add nodes to construct the road, if the road is a single road piece i.e. the road ends at an intersection,
+//            // then construct a short road. Otherwise construct a road spanning across the intersection
+//            for (int i = 1; i <= AccidentParam.ROAD_PIECE_NODE; i++)
+//            {
+//                double segmentLength = i * distanceBetweenBaseRoadNodes;
+//
+//                String finalCoord = constructRoadNodeByDirection(navigationDict, segmentLength, radius, roadCardinalDirection,
+//                        Integer.parseInt(road.getStreetPropertyValue("road_angle")), "backward");
+//
+//                ConsoleLogger.print('d', "finalCoord is " + finalCoord);
+//
+//                roadCoordList.add(0, finalCoord);
+//
+//                // If this road extends beyond the intersection, add more nodes to it
+//                if (!isSingleRoadPiece)
+//                {
+//                    String extendedCoord = constructRoadNodeByDirection(navigationDict, segmentLength, radius, roadCardinalDirection,
+//                        Integer.parseInt(road.getStreetPropertyValue("road_angle")), "forward");
+//
+//
+//                    roadCoordList.add(roadCoordList.size(), extendedCoord);
+//                }
+//
+//            } // End adding road nodes
+//
+//            ConsoleLogger.print('d', "New Road Coord list is " + roadCoordList.toString());
+//
+//            road.putValToKey("road_node_list", roadCoordList.toString().replace(",", ";")
+//                    .replace("[", "").replace("]", ""));
+//
+//            ConsoleLogger.print('d',"Road Coord List is " + roadCoordList);
+//
+//            StringBuilder nodeListStr = new StringBuilder();
+//
+//            for (String roadNode : roadCoordList) {
+//                nodeListStr.append("\t\tNode = \"" + roadNode + "\";\n");
+//            }
+//
+//            nodeListStr.append("\n");
+//
+//            try
+//            {
+//                // Update to environment file
+//                environmentFileStrBuilder.append(constructRoadTemplates(roadCoordList.get(0), nodeListStr.toString(),
+//                        roadCoordList, laneNumber, isPavementNeeded, road));
+//
+//                environmentFileStrBuilder.append("\n ");
+//            }
+//            catch (Exception ex)
+//            {
+//                environmentFileStrBuilder.append("Error in constructing Environment " + ex);
+//            }
+//        }
 
         if (!testCaseInfo.getCrashType().toLowerCase().contains("rear-end") &&
             !testCaseInfo.getCrashType().toLowerCase().contains("rearend")) {
@@ -269,11 +413,12 @@ public class RoadConstructor {
                 int lastCoordIndex = movementPath.size();
 
                 // Fon turn into path, leave the crash coord alone
-                if (testCaseInfo.getCrashType().toLowerCase().contains("turn into"))
-                {
-                    lastCoordIndex -= 1;
-                }
-                else if (testCaseInfo.getCrashType().toLowerCase().contains("straight path") )
+//                if (testCaseInfo.getCrashType().toLowerCase().contains("turn into"))
+//                {
+//                    lastCoordIndex -= 1;
+//                }
+                if (testCaseInfo.getCrashType().toLowerCase().contains("straight path")
+                    || testCaseInfo.getCrashType().toLowerCase().contains("turn into"))
                 {
                     lastCoordIndex -= 2;
                 }
@@ -380,7 +525,8 @@ public class RoadConstructor {
                 }
             }
         } catch (Exception ex) {
-            environmentFileStrBuilder.append("Error at construction wp and paths \n" + ex.getMessage());
+            environmentFileStrBuilder.append("Error at construction wp and paths \n");
+            ex.printStackTrace();
         }
 
         ConsoleLogger.print('d', "Final Road Str Builder Obj " + environmentFileStrBuilder.toString());

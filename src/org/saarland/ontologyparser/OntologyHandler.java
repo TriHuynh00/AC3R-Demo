@@ -8,6 +8,7 @@ import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 import org.semanticweb.owlapi.util.DefaultPrefixManager;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Set;
@@ -253,17 +254,37 @@ public class OntologyHandler {
         return false;
     }
 
+    public ArrayList<AccidentConcept> findConceptsByLeafLvlName(String leafLvlName)
+    {
+        ArrayList<AccidentConcept> matchedConceptList = new ArrayList<AccidentConcept>();
+        for (AccidentConcept concept : accidentConceptList)
+        {
+            if (concept.getLeafLevelName().equals(leafLvlName))
+            {
+                matchedConceptList.add(concept);
+                ConsoleLogger.print('d',"Found matched Concept of leafLvlName " + leafLvlName + " is " + concept.getLeafLevelName());
+
+            }
+        }
+        return matchedConceptList;
+    }
+
     public int findVelocityOfAction(String action)
     {
         AccidentConcept concept = findExactConcept(action);
-        if (concept != null)
-        {
-            return Integer.parseInt(concept.getDataProperties().get("velocity"));
-        }
-        else
-        {
+        try {
+            if (concept != null)
+            {
+                return Integer.parseInt(concept.getDataProperties().get("velocity"));
+            }
+            else
+            {
+                return -1000;
+            }
+        } catch (Exception ex) {
             return -1000;
         }
+
 
     }
 }

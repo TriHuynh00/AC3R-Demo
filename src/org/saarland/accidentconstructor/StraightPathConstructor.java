@@ -627,51 +627,144 @@ public class StraightPathConstructor {
 
                 // Append an extra distance to ensure crash happens. extra distance shows the intended moving direction
                 // of the car
-
                 for (int v = 0; v < vehicleList.size(); v++) {
                     VehicleAttr currentVehicle = vehicleList.get(v);
 
+                    String travelDirection = currentVehicle.getTravellingDirection();
+
                     Street vehicleStandingStreet = currentVehicle.getStandingStreet();
+
+                    Street turnStreet = null;
+
+                    boolean isCurrentVehicleTurn = false;
+
+                    String turnDirection = "";
+
+                    String actionBeforeImpact = AccidentConstructorUtil.getActionBeforeImpact(currentVehicle);
+
+
+                    ConsoleLogger.print('d', "Action before impact is " + actionBeforeImpact);
+
+
+                    // Find the other street that a car intends to turn into
+                    // NOTE: This only works when there is only one turn action in the action list
+                    // because the construction of path is not based on multiple turns
+                    if (actionBeforeImpact.contains("turn")) {
+                        isCurrentVehicleTurn = true;
+                        // Find the direction of the turn
+                        if (actionBeforeImpact.contains("left")) {
+                            turnDirection = "left";
+                        } else if (actionBeforeImpact.contains("right")) {
+                            turnDirection = "right";
+                        }
+
+                        ConsoleLogger.print('d', String.format("Current vehicle %s move towards %s turn direction is %s on street %s direction %s",
+                            currentVehicle.getVehicleId(),
+                            travelDirection,
+                            turnDirection,
+                            vehicleStandingStreet.getStreetPropertyValue("road_ID"),
+                            vehicleStandingStreet.getStreetPropertyValue("road_navigation")));
+
+                        String currVehiclePossibleTurnDirections = NavigationDictionary.getTurnDirectionOfMovingDirection(
+                            currentVehicle.getTravellingDirection(), turnDirection);
+
+                        ConsoleLogger.print('d', "Current vehicle possible turn direction is " + currVehiclePossibleTurnDirections);
+
+                        // Find the turning street, if there is more than one street in street list
+                        if (testCase.getStreetList().size() >= 2
+                            && !currVehiclePossibleTurnDirections.startsWith("No turn")) {
+                            for (Street street : testCase.getStreetList()) {
+                                if (!street.getStreetPropertyValue("road_ID").equals(vehicleStandingStreet.getStreetPropertyValue("road_ID"))) {
+                                    for (String possibleTurnDirection : currVehiclePossibleTurnDirections.
+                                        split(NavigationDictionary.POSSIBLE_TURN_DIRECTION_DELIMITER)) {
+                                                                                // If the candidate street's direction is a continuous street, its direction
+                                        // should be in the same axis as possible turn directions. If the street ends
+                                        // at the intersection, its moving direction
+                                        // choose it as the turning street
+                                        if ((NavigationDictionary.isDirectionsInSameAxis(
+                                                street.getStreetPropertyValue("road_navigation"), possibleTurnDirection)
+                                                && street.getStreetPropertyValue("is_single_road_piece").equals("F"))
+                                            || (NavigationDictionary.isDirectionsOpposite(
+                                                    street.getStreetPropertyValue("road_navigation"), possibleTurnDirection)
+                                                && street.getStreetPropertyValue("is_single_road_piece").equals("T"))
+                                            ) {
+                                            turnStreet = street;
+                                            ConsoleLogger.print('d', String.format("Turn street is %s direction %s coord %s",
+                                                turnStreet.getStreetPropertyValue("road_ID"),
+                                                turnStreet.getStreetPropertyValue("road_navigation"),
+                                                turnStreet.getStreetPropertyValue("road_node_list")));
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } // End processing turn direction and find street which the current vehicle turns into
 
                     String isSingleRoad = vehicleStandingStreet.getStreetPropertyValue("is_single_road_piece");
 
                     int streetRotateAngle = Integer.parseInt(vehicleStandingStreet.getStreetPropertyValue("road_angle"));
 
                     ArrayList<String> vehicleCoordAtI = constructedCoordVeh.get(currentVehicle.getVehicleId() - 1);
-
-                    if (!testCase.getCrashType().contains("turn into")) {
+                    System.out.println("Vehicle Coord before add extra point: " + vehicleCoordAtI.toString());
+//                    if (!testCase.getCrashType().contains("turn into")) {
                         if (vehicleCoordAtI.get(vehicleCoordAtI.size() - 1).equals(crashCoord)) {
                             // IF non critical param is specified, change the crash coord of the victim to a point before crash point
 
-
-                            String travelDirection = currentVehicle.getTravellingDirection();
                             double extraXCoord = 0;
                             double extraYCoord = 0;
-                            if (travelDirection.equals("W")) {
-                                extraXCoord = Double.parseDouble(crashXCoord) - extraDistance;
-                                extraYCoord = Double.parseDouble(crashYCoord);
-
-//                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
-                            } // End processing westbound direction
-                            else if (travelDirection.equals("E")) {
-                                extraXCoord = Double.parseDouble(crashXCoord) + extraDistance;
-                                extraYCoord = Double.parseDouble(crashYCoord);
-
-//                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
-                            } // End processing eastbound direction
-                            else if (travelDirection.equals("N")) {
-                                extraXCoord = Double.parseDouble(crashXCoord);
-                                extraYCoord = Double.parseDouble(crashYCoord) + extraDistance;
-
-//                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
-                            } // End processing northbound direction
-                            else if (travelDirection.equals("S"))
+//                            if (travelDirection.equals("W")) {
+//
+//                                extraXCoord = Double.parseDouble(crashXCoord) - extraDistance;
+//                                extraYCoord = Double.parseDouble(crashYCoord);
+//
+////                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
+//                            } // End processing westbound direction
+//                            else if (travelDirection.equals("E")) {
+//                                extraXCoord = Double.parseDouble(crashXCoord) + extraDistance;
+//                                extraYCoord = Double.parseDouble(crashYCoord);
+//
+////                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
+//                            } // End processing eastbound direction
+//                            else if (travelDirection.equals("N")) {
+//                                extraXCoord = Double.parseDouble(crashXCoord);
+//                                extraYCoord = Double.parseDouble(crashYCoord) + extraDistance;
+//
+////                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
+//                            } // End processing northbound direction
+                            //else
+                            // Test environment
+                            isCurrentVehicleTurn = false;
+                            isSingleRoad = "T";
+                            if (travelDirection.equals("N") || travelDirection.equals("S")
+                                || travelDirection.equals("E") || travelDirection.equals("W"))
                             {
-                                extraXCoord = Double.parseDouble(crashXCoord);
-                                extraYCoord = Double.parseDouble(crashYCoord) - extraDistance;
+                                double radius = Double.parseDouble(
+                                    vehicleStandingStreet.getStreetPropertyValue("curve_radius")
+                                    .replace("m", ""));
 
-                                // If this is a single road piece, append the road based on other road direction
-                                if (isSingleRoad.equals("T")) {
+                                ConsoleLogger.print('d', String.format("Extra distance info:\nisCurrentVehicleTurn = %s \n" +
+                                    "isSingleRoad = %s \ntravelDirection = %s \ncurrentStreetId = %s",
+                                    isCurrentVehicleTurn, isSingleRoad, travelDirection,
+                                    vehicleStandingStreet.getStreetPropertyValue("road_ID")));
+
+                                // If this is a continuous road, let the car move to the other end of the intersection
+                                if (!isCurrentVehicleTurn && isSingleRoad.equals("F")) {
+                                    ConsoleLogger.print('d', "go Straight on non continuous road");
+                                    String afterCrashCoord = NavigationDictionary.createNESWCoordBasedOnNavigation(
+                                        extraDistance, radius, "forward",
+                                        NavigationDictionary.selectDictionaryFromTravelingDirection(travelDirection),
+                                        AccidentParam.defaultCoordDelimiter
+                                    );
+                                    String[] afterCrashCoordXYZ = afterCrashCoord.split(AccidentParam.defaultCoordDelimiter);
+                                    extraXCoord = Double.parseDouble(crashXCoord) + Double.parseDouble(afterCrashCoordXYZ[0]);
+                                    extraYCoord = Double.parseDouble(crashYCoord) + Double.parseDouble(afterCrashCoordXYZ[1]);
+                                    ConsoleLogger.print('d', String.format("afterCrashCoord = (%.2f, %.2f)",
+                                        extraXCoord, extraYCoord));
+                                    // If the current vehicle runs on a non-continuous road,
+                                    // make a turn to the other road
+                                } else if (!isCurrentVehicleTurn && isSingleRoad.equals("T")) {
+
                                     for (Street otherStreet : testCase.getStreetList()) {
                                         // skip if see the same road
                                         if (otherStreet.getStreetPropertyValue("road_ID")
@@ -683,13 +776,42 @@ public class StraightPathConstructor {
                                         ConsoleLogger.print('d', "opposite angle of other street " + oppositeAngle);
 
                                         // Make the new crash coord further to avoid waypoint conflict
-                                        double newCoord[] = AccidentConstructorUtil.computeNewCoordOfRotatedLine(Math.abs(extraYCoord),
+                                        double newCoord[] = AccidentConstructorUtil.computeNewCoordOfRotatedLine(Math.abs(extraDistance),
                                                 oppositeAngle);
+
+//                                        String afterCrashCoord = NavigationDictionary.createNESWCoordBasedOnNavigation(
+//                                            extraDistance, radius, "backward",
+//                                            NavigationDictionary.selectDictionaryFromTravelingDirection(
+//                                                otherStreet.getStreetPropertyValue("road_navigation")),
+//                                            AccidentParam.defaultCoordDelimiter
+//                                        );
+
+//                                        String[] newCoord = afterCrashCoord.split(AccidentParam.defaultCoordDelimiter);
 
                                         extraXCoord = newCoord[0];
                                         extraYCoord = newCoord[1];
+
+
+                                        ConsoleLogger.print('d', String.format("No turning & non-continuous road, " +
+                                            "extraCoord is (%.2f, %.2f)", extraXCoord, extraYCoord));
+                                        ConsoleLogger.print('d', String.format("Other road_ID is %s \n isSingleRoad %s\n" +
+                                            "road_node_list = %s",
+                                            otherStreet.getStreetPropertyValue("road_ID"),
+                                            otherStreet.getStreetPropertyValue("is_single_road_piece"),
+                                            otherStreet.getStreetPropertyValue("road_node_list")));
+                                        break;
+                                    }
+                                } else if (isCurrentVehicleTurn) {
+                                    System.out.println("Turn Street nodes = " + turnStreet.getStreetPropertyValue("road_node_list") );
+                                    System.out.println("Turn Street direction = " + turnStreet.getStreetPropertyValue("road_navigation") );
+                                    double[] turningCoord = AccidentConstructorUtil.findTurningPointInTurningStreet(turnStreet, turnDirection, travelDirection);
+                                    System.out.println("Turn Coord is " + turningCoord);
+                                    if (turningCoord[0] != -1000) {
+                                        extraXCoord = turningCoord[0];
+                                        extraYCoord = turningCoord[1];
                                     }
                                 }
+
 
 //                                vehicleCoordAtI.add(vehicleCoordAtI.size(), df.format(extraXCoord) + ":" + df.format(extraYCoord));
                             } // End processing southbound direction
@@ -697,7 +819,7 @@ public class StraightPathConstructor {
                             {
                                 extraXCoord = Double.parseDouble(crashXCoord);
                                 extraYCoord = Double.parseDouble(crashYCoord) + extraDistance;
-
+                                // TODO: Compute turning behavior of the car
                                 // If this road is a continuous road, then keep going on the opposite direction
                                 if (vehicleStandingStreet.getStreetPropertyValue("is_single_road_piece").equals("F")) {
 
@@ -707,19 +829,45 @@ public class StraightPathConstructor {
                                     extraXCoord = newCoord[0];
                                     extraYCoord = newCoord[1];
                                 }
-                                else // TODO: Compute based on other road if this is a single_road_piece
+                                else
                                 {
+                                    for (Street otherStreet : testCase.getStreetList()) {
+                                        // skip if see the same road
+                                        if (otherStreet.getStreetPropertyValue("road_ID")
+                                            .equals(vehicleStandingStreet.getStreetPropertyValue("road_ID"))) {
+                                            continue;
+                                        }
+                                        int otherStreetRoadAngle = Integer.parseInt(otherStreet.getStreetPropertyValue("road_angle"));
+                                        int oppositeAngle = AccidentConstructorUtil.computeOppositeAngle(otherStreetRoadAngle);
+                                        ConsoleLogger.print('d', "opposite angle of other street " + oppositeAngle);
 
+                                        // Make the new crash coord further to avoid waypoint conflict
+                                        double newCoord[] = AccidentConstructorUtil.computeNewCoordOfRotatedLine(Math.abs(extraDistance),
+                                            oppositeAngle);
+
+                                        extraXCoord = newCoord[0];
+                                        extraYCoord = newCoord[1];
+                                        ConsoleLogger.print('d', String.format("No turning & non-continuous road, " +
+                                            "extraCoord is (%.2f, %.2f)", extraXCoord, extraYCoord));
+                                        ConsoleLogger.print('d', String.format("Other road_ID is %s \n" +
+                                                "road_node_list = %s",
+                                            otherStreet.getStreetPropertyValue("road_ID"),
+                                            otherStreet.getStreetPropertyValue("road_node_list")));
+                                        break;
+                                    }
                                 }
                             } // End appending extra crash point to ensure crash happens
 
                             if (vehicleCoordAtI.size() > 0
                                     && !vehicleCoordAtI.get(vehicleCoordAtI.size() - 1).equals(extraXCoord + ":" + extraYCoord))
-                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
+                                vehicleCoordAtI.add(vehicleCoordAtI.size(),
+                                    AccidentConstructorUtil.displayAs6DecimalNum(extraXCoord) + ":" +
+                                    AccidentConstructorUtil.displayAs6DecimalNum(extraYCoord));
                         } // End checking last coord is crash coord
 
-                    } // End add extra point for turn into path case.
+//                    } // End add extra point for turn into path case.
 
+                    System.out.println("Vehicle Coord after add extra point: " + vehicleCoordAtI.toString());
                     // Append grade (zCoord) value into the coords
                     for (int z = 0; z < vehicleCoordAtI.size(); z++)
                     {
