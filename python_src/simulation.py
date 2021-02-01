@@ -6,9 +6,17 @@ CRASHED = 1
 NO_CRASH = 0
 
 
+class SimulationReport:
+    def __init__(self, bng_vehicles, status):
+        self.vehicles = bng_vehicles
+        self.status = status
+
+    def __str__(self):
+        return str(self.__class__) + ": " + str(self.__dict__)
+
+
 class Simulation:
     def __init__(self, bng_roads, bng_vehicles):
-        self.result = CRASHED
         self.bng_roads = bng_roads
         self.bng_vehicles = bng_vehicles
         self.status = NO_CRASH
@@ -36,11 +44,8 @@ class Simulation:
 
         return bng_vehicle
 
-    def get_result(self):
-        return {
-            'vehicles': self.bng_vehicles,
-            'status': self.status
-        }
+    def get_report(self):
+        return SimulationReport(self.bng_vehicles, self.status)
 
     def execute_scenario(self, timeout=None):
         bng_roads = self.bng_roads

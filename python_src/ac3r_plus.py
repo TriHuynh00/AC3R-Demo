@@ -472,24 +472,20 @@ class CrashScenario:
         # Scenario score
         self.score = 0
 
-        self.simulation = None
+        self.sim_report = None
 
     def cal_fitness(self, police_report=None):
-        simulation = self.simulation
-        status = simulation["status"]
+        report = self.sim_report
+        status = report.status
         if police_report is None or status == NO_CRASH:
-            # For testing purpose
-            if "distance" in simulation:
-                self.score = -simulation["distance"]
-            else:
-                v1 = simulation["vehicles"][0]
-                v2 = simulation["vehicles"][1]
-                p1 = Point(v1.positions[-1][0], v1.positions[-1][1])
-                p2 = Point(v2.positions[-1][0], v2.positions[-1][1])
-                self.score = -p1.distance(p2)
+            v1 = report.vehicles[0]
+            v2 = report.vehicles[1]
+            p1 = Point(v1.positions[-1][0], v1.positions[-1][1])
+            p2 = Point(v2.positions[-1][0], v2.positions[-1][1])
+            self.score = -p1.distance(p2)
         elif status == CRASHED:
             point = 1
-            for v in simulation["vehicles"]:
+            for v in report.vehicles:
                 police_data = police_report[v.vehicle.vid] # Extract data from report to compare
                 v_damage = v.get_damage()
                 for k in v_damage:
@@ -497,7 +493,7 @@ class CrashScenario:
                         point += 1
             self.score = point
         # Remove unnecessary attribute
-        delattr(self, 'simulation')
+        delattr(self, 'sim_report')
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
