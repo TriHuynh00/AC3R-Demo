@@ -66,42 +66,57 @@ public class StraightPathConstructor {
     {
         //AccidentConstructorUtil.findVehicleBasedOnId(2, vehicleList).setVelocity(50);
         ArrayList<ArrayList<String>> constructedCoordVeh = new ArrayList<ArrayList<String>>();
-        ArrayList<Integer> impactAtSteps = new ArrayList<Integer>();
-        ArrayList<ArrayList<VehicleAttr>> impactedVehiclesAtSteps = new ArrayList<ArrayList<VehicleAttr>>();
+        ArrayList<ArrayList<Integer>> impactAtSteps = new ArrayList<ArrayList<Integer>>();
+        ArrayList<ArrayList<ArrayList<VehicleAttr>>> impactedVehiclesAtSteps = new ArrayList<ArrayList<ArrayList<VehicleAttr>>>();
 
         VehicleAttr[] strikerAndVictim = new VehicleAttr[2];
 
         for (VehicleAttr vehicle : vehicleList)
         {
             constructedCoordVeh.add(new ArrayList<String>());
+            impactAtSteps.add(new ArrayList<Integer>());
+            impactedVehiclesAtSteps.add(new ArrayList<ArrayList<VehicleAttr>>());
         }
 
         constructedCoordVeh = AccidentConstructorUtil.fillCoordOfVehicles(constructedCoordVeh, vehicleList.get(0).getActionList().size());
 
         strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictim(vehicleList.get(0), vehicleList.get(1));
 
-        // Find the index of the impact action in the action lists of both vehicles
-        AccidentConstructorUtil.findImpactedStepsAndVehicles(impactAtSteps, impactedVehiclesAtSteps, vehicleList);
-
         // If there are 2 vehicles, construct the only crash point at 0:0
         if (vehicleList.size() == 2) {
 
-            if (impactAtSteps.size() > 0) {
-                constructedCoordVeh.get(0).add(impactAtSteps.get(0), "0:0");
-                constructedCoordVeh.get(1).add(impactAtSteps.get(0), "0:0");
-            } else {
-                constructedCoordVeh.get(0).add("0:0");
-                constructedCoordVeh.get(1).add("0:0");
+            boolean impactFound = false;
+
+            for (VehicleAttr vehicle : vehicleList) {
+                // Find the index of the impact action in the action lists of both vehicles
+
+                ArrayList<Integer> vehicleImpactsAtStep = impactAtSteps.get(vehicle.getVehicleId() - 1);
+
+                AccidentConstructorUtil.findImpactedStepsAndVehicles(
+                    vehicle,
+                    impactAtSteps.get(vehicle.getVehicleId() - 1),
+                    impactedVehiclesAtSteps.get(vehicle.getVehicleId() - 1),
+                    vehicleList);
+
+
+                if (impactAtSteps.get(vehicle.getVehicleId() - 1).size() > 0) {
+                    impactFound = true;
+                    constructedCoordVeh.get(vehicle.getVehicleId() - 1).add(
+                        vehicleImpactsAtStep.get(0), "0:0");
+                } else {
+                    constructedCoordVeh.get(vehicle.getVehicleId() - 1).add("0:0");
+                }
             }
 
             ConsoleLogger.print('d',"impactAtSteps size: " + impactAtSteps.size());
 
             // If an impact action is found, construct the crash coord based on the travelling direction of the vehicles
-            if (impactAtSteps.size() >= 1) {
+            if (impactFound) {
                 String crashXCoord = "0";
                 String crashYCoord = "0";
 
                 for (int v = 0; v < vehicleList.size(); v++) {
+
                     VehicleAttr currentVehicle = vehicleList.get(v);
 
                     Street vehicleStandingStreet = currentVehicle.getStandingStreet();
@@ -173,7 +188,9 @@ public class StraightPathConstructor {
                 for (int v = 0; v < vehicleList.size(); v++) {
                     VehicleAttr currentVehicle = vehicleList.get(v);
 
-                    constructedCoordVeh.get(currentVehicle.getVehicleId() - 1).set(impactAtSteps.get(0), crashCoord);
+                    ArrayList<Integer> vehicleImpactsAtStep = impactAtSteps.get(currentVehicle.getVehicleId() - 1);
+
+                    constructedCoordVeh.get(currentVehicle.getVehicleId() - 1).set(vehicleImpactsAtStep.get(0), crashCoord);
 
                     LinkedList<String> vehicleActionList = currentVehicle.getActionList();
 
@@ -230,6 +247,8 @@ public class StraightPathConstructor {
                 for (int v = 0; v < vehicleList.size(); v++)
                 {
                     VehicleAttr currentVehicle = vehicleList.get(v);
+
+                    ArrayList<Integer> vehicleImpactsAtStep = impactAtSteps.get(currentVehicle.getVehicleId() - 1);
 
                     Street vehicleStandingStreet = currentVehicle.getStandingStreet();
 
@@ -351,7 +370,8 @@ public class StraightPathConstructor {
                         ConsoleLogger.print('d',"Moving vehicle first point before impact " + currentVehicleXCoord + ":" + currentVehicleYCoord);
 
                         // Check if the action before crash is a moving action, if yes, assign the prior crash point in that index
-                        int indexActionBeforeCrash = impactAtSteps.get(0) - 1;
+
+                        int indexActionBeforeCrash = vehicleImpactsAtStep.get(0) - 1;
 
                         if (parser.findVelocityOfAction(currentVehicle.getActionList().get(indexActionBeforeCrash)) > 0)
                         {

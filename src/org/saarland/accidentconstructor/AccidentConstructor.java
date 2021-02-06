@@ -416,8 +416,10 @@ public class AccidentConstructor {
                         for (int y = 0; y < vehicle.getActionList().size(); y++) {
                             if (vehicle.getActionList().get(y).contains("turn")
                                 || vehicle.getActionList().get(y).contains("drift")) {
-                                String turnSide = vehicle.getActionDescriptionList().get(y).getVerbProps().get(0);
-                                vehicle.getActionList().set(y, "turn " + turnSide);
+                                if (vehicle.getActionDescriptionList().get(y).getVerbProps().size() > 0) {
+                                    String turnSide = vehicle.getActionDescriptionList().get(y).getVerbProps().get(0);
+                                    vehicle.getActionList().set(y, "turn " + turnSide);
+                                }
                             }
                         }
 
@@ -688,10 +690,10 @@ public class AccidentConstructor {
                         // ontologyHandler, scenarioName);
 
                 // crashAnalyzer.checkWhetherCrashOccur(hasCrash);
-                boolean hasCrash = testCaseRunner.runScenario(scenarioName);
-                DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList, ontologyHandler, scenarioName);
-                crashAnalyzer.checkWhetherCrashOccur(true);
-                ConsoleLogger.print('d', "Finish running scenario");
+//                boolean hasCrash = testCaseRunner.runScenario(scenarioName);
+//                DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList, ontologyHandler, scenarioName);
+//                crashAnalyzer.checkWhetherCrashOccur(hasCrash);
+//                ConsoleLogger.print('d', "Finish running scenario");
 
                 /************ END SCENARIO EXECUTION ***********/
                 long scenarioEndTime = System.nanoTime() - scenarioStartTime;
@@ -2258,6 +2260,41 @@ public class AccidentConstructor {
         } // End looping through vehicle
     }
 
+//    private void removeDuplicateAction(ArrayList<VehicleAttr> vehicleList) {
+//        LinkedList<LinkedList<String>> vehicleActionList = new LinkedList<LinkedList<String>>();
+//
+//        for (int i = 0; i < vehicleList.size(); i++) {
+//            vehicleActionList.add(vehicleList.get(i).getActionList());
+//        }
+//        // Remove duplicate actions
+//        for (int i = 0; i < vehicleActionList.get(0).size() - 1; i++) {
+//            boolean allVehicleSameAction = false;
+//            // Check if all next action for each vehicle is the same
+//            for (int j = 0; j < vehicleActionList.size(); j++) {
+//                // ConsoleLogger.print('d',"Word of vehicle %d at pos %d is %s;
+//                // at [%d, %d] is %s \n",
+//                // j, i, vehicleActionList.get(j).get(i),
+//                // j, i + 1, vehicleActionList.get(j).get(i + 1));
+//
+//                // Only prune if there are more than 1 duplicate action
+//
+//                if (i + 1 < vehicleActionList.get(j).size()
+//                    && vehicleActionList.get(j).get(i).equals(vehicleActionList.get(j).get(i + 1))) {
+//                    allVehicleSameAction = true;
+//                } else {
+//                    allVehicleSameAction = false;
+//                    break;
+//                }
+//            }
+//            if (allVehicleSameAction) {
+//                for (int j = 0; j < vehicleActionList.size(); j++) {
+//                    vehicleActionList.get(j).remove(i);
+//                }
+//                i--;
+//            }
+//        }
+//    }
+
     private void removeDuplicateAction(ArrayList<VehicleAttr> vehicleList) {
         LinkedList<LinkedList<String>> vehicleActionList = new LinkedList<LinkedList<String>>();
 
@@ -2265,10 +2302,12 @@ public class AccidentConstructor {
             vehicleActionList.add(vehicleList.get(i).getActionList());
         }
         // Remove duplicate actions
-        for (int i = 0; i < vehicleActionList.get(0).size() - 1; i++) {
+//        for (int i = 0; i < vehicleActionList.get(0).size() - 1; i++) {
+        for (int i = 0; i < vehicleActionList.size(); i++) {
             boolean allVehicleSameAction = false;
             // Check if all next action for each vehicle is the same
-            for (int j = 0; j < vehicleActionList.size(); j++) {
+            LinkedList<String> currVehicleActionList = vehicleActionList.get(i);
+            for (int j = currVehicleActionList.size() - 1; j > 0 ; j--) {
                 // ConsoleLogger.print('d',"Word of vehicle %d at pos %d is %s;
                 // at [%d, %d] is %s \n",
                 // j, i, vehicleActionList.get(j).get(i),
@@ -2276,18 +2315,9 @@ public class AccidentConstructor {
 
                 // Only prune if there are more than 1 duplicate action
 
-                if (vehicleActionList.get(j).get(i).equals(vehicleActionList.get(j).get(i + 1))) {
-                    allVehicleSameAction = true;
-                } else {
-                    allVehicleSameAction = false;
-                    break;
+                if (j > 0 && currVehicleActionList.get(j).equals(currVehicleActionList.get(j - 1))) {
+                    currVehicleActionList.remove(j);
                 }
-            }
-            if (allVehicleSameAction) {
-                for (int j = 0; j < vehicleActionList.size(); j++) {
-                    vehicleActionList.get(j).remove(i);
-                }
-                i--;
             }
         }
     }
@@ -2324,10 +2354,35 @@ public class AccidentConstructor {
         }
     }
 
+    // If there are only two actions, and the first one is hit, swap the two actions
+    private void swapHitAction(ArrayList<VehicleAttr> vehicleList){
+        LinkedList<String> vehicleActionList = new LinkedList<String>();
+
+        for (VehicleAttr vehicle : vehicleList) {
+            vehicleActionList = vehicle.getActionList();
+
+            if (vehicleActionList.size() == 2) {
+                // If the first action is hit, and the second action is a static one (park, stop),
+                // Swap the two actions
+                if (vehicleActionList.get(0).startsWith("hit")
+                    && ontoParser.findExactConcept(vehicleActionList.get(1)).getDataProperties()
+                    .get("velocity").equals("0")) {
+                    String temp = vehicleActionList.get(1);
+                    vehicleActionList.set(1, vehicleActionList.get(0));
+                    vehicleActionList.set(0, temp);
+                }
+            }
+        }
+
+
+    }
+
     // Remove N/A and duplicate actions
     private void pruneActionTree(ArrayList<VehicleAttr> vehicleList) {
         removeInvalidActions(vehicleList);
         removeDuplicateAction(vehicleList);
+        swapHitAction(vehicleList);
+
 
         ConsoleLogger.print('d', "After preprocessing");
 
@@ -2336,77 +2391,77 @@ public class AccidentConstructor {
                     "Vehicle " + vehicle.getVehicleId() + " Actions : " + vehicle.getActionList().toString());
         }
 
-        LinkedList<LinkedList<String>> vehicleActionList = new LinkedList<LinkedList<String>>();
-        LinkedList<LinkedList<ActionDescription>> vehicleActionDescriptionList
-            = new LinkedList<LinkedList<ActionDescription>>();
-
-
-        for (int i = 0; i < vehicleList.size(); i++) {
-            vehicleActionList.add(vehicleList.get(i).getActionList());
-            vehicleActionDescriptionList.add(vehicleList.get(i).getActionDescriptionList());
-        }
-
-        for (int i = vehicleActionList.get(0).size() - 1; i > 0 && vehicleActionList.get(0).size() > 2; i--) {
-            boolean prunable = true;
-            boolean hitWordFound = false;
-            // Loop through each vehicle
-            for (int c = 0; c < vehicleActionList.size(); c++) {
-                // Check if the action of this step is equal to another step
-                if (vehicleActionList.get(c).get(i).equals("hit")) {
-                    ConsoleLogger.print('d', "hit word reached");
-                    hitWordFound = true;
-                    continue;
-                } else if (vehicleActionList.get(c).get(i).equals("hit*")) {
-                    ConsoleLogger.print('d', "hit* condition reached");
-                    hitWordFound = true;
-                    // If previous word is a normal traveling action, then can't
-                    // prune
-                    if (!ontoParser.findExactConcept(vehicleActionList.get(c).get(i - 1)).getDataProperties()
-                            .get("velocity").equals("20")) {
-
-                        prunable = false;
-                        break;
-                    } else {
-                        // Do NOT prune if the previous word is different from
-                        // the previous previous word
-                        if (i - 2 >= 0) {
-                            if (!vehicleActionList.get(c).get(i - 1).equals(vehicleActionList.get(c).get(i - 2))) {
-                                ConsoleLogger.print('d', "2 previous words are not the same");
-                                prunable = false;
-                                break;
-                            }
-                        }
-                    }
-                } else if (!vehicleActionList.get(c).get(i).equals(vehicleActionList.get(c).get(i - 1))) {
-                    prunable = false;
-                    break;
-                } else {
-                    ConsoleLogger.print('d', "Else condition in prune action tree");
-                    // If the previous action is a stop or park action, leave it
-                    // like that
-                    if (ontoParser.findExactConcept(vehicleActionList.get(c).get(i - 1).split(" ")[0]).getDataProperties()
-                            .get("velocity").equals("0")) {
-                        prunable = false;
-                        break;
-                    }
-                }
-            } // End looping through vehicle
-
-            if (!hitWordFound) {
-                break;
-            }
-
-            if (!prunable) {
-                continue;
-            } else {
-                for (LinkedList<String> actionList : vehicleActionList) {
-                    actionList.remove(i - 1);
-                }
-                for (LinkedList<ActionDescription> actionDescritionList : vehicleActionDescriptionList) {
-                    actionDescritionList.remove(i - 1);
-                }
-            }
-        } // End looping through action list
+//        LinkedList<LinkedList<String>> vehicleActionList = new LinkedList<LinkedList<String>>();
+//        LinkedList<LinkedList<ActionDescription>> vehicleActionDescriptionList
+//            = new LinkedList<LinkedList<ActionDescription>>();
+//
+//
+//        for (int i = 0; i < vehicleList.size(); i++) {
+//            vehicleActionList.add(vehicleList.get(i).getActionList());
+//            vehicleActionDescriptionList.add(vehicleList.get(i).getActionDescriptionList());
+//        }
+//
+//        for (int i = vehicleActionList.get(0).size() - 1; i > 0 && vehicleActionList.get(0).size() > 2; i--) {
+//            boolean prunable = true;
+//            boolean hitWordFound = false;
+//            // Loop through each vehicle
+//            for (int c = 0; c < vehicleActionList.size(); c++) {
+//                // Check if the action of this step is equal to another step
+//                if (vehicleActionList.get(c).get(i).equals("hit")) {
+//                    ConsoleLogger.print('d', "hit word reached");
+//                    hitWordFound = true;
+//                    continue;
+//                } else if (vehicleActionList.get(c).get(i).equals("hit*")) {
+//                    ConsoleLogger.print('d', "hit* condition reached");
+//                    hitWordFound = true;
+//                    // If previous word is a normal traveling action, then can't
+//                    // prune
+//                    if (!ontoParser.findExactConcept(vehicleActionList.get(c).get(i - 1)).getDataProperties()
+//                            .get("velocity").equals("20")) {
+//
+//                        prunable = false;
+//                        break;
+//                    } else {
+//                        // Do NOT prune if the previous word is different from
+//                        // the previous previous word
+//                        if (i - 2 >= 0) {
+//                            if (!vehicleActionList.get(c).get(i - 1).equals(vehicleActionList.get(c).get(i - 2))) {
+//                                ConsoleLogger.print('d', "2 previous words are not the same");
+//                                prunable = false;
+//                                break;
+//                            }
+//                        }
+//                    }
+//                } else if (!vehicleActionList.get(c).get(i).equals(vehicleActionList.get(c).get(i - 1))) {
+//                    prunable = false;
+//                    break;
+//                } else {
+//                    ConsoleLogger.print('d', "Else condition in prune action tree");
+//                    // If the previous action is a stop or park action, leave it
+//                    // like that
+//                    if (ontoParser.findExactConcept(vehicleActionList.get(c).get(i - 1).split(" ")[0]).getDataProperties()
+//                            .get("velocity").equals("0")) {
+//                        prunable = false;
+//                        break;
+//                    }
+//                }
+//            } // End looping through vehicle
+//
+//            if (!hitWordFound) {
+//                break;
+//            }
+//
+//            if (!prunable) {
+//                continue;
+//            } else {
+//                for (LinkedList<String> actionList : vehicleActionList) {
+//                    actionList.remove(i - 1);
+//                }
+//                for (LinkedList<ActionDescription> actionDescritionList : vehicleActionDescriptionList) {
+//                    actionDescritionList.remove(i - 1);
+//                }
+//            }
+//        } // End looping through action list
     }
 
     private void assignDirectionToRoad(String directionWord, VehicleAttr travellingVehicle) {
@@ -2941,7 +2996,7 @@ public class AccidentConstructor {
                     if(entry.getValue().contains("type") ) {
                         scenarioData += "\t{\n \t\t'name' : \"" + entry.getKey().toString() + "\",\n";
 
-                        scenarioData += "\t\t'trajectory' : [ " + entry.getValue() + " ],\n";
+                        scenarioData += "\t\t'trajectory' : " + entry.getValue() + ",\n";
 
                         scenarioData += "\t\t'speed': " + vehicle.getVelocity();
 
@@ -3037,11 +3092,24 @@ public class AccidentConstructor {
         // Loop through each action
         for (int i = vehicleActionList.size() - 2; i >= 0; i--) {
             String currentAction = vehicleActionList.get(i);
-            ConsoleLogger.print('d', "current Action is " + currentAction);
-            // if the action is a turn, map 3 points
-            if (currentAction.startsWith("turn")
-                && currentCoordIndex - 1 >= 0 && currentCoordIndex + 1 < vehiclePath.size()) {
+            int turnAngle = 0;
 
+            if (currentAction.contains(" ")) {
+                currentAction = currentAction.split(" ")[0];
+            }
+
+            ConsoleLogger.print('d', "current Action is " + currentAction);
+            // if the action is a turn, map 3 points: 1 point before the currentCoordIndex
+            // , the currentCoordIndex, and 1 point after the currentCoordIndex
+            AccidentConcept currentActionConcept = ontoParser.findExactConcept(currentAction);
+
+            if (currentActionConcept.getDataProperties().get("turn_angle") != null)
+                turnAngle = Integer.parseInt(
+                    currentActionConcept.getDataProperties().get("turn_angle"));
+
+            if ((currentAction.startsWith("turn") || turnAngle >= 45)
+                && currentCoordIndex - 1 >= 0 && currentCoordIndex + 1 < vehiclePath.size()) {
+                ConsoleLogger.print('d', "Turn Action is " + currentAction);
                 String actionAndCoord = String.format("{\"type\": \"turn\"," +
                         "\"start\":\"%s\", " +
                         "\"middle\":\"%s\", " +
@@ -3050,12 +3118,7 @@ public class AccidentConstructor {
                     vehiclePath.get(currentCoordIndex),
                     vehiclePath.get(currentCoordIndex + 1));
 
-
-                if (turnActionAndCoord.isEmpty()) {
-                    turnActionAndCoord.add(actionAndCoord);
-                } else {
-                    turnActionAndCoord.add("," + actionAndCoord);
-                }
+                turnActionAndCoord.add(actionAndCoord);
 
                 if (impactActionAndCoord.isEmpty()) {
                     impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
@@ -3069,9 +3132,8 @@ public class AccidentConstructor {
 
                 int velocity = Integer.parseInt(
                     ontoParser.findExactConcept(currentAction).getDataProperties().get("velocity"));
-                int turnAngle = Integer.parseInt(
-                    ontoParser.findExactConcept(currentAction).getDataProperties().get("turn_angle"));
-                // If this is a moving action, make a segment from previous
+
+                // If this is a moving or decelerating action, make a segment from previous
                 if ((velocity > 0 || velocity < 0) && velocity < 1000) {
                     if (turnAngle == 0 && currentCoordIndex - 1 >= 0) {
 
@@ -3082,11 +3144,7 @@ public class AccidentConstructor {
                             vehiclePath.get(currentCoordIndex - 1),
                             vehiclePath.get(currentCoordIndex));
 
-                        if (followActionAndCoord.isEmpty()) {
-                            followActionAndCoord.add(actionAndCoord);
-                        } else {
-                            followActionAndCoord.add("," + actionAndCoord);
-                        }
+                        followActionAndCoord.add(actionAndCoord);
 
                         // set the impact as the 2nd last point in vehicle path for non-rear-end cases
                         if (!testCase.getCrashType().contains("rear end")
@@ -3098,6 +3156,17 @@ public class AccidentConstructor {
                                         "\"middle\":\"None\", " +
                                         "\"end\":\"None\"}",
                                     vehiclePath.get(vehiclePath.size() - 2)));
+
+                                // If the action before impact is a turn,
+                                // then the action after impact is a follow action
+                                if (i == vehicleActionList.size() - 2) {
+                                    followActionAndCoord.add(String.format("{\"type\": \"straight\"," +
+                                        "\"start\":\"%s\", " +
+                                        "\"middle\":\"None\", " +
+                                        "\"end\":\"%s\"}",
+                                    vehiclePath.get(vehiclePath.size() - 2),
+                                    vehiclePath.get(vehiclePath.size() - 1)));
+                                }
                             }
                         } else { // set the impact as the last point in vehicle path for rear-end cases
                             if (impactActionAndCoord.isEmpty()) {
@@ -3132,6 +3201,24 @@ public class AccidentConstructor {
                 }
             }
         }
+        // Final check:  if there is no point being covered in the action coordinates,
+        // add that point as a straight action
+        for (int k = vehiclePath.size() - 2; k >= 0 ; k--) {
+            String unassignedCoord = vehiclePath.get(k);
+            if (!followActionAndCoord.toString().contains(unassignedCoord)
+                && !stopActionAndCoord.toString().contains(unassignedCoord)
+                && !turnActionAndCoord.toString().contains(unassignedCoord)
+                && !impactActionAndCoord.toString().contains(unassignedCoord))
+            {
+                followActionAndCoord.add(String.format("{\"type\": \"straight\"," +
+                        "\"start\":\"%s\", " +
+                        "\"middle\":\"None\", " +
+                        "\"end\":\"%s\"}",
+                    unassignedCoord,
+                    vehiclePath.get(k + 1)));
+            }
+        }
+
         actionAndCoordinate.put("follow", followActionAndCoord.toString());
         actionAndCoordinate.put("turn", turnActionAndCoord.toString());
         actionAndCoordinate.put("stop", stopActionAndCoord.toString());

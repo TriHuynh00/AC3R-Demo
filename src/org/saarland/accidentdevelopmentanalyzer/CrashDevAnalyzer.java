@@ -12,7 +12,9 @@ import org.saarland.nlptools.Stemmer;
 import org.saarland.ontologyparser.AccidentConcept;
 import org.saarland.ontologyparser.OntologyHandler;
 
+import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public class CrashDevAnalyzer {
@@ -464,8 +466,11 @@ public class CrashDevAnalyzer {
 
     public void constructVehicleActionEventList(LinkedList<ActionDescription> actionList, ArrayList<VehicleAttr> vehicleList) {
 
-        for (ActionDescription actionDesc : actionList)
+
+//        for (ActionDescription actionDesc : actionList)
+        for (Iterator<ActionDescription> iterator = actionList.iterator(); iterator.hasNext();)
         {
+            ActionDescription actionDesc = iterator.next();
             String subject = actionDesc.getSubject().trim();
             String verb    = AccidentConstructorUtil.getWordFromToken(actionDesc.getVerb().trim());
 
@@ -487,7 +492,8 @@ public class CrashDevAnalyzer {
                         objVehicleName = actionDesc.getVerbProps().get(0);
                     }
                     catch (Exception ex) {
-                        actionList.remove(actionDesc);
+//                        actionList.remove(actionDesc);
+                        iterator.remove();
                         continue;
                     }
 
