@@ -46,42 +46,28 @@ class RandomEvolution:
         # Extracting all the fitness of
         fits = [ind.fitness.values[0] for ind in pop]
 
-        # def _run():
-        #     # Begin the evolution
-        #     epochs = 0
-        #     while True:
-        #         # A new generation
-        #         epochs = epochs + 1
-        #         # Select the next generation individuals
-        #         offspring = self.toolbox.select(self.orig_ind, pop, orig_fitness)
-        #         self.toolbox.mutate(offspring)
-        #         # The population is entirely replaced by the offspring
-        #         pop[:] = [offspring]
-        #         best_ind = tools.selBest(pop, 1)[0]
-        #         record = self.mstats.compile(pop)
-        #         self.logbook.record(gen=epochs, evals=epochs, **record)
-        #         if STOP_EVENT.is_set():
-        #             break
-        #
-        # # Start the thread evolution within given time
-        # action_thread = Thread(target=_run)
-        # action_thread.start()
-        # action_thread.join(timeout=timeout)
-        # STOP_EVENT.set()
+        def _run():
+            # Begin the evolution
+            epochs = 0
+            while True:
+                # A new generation
+                epochs = epochs + 1
+                # Select the next generation individuals
+                offspring = self.toolbox.select(self.orig_ind, pop, orig_fitness)
+                self.toolbox.mutate(offspring)
+                # The population is entirely replaced by the offspring
+                pop[:] = [offspring]
+                best_ind = tools.selBest(pop, 1)[0]
+                record = self.mstats.compile(pop)
+                self.logbook.record(gen=epochs, evals=epochs, **record)
+                if STOP_EVENT.is_set():
+                    break
 
-        # TODO: Change to timer
-        epochs = 0
-        while epochs < timeout:
-            # A new generation
-            epochs = epochs + 1
-            # Select the next generation individuals
-            offspring = self.toolbox.select(self.orig_ind, pop, orig_fitness)
-            self.toolbox.mutate(offspring)
-            # The population is entirely replaced by the offspring
-            pop[:] = [offspring]
-            best_ind = tools.selBest(pop, 1)[0]
-            record = self.mstats.compile(pop)
-            self.logbook.record(gen=epochs, evals=epochs, **record)
+        # Start the thread evolution within given time
+        action_thread = Thread(target=_run)
+        action_thread.start()
+        action_thread.join(timeout=timeout)
+        STOP_EVENT.set()
 
         print("End of evolution")
 

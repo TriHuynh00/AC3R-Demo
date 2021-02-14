@@ -109,7 +109,7 @@ def expectations(gens):
     return [7 for _ in range(gens)]
 
 
-class PopulationTest(unittest.TestCase):
+class RandomEvolutionTest(unittest.TestCase):
     def test_run_scenario_in_population(self):
         self.assertEqual(0, 0)
         with open("./data/Case6.json") as file:
@@ -118,7 +118,7 @@ class PopulationTest(unittest.TestCase):
         orig_fitness = fitness([orig_ind])
 
         rev = RandomEvolution(orig_ind, fitness, generate_random_ind, select, mutate, expectations)
-        rev.start_from(orig_fitness=orig_fitness, timeout=5)
+        rev.start_from(orig_fitness=orig_fitness, timeout=300)
 
         rev.print_logbook()
         rev.visualize_evolution()
