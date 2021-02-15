@@ -9,13 +9,13 @@ FIRST = 0
 
 
 class RandomEvolution:
-    def __init__(self, orig_ind, fitness, generate_random_ind, generate_params, select, expectations):
+    def __init__(self, orig_ind, fitness, generate, generate_params, select, expectations):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
         self.toolbox = base.Toolbox()
         # Attribute generator
-        self.toolbox.register("random_ind", generate_random_ind, orig_ind, generate_params)
+        self.toolbox.register("random_ind", generate, orig_ind, generate_params)
         # Structure initializers
         self.toolbox.register("individual", tools.initRepeat, creator.Individual, self.toolbox.random_ind, 1)
         self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
@@ -57,7 +57,7 @@ class RandomEvolution:
 
                 # Select the next generation individuals
                 best_ind = self.toolbox.select(best_ind, pop)
-                print(epochs, best_ind.fitness.values)
+                pop[:] = [best_ind]
                 record = self.mstats.compile(pop)
                 self.logbook.record(gen=epochs, evals=epochs, **record)
                 if STOP_EVENT.is_set():
