@@ -1,11 +1,14 @@
+import time
 import numpy as np
 import matplotlib.pyplot as plt
 from deap import tools, creator, base
 from threading import Thread, Event
+import logging
 
 # Event object used to send signals from one thread to another
 STOP_EVENT = Event()
 FIRST = 0
+logger = logging.getLogger(__name__)
 
 
 class RandomEvolution:
@@ -37,7 +40,6 @@ class RandomEvolution:
     def start_from(self, timeout):
         def _run():
             pop = self.toolbox.population(n=1)
-            print("Start of evolution")
             # Evaluate the entire population
             fitnesses = list(map(self.toolbox.evaluate, pop))
             for ind, fit in zip(pop, fitnesses):
@@ -46,10 +48,13 @@ class RandomEvolution:
             best_ind = tools.selBest(pop, 1)[FIRST]
             epochs = 0
             # Begin the evolution
+            print("Start of evolution")
             while True:
+                start_time = time.time()
                 epochs = epochs + 1
                 # A new generation
                 pop = self.toolbox.population(n=1)
+                logger.info("--- Obtained new generation %s ---", pop[FIRST][FIRST])
                 # Evaluate the entire population
                 fitnesses = list(map(self.toolbox.evaluate, pop))
                 for ind, fit in zip(pop, fitnesses):
@@ -60,15 +65,18 @@ class RandomEvolution:
                 pop[:] = [best_ind]
                 record = self.mstats.compile(pop)
                 self.logbook.record(gen=epochs, evals=epochs, **record)
+                logger.info("--- Obtained best individual %s ---", best_ind)
+                logger.info("--- Evolution time: %s seconds ---" % (time.time() - start_time))
                 if STOP_EVENT.is_set():
                     break
 
         # Start the thread evolution within given time
         action_thread = Thread(target=_run)
         action_thread.start()
-        action_thread.join(timeout=timeout)
+        action_thread.join(timeout=timeout+60)
         STOP_EVENT.set()
-
+        logger.info("--- Logging Evolution Data ---")
+        logger.info(self.logbook)
         print("End of evolution")
 
     def print_logbook(self):

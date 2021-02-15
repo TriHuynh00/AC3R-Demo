@@ -115,7 +115,5 @@ class Simulation:
             # Save the last position of vehicle
             for bng_vehicle in bng_vehicles:
                 self.collect_vehicle_position(bng_vehicle)
-            bng_instance.close()
-            bng_instance.kill_beamng()
         finally:
             bng_instance.close()

@@ -4,6 +4,8 @@ from beamngpy import Road, Vehicle
 from beamngpy.sensors import Damage
 from models import RoadProfiler, BNGVehicle
 from simulation import Simulation
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Fitness:
@@ -40,7 +42,9 @@ class Fitness:
         crash_scenario, bng_roads, bng_vehicles = _collect_sim_data(individual)
         # Execute crash scenario and collect simulation's result
         simulation = Simulation(bng_roads, bng_vehicles)
+        start_time = time.time()
         simulation.execute_scenario(time.time() + 60 * 1)
+        logger.info("--- Simulation time: %s seconds ---" % (time.time() - start_time))
         crash_scenario.sim_report = simulation.get_report()
 
         # Fixed sample report data
