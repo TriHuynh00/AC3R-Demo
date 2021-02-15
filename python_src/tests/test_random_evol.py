@@ -84,20 +84,19 @@ def select(orig_ind, pop_ind, orig_fitness, fitness):
         fitness_value = f2
 
     deap_inds.fitness.values = fitness_value  # update fitness value to offspring
-    deap_inds[FIRST].value = value  # update attribute value to offspring
-    change_speed_v1(target_ind, value)
+    change_speed_v1(target_ind, value)  # update attribute value to offspring
     return deap_inds  # return deap_individual
 
 
 def mutate(deap_inds, mutate_params):
     individual = deap_inds[FIRST]  # deap_individual is a list
 
-    value = get_speed_v1(individual)  # extract attribute value from an individual
-    std, dim = mutate_params['std'], mutate_params['dim']
-    value += np.random.normal(0, std, dim)[0]
-    if value <= mutate_params['min']:
+    # value = get_speed_v1(individual)  # extract attribute value from an individual
+    # std, dim = mutate_params['std'], mutate_params['dim']
+    value = np.random.uniform(mutate_params["min"], mutate_params["max"], mutate_params["dim"])[0]
+    if value < mutate_params['min']:
         value = mutate_params['min']
-    if value >= mutate_params['max']:
+    if value > mutate_params['max']:
         value = mutate_params['max']
 
     change_speed_v1(individual, value)
@@ -118,7 +117,7 @@ class RandomEvolutionTest(unittest.TestCase):
         orig_fitness = fitness([orig_ind])
 
         rev = RandomEvolution(orig_ind, fitness, generate_random_ind, select, mutate, expectations)
-        rev.start_from(orig_fitness=orig_fitness, timeout=300)
+        rev.start_from(orig_fitness=orig_fitness, timeout=1200)
 
         rev.print_logbook()
         rev.visualize_evolution()
