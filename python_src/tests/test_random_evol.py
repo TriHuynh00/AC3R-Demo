@@ -63,18 +63,19 @@ def fitness(deap_inds):
     return crash_scenario.score,
 
 
-def generate_random_ind(orig_ind, params):
+def generate_random_ind(orig_ind, generate_params):
     random_ind = deepcopy(orig_ind)
-    change_speed_v1(random_ind, np.random.uniform(params["min"], params["max"], params["dim"])[0])
+    change_speed_v1(random_ind, np.random.uniform(generate_params["min"], generate_params["max"], 1)[0])
     return random_ind
 
 
-def select(orig_ind, pop_ind, orig_fitness, fitness):
+def select(orig_inds, pop_ind):
     deap_inds = pop_ind[FIRST]  # deap_pop is a list
     target_ind = deap_inds[FIRST]  # deap_individual is a list
+    orig_ind = orig_inds[FIRST]  # deap_individual is a list
 
-    f1 = orig_fitness
-    f2 = fitness([target_ind])
+    f1 = orig_inds.fitness.values
+    f2 = deap_inds.fitness.values
 
     if f1 >= f2:
         value = get_speed_v1(orig_ind)
@@ -114,10 +115,16 @@ class RandomEvolutionTest(unittest.TestCase):
         with open("./data/Case6.json") as file:
             scenario_data = json.load(file)
         orig_ind = CrashScenario.from_json(scenario_data)
-        orig_fitness = fitness([orig_ind])
 
-        rev = RandomEvolution(orig_ind, fitness, generate_random_ind, select, mutate, expectations)
-        rev.start_from(orig_fitness=orig_fitness, timeout=1200)
+        rev = RandomEvolution(
+            orig_ind=orig_ind,
+            fitness=fitness,
+            generate_random_ind=generate_random_ind,
+            select=select,
+            generate_params={"min": 10, "max": 50},
+            expectations=expectations
+        )
+        rev.start_from(timeout=180)
 
         rev.print_logbook()
         rev.visualize_evolution()
