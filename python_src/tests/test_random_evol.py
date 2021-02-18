@@ -1,12 +1,7 @@
 import json
 import unittest
 from ac3r_plus import CrashScenario
-from evolution import RandomEvolution, Selector, Generator, Fitness
-import logging
-
-logging.basicConfig(filename="evolution.log",
-                format='%(asctime)s - %(threadName)s - %(name)s - %(levelname)s - %(message)s',
-                datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
+from evolution import RandomEvolution, Selector, Generator, Fitness, LogBook
 
 
 def get_speed_v1(individual):
@@ -41,9 +36,9 @@ class RandomEvolutionTest(unittest.TestCase):
             generate=Generator.generate_random_from,
             generate_params={"min": 10, "max": 50},
             select=Selector.select_random_ev,
-            expectations=expectations
+            timeout=60 * 5
         )
-        rev.start_from(timeout=60*5)
+        rev.start_from()
 
-        rev.print_logbook()
-        rev.visualize_evolution()
+        LogBook(rev.logbook, expectations).visualize_evolution()
+
