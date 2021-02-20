@@ -36,9 +36,9 @@ class RandomEvolutionTest(unittest.TestCase):
             generate=Generator.generate_random_from,
             generate_params={"min": 10, "max": 50},
             select=Selector.select_random_ev,
-            timeout=60 * 5
+            timeout=60 * 3
         )
-        rev.start_from()
+        rev.run()
 
         v = LogBook(expectations)
         v.print_logbook(rev.logbook)

@@ -31,17 +31,20 @@ class RandomEvolution:
 
         self.timeout = timeout
 
-    def start_from(self, ):
+    def run(self):
         pop = self.toolbox.population(n=1)
         # Evaluate the entire population
+        print("Start evaluation")
+        start_time = time.time()
         fitnesses = list(map(self.toolbox.evaluate, pop))
         for ind, fit in zip(pop, fitnesses):
             ind.fitness.values = fit
-
+        print("Evaluation time: ", time.time() - start_time)
         best_ind = tools.selBest(pop, 1)[FIRST]
         epochs = 0
         # Begin the evolution
         print("Start of evolution")
+        start_time = time.time()
         timeout = time.time() + 10 if self.timeout is None else time.time() + self.timeout
         while time.time() < timeout:
             epochs = epochs + 1
@@ -58,4 +61,5 @@ class RandomEvolution:
             record = self.mstats.compile(pop)
             self.logbook.record(gen=epochs, evals=epochs, **record)
 
+        print("Evolution time: ", time.time() - start_time)
         print("End of evolution")
