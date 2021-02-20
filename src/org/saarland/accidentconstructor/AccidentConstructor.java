@@ -3109,18 +3109,36 @@ public class AccidentConstructor {
             ConsoleLogger.print('d', "Parsing JSON action for rearend case");
             // set the impact as the last point in vehicle path for rear-end cases
 
-            impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
+            if (!testCase.getCrashType().equals("forward impact")
+                || (testCase.getCrashType().equals("forward impact") && vehiclePath.size() == 1)) {
+                impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
+                        "\"start\":\"%s\", " +
+                        "\"middle\":\"None\", " +
+                        "\"end\":\"None\"}",
+                    vehiclePath.get(vehiclePath.size() - 1)));
+            } else {
+                impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
                     "\"start\":\"%s\", " +
                     "\"middle\":\"None\", " +
                     "\"end\":\"None\"}",
-                vehiclePath.get(vehiclePath.size() - 1)));
+                vehiclePath.get(vehiclePath.size() - 2)));
+            }
 
-            followActionAndCoord.add(String.format("{\"type\": \"straight\"," +
-                    "\"start\":\"%s\", " +
-                    "\"middle\":\"None\", " +
-                    "\"end\":\"%s\"}",
-                vehiclePath.get(vehiclePath.size() - 2),
-                vehiclePath.get(vehiclePath.size() - 1)));
+            if (vehiclePath.size() > 1) {
+
+                followActionAndCoord.add(String.format("{\"type\": \"straight\"," +
+                        "\"start\":\"%s\", " +
+                        "\"middle\":\"None\", " +
+                        "\"end\":\"%s\"}",
+                    vehiclePath.get(vehiclePath.size() - 2),
+                    vehiclePath.get(vehiclePath.size() - 1)));
+            } else {
+                stopActionAndCoord.add(String.format("{\"type\": \"stop\"," +
+                        "\"start\":\"%s\", " +
+                        "\"middle\":\"None\", " +
+                        "\"end\":\"None\"}",
+                    vehiclePath.get(vehiclePath.size() - 1)));
+            }
 
         } else {
             // Find the last point which other cars also share

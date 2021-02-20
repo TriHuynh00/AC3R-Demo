@@ -57,7 +57,7 @@ public class FrontCollisionConstructor {
             // Remove all the victim's coord and append only the crash point position
             strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictim(vehicleList.get(0), vehicleList.get(1));
             constructedCoordVeh.get(strikerAndVictim[1].getVehicleId() - 1).clear();
-            constructedCoordVeh.get(strikerAndVictim[1].getVehicleId() - 1).add("0");
+            // constructedCoordVeh.get(strikerAndVictim[1].getVehicleId() - 1).add("0");
         } else if (vehicleList.size() == 1) {
             strikerAndVictim = new VehicleAttr[]{vehicleList.get(0), null};
         }
@@ -80,20 +80,21 @@ public class FrontCollisionConstructor {
                 vehicleList);
 
 
-            if (impactAtSteps.get(vehicle.getVehicleId() - 1).size() > 0) {
+            if (vehicleImpactsAtStep.size() > 0) {
                 impactFound = true;
 //                constructedCoordVeh.get(vehicle.getVehicleId() - 1).add(
 //                    vehicleImpactsAtStep.get(0), "0:0");
             }
+            // Set the crash coord at 0:0
             constructedCoordVeh.get(vehicle.getVehicleId() - 1).add("0:0");
         }
 
-        // Set the crash coord at 0:0
+
         ArrayList<Integer> strikerImpactAtSteps =
             impactAtSteps.get(strikerVehicle.getVehicleId() - 1);
 
         ArrayList<String> vehicleCoordStriker = constructedCoordVeh.get(strikerVehicle.getVehicleId() - 1);
-        vehicleCoordStriker.set(strikerImpactAtSteps.get(0), "0:0");
+        //vehicleCoordStriker.set(strikerImpactAtSteps.get(0), "0:0");
 
         // Construct the coords before crash
 
@@ -124,7 +125,7 @@ public class FrontCollisionConstructor {
                 }
                 // If this is a moving or stop action, construct the coord using the predefined speed of the action in
                 // the Ontology
-                if (!actionAtI.startsWith("hit") && !actionAtI.equalsIgnoreCase("endHit")) {
+                if (!actionAtI.startsWith("hit") && !actionAtI.equalsIgnoreCase("hit*")) {
 
                     int estimateActionVelocity = Integer.parseInt(parser.findExactConcept(actionAtI)
                             .getDataProperties().get("velocity"));
@@ -514,8 +515,12 @@ public class FrontCollisionConstructor {
             int vehicleIndexInCoordArr = vehicleAttr.getVehicleId() - 1;
             ArrayList<String> coordOfSelectedVehicle = vehicleCoordList.get(vehicleIndexInCoordArr);
 
+            ConsoleLogger.print('d', "Coord of vehicle " + vehicleAttr.getVehicleId() + " + is " +
+                coordOfSelectedVehicle.toString());
+
             if (coordOfSelectedVehicle.size() <= 1)
             {
+
                 continue;
             }
 

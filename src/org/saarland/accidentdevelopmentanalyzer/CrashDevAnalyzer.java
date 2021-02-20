@@ -401,6 +401,9 @@ public class CrashDevAnalyzer {
                         } // End Processing vehicle action
                         else if (actionConcept.getLeafLevelName().equals("vehicle_direction"))
                         {
+                            if (!action.endsWith("bound")) {
+                                continue;
+                            }
                             int wordTokenIndex = AccidentConstructorUtil.getPositionFromToken(wordToken);
                             // If "[cardinal direction]bound" is not a verb, don't process it
                             ConsoleLogger.print('d', "WordToken is " + wordToken);
