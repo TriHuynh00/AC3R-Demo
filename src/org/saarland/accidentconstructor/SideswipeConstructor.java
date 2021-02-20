@@ -107,6 +107,7 @@ public class SideswipeConstructor {
             for (int v = 0; v < vehicleList.size(); v++)
             {
                 VehicleAttr currentVehicle = vehicleList.get(v);
+                ConsoleLogger.print('d', String.format("vehicle %s",currentVehicle.getVehicleId()));
 
                 ArrayList<String> vehicleCoordList = constructedCoordVeh.get(currentVehicle.getVehicleId() - 1);
 
@@ -116,15 +117,29 @@ public class SideswipeConstructor {
                 int estimateActionAtIVelocity = 0;
 
                 boolean isConsistentAction = true;
+
                 for (int i = 0;
-                     i < impactAtSteps.get(currentVehicle.getVehicleId() - 1).get(0) - 1; i++) {
+                     i < impactAtSteps.get(currentVehicle.getVehicleId() - 1).get(0); i++) {
                     String actionAtI = vehicleActionList.get(i);
+
+                    ConsoleLogger.print('d', String.format("ActionAtI is %s for vehicle %s",
+                        actionAtI, currentVehicle.getVehicleId()));
+
+                    String nextAction = vehicleActionList.get(i + 1);
+
 //                    if (!actionAtI.startsWith("hit") && !actionAtI.equalsIgnoreCase("endHit")) {
                         estimateActionAtIVelocity = Integer.parseInt(parser.findExactConcept(actionAtI)
                                 .getDataProperties().get("velocity"));
 
                         int estimateNextActionVelocity = Integer.parseInt(parser.findExactConcept(vehicleActionList.get(i + 1))
                                 .getDataProperties().get("velocity"));
+
+                        // if we have only 2 actions, then the action is consistent, as the vehicle
+                        // performs only 1 action before crashing
+                        if (vehicleActionList.size() == 2 && estimateNextActionVelocity == 1000) {
+                            isConsistentAction = true;
+                            break;
+                        }
 
                         if (estimateActionAtIVelocity != estimateNextActionVelocity) {
                             ConsoleLogger.print('d',"inconsistent action at " + i);

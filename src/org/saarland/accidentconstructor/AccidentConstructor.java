@@ -391,9 +391,18 @@ public class AccidentConstructor {
 //                crashDevAnalyzer.removeIndexInActionWord(actionList);
                 crashDevAnalyzer.constructVehicleActionEventList(actionList, accidentConstructor.vehicleList);
 
+                // If the vehicle has only 1 action, and it is a static one, then it will be impacted at last
                 for (VehicleAttr vehicle : accidentConstructor.vehicleList) {
                     ConsoleLogger.print('d',
                             "Vehicle " + vehicle.getVehicleId() + " Actions : " + vehicle.getActionList().toString());
+                    if (vehicle.getActionList().size() == 1){
+                        int actionVelocity = Integer.parseInt(
+                            ontologyHandler.findExactConcept(vehicle.getActionList().get(0))
+                            .getDataProperties().get("velocity"));
+                        if (actionVelocity == 0) {
+                            vehicle.getActionList().add("hit*");
+                        }
+                    }
                 }
 
 
@@ -2334,16 +2343,17 @@ public class AccidentConstructor {
         for (int c = 0; c < vehicleActionList.size(); c++) {
             for (int i = 0; i < vehicleActionList.get(c).size(); i++) {
                 // Check if the action of this step is equal to another step
-                if (vehicleActionList.get(c).get(i).equals("hit")) {
+                if (vehicleActionList.get(c).get(i).equals("hit") ||
+                    vehicleActionList.get(c).get(i).equals("hit*")) {
                     ConsoleLogger.print('d', "hit word reached super prune at " + i);
                     // Prune everything behind this index
-                    for (int e = 0; e < vehicleActionList.size(); e++) {
-                        for (int k = vehicleActionList.get(e).size() - 1; k > i; k--) {
-                            vehicleActionList.get(e).remove(k);
-                            vehicleActionDescriptionList.get(e).remove(k);
-                            ConsoleLogger.print('d', "Removed VehicleList e=" + e + " k=" + k);
+//                    for (int e = 0; e < vehicleActionList.size(); e++) {
+                        for (int k = vehicleActionList.get(c).size() - 1; k > i; k--) {
+                            vehicleActionList.get(c).remove(k);
+                            vehicleActionDescriptionList.get(c).remove(k);
+                            ConsoleLogger.print('d', "Removed VehicleList c=" + c + " k=" + k);
                         }
-                    }
+//                    }
                     for (int e = 0; e < vehicleActionList.size(); e++) {
                         ConsoleLogger.print('d', "VehicleList e=" + e + " :" + vehicleActionList.get(e));
 
@@ -3089,6 +3099,59 @@ public class AccidentConstructor {
 
         int currentCoordIndex = vehiclePath.size() >= 2 ? vehiclePath.size() - 2 : vehiclePath.size() - 1;
 
+        boolean isRearEndCrash = false;
+
+        if (testCase.getCrashType().contains("rear end")
+            || testCase.getCrashType().contains("rear-end")
+            || testCase.getCrashType().contains("rearend")
+            || testCase.getCrashType().contains("forward impact")) {
+            isRearEndCrash = true;
+            ConsoleLogger.print('d', "Parsing JSON action for rearend case");
+            // set the impact as the last point in vehicle path for rear-end cases
+
+            impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
+                    "\"start\":\"%s\", " +
+                    "\"middle\":\"None\", " +
+                    "\"end\":\"None\"}",
+                vehiclePath.get(vehiclePath.size() - 1)));
+
+            followActionAndCoord.add(String.format("{\"type\": \"straight\"," +
+                    "\"start\":\"%s\", " +
+                    "\"middle\":\"None\", " +
+                    "\"end\":\"%s\"}",
+                vehiclePath.get(vehiclePath.size() - 2),
+                vehiclePath.get(vehiclePath.size() - 1)));
+
+        } else {
+            // Find the last point which other cars also share
+            if (vehicleList.size() == 2) {
+                VehicleAttr otherVehicle = vehicleList.get(1 - (vehicle.getVehicleId() - 1));
+
+                // If the last 2 coords of other vehicle match one of the last two coords of current vehicle
+                // it is the crash point
+                for (int i = vehiclePath.size() - 2; i < vehiclePath.size(); i++) {
+                    String currentPoint = vehiclePath.get(i);
+                    boolean foundCrashPoint = false;
+                    for (int j = otherVehicle.getMovementPath().size() - 2;
+                         j < vehicle.getMovementPath().size(); j++) {
+                        String otherPoint = otherVehicle.getMovementPath().get(j);
+                        if (currentPoint.trim().equals(otherPoint.trim())) {
+                            impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
+                                "\"start\":\"%s\", " +
+                                "\"middle\":\"None\", " +
+                                "\"end\":\"None\"}",
+                                currentPoint));
+                            foundCrashPoint = true;
+                            break;
+                        }
+                    }
+                    if (foundCrashPoint) break;
+
+                }
+
+            }
+        }
+
         // Loop through each action
         for (int i = vehicleActionList.size() - 2; i >= 0; i--) {
             String currentAction = vehicleActionList.get(i);
@@ -3120,13 +3183,13 @@ public class AccidentConstructor {
 
                 turnActionAndCoord.add(actionAndCoord);
 
-                if (impactActionAndCoord.isEmpty()) {
-                    impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
-                        "\"start\":\"%s\", " +
-                        "\"middle\":\"None\", " +
-                        "\"end\":\"None\"}",
-                        vehiclePath.get(vehiclePath.size() - 2)));
-                }
+//                if (impactActionAndCoord.isEmpty()) {
+//                    impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
+//                        "\"start\":\"%s\", " +
+//                        "\"middle\":\"None\", " +
+//                        "\"end\":\"None\"}",
+//                        vehiclePath.get(vehiclePath.size() - 2)));
+//                }
                 currentCoordIndex -= 1;
             } else {
 
@@ -3147,15 +3210,13 @@ public class AccidentConstructor {
                         followActionAndCoord.add(actionAndCoord);
 
                         // set the impact as the 2nd last point in vehicle path for non-rear-end cases
-                        if (!testCase.getCrashType().contains("rear end")
-                            || !testCase.getCrashType().contains("rear-end")
-                            || !testCase.getCrashType().contains("rearend")) {
-                            if (impactActionAndCoord.isEmpty() && currentCoordIndex - 2 >= 0) {
-                                impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
-                                        "\"start\":\"%s\", " +
-                                        "\"middle\":\"None\", " +
-                                        "\"end\":\"None\"}",
-                                    vehiclePath.get(vehiclePath.size() - 2)));
+                        if (!isRearEndCrash) {
+                            if (currentCoordIndex - 2 >= 0) {
+//                                impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
+//                                        "\"start\":\"%s\", " +
+//                                        "\"middle\":\"None\", " +
+//                                        "\"end\":\"None\"}",
+//                                    vehiclePath.get(vehiclePath.size() - 2)));
 
                                 // If the action before impact is a turn,
                                 // then the action after impact is a follow action
@@ -3168,15 +3229,6 @@ public class AccidentConstructor {
                                     vehiclePath.get(vehiclePath.size() - 1)));
                                 }
                             }
-                        } else { // set the impact as the last point in vehicle path for rear-end cases
-                            if (impactActionAndCoord.isEmpty()) {
-                                impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
-                                        "\"start\":\"%s\", " +
-                                        "\"middle\":\"None\", " +
-                                        "\"end\":\"None\"}",
-                                    vehiclePath.get(vehiclePath.size() - 1)));
-                            }
-
                         }
                         currentCoordIndex--;
 
@@ -3189,13 +3241,22 @@ public class AccidentConstructor {
                         "\"end\":\"None\"}",
                     vehiclePath.get(currentCoordIndex)));
 
-                    if (impactActionAndCoord.isEmpty()) {
-                        impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
-                            "\"start\":\"%s\", " +
-                            "\"middle\":\"None\", " +
-                            "\"end\":\"None\"}",
-                        vehiclePath.get(vehiclePath.size() - 1)));
+                    if (currentCoordIndex - 1 >= 0) {
+                        followActionAndCoord.add(String.format("{\"type\": \"straight\"," +
+                                "\"start\":\"%s\", " +
+                                "\"middle\":\"None\", " +
+                                "\"end\":\"%s\"}",
+                            vehiclePath.get(currentCoordIndex - 1),
+                            vehiclePath.get(currentCoordIndex)));
                     }
+
+//                    if (impactActionAndCoord.isEmpty()) {
+//                        impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
+//                            "\"start\":\"%s\", " +
+//                            "\"middle\":\"None\", " +
+//                            "\"end\":\"None\"}",
+//                        vehiclePath.get(vehiclePath.size() - 1)));
+//                    }
 
                     currentCoordIndex--;
                 }
