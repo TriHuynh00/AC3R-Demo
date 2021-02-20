@@ -54,11 +54,21 @@ class RandomEvolution:
             pop = self.toolbox.population(n=1)
 
             # Evaluate the entire population
+            print("Compare 2 scenarios: ")
+            s1 = best_ind[0]
+            s2 = pop[0][0]
+            print("Best ind: ", s1.vehicles[0].get_speed()[0], s1.vehicles[1].get_speed()[0])
+            print("Mutant: ", s2.vehicles[0].get_speed()[0], s2.vehicles[1].get_speed()[0])
+
             fitnesses = list(map(self.toolbox.evaluate, pop))
             for ind, fit in zip(pop, fitnesses):
                 ind.fitness.values = fit
 
             # Select the next generation individuals
+            print("Compare 2 fitness score scenarios: ")
+            print("Best ind: ", best_ind.fitness.values)
+            print("Mutant: ", pop[0].fitness.values)
+
             best_ind = self.toolbox.select(best_ind, pop)
             pop[:] = [best_ind]
             record = self.mstats.compile(pop)

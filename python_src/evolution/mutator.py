@@ -8,11 +8,16 @@ class Mutator:
         mutant = copy.deepcopy(deap_inds)
         individual = mutant[0]  # deap_individual is a list
 
-        value_v1 = individual.vehicles[0].get_speed()[0]  # extract attribute value from an individual
-        value_v2 = individual.vehicles[1].get_speed()[0]  # extract attribute value from an individual
+        def _mutate_val(value, params):
+            value += numpy.random.normal(0, params['std'], 1)[0]
+            if value < params['min']:
+                value = params['min']
+            if value > params['max']:
+                value = params['max']
+            return value
 
-        value_v1 += numpy.random.normal(0, mutate_params['std'], 1)[0]
-        value_v2 += numpy.random.normal(0, mutate_params['std'], 1)[0]
+        value_v1 = _mutate_val(individual.vehicles[0].get_speed()[0], mutate_params)
+        value_v2 = _mutate_val(individual.vehicles[1].get_speed()[0], mutate_params)
 
         for i in individual.vehicles[0].driving_actions:
             i["speed"] = value_v1
