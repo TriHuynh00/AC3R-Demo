@@ -20,7 +20,11 @@ class BNGVehicle:
         self.damage.append(damage)
 
     def get_damage(self):
-        tmp_comp = self.damage[0]
+        try:
+            tmp_comp = self.damage[0]
+        except:
+            print(self.damage)
+            return {}
         dam_comp = {}
         for k in tmp_comp:
             v = tmp_comp[k]
