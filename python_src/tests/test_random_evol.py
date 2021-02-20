@@ -40,5 +40,14 @@ class RandomEvolutionTest(unittest.TestCase):
         )
         rev.start_from()
 
-        LogBook(rev.logbook, expectations).visualize_evolution()
+        v = LogBook(expectations)
+        v.print_logbook(rev.logbook)
+        v.visualize_ind(rev.logbook, "Random")
+
+
+        # v.print_logbook(opo_ev.logbook)
+        # v.visualize_ind(opo_ev.logbook, "OPO")
+        #
+        # v.visualize(rev.logbook, opo_ev.logbook, "Random", "OPO")
+
 
