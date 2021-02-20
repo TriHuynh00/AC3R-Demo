@@ -426,6 +426,10 @@ class Vehicle:
         # Return triplet
         return trajectory_points
 
+    def get_speed(self):
+        speed = [i["speed"] for i in self.driving_actions]
+        return speed
+
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
 

@@ -1,6 +1,5 @@
 import copy
 import numpy
-import logging
 
 
 class Generator:
