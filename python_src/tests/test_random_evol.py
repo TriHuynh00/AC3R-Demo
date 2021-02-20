@@ -1,5 +1,6 @@
 import json
 import unittest
+import numpy
 from ac3r_plus import CrashScenario
 from evolution import RandomEvolution, OpoEvolution, Selector, Mutator, Generator, Fitness, LogBook
 
@@ -16,6 +17,8 @@ class RandomEvolutionTest(unittest.TestCase):
             scenario_data = json.load(file)
         orig_ind = CrashScenario.from_json(scenario_data)
         timeout = 60 * 15
+
+        numpy.random.seed(64)
 
         rev = RandomEvolution(
             orig_ind=orig_ind,
@@ -37,17 +40,16 @@ class RandomEvolutionTest(unittest.TestCase):
             timeout=timeout
         )
 
-        # rev.run()
+        rev.run()
         oev.run()
 
         v = LogBook(expectations)
         v.print_logbook(oev.logbook)
         v.visualize_ind(oev.logbook, "Random")
 
+        v.print_logbook(oev.logbook)
+        v.visualize_ind(oev.logbook, "OPO")
 
-        # v.print_logbook(opo_ev.logbook)
-        # v.visualize_ind(opo_ev.logbook, "OPO")
-        #
-        # v.visualize(rev.logbook, opo_ev.logbook, "Random", "OPO")
+        v.visualize(rev.logbook, oev.logbook, "Random", "OPO")
 
 
