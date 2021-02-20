@@ -16,7 +16,7 @@ class RandomEvolutionTest(unittest.TestCase):
         with open("./data/Case6.json") as file:
             scenario_data = json.load(file)
         orig_ind = CrashScenario.from_json(scenario_data)
-        timeout = 60 * 15
+        timeout = 60 * 20
 
         numpy.random.seed(64)
 
@@ -44,8 +44,8 @@ class RandomEvolutionTest(unittest.TestCase):
         oev.run()
 
         v = LogBook(expectations)
-        v.print_logbook(oev.logbook)
-        v.visualize_ind(oev.logbook, "Random")
+        v.print_logbook(rev.logbook)
+        v.visualize_ind(rev.logbook, "Random")
 
         v.print_logbook(oev.logbook)
         v.visualize_ind(oev.logbook, "OPO")

@@ -74,6 +74,7 @@ class OpoEvolution:
             pop[:] = [best_ind]
             record = self.mstats.compile(pop)
             self.logbook.record(gen=epochs, evals=epochs, **record)
+            print("-------------------")
 
         print("Evolution time: ", time.time() - start_time)
         print("End of evolution")

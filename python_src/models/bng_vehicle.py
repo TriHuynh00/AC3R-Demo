@@ -20,11 +20,9 @@ class BNGVehicle:
         self.damage.append(damage)
 
     def get_damage(self):
-        try:
-            tmp_comp = self.damage[0]
-        except:
-            print(self.damage)
+        if len(self.damage) == 0:  # handle a crash scenario without damage
             return {}
+        tmp_comp = self.damage[0]
         dam_comp = {}
         for k in tmp_comp:
             v = tmp_comp[k]
