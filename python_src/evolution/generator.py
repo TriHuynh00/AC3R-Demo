@@ -9,9 +9,9 @@ class Generator:
         random_ind = copy.deepcopy(individual)
 
         # Provide a new average speed to vehicles of the new crash scenario
-        for i in range(len(individual.vehicles)):
+        for i in range(len(random_ind.vehicles)):
             avg_speed = numpy.random.uniform(generate_params["min"], generate_params["max"], 1)[0]
-            vehicle = individual.vehicles[i]
+            vehicle = random_ind.vehicles[i]
             for v in vehicle.driving_actions:
                 v["speed"] = avg_speed
 

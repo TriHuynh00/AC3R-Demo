@@ -486,7 +486,7 @@ class CrashScenario:
             v2 = report.vehicles[1]
             p1 = Point(v1.positions[-1][0], v1.positions[-1][1])
             p2 = Point(v2.positions[-1][0], v2.positions[-1][1])
-            self.score = -p1.distance(p2)
+            self.score = round(-p1.distance(p2), 2)
         elif status == CRASHED:
             point = 1
             for v in report.vehicles:

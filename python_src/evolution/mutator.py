@@ -9,7 +9,7 @@ class Mutator:
         individual = mutant[0]  # deap_individual is a list
 
         def _mutate_val(value, params):
-            value += numpy.random.normal(0, params['std'], 1)[0]
+            value += numpy.random.normal(params["mean"], params["std"], 1)[0]
             if value < params['min']:
                 value = params['min']
             if value > params['max']:

@@ -30,9 +30,11 @@ class OpoEvolution:
         self.logbook = tools.Logbook()
 
         self.timeout = timeout
+        self.orig_ind = orig_ind
 
     def run(self):
         pop = self.toolbox.population(n=1)
+        pop[FIRST][FIRST] = self.orig_ind
         # Evaluate the entire population
         print("Start evaluation")
         start_time = time.time()
@@ -42,12 +44,14 @@ class OpoEvolution:
         print("Evaluation time: ", time.time() - start_time)
 
         best_ind = tools.selBest(pop, 1)[FIRST]
-        epochs = 0
+        record = self.mstats.compile(pop)
+        self.logbook.record(gen=0, evals=0, **record)
 
         # Begin the evolution
         print("Start of evolution")
         start_time = time.time()
         timeout = time.time() + 60 if self.timeout is None else time.time() + self.timeout
+        epochs = 0
         while time.time() < timeout:
             epochs = epochs + 1
             # A new generation
