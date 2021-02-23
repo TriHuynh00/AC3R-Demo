@@ -5,8 +5,8 @@ from deap import tools, creator, base
 FIRST = 0
 
 
-class RandomEvolution:
-    def __init__(self, orig_ind, fitness, generate, generate_params, select, timeout=None):
+class OpoEvolution:
+    def __init__(self, orig_ind, fitness, generate, generate_params, select, mutate, mutate_params, timeout=None):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
@@ -16,7 +16,7 @@ class RandomEvolution:
         # Structure initializers
         self.toolbox.register("individual", tools.initRepeat, creator.Individual, self.toolbox.random_ind, 1)
         self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
-
+        self.toolbox.register("mutate", mutate, mutate_params)
         self.toolbox.register("evaluate", fitness)
         self.toolbox.register("select", select)
 
@@ -55,7 +55,8 @@ class RandomEvolution:
         while time.time() < timeout:
             epochs = epochs + 1
             # A new generation
-            pop = self.toolbox.population(n=1)
+            mutant = self.toolbox.mutate(best_ind)
+            pop[:] = [mutant]
 
             # Evaluate the entire population
             print("Compare 2 scenarios: ")

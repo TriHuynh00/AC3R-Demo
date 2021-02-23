@@ -1,26 +1,8 @@
 import json
 import unittest
+import numpy
 from ac3r_plus import CrashScenario
-from evolution import RandomEvolution, Selector, Generator, Fitness
-import logging
-
-logging.basicConfig(filename="evolution.log",
-                format='%(asctime)s - %(threadName)s - %(name)s - %(levelname)s - %(message)s',
-                datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
-
-
-def get_speed_v1(individual):
-    speed = 0
-    for i in individual.vehicles[0].driving_actions:
-        speed = i["speed"]
-    return speed
-
-
-def get_speed_v2(individual):
-    speed = 0
-    for i in individual.vehicles[1].driving_actions:
-        speed = i["speed"]
-    return speed
+from evolution import RandomEvolution, OpoEvolution, Selector, Mutator, Generator, Fitness, LogBook
 
 
 def expectations(gens):
@@ -34,16 +16,31 @@ class RandomEvolutionTest(unittest.TestCase):
         with open("./data/Case6.json") as file:
             scenario_data = json.load(file)
         orig_ind = CrashScenario.from_json(scenario_data)
+        timeout = 60 * 20
+
+        numpy.random.seed(64)
+
+        v = LogBook(expectations)
 
         rev = RandomEvolution(
             orig_ind=orig_ind,
             fitness=Fitness.evaluate,
             generate=Generator.generate_random_from,
             generate_params={"min": 10, "max": 50},
-            select=Selector.select_random_ev,
-            expectations=expectations
+            select=Selector.select_best_ind,
+            timeout=timeout
         )
-        rev.start_from(timeout=60*5)
+        rev.run()
 
-        rev.print_logbook()
-        rev.visualize_evolution()
+        oev = OpoEvolution(
+                orig_ind=orig_ind,
+                fitness=Fitness.evaluate,
+                generate=Generator.generate_random_from,
+                generate_params={"min": 10, "max": 50},
+                mutate=Mutator.mutate,
+                mutate_params={"mean": 2.1, "std": 1, "min": 10, "max": 50},
+                select=Selector.select_best_ind,
+                timeout=timeout
+            )
+        oev.run()
+        v.visualize(rev.logbook, oev.logbook, "Random", "OPO")
