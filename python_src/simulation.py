@@ -87,8 +87,7 @@ class Simulation:
                     vehicle.ai_set_script(road_pf.script, cling=False)
 
             # Update the vehicle information
-            end_time = time.time() + timeout
-            while time.time() < end_time:
+            while time.time() < timeout:
                 bng_instance.step(1)
                 for bng_vehicle in bng_vehicles:
                     # Find the position of moving car

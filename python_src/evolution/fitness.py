@@ -54,7 +54,7 @@ class Fitness:
             # Execute crash scenario and collect simulation's result
             simulation = Simulation(bng_roads, bng_vehicles)
             start_time = time.time()
-            simulation.execute_scenario(60 * 1)
+            simulation.execute_scenario(time.time() + 60 * 1)
             print("Execution time: ", time.time() - start_time)
             crash_scenario.sim_report = simulation.get_report()
 
