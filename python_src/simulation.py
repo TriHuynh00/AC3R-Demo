@@ -67,7 +67,7 @@ class Simulation:
 
         if timeout is None:
             # 45 seconds for each scenario
-            timeout = time.time() + 45
+            timeout = 45
         is_crash = False
 
         try:
@@ -87,7 +87,8 @@ class Simulation:
                     vehicle.ai_set_script(road_pf.script, cling=False)
 
             # Update the vehicle information
-            while time.time() < timeout:
+            end_time = time.time() + timeout
+            while time.time() < end_time:
                 bng_instance.step(1)
                 for bng_vehicle in bng_vehicles:
                     # Find the position of moving car
@@ -95,6 +96,8 @@ class Simulation:
 
                     # Collect the damage sensor information
                     vehicle = bng_vehicle.vehicle
+                    if bool(bng_instance.poll_sensors(vehicle)) is False:
+                        raise Exception("Vehicle not found in bng_instance")
                     sensor = bng_instance.poll_sensors(vehicle)['damage']
                     if sensor['damage'] != 0:  # Crash detected
                         # Disable AI control
@@ -116,4 +119,5 @@ class Simulation:
             for bng_vehicle in bng_vehicles:
                 self.collect_vehicle_position(bng_vehicle)
         finally:
+            bng_instance.kill_beamng()
             bng_instance.close()

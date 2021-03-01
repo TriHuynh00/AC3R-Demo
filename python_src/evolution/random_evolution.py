@@ -6,7 +6,7 @@ FIRST = 0
 
 
 class RandomEvolution:
-    def __init__(self, orig_ind, fitness, generate, generate_params, select, timeout=None):
+    def __init__(self, orig_ind, fitness, generate, generate_params, select, timeout=None, fitness_repetitions=1, fitness_aggregate=np.mean):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
@@ -17,7 +17,7 @@ class RandomEvolution:
         self.toolbox.register("individual", tools.initRepeat, creator.Individual, self.toolbox.random_ind, 1)
         self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
 
-        self.toolbox.register("evaluate", fitness)
+        self.toolbox.register("evaluate", fitness, fitness_repetitions, fitness_aggregate)
         self.toolbox.register("select", select)
 
         stats_fit = tools.Statistics(key=lambda ind: ind.fitness.values)

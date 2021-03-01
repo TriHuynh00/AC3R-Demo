@@ -8,7 +8,7 @@ from simulation import Simulation
 
 class Fitness:
     @staticmethod
-    def evaluate(deap_inds):
+    def evaluate(repetitions, aggregate_function, deap_inds):
         def _collect_police_report():
             with open("./data/sample_report.json") as file:
                 report_data = json.load(file)
@@ -37,14 +37,33 @@ class Fitness:
             return crash_scenario, bng_roads, bng_vehicles
 
         individual = deap_inds[0]
-        crash_scenario, bng_roads, bng_vehicles = _collect_sim_data(individual)
-        # Execute crash scenario and collect simulation's result
-        simulation = Simulation(bng_roads, bng_vehicles)
-        simulation.execute_scenario(time.time() + 60 * 1)
-        crash_scenario.sim_report = simulation.get_report()
+        # crash_scenario, bng_roads, bng_vehicles = _collect_sim_data(individual)
+        # # Execute crash scenario and collect simulation's result
+        # simulation = Simulation(bng_roads, bng_vehicles)
+        # simulation.execute_scenario(time.time() + 60 * 1)
+        # crash_scenario.sim_report = simulation.get_report()
+        #
+        # # Fixed sample report data
+        # # TODO: change the sample police report to dynamic variable
+        # report_data = _collect_police_report()
+        # crash_scenario.cal_fitness(report_data)  # Calculate fitness score
 
-        # Fixed sample report data
-        # TODO: change the sample police report to dynamic variable
-        report_data = _collect_police_report()
-        crash_scenario.cal_fitness(report_data)  # Calculate fitness score
-        return crash_scenario.score,
+        scores = []
+        for _ in range(repetitions):
+            crash_scenario, bng_roads, bng_vehicles = _collect_sim_data(individual)
+            # Execute crash scenario and collect simulation's result
+            simulation = Simulation(bng_roads, bng_vehicles)
+            start_time = time.time()
+            simulation.execute_scenario(60 * 1)
+            print("Execution time: ", time.time() - start_time)
+            crash_scenario.sim_report = simulation.get_report()
+
+            # Fixed sample report data
+            # TODO: change the sample police report to dynamic variable
+            report_data = _collect_police_report()
+            crash_scenario.cal_fitness(report_data)  # Calculate fitness score
+            scores.append(crash_scenario.score)
+
+        print("Scores: ", scores)
+        print("Fitness score: ", aggregate_function(scores))
+        return aggregate_function(scores),

@@ -25,22 +25,27 @@ class RandomEvolutionTest(unittest.TestCase):
         rev = RandomEvolution(
             orig_ind=orig_ind,
             fitness=Fitness.evaluate,
+            fitness_repetitions=3,
+            fitness_aggregate=numpy.mean,
             generate=Generator.generate_random_from,
             generate_params={"min": 10, "max": 50},
             select=Selector.select_best_ind,
             timeout=timeout
         )
-        rev.run()
 
         oev = OpoEvolution(
-                orig_ind=orig_ind,
-                fitness=Fitness.evaluate,
-                generate=Generator.generate_random_from,
-                generate_params={"min": 10, "max": 50},
-                mutate=Mutator.mutate,
-                mutate_params={"mean": 2.1, "std": 1, "min": 10, "max": 50},
-                select=Selector.select_best_ind,
-                timeout=timeout
-            )
+            orig_ind=orig_ind,
+            fitness=Fitness.evaluate,
+            fitness_repetitions=3,
+            fitness_aggregate=numpy.mean,
+            generate=Generator.generate_random_from,
+            generate_params={"min": 10, "max": 50},
+            mutate=Mutator.mutate,
+            mutate_params={"mean": 2.1, "std": 1, "min": 10, "max": 50},
+            select=Selector.select_best_ind,
+            timeout=timeout
+        )
+
+        rev.run()
         oev.run()
         v.visualize(rev.logbook, oev.logbook, "Random", "OPO")
