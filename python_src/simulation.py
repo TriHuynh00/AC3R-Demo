@@ -67,7 +67,7 @@ class Simulation:
 
         if timeout is None:
             # 45 seconds for each scenario
-            timeout = 45
+            timeout = time.time() + 45
         is_crash = False
 
         try:
