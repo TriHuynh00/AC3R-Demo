@@ -37,7 +37,7 @@ class LogBook:
         gen_1 = logbook_1.select("gen")
         gen_2 = logbook_2.select("gen")
         if len(gen_1) != len(gen_2):
-            print(gen_1, gen_2)
+            print(len(gen_1), len(gen_2))
             raise Exception("The number of generation is not compatible!")
         gen = gen_1
         fig, ax1 = plt.subplots()

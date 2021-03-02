@@ -95,6 +95,8 @@ class Simulation:
 
                     # Collect the damage sensor information
                     vehicle = bng_vehicle.vehicle
+                    if bool(bng_instance.poll_sensors(vehicle)) is False:
+                        raise Exception("Vehicle not found in bng_instance")
                     sensor = bng_instance.poll_sensors(vehicle)['damage']
                     if sensor['damage'] != 0:  # Crash detected
                         # Disable AI control
@@ -116,4 +118,5 @@ class Simulation:
             for bng_vehicle in bng_vehicles:
                 self.collect_vehicle_position(bng_vehicle)
         finally:
+            bng_instance.kill_beamng()
             bng_instance.close()
