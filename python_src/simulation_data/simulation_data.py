@@ -13,7 +13,7 @@ from pathlib import Path
 
 SimulationDataRecordProperties = ['timer', 'pos', 'dir', 'vel', 'steering',
                                   'steering_input', 'brake', 'brake_input', 'throttle', 'throttle_input',
-                                  'wheelspeed', 'vel_kmh',
+                                  'wheelspeed', 'vel_kmh', "damage"
                                   # 'is_oob', 'oob_counter',
                                   # 'max_oob_percentage', 'oob_distance', 'oob_percentage'
                                   ]

@@ -6,7 +6,7 @@ from typing import List, Tuple
 
 VehicleStateProperties = ['timer', 'pos', 'dir', 'vel', 'steering', 'steering_input',
                           'brake', 'brake_input', 'throttle', 'throttle_input',
-                          'wheelspeed', 'vel_kmh']
+                          'wheelspeed', 'vel_kmh', "damage"]
 
 VehicleState = namedtuple('VehicleState', VehicleStateProperties)
 
@@ -53,4 +53,6 @@ class VehicleStateReader:
                                   , throttle=ele.get('throttle', None)
                                   , throttle_input=ele.get('throttle_input', None)
                                   , wheelspeed=ele.get('wheelspeed', None)
-                                  , vel_kmh=int(round(np.linalg.norm(vel) * 3.6)))
+                                  , vel_kmh=int(round(np.linalg.norm(vel) * 3.6))
+                                  , damage=None if sensors["damage"] == 0 else sensors["damage"]['part_damage']
+                                  )
