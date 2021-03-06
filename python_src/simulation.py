@@ -102,6 +102,8 @@ class Simulation:
                 self.collect_vehicle_state()
 
                 for bng_vehicle in bng_vehicles:
+                    # Find the position of moving car
+                    self.collect_vehicle_position(bng_vehicle)
                     # Collect the damage sensor information
                     vehicle = bng_vehicle.vehicle
                     if bool(bng_instance.poll_sensors(vehicle)) is False:

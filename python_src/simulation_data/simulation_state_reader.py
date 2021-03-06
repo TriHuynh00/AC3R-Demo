@@ -1,5 +1,5 @@
 from beamngpy import Vehicle, BeamNGpy
-from simulation_data import SimulationParams, SimulationDataRecords, SimulationData, SimulationDataRecord
+from .simulation_data import SimulationParams, SimulationDataRecords, SimulationData, SimulationDataRecord
 from simulation_data import VehicleStateReader
 
 
