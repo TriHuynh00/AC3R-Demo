@@ -1,6 +1,7 @@
 import os
 import time
 from beamngpy import BeamNGpy, Scenario
+from simulation_data import VehicleStateReader
 
 CRASHED = 1
 NO_CRASH = 0
@@ -20,6 +21,7 @@ class Simulation:
         self.bng_roads = bng_roads
         self.bng_vehicles = bng_vehicles
         self.status = NO_CRASH
+        self.vehicle_states = []
 
     @staticmethod
     def init_simulation():
@@ -44,6 +46,12 @@ class Simulation:
 
         return bng_vehicle
 
+    def collect_vehicle_state(self):
+        for vec_state in self.vehicle_states:
+            vec_state.update_state()
+            car_state = vec_state.get_state()
+            print(car_state)
+
     def get_report(self):
         return SimulationReport(self.bng_vehicles, self.status)
 
@@ -60,6 +68,7 @@ class Simulation:
         for bng_vehicle in bng_vehicles:
             scenario.add_vehicle(bng_vehicle.vehicle, pos=bng_vehicle.pos,
                                  rot=bng_vehicle.rot, rot_quat=bng_vehicle.rot_quat)
+            self.vehicle_states.append(VehicleStateReader(bng_vehicle.vehicle, bng_instance))
 
         scenario.make(bng_instance)
         bng_instance.open(launch=True)
@@ -88,11 +97,11 @@ class Simulation:
 
             # Update the vehicle information
             while time.time() < timeout:
-                bng_instance.step(1)
-                for bng_vehicle in bng_vehicles:
-                    # Find the position of moving car
-                    self.collect_vehicle_position(bng_vehicle)
+                # Record the vehicle state for every 250ms
+                bng_instance.step(25, True)
+                self.collect_vehicle_state()
 
+                for bng_vehicle in bng_vehicles:
                     # Collect the damage sensor information
                     vehicle = bng_vehicle.vehicle
                     if bool(bng_instance.poll_sensors(vehicle)) is False:
