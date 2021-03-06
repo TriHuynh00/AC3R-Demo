@@ -13,13 +13,16 @@ from pathlib import Path
 
 SimulationDataRecordProperties = ['timer', 'pos', 'dir', 'vel', 'steering',
                                   'steering_input', 'brake', 'brake_input', 'throttle', 'throttle_input',
-                                  'wheelspeed', 'vel_kmh', 'is_oob', 'oob_counter',
-                                  'max_oob_percentage', 'oob_distance', 'oob_percentage']
+                                  'wheelspeed', 'vel_kmh',
+                                  # 'is_oob', 'oob_counter',
+                                  # 'max_oob_percentage', 'oob_distance', 'oob_percentage'
+                                  ]
 
 SimulationDataRecord = namedtuple('SimulationDataRecord', SimulationDataRecordProperties)
 SimulationDataRecords = List[SimulationDataRecord]
 
 SimulationParams = namedtuple('SimulationParameters', ['beamng_steps', 'delay_msec'])
+
 
 def delete_folder_recursively(path: Union[str, Path], exception_if_fail: bool = True):
     path = str(path)
@@ -55,12 +58,12 @@ class SimulationInfo:
 class SimulationData:
     f_info = 'info'
     f_params = 'params'
-    f_road = 'road'
+    # f_road = 'road'
     f_records = 'records'
 
     def __init__(self, simulation_name: str):
         self.name = simulation_name
-        root: Path = Path(os.path.abspath(os.path.join(os.path.dirname(__file__),'..')))
+        root: Path = Path(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
         self.simulations: Path = root.joinpath('simulations')
         self.path_root: Path = self.simulations.joinpath(simulation_name)
         self.path_json: Path = self.path_root.joinpath('simulation.full.json')
@@ -102,7 +105,7 @@ class SimulationData:
             f.write(json.dumps({
                 self.f_params: self.params._asdict(),
                 self.f_info: self.info.__dict__,
-                self.f_road: self.road.to_dict(),
+                # self.f_road: self.road.to_dict(),
                 self.f_records: [r._asdict() for r in self.states]
             }))
 
@@ -150,3 +153,6 @@ class SimulationData:
         self.info.success = success
         if exception:
             self.exception_str = str(exception)
+
+    def __str__(self):
+        return str(self.__class__) + ": " + str(self.__dict__)
