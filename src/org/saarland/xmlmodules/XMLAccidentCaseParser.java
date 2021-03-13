@@ -395,20 +395,24 @@ public class XMLAccidentCaseParser {
 
             Node tagInfo = targetTags.item(objectIndex);
 
-            ConsoleLogger.print('d', "tagInfo " + tagInfo.getNodeName());
+            if (tagInfo != null) {
+                ConsoleLogger.print('d', "tagInfo " + tagInfo.getNodeName());
 
-            Node tagInfoIterator = tagInfo.getFirstChild();
+                Node tagInfoIterator = tagInfo.getFirstChild();
 
-            ConsoleLogger.print('d', "tagInfoIterator " + tagInfoIterator.getTextContent());
+                ConsoleLogger.print('d', "tagInfoIterator " + tagInfoIterator.getTextContent());
 
-            return AccidentConstructorUtil.transformWordNumIntoNum(tagInfoIterator.getTextContent().trim());
+                return AccidentConstructorUtil.transformWordNumIntoNum(tagInfoIterator.getTextContent().trim());
+            }
+
         } catch (Exception ex) {
-            ConsoleLogger.print('d', "Error when read tag of a given order");
+            ConsoleLogger.print('d', "Error when read tag of a given order " +
+                "with specificTagName = " + specificTagName);
             ex.printStackTrace();
-            return "";
+
         }
 
-
+        return "";
     }
 
     private String readColorValue(String colorName, OntologyHandler parser)

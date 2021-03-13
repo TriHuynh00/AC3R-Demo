@@ -26,28 +26,55 @@ public class SideswipeConstructor {
                                                                   TestCaseInfo testCase)
     {
         ArrayList<ArrayList<String>> constructedCoordVeh = new ArrayList<ArrayList<String>>();
-        ArrayList<Integer> impactAtSteps = new ArrayList<Integer>();
-        ArrayList<ArrayList<VehicleAttr>> impactedVehiclesAtSteps = new ArrayList<ArrayList<VehicleAttr>>();
-
+        ArrayList<ArrayList<Integer>> impactAtSteps = new ArrayList<ArrayList<Integer>>();
+        ArrayList<ArrayList<ArrayList<VehicleAttr>>> impactedVehiclesAtSteps
+            = new ArrayList<ArrayList<ArrayList<VehicleAttr>>>();
 
 
         for (VehicleAttr vehicle : vehicleList)
         {
             constructedCoordVeh.add(vehicle.getVehicleId() - 1, new ArrayList<String>());
+            impactAtSteps.add(new ArrayList<Integer>());
+            impactedVehiclesAtSteps.add(new ArrayList<ArrayList<VehicleAttr>>());
         }
 
         constructedCoordVeh = AccidentConstructorUtil.fillCoordOfVehicles(constructedCoordVeh, vehicleList.get(0).getActionList().size());
 
-        // If there are 2 vehicles, find the victim and striker to construct coordinate.
-        if (vehicleList.size() == 2) {
-            constructedCoordVeh.get(0).add("0:0");
-            constructedCoordVeh.get(1).add("0:0");
-        }
-
         VehicleAttr[] strikerAndVictim = AccidentConstructorUtil.findStrikerAndVictim(vehicleList.get(0), vehicleList.get(1));
 
-        // Find the impact point
-        AccidentConstructorUtil.findImpactedStepsAndVehicles(impactAtSteps, impactedVehiclesAtSteps, vehicleList);
+        boolean impactFound = false;
+        // If there are 2 vehicles, find the impact point of victim and striker to construct coordinate.
+        if (vehicleList.size() == 2) {
+//            constructedCoordVeh.get(0).add("0:0");
+//            constructedCoordVeh.get(1).add("0:0");
+
+            for (VehicleAttr vehicle : vehicleList) {
+                // Find the index of the impact action in the action lists of both vehicles
+
+                ArrayList<Integer> vehicleImpactsAtStep = impactAtSteps.get(vehicle.getVehicleId() - 1);
+
+                AccidentConstructorUtil.findImpactedStepsAndVehicles(
+                    vehicle,
+                    impactAtSteps.get(vehicle.getVehicleId() - 1),
+                    impactedVehiclesAtSteps.get(vehicle.getVehicleId() - 1),
+                    vehicleList);
+
+                if (impactAtSteps.get(vehicle.getVehicleId() - 1).size() > 0) {
+                    impactFound = true;
+                    constructedCoordVeh.get(vehicle.getVehicleId() - 1).add(
+                        vehicleImpactsAtStep.get(0), "0:0");
+                } else {
+                    vehicle.getActionList().add("hit");
+                    impactAtSteps.get(vehicle.getVehicleId() - 1).add(vehicle.getActionList().size() - 1);
+                    constructedCoordVeh.get(vehicle.getVehicleId() - 1).add("0:0");
+                }
+            }
+        }
+
+
+
+
+//        AccidentConstructorUtil.findImpactedStepsAndVehicles(impactAtSteps, impactedVehiclesAtSteps, vehicleList);
 
         // Set the crash coord
 //        ArrayList<String> vehicleCoordStriker = constructedCoordVeh.get(strikerVehicle.getVehicleId() - 1);
@@ -55,8 +82,8 @@ public class SideswipeConstructor {
 
         // Construct the coords before crash
         ConsoleLogger.print('d',"impactAtSteps size: " + impactAtSteps.size());
-        if (impactAtSteps.size() >= 1) {
-
+//        if (impactAtSteps.size() >= 1) {
+        if (impactFound) {
             Street currentStreet = null;
 
             if (testCase.getStreetList().size() == 1)
@@ -80,6 +107,7 @@ public class SideswipeConstructor {
             for (int v = 0; v < vehicleList.size(); v++)
             {
                 VehicleAttr currentVehicle = vehicleList.get(v);
+                ConsoleLogger.print('d', String.format("vehicle %s",currentVehicle.getVehicleId()));
 
                 ArrayList<String> vehicleCoordList = constructedCoordVeh.get(currentVehicle.getVehicleId() - 1);
 
@@ -89,14 +117,29 @@ public class SideswipeConstructor {
                 int estimateActionAtIVelocity = 0;
 
                 boolean isConsistentAction = true;
-                for (int i = 0; i < impactAtSteps.get(0) - 1; i++) {
+
+                for (int i = 0;
+                     i < impactAtSteps.get(currentVehicle.getVehicleId() - 1).get(0); i++) {
                     String actionAtI = vehicleActionList.get(i);
+
+                    ConsoleLogger.print('d', String.format("ActionAtI is %s for vehicle %s",
+                        actionAtI, currentVehicle.getVehicleId()));
+
+                    String nextAction = vehicleActionList.get(i + 1);
+
 //                    if (!actionAtI.startsWith("hit") && !actionAtI.equalsIgnoreCase("endHit")) {
                         estimateActionAtIVelocity = Integer.parseInt(parser.findExactConcept(actionAtI)
                                 .getDataProperties().get("velocity"));
 
                         int estimateNextActionVelocity = Integer.parseInt(parser.findExactConcept(vehicleActionList.get(i + 1))
                                 .getDataProperties().get("velocity"));
+
+                        // if we have only 2 actions, then the action is consistent, as the vehicle
+                        // performs only 1 action before crashing
+                        if (vehicleActionList.size() == 2 && estimateNextActionVelocity == 1000) {
+                            isConsistentAction = true;
+                            break;
+                        }
 
                         if (estimateActionAtIVelocity != estimateNextActionVelocity) {
                             ConsoleLogger.print('d',"inconsistent action at " + i);
@@ -178,9 +221,10 @@ public class SideswipeConstructor {
                         ConsoleLogger.print('d',"Vehicle " + v + " has consistent moving action");
 
                         // Set all the
-                        for (int i = 0 ; i < impactAtSteps.get(0); i++)
+                        ArrayList<Integer> vehicleImpactAtSteps = impactAtSteps.get(currentVehicle.getVehicleId() - 1);
+                        for (int i = 0 ; i < vehicleImpactAtSteps.get(0); i++)
                         {
-                            double xCoord = estimateActionAtIVelocity * -1.0 * (impactAtSteps.get(0) - i);
+                            double xCoord = estimateActionAtIVelocity * -1.0 * (vehicleImpactAtSteps.get(0) - i);
                             double yCoord = 0;
                             if (curvyRoad) {
 //                            yCoord = 1000 + -1.0 * Math.sqrt(1000000 - Math.pow(xCoord, 2));
@@ -241,7 +285,7 @@ public class SideswipeConstructor {
                     // Construct movement style if this is a non-parking vehicle
                     if (!vehicleActionList.get(0).startsWith("park"))
                     {
-                        int indexAtFirstImpact = impactAtSteps.get(0);
+                        int indexAtFirstImpact = impactAtSteps.get(currentVehicle.getVehicleId() - 1).get(0);
                         // Set the x and y Coord for each action
                         for (int s = 0; s < indexAtFirstImpact; s++)
                         {

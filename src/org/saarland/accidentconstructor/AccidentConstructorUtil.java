@@ -107,23 +107,56 @@ public class AccidentConstructorUtil {
         return null;
     }
 
-    public static void findImpactedStepsAndVehicles(ArrayList<Integer> impactAtSteps,
-                                                       ArrayList<ArrayList<VehicleAttr>> impactedVehiclesAtSteps,
-                                                       ArrayList<VehicleAttr> vehicleList) {
-        for (int i = 0; i < vehicleList.get(0).getActionList().size(); i++) {
+//    public static void findImpactedStepsAndVehicles(ArrayList<Integer> impactAtSteps,
+//                                                       ArrayList<ArrayList<VehicleAttr>> impactedVehiclesAtSteps,
+//                                                       ArrayList<VehicleAttr> vehicleList) {
+//        for (int i = 0; i < vehicleList.get(0).getActionList().size(); i++) {
+//            ArrayList<VehicleAttr> impactedVehicleInThisStep = new ArrayList<VehicleAttr>();
+//            boolean foundImpact = false;
+//            for (VehicleAttr vehicle : vehicleList) {
+//                if (vehicle.getActionList().get(i).startsWith("hit")) {
+//                    foundImpact = true;
+//                    ConsoleLogger.print('d',"Find impact at step " + i);
+//                    if (impactAtSteps.indexOf(i) == -1) {
+//                        impactAtSteps.add(i);
+//                    }
+//
+//                    impactedVehicleInThisStep.add(vehicle);
+//                }
+//            }
+//            if (impactedVehicleInThisStep.size() > 0) {
+//                impactedVehiclesAtSteps.add(impactedVehicleInThisStep);
+//            }
+//        }
+//    }
+
+    // Find the impacted step and vehicle of a given acting vehicle
+    public static void findImpactedStepsAndVehicles(VehicleAttr actorVehicle,
+                                                    ArrayList<Integer> impactAtSteps,
+                                                    ArrayList<ArrayList<VehicleAttr>> impactedVehiclesAtSteps,
+                                                    ArrayList<VehicleAttr> vehicleList) {
+        for (int i = 0; i < actorVehicle.getActionList().size(); i++) {
             ArrayList<VehicleAttr> impactedVehicleInThisStep = new ArrayList<VehicleAttr>();
             boolean foundImpact = false;
-            for (VehicleAttr vehicle : vehicleList) {
-                if (vehicle.getActionList().get(i).startsWith("hit")) {
-                    foundImpact = true;
-                    ConsoleLogger.print('d',"Find impact at step " + i);
-                    if (impactAtSteps.indexOf(i) == -1) {
-                        impactAtSteps.add(i);
-                    }
 
-                    impactedVehicleInThisStep.add(vehicle);
+            if (actorVehicle.getActionList().get(i).startsWith("hit")) {
+                foundImpact = true;
+                ConsoleLogger.print('d',"Find impact at step " + i);
+                if (impactAtSteps.indexOf(i) == -1) {
+                    impactAtSteps.add(i);
                 }
+
+                for (VehicleAttr vehicle : vehicleList) {
+                    if (vehicle.getVehicleId() == actorVehicle.getVehicleId()) continue;
+                    for (String action : vehicle.getActionList()) {
+                        if (action.equals("hit*")) {
+                            impactedVehicleInThisStep.add(vehicle);
+                        }
+                    }
+                }
+
             }
+
             if (impactedVehicleInThisStep.size() > 0) {
                 impactedVehiclesAtSteps.add(impactedVehicleInThisStep);
             }

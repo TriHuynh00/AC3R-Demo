@@ -157,7 +157,8 @@ public class RoadAnalyzer {
 
                 // If there is a possible lane indicator, analyze this to discover the lane number
 
-                if ( sentence.contains(directionName) )
+                if ( sentence.contains(" " + directionName + " ")
+                    || sentence.contains(" " + directionName))
                 {
                     directionIsFound = true;
 
