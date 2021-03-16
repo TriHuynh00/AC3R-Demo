@@ -32,8 +32,13 @@ class Selector:
             return orig_inds
         else:
             print('H1: The two populations are different.')
+            print("Compare: ")
+            print(f'orig_inds: {f1}')
+            print(f'deap_inds: {f2}')
             # To understand how different they were (the effect size)
             # we used VDA
             if vda_func(f1, f2) > 0.5:
+                print(f'deap_inds wins: {f2}')
                 return deap_inds
+            print(f'orig_inds wins: {f1}')
             return orig_inds
