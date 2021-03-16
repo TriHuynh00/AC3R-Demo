@@ -476,6 +476,9 @@ class CrashScenario:
         # Scenario score
         self.score = 0
 
+        # Scenario score for repetition
+        self.simulation_results = []
+
         self.sim_report = None
 
     def cal_fitness(self, police_report=None):

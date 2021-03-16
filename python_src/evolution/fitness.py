@@ -5,7 +5,7 @@ from libs import _collect_sim_data, _collect_police_report
 
 class Fitness:
     @staticmethod
-    def evaluate(repetitions, aggregate_function, deap_inds):
+    def evaluate(repetitions, deap_inds):
         individual = deap_inds[0]
         scores = []
         for _ in range(repetitions):
@@ -23,6 +23,5 @@ class Fitness:
             crash_scenario.cal_fitness(report_data)  # Calculate fitness score
             scores.append(crash_scenario.score)
 
-        print("Scores: ", scores)
-        print("Fitness score: ", aggregate_function(scores))
-        return aggregate_function(scores),
+        individual.simulation_results = scores
+        return 0,
