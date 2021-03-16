@@ -1,4 +1,5 @@
 import time
+import numpy as np
 from simulation import Simulation
 from libs import _collect_sim_data, _collect_police_report
 
@@ -24,4 +25,4 @@ class Fitness:
             scores.append(crash_scenario.score)
 
         individual.simulation_results = scores
-        return 0,
+        return np.mean(scores),
