@@ -1,5 +1,7 @@
 import time
 
+THRESHOLD_DAMAGE = 0.05
+
 
 class BNGVehicle:
     def __init__(self, vehicle, pos, rot, rot_quat, road_pf):
@@ -16,14 +18,20 @@ class BNGVehicle:
         self.positions.append(position)
         self.times.append(time.time())
 
-    def collect_damage(self, damage):
-        self.damage.append(damage)
+    def collect_damage(self, bng_damage):
+        # bng_damage format:
+        # {'etk800_door_RL_wagon': {'name': 'Rear Left Door', 'damage': 0.009009009009009009}}
+        for k in bng_damage:
+            v = bng_damage[k]
+            # Only collect component with damage bigger than threshold
+            if v["damage"] > THRESHOLD_DAMAGE:
+                self.damage.append(bng_damage)
 
     def get_damage(self):
-        if len(self.damage) == 0:  # handle a crash scenario without damage
-            return {}
-        tmp_comp = self.damage[0]
         dam_comp = {}
+        if len(self.damage) == 0:  # handle a crash scenario without damage
+            return dam_comp
+        tmp_comp = self.damage[0]
         for k in tmp_comp:
             v = tmp_comp[k]
             dam_comp[v['name']] = v['damage']

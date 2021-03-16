@@ -9,7 +9,6 @@ def pairs(lst):
 
 class RoadProfiler:
     def __init__(self):
-        self = self
         self.script = []
         self.points = []
         self.spheres = []
@@ -25,7 +24,7 @@ class RoadProfiler:
             length = Point(p1[0], p1[1]).distance(Point(p2[0], p2[1]))
             if length == 0:
                 continue
-            speed = p1[2] / 3.6
+            speed = round(p1[2] / 3.6, 1)
             time = length / speed
             segment_times.append(time + segment_times[-1])
 

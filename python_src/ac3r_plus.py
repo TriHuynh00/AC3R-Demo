@@ -488,13 +488,24 @@ class CrashScenario:
             p2 = Point(v2.positions[-1][0], v2.positions[-1][1])
             self.score = round(-p1.distance(p2), 2)
         elif status == CRASHED:
+            logs = []
             point = 1
+            logs.append("Scenario starts with 0 score")
+            logs.append("+1 for crashed scenario")
             for v in report.vehicles:
-                police_data = police_report[v.vehicle.vid] # Extract data from report to compare
+                police_data = police_report[v.vehicle.vid]  # Extract data from report to compare
                 v_damage = v.get_damage()
+                logs.append(f'Checking  {v.vehicle.vid}...')
                 for k in v_damage:
-                    if self.key_exist_in_list(k, police_data): # Damage component exists in police report
+                    if self.key_exist_in_list(k, police_data):  # Damage component exists in police report
                         point += 1
+                        logs.append(f'+1 for matching component in report: {k}')
+                    else:
+                        point -= 1
+                        logs.append(f'-1 for not matching component in report: {k}')
+            logs.append(f'Final score: {point}')
+            print("Summary Fitness Calculation: ")
+            print(*logs, sep="\n")
             self.score = point
         # Remove unnecessary attribute
         delattr(self, 'sim_report')
