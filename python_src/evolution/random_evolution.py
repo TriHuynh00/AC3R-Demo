@@ -31,12 +31,13 @@ class RandomEvolution:
 
         self.timeout = timeout
         self.orig_ind = orig_ind
+        self.fitness_repetitions = fitness_repetitions
 
     def run(self):
         pop = self.toolbox.population(n=1)
         pop[FIRST][FIRST] = self.orig_ind
         # Evaluate the entire population
-        print("Start evaluation")
+        print("Initial Random evaluation")
         start_time = time.time()
         fitnesses = list(map(self.toolbox.evaluate, pop))
         for ind, fit in zip(pop, fitnesses):
@@ -50,7 +51,10 @@ class RandomEvolution:
         # Begin the evolution
         print("Start of evolution")
         start_time = time.time()
-        timeout = time.time() + 60 if self.timeout is None else time.time() + self.timeout
+        timeout = time.time() + 60
+        if self.timeout is not None:
+            timeout = time.time() + self.timeout
+
         epochs = 0
         while time.time() < timeout:
             epochs = epochs + 1
@@ -58,6 +62,7 @@ class RandomEvolution:
             pop = self.toolbox.population(n=1)
 
             # Evaluate the entire population
+            print("Epoch: ", str(epochs))
             print("Compare 2 scenarios: ")
             s1 = best_ind[0]
             s2 = pop[0][0]
