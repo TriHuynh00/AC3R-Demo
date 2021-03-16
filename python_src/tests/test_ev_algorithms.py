@@ -95,7 +95,7 @@ class RandomEvolutionTest(unittest.TestCase):
         rev = RandomEvolution(
             orig_ind=ORIG_IND,
             fitness=Fitness.evaluate,
-            fitness_repetitions=10,
+            fitness_repetitions=6,
             generate=Generator.generate_random_from,
             generate_params={"min": 10, "max": 50},
             select=Selector.select_by_vda,
@@ -105,7 +105,7 @@ class RandomEvolutionTest(unittest.TestCase):
         oev = OpoEvolution(
             orig_ind=ORIG_IND,
             fitness=Fitness.evaluate,
-            fitness_repetitions=10,
+            fitness_repetitions=6,
             generate=Generator.generate_random_from,
             generate_params={"min": 10, "max": 50},
             mutate=Mutator.mutate,
