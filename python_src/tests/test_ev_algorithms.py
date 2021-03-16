@@ -3,6 +3,7 @@ import unittest
 import numpy
 from ac3r_plus import CrashScenario
 from evolution import RandomEvolution, OpoEvolution, Selector, Mutator, Generator, Fitness, LogBook
+from libs import _VD_A
 
 
 def expectations(gens):
@@ -24,6 +25,7 @@ class RandomEvolutionTest(unittest.TestCase):
 
         #########################################################
         # First Experiment
+        #
         # Run simulations one time only
         #########################################################
         rev = RandomEvolution(
@@ -52,6 +54,7 @@ class RandomEvolutionTest(unittest.TestCase):
 
         #########################################################
         # Second Experiment
+        #
         # Run simulations a fixed amount of time (e.g.,10)
         # and take average/mean
         #########################################################
@@ -62,7 +65,7 @@ class RandomEvolutionTest(unittest.TestCase):
             generate=Generator.generate_random_from,
             generate_params={"min": 10, "max": 50},
             select=Selector.select_by_aggregate,
-            select_strategy=numpy.mean,
+            select_aggregate=numpy.mean,
             timeout=timeout
         )
         oev = OpoEvolution(
@@ -74,7 +77,41 @@ class RandomEvolutionTest(unittest.TestCase):
             mutate=Mutator.mutate,
             mutate_params={"mean": 0, "std": 8, "min": 10, "max": 50},
             select=Selector.select_by_aggregate,
-            select_strategy=numpy.mean,
+            select_aggregate=numpy.mean,
+            timeout=timeout
+        )
+        rev.run()
+        oev.run()
+        VIS.visualize(rev.logbook, oev.logbook, "Random", "OPO")
+
+        #########################################################
+        # Third Experiment
+        #
+        # Run simulations a minimal amount of times (e.g., 3/5)
+        # and then use pValue and A12 to decide whether
+        # the individuals are different, the same,
+        # and which one is better
+        #########################################################
+        rev = RandomEvolution(
+            orig_ind=ORIG_IND,
+            fitness=Fitness.evaluate,
+            fitness_repetitions=10,
+            generate=Generator.generate_random_from,
+            generate_params={"min": 10, "max": 50},
+            select=Selector.select_by_vda,
+            select_aggregate=_VD_A,
+            timeout=timeout
+        )
+        oev = OpoEvolution(
+            orig_ind=ORIG_IND,
+            fitness=Fitness.evaluate,
+            fitness_repetitions=10,
+            generate=Generator.generate_random_from,
+            generate_params={"min": 10, "max": 50},
+            mutate=Mutator.mutate,
+            mutate_params={"mean": 0, "std": 8, "min": 10, "max": 50},
+            select=Selector.select_by_vda,
+            select_aggregate=_VD_A,
             timeout=timeout
         )
         rev.run()

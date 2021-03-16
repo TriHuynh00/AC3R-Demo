@@ -6,7 +6,7 @@ FIRST = 0
 
 
 class RandomEvolution:
-    def __init__(self, orig_ind, fitness, generate, generate_params, select, timeout=None, fitness_repetitions=1, select_aggregate=np.mean):
+    def __init__(self, orig_ind, fitness, generate, generate_params, select, timeout=None, fitness_repetitions=1, select_aggregate=None):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
