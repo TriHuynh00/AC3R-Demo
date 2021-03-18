@@ -1,7 +1,7 @@
 import time
 import numpy as np
 from simulation import Simulation
-from libs import _collect_sim_data, _collect_police_report
+from libs import _collect_sim_data
 
 
 class Fitness:
@@ -20,8 +20,7 @@ class Fitness:
 
             # Fixed sample report data
             # TODO: change the sample police report to dynamic variable
-            report_data = _collect_police_report("./data/sample_report.json")
-            crash_scenario.cal_fitness(report_data)  # Calculate fitness score
+            crash_scenario.cal_fitness("./data/sample_report.json")  # Calculate fitness score
             scores.append(crash_scenario.score)
 
         individual.simulation_results = scores

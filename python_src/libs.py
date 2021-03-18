@@ -1,10 +1,33 @@
 import json
+import os
+from pathlib import Path
+
 from beamngpy import Road, Vehicle
 from beamngpy.sensors import Damage
 from models import RoadProfiler, BNGVehicle
 from typing import List
 import scipy.stats as stats
 from bisect import bisect_left
+
+ROOT: Path = Path(os.path.abspath(os.path.join(os.path.dirname(__file__))))
+PATH_TEST = str(ROOT.joinpath("tests"))
+
+
+def _key_exist_in_list(target, lis):
+    for d in lis:
+        if d["name"] == target:
+            return True
+    return False
+
+
+def _calculate_score_police_report(path):
+    with open(path) as file:
+        report_data = json.load(file)
+    score = 1
+    for v_id in report_data:
+        v_parts = report_data[v_id]
+        score += len(v_parts)
+    return score
 
 
 def _collect_police_report(path):
@@ -26,7 +49,7 @@ def _collect_sim_data(crash_scenario):
     for vehicle in crash_scenario.vehicles:
         trajectory = vehicle.generate_trajectory()
         initial_position = (trajectory[0][0], trajectory[0][1], 0)
-        v = Vehicle("scenario_player_" + str(vehicle.name),
+        v = Vehicle(str(vehicle.name),
                     model="etk800", licence=vehicle.name, color=vehicle.color)
         v.attach_sensor('damage', Damage())
         road_pf = RoadProfiler()
@@ -34,6 +57,7 @@ def _collect_sim_data(crash_scenario):
         bng_vehicles.append(BNGVehicle(v, initial_position, None, vehicle.rot_quat, road_pf))
 
     return crash_scenario, bng_roads, bng_vehicles
+
 
 def _VD_A(treatment: List[float], control: List[float]):
     m = len(treatment)

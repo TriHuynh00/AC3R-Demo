@@ -11,6 +11,8 @@ from shapely.affinity import translate, rotate, scale
 from scipy.spatial import geometric_slerp
 from math import sin, cos, radians, degrees, atan2, copysign
 
+from libs import _key_exist_in_list, _collect_police_report
+
 # Constants
 rounding_precision = 3
 interpolation_distance = 1
@@ -433,15 +435,8 @@ class Vehicle:
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
 
+
 class CrashScenario:
-
-    @staticmethod
-    def key_exist_in_list(k, lis):
-        for d in lis:
-            if d['name'] == k:
-                return True
-        return False
-
     @staticmethod
     def from_json(ac3r_json_data):
         """
@@ -481,31 +476,40 @@ class CrashScenario:
 
         self.sim_report = None
 
-    def cal_fitness(self, police_report=None):
+    def cal_fitness(self, police_report_path=None):
         report = self.sim_report
         status = report.status
-        if police_report is None or status == NO_CRASH:
+        if police_report_path is None or status == NO_CRASH:
             v1 = report.vehicles[0]
             v2 = report.vehicles[1]
             p1 = Point(v1.positions[-1][0], v1.positions[-1][1])
             p2 = Point(v2.positions[-1][0], v2.positions[-1][1])
             self.score = round(-p1.distance(p2), 2)
         elif status == CRASHED:
+            police_report = _collect_police_report(police_report_path)
             logs = []
             point = 1
             logs.append("Scenario starts with 0 score")
             logs.append("+1 for crashed scenario")
             for v in report.vehicles:
-                police_data = police_report[v.vehicle.vid]  # Extract data from report to compare
-                v_damage = v.get_damage()
-                logs.append(f'Checking  {v.vehicle.vid}...')
-                for k in v_damage:
-                    if self.key_exist_in_list(k, police_data):  # Damage component exists in police report
-                        point += 1
-                        logs.append(f'+1 for matching component in report: {k}')
+                try:
+                    police_data = police_report[v.vehicle.vid]  # Extract data from report to compare
+                    v_damage = v.get_damage()
+                    logs.append(f'Checking  {v.vehicle.vid}...')
+                    print(f'Damage of {v.vehicle.vid} is: {v_damage}')
+                    if len(v_damage) == 0:
+                        point -= len(police_data)
+                        logs.append(f'-{len(police_data)} for not matching any parts in report.')
                     else:
-                        point -= 1
-                        logs.append(f'-1 for not matching component in report: {k}')
+                        for k in v_damage:
+                            if _key_exist_in_list(k, police_data):  # Damage component exists in police report
+                                point += 1
+                                logs.append(f'+1: {k} is found in report.')
+                            else:
+                                point -= 1
+                                logs.append(f'-1: {k} is not found in report.')
+                except KeyError:
+                    logs.append(f'{v.vehicle.vid} not found in report.')
             logs.append(f'Final score: {point}')
             print("Summary Fitness Calculation: ")
             print(*logs, sep="\n")

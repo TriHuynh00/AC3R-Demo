@@ -1,6 +1,33 @@
 import time
 
+CART_PARTS_DICT = {
+    "Tailgate": 'R',
+    "Wagon Unibody": 'M',
+    "Rear Bumper": 'R',
+    "Front Bumper Support": 'F',
+    "Front Bumper": 'F',
+    "Hood": 'F',
+    "Right Headlight": 'FR',
+    "Left Headlight": 'FL',
+    "Front Right Fender": 'FR',
+    "Front Left Fender": 'FL',
+    "Single Exhaust": 'R',
+    "Front Right Door": 'MR',
+    "Front Left Door": 'ML',
+    "Rear Right Door": 'MR',
+    "Rear Left Door": 'ML',
+    "Wagon Right Taillight": 'MR',
+    "Wagon Left Taillight": 'ML'
+}
+
 THRESHOLD_DAMAGE = 0.05
+
+
+def look_up_part_code(part_name):
+    if part_name in CART_PARTS_DICT:
+        return CART_PARTS_DICT[part_name]
+    else:
+        return 'UN'
 
 
 class BNGVehicle:
@@ -25,17 +52,12 @@ class BNGVehicle:
             v = bng_damage[k]
             # Only collect component with damage bigger than threshold
             if v["damage"] > THRESHOLD_DAMAGE:
-                self.damage.append(bng_damage)
+                damage_position = look_up_part_code(v["name"])
+                damage_value = v["damage"]
+                self.damage.append({damage_position: damage_value})
 
     def get_damage(self):
-        dam_comp = {}
-        if len(self.damage) == 0:  # handle a crash scenario without damage
-            return dam_comp
-        tmp_comp = self.damage[0]
-        for k in tmp_comp:
-            v = tmp_comp[k]
-            dam_comp[v['name']] = v['damage']
-        return dam_comp
+        return self.damage
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
