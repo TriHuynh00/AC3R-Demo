@@ -3000,42 +3000,19 @@ public class AccidentConstructor {
 
             if (!testCase.getCrashType().equals("forward impact")
                 || (testCase.getCrashType().equals("forward impact") && vehiclePath.size() == 1)) {
-//                impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
-//                        "\"start\":\"%s\", " +
-//                        "\"middle\":\"None\", " +
-//                        "\"end\":\"None\"}",
-//                    vehiclePath.get(vehiclePath.size() - 1)));
+
                 impactActionAndCoord.add(outputTrajectoryFormat(
                     vehiclePath.get(vehiclePath.size() - 1)));
             } else {
-//                impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
-//                    "\"start\":\"%s\", " +
-//                    "\"middle\":\"None\", " +
-//                    "\"end\":\"None\"}",
-//                vehiclePath.get(vehiclePath.size() - 2)));
                 impactActionAndCoord.add(outputTrajectoryFormat(
                     vehiclePath.get(vehiclePath.size() - 2)));
             }
 
+            // Make a movement from the penultimate to final point
             if (vehiclePath.size() > 1) {
-
-//                followActionAndCoord.add(String.format("{\"type\": \"straight\"," +
-//                        "\"start\":\"%s\", " +
-//                        "\"middle\":\"None\", " +
-//                        "\"end\":\"%s\"}",
-//                    vehiclePath.get(vehiclePath.size() - 2),
-//                    vehiclePath.get(vehiclePath.size() - 1)));
                 followActionAndCoord.add(outputTrajectoryFormat(
                     vehiclePath.get(vehiclePath.size() - 2),
                     vehiclePath.get(vehiclePath.size() - 1)));
-            } else {
-                stopActionAndCoord.add(outputTrajectoryFormat(
-                    vehiclePath.get(vehiclePath.size() - 1)));
-//                    String.format("{\"type\": \"stop\"," +
-//                        "\"start\":\"%s\", " +
-//                        "\"middle\":\"None\", " +
-//                        "\"end\":\"None\"}",
-//                    vehiclePath.get(vehiclePath.size() - 1)));
             }
 
         } else {
@@ -3050,14 +3027,12 @@ public class AccidentConstructor {
                     boolean foundCrashPoint = false;
                     for (int j = otherVehicle.getMovementPath().size() - 2;
                          j < vehicle.getMovementPath().size(); j++) {
+
                         String otherPoint = otherVehicle.getMovementPath().get(j);
+
                         if (currentPoint.trim().equals(otherPoint.trim())) {
+
                             impactActionAndCoord.add(outputTrajectoryFormat(currentPoint));
-//                                String.format("{\"type\": \"crash\"," +
-//                                "\"start\":\"%s\", " +
-//                                "\"middle\":\"None\", " +
-//                                "\"end\":\"None\"}",
-//                                currentPoint));
                             foundCrashPoint = true;
                             break;
                         }
@@ -3090,28 +3065,14 @@ public class AccidentConstructor {
 
             if ((currentAction.startsWith("turn") || turnAngle >= 45)
                 && currentCoordIndex - 1 >= 0 && currentCoordIndex + 1 < vehiclePath.size()) {
+
                 ConsoleLogger.print('d', "Turn Action is " + currentAction);
-//                String actionAndCoord = String.format("{\"type\": \"turn\"," +
-//                        "\"start\":\"%s\", " +
-//                        "\"middle\":\"%s\", " +
-//                        "\"end\":\"%s\"}",
-//                    vehiclePath.get(currentCoordIndex - 1),
-//                    vehiclePath.get(currentCoordIndex),
-//                    vehiclePath.get(currentCoordIndex + 1));
 
                 turnActionAndCoord.add(outputTrajectoryFormat(
                     vehiclePath.get(currentCoordIndex - 1),
                     vehiclePath.get(currentCoordIndex),
                     vehiclePath.get(currentCoordIndex + 1)
                 ));
-
-//                if (impactActionAndCoord.isEmpty()) {
-//                    impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
-//                        "\"start\":\"%s\", " +
-//                        "\"middle\":\"None\", " +
-//                        "\"end\":\"None\"}",
-//                        vehiclePath.get(vehiclePath.size() - 2)));
-//                }
 
                 currentCoordIndex -= 1;
             } else {
@@ -3131,21 +3092,11 @@ public class AccidentConstructor {
                         // set the impact as the 2nd last point in vehicle path for non-rear-end cases
                         if (!isRearEndCrash) {
                             if (currentCoordIndex - 2 >= 0) {
-//                                impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
-//                                        "\"start\":\"%s\", " +
-//                                        "\"middle\":\"None\", " +
-//                                        "\"end\":\"None\"}",
-//                                    vehiclePath.get(vehiclePath.size() - 2)));
 
                                 // If the action before impact is a turn,
                                 // then the action after impact is a follow action
                                 if (i == vehicleActionList.size() - 2) {
-//                                    followActionAndCoord.add(String.format("{\"type\": \"straight\"," +
-//                                        "\"start\":\"%s\", " +
-//                                        "\"middle\":\"None\", " +
-//                                        "\"end\":\"%s\"}",
-//                                    vehiclePath.get(vehiclePath.size() - 2),
-//                                    vehiclePath.get(vehiclePath.size() - 1)));
+
                                     followActionAndCoord.add(outputTrajectoryFormat(
                                         vehiclePath.get(vehiclePath.size() - 2),
                                         vehiclePath.get(vehiclePath.size() - 1)));
@@ -3161,24 +3112,11 @@ public class AccidentConstructor {
                         vehiclePath.get(currentCoordIndex).replaceAll(" ", ",")));
 
                     if (currentCoordIndex - 1 >= 0) {
-//                        followActionAndCoord.add(String.format("{\"type\": \"straight\"," +
-//                                "\"start\":\"%s\", " +
-//                                "\"middle\":\"None\", " +
-//                                "\"end\":\"%s\"}",
-//                            vehiclePath.get(currentCoordIndex - 1),
-//                            vehiclePath.get(currentCoordIndex)));
+
                         followActionAndCoord.add(outputTrajectoryFormat(
                             vehiclePath.get(currentCoordIndex - 1),
                             vehiclePath.get(currentCoordIndex)));
                     }
-
-//                    if (impactActionAndCoord.isEmpty()) {
-//                        impactActionAndCoord.add(String.format("{\"type\": \"crash\"," +
-//                            "\"start\":\"%s\", " +
-//                            "\"middle\":\"None\", " +
-//                            "\"end\":\"None\"}",
-//                        vehiclePath.get(vehiclePath.size() - 1)));
-//                    }
 
                     currentCoordIndex--;
                 }
@@ -3186,22 +3124,23 @@ public class AccidentConstructor {
         }
         // Final check:  if there is no point being covered in the action coordinates,
         // add that point as a straight action
-        for (int k = vehiclePath.size() - 2; k >= 0 ; k--) {
-            String unassignedCoord = vehiclePath.get(k);
+        for (int k = vehiclePath.size() - 1; k >= 0 ; k--) {
+            String unassignedCoord = outputTrajectoryFormat(vehiclePath.get(k));
             if (!followActionAndCoord.toString().contains(unassignedCoord)
                 && !stopActionAndCoord.toString().contains(unassignedCoord)
                 && !turnActionAndCoord.toString().contains(unassignedCoord)
                 && !impactActionAndCoord.toString().contains(unassignedCoord))
             {
-//                followActionAndCoord.add(String.format("{\"type\": \"straight\"," +
-////                        "\"start\":\"%s\", " +
-////                        "\"middle\":\"None\", " +
-////                        "\"end\":\"%s\"}",
-//                    unassignedCoord,
-//                    vehiclePath.get(k + 1)));
-                followActionAndCoord.add(outputTrajectoryFormat(
-                    unassignedCoord,
-                    vehiclePath.get(k + 1)));
+
+                if (k == vehiclePath.size() - 1) {
+                    followActionAndCoord.add(outputTrajectoryFormat(
+                        vehiclePath.get(k - 1),
+                        vehiclePath.get(k)));
+                } else {
+                    followActionAndCoord.add(outputTrajectoryFormat(
+                        vehiclePath.get(k),
+                        vehiclePath.get(k + 1)));
+                }
             }
         }
 

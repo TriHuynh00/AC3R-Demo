@@ -355,14 +355,21 @@ public class SideswipeConstructor {
 
         ConsoleLogger.print('d', "add far away wp");
         double extraDistanceX = AccidentConstructorUtil.getNonCriticalDistance() == 0 ?
-                3 : AccidentConstructorUtil.getNonCriticalDistance();
+                5 : AccidentConstructorUtil.getNonCriticalDistance();
         double extraDistanceY = AccidentConstructorUtil.getNonCriticalDistance() == 0 ?
-                -3 : 0;
+                2 : 0;
 //        double extraDistanceStriker = AccidentConstructorUtil.getNonCriticalDistance() == 0 ?
 //                6 : 0;
 
+        // Victim enter the road and go forward, but make a little wider curve
         constructedCoordVeh.get(strikerAndVictim[1].getVehicleId() - 1).add
-                (extraDistanceX + AccidentParam.defaultCoordDelimiter + extraDistanceY);
+            (extraDistanceX + AccidentParam.defaultCoordDelimiter + extraDistanceY);
+
+        // Striker go straight a bit
+        constructedCoordVeh.get(strikerAndVictim[0].getVehicleId() - 1).add
+            (extraDistanceX + AccidentParam.defaultCoordDelimiter + "0");
+
+
 
 
         for (int i = 0; i < vehicleList.size(); i++)
