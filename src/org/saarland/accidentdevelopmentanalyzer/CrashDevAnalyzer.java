@@ -359,6 +359,8 @@ public class CrashDevAnalyzer {
 
                                     VehicleAttr actingVehicle = AccidentConstructorUtil.findVehicleBasedOnId(vehicleID,
                                             vehicleList);
+                                    if (actingVehicle != null)
+                                        actingVehicle.setOnStreet(-1);
 
                                     for (AccidentConcept concept : pavementConcepts)
                                     {
@@ -368,6 +370,7 @@ public class CrashDevAnalyzer {
                                             if (actingVehicle.getStandingStreet() != null) {
                                                 actingVehicle.getStandingStreet().putValToKey("pavement_type",
                                                         conceptName);
+                                                actingVehicle.setOnStreet(0);
 
                                             }
                                             // Find whether the parking side is "left" or "right"

@@ -168,7 +168,7 @@ public class SideswipeConstructor {
                                 ConsoleLogger.print('d',"Set coord for parking on the pavement");
                                 double yCoord = (Double.parseDouble(currentStreet.getStreetPropertyValue("lane_num"))
                                         * AccidentParam.laneWidth) / 2
-                                        + AccidentParam.laneWidth / 2.0 ;
+                                        + AccidentParam.laneWidth / 2;
 //                                if (currentVehicle.getStandingRoadSide().equals("left"))
 //                                {
 //                                    yCoord = ;

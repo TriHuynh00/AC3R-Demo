@@ -336,8 +336,15 @@ public class FrontCollisionConstructor {
 
                             if (!currentStreet.getStreetPropertyValue("road_park_line").equals("0")
                                     && !currentStreet.getStreetPropertyValue("road_park_line").equals("")) {
-                                ConsoleLogger.print('d', "Parking Line extra distance set to 2");
-                                parkingLineExtraDistance = 1;
+
+                                // Keep the computed yCoord when on parking line
+                                // On pavement, put car far away from the road by parking line width
+                                if (vehicleAttr.getOnStreet() == -1) {
+                                    parkingLineExtraDistance = 0;
+                                } else if (vehicleAttr.getOnStreet() == 0) {
+                                    parkingLineExtraDistance = -1 * AccidentParam.parkingLineWidth;
+                                }
+                                ConsoleLogger.print('d', "Parking Line extra distance set to " + parkingLineExtraDistance);
                             }
 
                             if (vehicleAttr.getStandingRoadSide().equals("left")) {

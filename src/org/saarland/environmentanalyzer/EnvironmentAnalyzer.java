@@ -99,7 +99,8 @@ public class EnvironmentAnalyzer {
                                            ArrayList<VehicleAttr> vehicleList, StanfordCoreferencer stanfordCoreferencer)
     {
         // Find the existence of intersection
-        RoadAnalyzer roadAnalyzer = new RoadAnalyzer(testCase.getStreetList(), parser, testCase);
+        RoadAnalyzer roadAnalyzer = new RoadAnalyzer(testCase.getStreetList(),
+            parser, testCase, vehicleList);
 
         String intersectionType = "";
 
@@ -157,11 +158,22 @@ public class EnvironmentAnalyzer {
 
         } // End checking intersection
 
-
-
         // ----- End road analysis based on direction -----
 
         // ----- Analyze other road properties -----
+        LinkedList<LinkedList<String>> dependencyAndTagListSentence1 =
+            stanfordCoreferencer.findDependencies(paragraph1);
+
+        String[] sentences = paragraph1.split("\\. ");
+
+        for (String sentence : sentences)
+        {
+            if (sentence.contains("park")) {
+                roadAnalyzer.identifyParkingSetup(dependencyAndTagListSentence1.get(1),
+                    sentence);
+            }
+        }
+
 
         // ** Number of lanes **
 

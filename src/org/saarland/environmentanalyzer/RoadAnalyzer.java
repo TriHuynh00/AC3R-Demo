@@ -5,25 +5,33 @@ import org.saarland.accidentconstructor.ConsoleLogger;
 import org.saarland.accidentelementmodel.NavigationDictionary;
 import org.saarland.accidentelementmodel.Street;
 import org.saarland.accidentelementmodel.TestCaseInfo;
+import org.saarland.accidentelementmodel.VehicleAttr;
 import org.saarland.nlptools.StanfordCoreferencer;
+import org.saarland.nlptools.Stemmer;
 import org.saarland.ontologyparser.AccidentConcept;
 import org.saarland.ontologyparser.OntologyHandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class RoadAnalyzer {
 
     ArrayList<Street> streetList;
     TestCaseInfo testCaseInfo;
+    ArrayList<VehicleAttr> vehicleList;
     String[] tIntersectionNames = new String[] {"t-intersection", "t-junction", "three-legged", "merge"};
     String[] intersectionNames = new String[] {"intersection", "four-legged", "intersect"};
     OntologyHandler ontologyHandler;
 
-    public RoadAnalyzer(ArrayList<Street> streetList, OntologyHandler ontologyHandler, TestCaseInfo testCase)
+    public RoadAnalyzer(ArrayList<Street> streetList,
+                        OntologyHandler ontologyHandler,
+                        TestCaseInfo testCase,
+                        ArrayList<VehicleAttr> vehicleList)
     {
         this.streetList = streetList;
         this.ontologyHandler = ontologyHandler;
+        this.vehicleList = vehicleList;
         testCaseInfo = testCase;
         //constructIntersectionNames();
     }
@@ -467,9 +475,177 @@ public class RoadAnalyzer {
      * ========================================================
      */
 
-    private void identifyParkingSpaceExistence(String paragraph)
+    public void identifyParkingSetup(LinkedList<String> dependencyList, String paragraph)
     {
+        // Check if we find any park in this paragraph
+        if (!paragraph.contains("park")) {
+            return;
+        }
+        HashMap<String, String> newTestCaseProp = testCaseInfo.getTestCaseProp();
+        String connectedWordList = AccidentConstructorUtil.
+            findAllConnectedWordsTopDown(dependencyList, "park", "", 0, 5);
+        ConsoleLogger.print('d', "Environment park found " + connectedWordList);
+        Street parkedStreet = null;
 
+        if (testCaseInfo.getStreetList().size() == 1) {
+            parkedStreet = testCaseInfo.getStreetList().get(0);
+        }
+        // Find vehicle ID first
+        if (connectedWordList.matches(".*vehicle\\d.*")) {
+            ConsoleLogger.print('d', "A parked vehicle found");
+        } else  // if a vehicle with ID cannot be found, check which vehicle is identified as park
+        {
+            ConsoleLogger.print('d', "Cannot find a parked vehicleID");
+
+            for (VehicleAttr vehicleTemp : vehicleList) {
+                ConsoleLogger.print('d', "Onstreet of vehicle " + vehicleTemp.getVehicleId() + " is " + vehicleTemp.getOnStreet());
+                if (vehicleTemp.getOnStreet() != 1) {
+                    vehicleTemp.setTravelOnLaneNumber(AccidentConstructorUtil.detectTravellingLane(connectedWordList));
+
+                    ConsoleLogger.print('d', "Environment parked vehicle #" + vehicleTemp.getVehicleId() +
+                        " at lane number " + vehicleTemp.getTravelOnLaneNumber());
+
+                    // Since this vehicle parked on a lane, it is set to locate on the street instead of
+                    // a pavement
+                    vehicleTemp.setOnStreet(1);
+                }
+            }
+        }
+
+
+        // Extract Misc descriptions
+        for (String dependency : dependencyList) {
+            String[] tokenPair = AccidentConstructorUtil.getWordPairFromDependency(dependency);
+
+            String[] wordPair = {
+                AccidentConstructorUtil.getWordFromToken(tokenPair[0]),
+                AccidentConstructorUtil.getWordFromToken(tokenPair[1])
+            };
+
+            if (dependency.startsWith("nmod:of")) {
+
+                for (String word : wordPair) {
+                    AccidentConcept wordConcept = ontologyHandler.findExactConcept(word);
+                    // Find whether street has parking line
+                    if (wordConcept != null
+                        && wordConcept.getLeafLevelName().equals("road_type")
+                        && dependency.contains("side-")) {
+
+                        String sidePattern = "side";
+
+                        String relatedSideString = AccidentConstructorUtil
+                            .findAllConnectedWordsTopDown(dependencyList, "side", "", 0, 1);
+                        //                    String sidePattern = "side-";
+                        //                    LinkedList<String> relatedSideDependencies = AccidentConstructorUtil.findConnectedDependencies(dependencyList, taggedWordList,
+                        //                        sidePattern, dependency, 0);
+
+                        ConsoleLogger.print('d', "relatedSideString = " +
+                            relatedSideString);
+
+                        // Check indicator of parked cars
+                        if (relatedSideString.contains(",line") || relatedSideString.contains(",fill") ) {
+                            String carLineDeps = AccidentConstructorUtil
+                                .findAllConnectedWordsTopDown(dependencyList, "line", "", 0, 2);
+                            ConsoleLogger.print('d', "carLineDeps = " +
+                                carLineDeps);
+
+                            if (carLineDeps.contains(",car")) {
+                                parkedStreet.putValToKey("road_park_line_fill", "1");
+
+                                ConsoleLogger.print('d', "find line filled with cars");
+
+                                // If the parking line is not found yet, set both sides have a parking line
+                                if (parkedStreet.getStreetPropertyValue("road_park_line").equals("")) {
+                                    parkedStreet.putValToKey("road_park_line", "3");
+                                }
+
+                                if (relatedSideString.contains(",right-")
+                                    && ( parkedStreet.getStreetPropertyValue("road_park_line").equals("")
+                                        || parkedStreet.getStreetPropertyValue("road_park_line").equals("3"))) {
+
+                                    parkedStreet.putValToKey("road_park_line", "2");
+
+                                } else if (relatedSideString.contains(",left-")
+                                    && ( parkedStreet.getStreetPropertyValue("road_park_line").equals("")
+                                        || parkedStreet.getStreetPropertyValue("road_park_line").equals("3"))) {
+
+                                    parkedStreet.putValToKey("road_park_line", "1");
+                                }
+                            }
+                        }
+                    }
+                }
+
+                    // Check if side dependency has line for parking
+//                    for (String sideDependency : relatedSideDependencies) {
+//                        ConsoleLogger.print('d', "Side related Dep " + sideDependency);
+//                        String[] sideDepWordPair = AccidentConstructorUtil.getWordPairFromDependency(sideDependency);
+//
+//                        String otherWord = AccidentConstructorUtil.getOtherWordInDep(sidePattern, sideDepWordPair);
+//
+//                        // Check if the parking line is filled with cars
+//                        if (otherWord.contains("line")) {
+//                            LinkedList<String> carLineDeps = AccidentConstructorUtil.findConnectedDependencies(
+////                                dependencyList, taggedWordList,
+////                                otherWord, sideDependency, 0);
+//                            ConsoleLogger.print('d', "Other word " + otherWord + " Car line Deps size " + carLineDeps.size());
+                            // No info about the objects on the parking line
+//                            if (carLineDeps.size() == 0) {
+//        //                                    newTestCaseProp.put("road_park_line_fill", "0");
+//                                parkedStreet.putValToKey("road_park_line_fill", "0");
+//                            }
+//
+//                            for (String carDependency : carLineDeps) {
+//                                // Found that the line is filled with cars
+//                                if (carDependency.contains("car")) {
+//                                    ConsoleLogger.print('d', "find line filled with cars");
+//        //                                        newTestCaseProp.put("road_park_line_fill", "1");
+//                                    parkedStreet.putValToKey("road_park_line_fill", "1");
+//
+//                                    // If the parking line is not found yet, set both sides have a parking line
+//                                    if (newTestCaseProp.get("road_park_line").equals("")) {
+//        //                                            newTestCaseProp.put("road_park_line", "3");
+//                                        parkedStreet.putValToKey("road_park_line", "3");
+//                                    }
+//                                }
+//                            }
+//                        } // End checking if parking line is filled with cars
+                        // Detect left parking line
+//                        else if (otherWord.contains("(left-")) {
+//                            if (newTestCaseProp.get("road_park_line").equals("")
+//                                || newTestCaseProp.get("road_park_line").equals("3")) {
+//        //                                    newTestCaseProp.put("road_park_line", "1");
+//                                parkedStreet.putValToKey("road_park_line", "1");
+//                            }
+//                            // If somehow people specify "left and right", the set the lane has both parking lines
+//                            else if (newTestCaseProp.get("road_park_line").equals("2")) {
+//        //                                    newTestCaseProp.put("road_park_line", "3");
+//                                parkedStreet.putValToKey("road_park_line", "3");
+//                            }
+//
+//                        }
+//                        // Detect right parking line
+//                        else if (otherWord.contains("(right-")) {
+//                            if (newTestCaseProp.get("road_park_line").equals("")
+//                                || newTestCaseProp.get("road_park_line").equals("3")) {
+//        //                                    newTestCaseProp.put("road_park_line", "2");
+//                                parkedStreet.putValToKey("road_park_line", "2");
+//                            }
+//                            // If somehow people specify "left and right", the set the lane has both parking lines
+//                            else if (newTestCaseProp.get("road_park_line").equals("1")) {
+//        //                                    newTestCaseProp.put("road_park_line", "3");
+//                                parkedStreet.putValToKey("road_park_line", "3");
+//                            }
+//                        }
+
+                    } // End processing line dependency
+                } // End checking road has parking line
+                if (parkedStreet.getStreetProp() != null) {
+                    parkedStreet.printStreetInfo();
+//                    parkedStreet.setStreetProp(parkedStreetProp);
+                }
+//            }
+//        }
     }
 
     /* ========================================================
@@ -485,6 +661,7 @@ public class RoadAnalyzer {
      * Analyze the lane number from the dependency list
      */
     public int analyzeNumberOfLane(LinkedList<String> dependencyList) {
+
         int numberOfLanes = 0;
         for (String dependency : dependencyList)
         {
