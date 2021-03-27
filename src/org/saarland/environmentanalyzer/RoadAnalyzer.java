@@ -512,7 +512,6 @@ public class RoadAnalyzer {
             }
         }
 
-
         // Extract Misc descriptions
         for (String dependency : dependencyList) {
             String[] tokenPair = AccidentConstructorUtil.getWordPairFromDependency(dependency);
@@ -575,77 +574,12 @@ public class RoadAnalyzer {
                         }
                     }
                 }
-
-                    // Check if side dependency has line for parking
-//                    for (String sideDependency : relatedSideDependencies) {
-//                        ConsoleLogger.print('d', "Side related Dep " + sideDependency);
-//                        String[] sideDepWordPair = AccidentConstructorUtil.getWordPairFromDependency(sideDependency);
-//
-//                        String otherWord = AccidentConstructorUtil.getOtherWordInDep(sidePattern, sideDepWordPair);
-//
-//                        // Check if the parking line is filled with cars
-//                        if (otherWord.contains("line")) {
-//                            LinkedList<String> carLineDeps = AccidentConstructorUtil.findConnectedDependencies(
-////                                dependencyList, taggedWordList,
-////                                otherWord, sideDependency, 0);
-//                            ConsoleLogger.print('d', "Other word " + otherWord + " Car line Deps size " + carLineDeps.size());
-                            // No info about the objects on the parking line
-//                            if (carLineDeps.size() == 0) {
-//        //                                    newTestCaseProp.put("road_park_line_fill", "0");
-//                                parkedStreet.putValToKey("road_park_line_fill", "0");
-//                            }
-//
-//                            for (String carDependency : carLineDeps) {
-//                                // Found that the line is filled with cars
-//                                if (carDependency.contains("car")) {
-//                                    ConsoleLogger.print('d', "find line filled with cars");
-//        //                                        newTestCaseProp.put("road_park_line_fill", "1");
-//                                    parkedStreet.putValToKey("road_park_line_fill", "1");
-//
-//                                    // If the parking line is not found yet, set both sides have a parking line
-//                                    if (newTestCaseProp.get("road_park_line").equals("")) {
-//        //                                            newTestCaseProp.put("road_park_line", "3");
-//                                        parkedStreet.putValToKey("road_park_line", "3");
-//                                    }
-//                                }
-//                            }
-//                        } // End checking if parking line is filled with cars
-                        // Detect left parking line
-//                        else if (otherWord.contains("(left-")) {
-//                            if (newTestCaseProp.get("road_park_line").equals("")
-//                                || newTestCaseProp.get("road_park_line").equals("3")) {
-//        //                                    newTestCaseProp.put("road_park_line", "1");
-//                                parkedStreet.putValToKey("road_park_line", "1");
-//                            }
-//                            // If somehow people specify "left and right", the set the lane has both parking lines
-//                            else if (newTestCaseProp.get("road_park_line").equals("2")) {
-//        //                                    newTestCaseProp.put("road_park_line", "3");
-//                                parkedStreet.putValToKey("road_park_line", "3");
-//                            }
-//
-//                        }
-//                        // Detect right parking line
-//                        else if (otherWord.contains("(right-")) {
-//                            if (newTestCaseProp.get("road_park_line").equals("")
-//                                || newTestCaseProp.get("road_park_line").equals("3")) {
-//        //                                    newTestCaseProp.put("road_park_line", "2");
-//                                parkedStreet.putValToKey("road_park_line", "2");
-//                            }
-//                            // If somehow people specify "left and right", the set the lane has both parking lines
-//                            else if (newTestCaseProp.get("road_park_line").equals("1")) {
-//        //                                    newTestCaseProp.put("road_park_line", "3");
-//                                parkedStreet.putValToKey("road_park_line", "3");
-//                            }
-//                        }
-
-                    } // End processing line dependency
-                } // End checking road has parking line
-                if (parkedStreet.getStreetProp() != null) {
-                    parkedStreet.printStreetInfo();
+            } // End processing line dependency
+        } // End checking road has parking line
+        if (parkedStreet.getStreetProp() != null) {
+            parkedStreet.printStreetInfo();
 //                    parkedStreet.setStreetProp(parkedStreetProp);
-                }
-//            }
-//        }
+        }
     }
 
     /* ========================================================
