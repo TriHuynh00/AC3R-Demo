@@ -65,9 +65,9 @@ class Report(ABC):
     @abstractmethod
     def operation(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         """
-        Return a number of expected crashed components/sides/parts,
-               a number of expected non-crashed components/sides/parts
-               a maximum point that one scenario can earn for those kinds of report
+        Return the amount of matched crashed elements(components/sides/parts),
+               the amount of matched non-crashed elements(components/sides/parts)
+               the amount of "matchable" elements for a specific report
         """
         pass
 
@@ -75,8 +75,8 @@ class Report(ABC):
     def matching_operation(category: list,
                            t1: list, o1: list, t2: list, o2: list) -> Tuple[int, int]:
         """
-        Count matching expected crashed components/sides/parts and
-              matching expected non-crashed components/sides/parts
+        Count the amount of matched crashed elements(components/sides/parts) and
+              the amount of matched non-crashed elements(components/sides/parts)
 
         Args:
             t1 (list): List of expected CRASHED element from a police report
@@ -86,7 +86,7 @@ class Report(ABC):
             category (list): Set of vehicle elements are used to compare
 
         Returns:
-            A tuple contains the number of matching expected crashed
+            A tuple contains the number of matched crashed
             and non-crashed elements
         """
         crash_points = 0
@@ -171,6 +171,7 @@ class ReportTypeB(Report):
         # From Simulation:
         # List o1 contains CRASHED component
         # List o2 contains NON-CRASHED component
+        # Remove duplicates from a list outputs
         outputs = list(dict.fromkeys([self._categorize_part(i["name"], CAT_B) for i in outputs]))
         o1, o2 = outputs, list(set(CAT_B_DATA) - set(outputs))
 
@@ -195,6 +196,7 @@ class ReportTypeC(Report):
         # From Simulation:
         # List o1 contains CRASHED side
         # List o2 contains NON-CRASHED side
+        # Remove duplicates from a list outputs
         outputs = list(dict.fromkeys([self._categorize_part(i["name"], CAT_C) for i in outputs]))
         o1, o2 = outputs, list(set(CAT_C_DATA) - set(outputs))
 
