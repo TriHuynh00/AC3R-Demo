@@ -2,10 +2,10 @@ from __future__ import annotations
 from typing import Tuple
 from abc import ABC, abstractmethod
 
-CAT_A = 'A'
-CAT_B = 'B'
-CAT_C = 'C'
-CAT_D = 'D'
+CAT_A = 'A'  # Report with a crashed scenario
+CAT_B = 'B'  # Report provides crashed components (front / middle / back)
+CAT_C = 'C'  # Report provides crashed sides (left / right)
+CAT_D = 'D'  # Report provides crashed part with its component and side (front left / front right)
 
 CAT_A_DATA = ["ANY"]
 CAT_B_DATA = ['F', 'M', 'B']
@@ -20,39 +20,60 @@ CATEGORIES = [{"type": CAT_A, "data": CAT_A_DATA},
 NO_CRASH = 0
 
 
-class Creator(ABC):
+class ReportCreator(ABC):
+    """
+    The ReportCreator class declares the factory method that returns new report objects.
+    The return type of this method must match the Report interface.
+    """
     @abstractmethod
-    def factory_method(self):
+    def create(self) -> Report:
         pass
 
-    def match_operation(self, outputs: list, targets: list) -> Tuple[int, int, int]:
-        police_report = self.factory_method()
+    def match(self, outputs: list, targets: list) -> Tuple[int, int, int]:
+        police_report = self.create()
         return police_report.process(outputs, targets)
 
 
 """
-Concrete Creators override the factory method in order to change the resulting
-report's type.
+Concrete Creators override the factory method in order to 
+generate a different type of report.
 """
 
 
-class ConcreteCreatorA(Creator):
-    def factory_method(self) -> Report:
+class AnyCreator(ReportCreator):
+    """
+    AnyCreator override the factory method in order to
+    generate a report with any crash.
+    """
+    def create(self) -> Report:
         return ReportTypeA()
 
 
-class ConcreteCreatorB(Creator):
-    def factory_method(self) -> Report:
+class ComponentCreator(ReportCreator):
+    """
+    ComponentCreator override the factory method in order to
+    generate a report with crashed components.
+    """
+    def create(self) -> Report:
         return ReportTypeB()
 
 
-class ConcreteCreatorC(Creator):
-    def factory_method(self) -> Report:
+class SideCreator(ReportCreator):
+    """
+    SideCreator override the factory method in order to
+    generate a report with crashed sides.
+    """
+    def create(self) -> Report:
         return ReportTypeC()
 
 
-class ConcreteCreatorD(Creator):
-    def factory_method(self) -> Report:
+class ComponentSideCreator(ReportCreator):
+    """
+    ComponentSideCreator override the factory method in order to
+    generate a report with crashed parts including their component
+    and side.
+    """
+    def create(self) -> Report:
         return ReportTypeD()
 
 
@@ -73,17 +94,18 @@ class Report(ABC):
 
     @staticmethod
     def _match(category: list,
-                           t1: list, o1: list, t2: list, o2: list) -> Tuple[int, int]:
+               crashes_from_police_report: list, crashes_from_simulation: list,
+               non_crashes_from_police_report: list, non_crashes_from_simulation: list) -> Tuple[int, int]:
         """
         Count the amount of matched crashed elements(components/sides/parts) and
               the amount of matched non-crashed elements(components/sides/parts)
 
         Args:
-            t1 (list): List of expected CRASHED element from a police report
-            o1 (list): List of expected CRASHED element from a simulation
-            t2 (list): List of expected NON-CRASHED element from a police report
-            o2 (list): List of expected NON-CRASHED element from a simulation
-            category (list): Set of vehicle elements are used to compare
+            crashes_from_police_report (list):     List of expected CRASHED element from a police report
+            crashes_from_simulation (list):        List of expected CRASHED element from a simulation
+            non_crashes_from_police_report (list): List of expected NON-CRASHED element from a police report
+            non_crashes_from_simulation (list):    List of expected NON-CRASHED element from a simulation
+            category (list):                       Set of vehicle elements are used to compare
 
         Returns:
             A tuple contains the number of matched crashed
@@ -93,9 +115,9 @@ class Report(ABC):
         non_crash_points = 0
         for part in category:
             # Count matching expected CRASHED component
-            crash_points += 1 if part in (set(t1) & set(o1)) else 0
+            crash_points += 1 if part in (set(crashes_from_police_report) & set(crashes_from_simulation)) else 0
             # Count matching expected NON-CRASHED component
-            non_crash_points += 1 if part in (set(t2) & set(o2)) else 0
+            non_crash_points += 1 if part in (set(non_crashes_from_police_report) & set(non_crashes_from_simulation)) else 0
 
         return crash_points, non_crash_points
 
@@ -121,12 +143,12 @@ class Report(ABC):
         """
         # Invalid given outputs
         if len(outputs) is NO_CRASH:
-            raise Exception("Given scenario might not be crashed!")
+            raise Exception("The simulator did not report any crashes!")
         # The vehicle's crash element should be on the car
         parts = CAT_D_DATA
         for item in [i["name"] for i in outputs]:
             if item not in parts:
-                raise Exception(f'Part name {item} is not found!')
+                raise Exception(f'The code {item} is not found in the part dictionary!')
         return True
 
 
@@ -163,19 +185,19 @@ class ReportTypeB(Report):
         point_target = len(CAT_B_DATA)
 
         # From Police Report:
-        # List t1 contains expected CRASHED component
-        # List t2 contains expected NON-CRASHED component
+        # List crashes_from_police_report contains expected CRASHED component
+        # List non_crashes_from_police_report contains expected NON-CRASHED component
         targets = [part["name"] for part in targets]
-        t1, t2 = targets, list(set(CAT_B_DATA) - set(targets))
+        crashes_from_police_report, non_crashes_from_police_report = targets, list(set(CAT_B_DATA) - set(targets))
 
         # From Simulation:
-        # List o1 contains CRASHED component
-        # List o2 contains NON-CRASHED component
+        # List crashes_from_simulation contains CRASHED component
+        # List non_crashes_from_simulation contains NON-CRASHED component
         # Remove duplicates from a list outputs
         outputs = list(dict.fromkeys([self._categorize_part(i["name"], CAT_B) for i in outputs]))
-        o1, o2 = outputs, list(set(CAT_B_DATA) - set(outputs))
+        crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_B_DATA) - set(outputs))
 
-        crash_points, non_crash_points = self._match(CAT_B_DATA, t1, o1, t2, o2)
+        crash_points, non_crash_points = self._match(CAT_B_DATA, crashes_from_police_report, crashes_from_simulation, non_crashes_from_police_report, non_crashes_from_simulation)
         return crash_points, non_crash_points, point_target
 
 
@@ -188,19 +210,19 @@ class ReportTypeC(Report):
         point_target = len(CAT_C_DATA)
 
         # From Police Report:
-        # List t1 contains expected CRASHED side
-        # List t2 contains expected NON-CRASHED side
+        # List crashes_from_police_report contains expected CRASHED side
+        # List non_crashes_from_police_report contains expected NON-CRASHED side
         targets = [part["name"] for part in targets]
-        t1, t2 = targets, list(set(CAT_C_DATA) - set(targets))
+        crashes_from_police_report, non_crashes_from_police_report = targets, list(set(CAT_C_DATA) - set(targets))
 
         # From Simulation:
-        # List o1 contains CRASHED side
-        # List o2 contains NON-CRASHED side
+        # List crashes_from_simulation contains CRASHED side
+        # List non_crashes_from_simulation contains NON-CRASHED side
         # Remove duplicates from a list outputs
         outputs = list(dict.fromkeys([self._categorize_part(i["name"], CAT_C) for i in outputs]))
-        o1, o2 = outputs, list(set(CAT_C_DATA) - set(outputs))
+        crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_C_DATA) - set(outputs))
 
-        crash_points, non_crash_points = self._match(CAT_C_DATA, t1, o1, t2, o2)
+        crash_points, non_crash_points = self._match(CAT_C_DATA, crashes_from_police_report, crashes_from_simulation, non_crashes_from_police_report, non_crashes_from_simulation)
         return crash_points, non_crash_points, point_target
 
 
@@ -213,22 +235,22 @@ class ReportTypeD(Report):
         point_target = len(CAT_D_DATA)
 
         # From Police Report:
-        # List t1 contains expected CRASHED parts
-        # List t2 contains expected NON-CRASHED parts
+        # List crashes_from_police_report contains expected CRASHED parts
+        # List non_crashes_from_police_report contains expected NON-CRASHED parts
         targets = [part["name"] for part in targets]
-        t1, t2 = targets, list(set(CAT_D_DATA) - set(targets))
+        crashes_from_police_report, non_crashes_from_police_report = targets, list(set(CAT_D_DATA) - set(targets))
 
         # From Simulation:
-        # List o1 contains CRASHED parts
-        # List o2 contains NON-CRASHED parts
+        # List crashes_from_simulation contains CRASHED parts
+        # List non_crashes_from_simulation contains NON-CRASHED parts
         outputs = [i["name"] for i in outputs]
-        o1, o2 = outputs, list(set(CAT_D_DATA) - set(outputs))
+        crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_D_DATA) - set(outputs))
 
-        crash_points, non_crash_points = self._match(CAT_D_DATA, t1, o1, t2, o2)
+        crash_points, non_crash_points = self._match(CAT_D_DATA, crashes_from_police_report, crashes_from_simulation, non_crashes_from_police_report, non_crashes_from_simulation)
         return crash_points, non_crash_points, point_target
 
 
-def _categorize_report(report_data: list) -> Creator:
+def _categorize_report(report_data: list) -> ReportCreator:
     """
     Categorizes the type of police report
     """
@@ -242,10 +264,10 @@ def _categorize_report(report_data: list) -> Creator:
         raise Exception("Report Type not found. More than 1 category reported!")
     else:
         if CAT_A in categories:
-            return ConcreteCreatorA()
+            return AnyCreator()
         if CAT_B in categories:
-            return ConcreteCreatorB()
+            return ComponentCreator()
         if CAT_C in categories:
-            return ConcreteCreatorC()
+            return SideCreator()
         if CAT_D in categories:
-            return ConcreteCreatorD()
+            return ComponentSideCreator()

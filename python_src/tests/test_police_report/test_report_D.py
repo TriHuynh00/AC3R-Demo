@@ -15,7 +15,7 @@ class TestPoliceReportTypeD(unittest.TestCase):
         for report in data_targets_01:
             data_targets = data_targets_01[report]
             creator = _categorize_report(data_targets)
-            self.assertEqual(expected, creator.match_operation(data_outputs, data_targets))
+            self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
     def test_case_02(self):
         expected = (2, 4, 6)
@@ -23,7 +23,7 @@ class TestPoliceReportTypeD(unittest.TestCase):
         for report in data_targets_01:
             data_targets = data_targets_01[report]
             creator = _categorize_report(data_targets)
-            self.assertEqual(expected, creator.match_operation(data_outputs, data_targets))
+            self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
     def test_case_03(self):
         expected = (1, 3, 6)
@@ -31,7 +31,7 @@ class TestPoliceReportTypeD(unittest.TestCase):
         for report in data_targets_02:
             data_targets = data_targets_02[report]
             creator = _categorize_report(data_targets)
-            self.assertEqual(expected, creator.match_operation(data_outputs, data_targets))
+            self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
     def test_case_04(self):
         expected = (2, 3, 6)
@@ -39,7 +39,7 @@ class TestPoliceReportTypeD(unittest.TestCase):
         for report in data_targets_02:
             data_targets = data_targets_02[report]
             creator = _categorize_report(data_targets)
-            self.assertEqual(expected, creator.match_operation(data_outputs, data_targets))
+            self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
     def test_case_05(self):
         expected = (0, 4, 6)
@@ -47,7 +47,7 @@ class TestPoliceReportTypeD(unittest.TestCase):
         for report in data_targets_03:
             data_targets = data_targets_03[report]
             creator = _categorize_report(data_targets)
-            self.assertEqual(expected, creator.match_operation(data_outputs, data_targets))
+            self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
     def test_case_06(self):
         expected = (0, 3, 6)
@@ -55,7 +55,7 @@ class TestPoliceReportTypeD(unittest.TestCase):
         for report in data_targets_03:
             data_targets = data_targets_03[report]
             creator = _categorize_report(data_targets)
-            self.assertEqual(expected, creator.match_operation(data_outputs, data_targets))
+            self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
     def test_case_07(self):
         expected = Exception
@@ -64,7 +64,7 @@ class TestPoliceReportTypeD(unittest.TestCase):
             data_targets = data_targets_03[report]
             creator = _categorize_report(data_targets)
             with self.assertRaises(expected):
-                creator.match_operation(data_outputs, data_targets)
+                creator.match(data_outputs, data_targets)
 
     def test_case_08(self):
         expected = Exception
@@ -73,7 +73,7 @@ class TestPoliceReportTypeD(unittest.TestCase):
             data_targets = data_targets_03[report]
             creator = _categorize_report(data_targets)
             with self.assertRaises(expected):
-                creator.match_operation(data_outputs, data_targets)
+                creator.match(data_outputs, data_targets)
 
 
 if __name__ == '__main__':

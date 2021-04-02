@@ -13,7 +13,7 @@ class TestPoliceReportTypeA(unittest.TestCase):
         for report in data_targets:
             report_data = data_targets[report]
             creator = _categorize_report(report_data)
-            self.assertEqual(expected, creator.match_operation(data_outputs, [part["name"] for part in report_data]))
+            self.assertEqual(expected, creator.match(data_outputs, [part["name"] for part in report_data]))
 
     def test_case_02(self):
         expected = (1, 0, 1)
@@ -21,7 +21,7 @@ class TestPoliceReportTypeA(unittest.TestCase):
         for report in data_targets:
             report_data = data_targets[report]
             creator = _categorize_report(report_data)
-            self.assertEqual(expected, creator.match_operation(data_outputs, [part["name"] for part in report_data]))
+            self.assertEqual(expected, creator.match(data_outputs, [part["name"] for part in report_data]))
 
     def test_case_03(self):
         expected = Exception
@@ -30,7 +30,7 @@ class TestPoliceReportTypeA(unittest.TestCase):
             report_data = data_targets[report]
             creator = _categorize_report(report_data)
             with self.assertRaises(expected):
-                creator.match_operation(data_outputs, targets)
+                creator.match(data_outputs, targets)
 
     def test_case_04(self):
         expected = Exception
@@ -39,7 +39,7 @@ class TestPoliceReportTypeA(unittest.TestCase):
             report_data = data_targets[report]
             creator = _categorize_report(report_data)
             with self.assertRaises(expected):
-                creator.match_operation(data_outputs, targets)
+                creator.match(data_outputs, targets)
 
 
 if __name__ == '__main__':
