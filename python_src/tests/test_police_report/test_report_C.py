@@ -8,7 +8,7 @@ data_targets_02 = json.loads('{"v1":[{"name":"L","damage":0.053689561784267}]}')
 
 
 class TestPoliceReportTypeC(unittest.TestCase):
-    def test_case_01(self):
+    def test_simulation_FL_must_match_SIDE_report_R_L(self):
         expected = (1, 0, 2)
         data_outputs = [{"name": "FL", "damage": 1}]
         for report in data_targets_01:
@@ -16,7 +16,7 @@ class TestPoliceReportTypeC(unittest.TestCase):
             creator = _categorize_report(data_targets)
             self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
-    def test_case_02(self):
+    def test_simulation_FL_ML_must_match_SIDE_report_R_L(self):
         expected = (1, 0, 2)
         data_outputs = [{"name": "FL", "damage": 1}, {"name": "ML", "damage": 1}]
         for report in data_targets_01:
@@ -24,7 +24,7 @@ class TestPoliceReportTypeC(unittest.TestCase):
             creator = _categorize_report(data_targets)
             self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
-    def test_case_03(self):
+    def test_simulation_FL_FR_must_match_SIDE_report_R_L(self):
         expected = (2, 0, 2)
         data_outputs = [{"name": "FL", "damage": 1}, {"name": "FR", "damage": 1}]
         for report in data_targets_01:
@@ -32,7 +32,7 @@ class TestPoliceReportTypeC(unittest.TestCase):
             creator = _categorize_report(data_targets)
             self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
-    def test_case_04(self):
+    def test_simulation_FL_must_match_SIDE_report_L(self):
         expected = (1, 1, 2)
         data_outputs = [{"name": "FL", "damage": 1}]
         for report in data_targets_02:
@@ -40,7 +40,7 @@ class TestPoliceReportTypeC(unittest.TestCase):
             creator = _categorize_report(data_targets)
             self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
-    def test_case_05(self):
+    def test_simulation_FL_MR_must_match_SIDE_report_L(self):
         expected = (1, 0, 2)
         data_outputs = [{"name": "FL", "damage": 1}, {"name": "MR", "damage": 1}]
         for report in data_targets_02:
@@ -48,7 +48,7 @@ class TestPoliceReportTypeC(unittest.TestCase):
             creator = _categorize_report(data_targets)
             self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
-    def test_case_06(self):
+    def test_simulation_FL_FR_must_match_SIDE_report_L(self):
         expected = (1, 0, 2)
         data_outputs = [{"name": "FL", "damage": 1}, {"name": "FR", "damage": 1}]
         for report in data_targets_02:
@@ -56,7 +56,15 @@ class TestPoliceReportTypeC(unittest.TestCase):
             creator = _categorize_report(data_targets)
             self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
-    def test_case_07(self):
+    def test_simulation_MR_FR_not_match_SIDE_report_L(self):
+        expected = (0, 0, 2)
+        data_outputs = [{"name": "MR", "damage": 1}, {"name": "FR", "damage": 1}]
+        for report in data_targets_02:
+            data_targets = data_targets_02[report]
+            creator = _categorize_report(data_targets)
+            self.assertEqual(expected, creator.match(data_outputs, data_targets))
+
+    def test_exception_is_raised_when_no_crash(self):
         expected = Exception
         data_outputs = []
         for report in data_targets_02:
@@ -65,7 +73,7 @@ class TestPoliceReportTypeC(unittest.TestCase):
             with self.assertRaises(expected):
                 creator.match(data_outputs, data_targets)
 
-    def test_case_08(self):
+    def test_exception_is_raised_when_unknown_element_is_found(self):
         expected = Exception
         data_outputs = [{"name": "NON_DEFINED", "damage": 1}]
         for report in data_targets_02:
