@@ -27,7 +27,7 @@ class Creator(ABC):
 
     def match_operation(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         police_report = self.factory_method()
-        return police_report.operation(outputs, targets)
+        return police_report.process(outputs, targets)
 
 
 """
@@ -63,7 +63,7 @@ class Report(ABC):
     """
 
     @abstractmethod
-    def operation(self, outputs: list, targets: list) -> Tuple[int, int, int]:
+    def process(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         """
         Return the amount of matched crashed elements(components/sides/parts),
                the amount of matched non-crashed elements(components/sides/parts)
@@ -72,7 +72,7 @@ class Report(ABC):
         pass
 
     @staticmethod
-    def matching_operation(category: list,
+    def _match(category: list,
                            t1: list, o1: list, t2: list, o2: list) -> Tuple[int, int]:
         """
         Count the amount of matched crashed elements(components/sides/parts) and
@@ -136,7 +136,7 @@ Concrete Reports provide various implementations of the Report interface.
 
 
 class ReportTypeA(Report):
-    def operation(self, outputs: list, targets: list) -> Tuple[int, int, int]:
+    def process(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         # Validate given output from simulation
         self._validate_output(outputs)
 
@@ -155,7 +155,7 @@ class ReportTypeA(Report):
 
 
 class ReportTypeB(Report):
-    def operation(self, outputs: list, targets: list) -> Tuple[int, int, int]:
+    def process(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         # Validate given output from simulation
         self._validate_output(outputs)
 
@@ -175,12 +175,12 @@ class ReportTypeB(Report):
         outputs = list(dict.fromkeys([self._categorize_part(i["name"], CAT_B) for i in outputs]))
         o1, o2 = outputs, list(set(CAT_B_DATA) - set(outputs))
 
-        crash_points, non_crash_points = self.matching_operation(CAT_B_DATA, t1, o1, t2, o2)
+        crash_points, non_crash_points = self._match(CAT_B_DATA, t1, o1, t2, o2)
         return crash_points, non_crash_points, point_target
 
 
 class ReportTypeC(Report):
-    def operation(self, outputs: list, targets: list) -> Tuple[int, int, int]:
+    def process(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         # Validate given output from simulation
         self._validate_output(outputs)
 
@@ -200,12 +200,12 @@ class ReportTypeC(Report):
         outputs = list(dict.fromkeys([self._categorize_part(i["name"], CAT_C) for i in outputs]))
         o1, o2 = outputs, list(set(CAT_C_DATA) - set(outputs))
 
-        crash_points, non_crash_points = self.matching_operation(CAT_C_DATA, t1, o1, t2, o2)
+        crash_points, non_crash_points = self._match(CAT_C_DATA, t1, o1, t2, o2)
         return crash_points, non_crash_points, point_target
 
 
 class ReportTypeD(Report):
-    def operation(self, outputs: list, targets: list) -> Tuple[int, int, int]:
+    def process(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         # Validate given output from simulation
         self._validate_output(outputs)
 
@@ -224,7 +224,7 @@ class ReportTypeD(Report):
         outputs = [i["name"] for i in outputs]
         o1, o2 = outputs, list(set(CAT_D_DATA) - set(outputs))
 
-        crash_points, non_crash_points = self.matching_operation(CAT_D_DATA, t1, o1, t2, o2)
+        crash_points, non_crash_points = self._match(CAT_D_DATA, t1, o1, t2, o2)
         return crash_points, non_crash_points, point_target
 
 
