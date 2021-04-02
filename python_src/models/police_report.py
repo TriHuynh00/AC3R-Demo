@@ -25,7 +25,7 @@ class Creator(ABC):
     def factory_method(self):
         pass
 
-    def match_operation(self, outputs, targets) -> Tuple[int, int, int]:
+    def match_operation(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         police_report = self.factory_method()
         return police_report.operation(outputs, targets)
 
@@ -63,7 +63,7 @@ class Report(ABC):
     """
 
     @abstractmethod
-    def operation(self, outputs, targets) -> Tuple[int, int, int]:
+    def operation(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         """
         Return a number of expected crashed components/sides/parts,
                a number of expected non-crashed components/sides/parts
@@ -121,7 +121,12 @@ class Report(ABC):
         """
         # Invalid given outputs
         if len(outputs) is NO_CRASH:
-            raise Exception("Given data might not crash scenario!")
+            raise Exception("Given scenario might not be crashed!")
+        # The vehicle's crash element should be on the car
+        parts = CAT_D_DATA
+        for item in [i["name"] for i in outputs]:
+            if item not in parts:
+                raise Exception(f'Part name {item} is not found!')
         return True
 
 
@@ -131,7 +136,7 @@ Concrete Reports provide various implementations of the Report interface.
 
 
 class ReportTypeA(Report):
-    def operation(self, outputs, targets) -> Tuple[int, int, int]:
+    def operation(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         # Validate given output from simulation
         self._validate_output(outputs)
 
@@ -150,7 +155,7 @@ class ReportTypeA(Report):
 
 
 class ReportTypeB(Report):
-    def operation(self, outputs, targets) -> Tuple[int, int, int]:
+    def operation(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         # Validate given output from simulation
         self._validate_output(outputs)
 
@@ -160,6 +165,7 @@ class ReportTypeB(Report):
         # From Police Report:
         # List t1 contains expected CRASHED component
         # List t2 contains expected NON-CRASHED component
+        targets = [part["name"] for part in targets]
         t1, t2 = targets, list(set(CAT_B_DATA) - set(targets))
 
         # From Simulation:
@@ -173,7 +179,7 @@ class ReportTypeB(Report):
 
 
 class ReportTypeC(Report):
-    def operation(self, outputs, targets) -> Tuple[int, int, int]:
+    def operation(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         # Validate given output from simulation
         self._validate_output(outputs)
 
@@ -183,6 +189,7 @@ class ReportTypeC(Report):
         # From Police Report:
         # List t1 contains expected CRASHED side
         # List t2 contains expected NON-CRASHED side
+        targets = [part["name"] for part in targets]
         t1, t2 = targets, list(set(CAT_C_DATA) - set(targets))
 
         # From Simulation:
@@ -196,7 +203,7 @@ class ReportTypeC(Report):
 
 
 class ReportTypeD(Report):
-    def operation(self, outputs, targets) -> Tuple[int, int, int]:
+    def operation(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         # Validate given output from simulation
         self._validate_output(outputs)
 
@@ -206,6 +213,7 @@ class ReportTypeD(Report):
         # From Police Report:
         # List t1 contains expected CRASHED parts
         # List t2 contains expected NON-CRASHED parts
+        targets = [part["name"] for part in targets]
         t1, t2 = targets, list(set(CAT_D_DATA) - set(targets))
 
         # From Simulation:

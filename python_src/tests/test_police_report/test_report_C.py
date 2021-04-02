@@ -12,74 +12,67 @@ class TestPoliceReportTypeC(unittest.TestCase):
         expected = (1, 0, 2)
         data_outputs = [{"name": "FL", "damage": 1}]
         for report in data_targets_01:
-            report_data = data_targets_01[report]
-            creator = _categorize_report(report_data)
-            targets = [part["name"] for part in report_data]
-            self.assertEqual(expected, creator.match_operation(data_outputs, targets))
+            data_targets = data_targets_01[report]
+            creator = _categorize_report(data_targets)
+            self.assertEqual(expected, creator.match_operation(data_outputs, data_targets))
 
     def test_case_02(self):
         expected = (1, 0, 2)
         data_outputs = [{"name": "FL", "damage": 1}, {"name": "ML", "damage": 1}]
         for report in data_targets_01:
-            report_data = data_targets_01[report]
-            creator = _categorize_report(report_data)
-            targets = [part["name"] for part in report_data]
-            self.assertEqual(expected, creator.match_operation(data_outputs, targets))
+            data_targets = data_targets_01[report]
+            creator = _categorize_report(data_targets)
+            self.assertEqual(expected, creator.match_operation(data_outputs, data_targets))
 
     def test_case_03(self):
         expected = (2, 0, 2)
         data_outputs = [{"name": "FL", "damage": 1}, {"name": "FR", "damage": 1}]
         for report in data_targets_01:
-            report_data = data_targets_01[report]
-            creator = _categorize_report(report_data)
-            targets = [part["name"] for part in report_data]
-            self.assertEqual(expected, creator.match_operation(data_outputs, targets))
+            data_targets = data_targets_01[report]
+            creator = _categorize_report(data_targets)
+            self.assertEqual(expected, creator.match_operation(data_outputs, data_targets))
 
     def test_case_04(self):
         expected = (1, 1, 2)
         data_outputs = [{"name": "FL", "damage": 1}]
         for report in data_targets_02:
-            report_data = data_targets_02[report]
-            creator = _categorize_report(report_data)
-            targets = [part["name"] for part in report_data]
-            self.assertEqual(expected, creator.match_operation(data_outputs, targets))
+            data_targets = data_targets_02[report]
+            creator = _categorize_report(data_targets)
+            self.assertEqual(expected, creator.match_operation(data_outputs, data_targets))
 
     def test_case_05(self):
         expected = (1, 0, 2)
         data_outputs = [{"name": "FL", "damage": 1}, {"name": "MR", "damage": 1}]
         for report in data_targets_02:
-            report_data = data_targets_02[report]
-            creator = _categorize_report(report_data)
-            targets = [part["name"] for part in report_data]
-            self.assertEqual(expected, creator.match_operation(data_outputs, targets))
+            data_targets = data_targets_02[report]
+            creator = _categorize_report(data_targets)
+            self.assertEqual(expected, creator.match_operation(data_outputs, data_targets))
 
     def test_case_06(self):
         expected = (1, 0, 2)
         data_outputs = [{"name": "FL", "damage": 1}, {"name": "FR", "damage": 1}]
         for report in data_targets_02:
-            report_data = data_targets_02[report]
-            creator = _categorize_report(report_data)
-            targets = [part["name"] for part in report_data]
-            self.assertEqual(expected, creator.match_operation(data_outputs, targets))
+            data_targets = data_targets_02[report]
+            creator = _categorize_report(data_targets)
+            self.assertEqual(expected, creator.match_operation(data_outputs, data_targets))
 
     def test_case_07(self):
         expected = Exception
         data_outputs = []
         for report in data_targets_02:
-            report_data = data_targets_02[report]
-            creator = _categorize_report(report_data)
-            targets = [part["name"] for part in report_data]
+            data_targets = data_targets_02[report]
+            creator = _categorize_report(data_targets)
             with self.assertRaises(expected):
-                creator.match_operation(data_outputs, targets)
+                creator.match_operation(data_outputs, data_targets)
 
     def test_case_08(self):
-        expected = (0, 1, 2)
+        expected = Exception
         data_outputs = [{"name": "NON_DEFINED", "damage": 1}]
         for report in data_targets_02:
-            report_data = data_targets_02[report]
-            creator = _categorize_report(report_data)
-            targets = [part["name"] for part in report_data]
-            self.assertEqual(expected, creator.match_operation(data_outputs, targets))
+            data_targets = data_targets_02[report]
+            creator = _categorize_report(data_targets)
+            with self.assertRaises(expected):
+                creator.match_operation(data_outputs, data_targets)
 
 
 if __name__ == '__main__':
