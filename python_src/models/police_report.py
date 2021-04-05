@@ -17,7 +17,7 @@ CATEGORIES = [{"type": CAT_A, "data": CAT_A_DATA},
               {"type": CAT_C, "data": CAT_C_DATA},
               {"type": CAT_D, "data": CAT_D_DATA}]
 
-NO_CRASH = 0
+EMPTY_CRASH = 0
 
 
 class ReportCreator(ABC):
@@ -131,8 +131,10 @@ class Report(ABC):
             report_type (chr): Type of report is used to categorize
         """
         if report_type == CAT_B:
+            # Police Report is Component Type: [F]L, [M]L, [B]L -> F, M, B
             return part[0]
         elif report_type == CAT_C:
+            # Police Report is Side Type: F[L], B[R] -> L, R
             return part[1]
         return None
 
@@ -142,7 +144,7 @@ class Report(ABC):
         Verify the validity of given output from simulation
         """
         # Invalid given outputs
-        if len(outputs) is NO_CRASH:
+        if len(outputs) is EMPTY_CRASH:
             raise Exception("The simulator did not report any crashes!")
         # The vehicle's crash element should be on the car
         parts = CAT_D_DATA
@@ -197,7 +199,9 @@ class ReportTypeB(Report):
         outputs = list(dict.fromkeys([self._categorize_part(i["name"], CAT_B) for i in outputs]))
         crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_B_DATA) - set(outputs))
 
-        crash_points, non_crash_points = self._match(CAT_B_DATA, crashes_from_police_report, crashes_from_simulation, non_crashes_from_police_report, non_crashes_from_simulation)
+        crash_points, non_crash_points = self._match(CAT_B_DATA,
+                                                     crashes_from_police_report, crashes_from_simulation,
+                                                     non_crashes_from_police_report, non_crashes_from_simulation)
         return crash_points, non_crash_points, point_target
 
 
@@ -222,7 +226,9 @@ class ReportTypeC(Report):
         outputs = list(dict.fromkeys([self._categorize_part(i["name"], CAT_C) for i in outputs]))
         crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_C_DATA) - set(outputs))
 
-        crash_points, non_crash_points = self._match(CAT_C_DATA, crashes_from_police_report, crashes_from_simulation, non_crashes_from_police_report, non_crashes_from_simulation)
+        crash_points, non_crash_points = self._match(CAT_C_DATA,
+                                                     crashes_from_police_report, crashes_from_simulation,
+                                                     non_crashes_from_police_report, non_crashes_from_simulation)
         return crash_points, non_crash_points, point_target
 
 
@@ -246,7 +252,9 @@ class ReportTypeD(Report):
         outputs = [i["name"] for i in outputs]
         crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_D_DATA) - set(outputs))
 
-        crash_points, non_crash_points = self._match(CAT_D_DATA, crashes_from_police_report, crashes_from_simulation, non_crashes_from_police_report, non_crashes_from_simulation)
+        crash_points, non_crash_points = self._match(CAT_D_DATA,
+                                                     crashes_from_police_report, crashes_from_simulation,
+                                                     non_crashes_from_police_report, non_crashes_from_simulation)
         return crash_points, non_crash_points, point_target
 
 
