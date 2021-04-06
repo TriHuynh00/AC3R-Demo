@@ -99,7 +99,8 @@ public class EnvironmentAnalyzer {
                                            ArrayList<VehicleAttr> vehicleList, StanfordCoreferencer stanfordCoreferencer)
     {
         // Find the existence of intersection
-        RoadAnalyzer roadAnalyzer = new RoadAnalyzer(testCase.getStreetList(), parser, testCase);
+        RoadAnalyzer roadAnalyzer = new RoadAnalyzer(testCase.getStreetList(),
+            parser, testCase, vehicleList);
 
         String intersectionType = "";
 
@@ -157,11 +158,22 @@ public class EnvironmentAnalyzer {
 
         } // End checking intersection
 
-
-
         // ----- End road analysis based on direction -----
 
         // ----- Analyze other road properties -----
+        LinkedList<LinkedList<String>> dependencyAndTagListSentence1 =
+            stanfordCoreferencer.findDependencies(paragraph1);
+
+        String[] sentences = paragraph1.split("\\. ");
+
+        for (String sentence : sentences)
+        {
+            if (sentence.contains("park")) {
+                roadAnalyzer.identifyParkingSetup(dependencyAndTagListSentence1.get(1),
+                    sentence);
+            }
+        }
+
 
         // ** Number of lanes **
 
@@ -338,6 +350,7 @@ public class EnvironmentAnalyzer {
                                                     String direction = AccidentConstructorUtil.convertDirectionWordToDirectionLetter(otherWord);
 
                                                     currentStreet.putValToKey("road_navigation", direction);
+                                                    currentStreet.putValToKey("road_angle", "" + fuzzAngleOfRoad(direction));
                                                     previousStreet = currentStreet;
                                                 }
                                             }
@@ -354,9 +367,13 @@ public class EnvironmentAnalyzer {
                                                 }
 
                                                 if (currentStreet != null) {
+                                                    String directionWord = AccidentConstructorUtil
+                                                        .convertDirectionWordToDirectionLetter(otherWord);
 
-                                                    currentStreet.putValToKey("road_navigation",
-                                                            AccidentConstructorUtil.convertDirectionWordToDirectionLetter(otherWord));
+                                                    currentStreet.putValToKey("road_navigation", directionWord);
+                                                    currentStreet.putValToKey("road_angle",
+                                                        "" + fuzzAngleOfRoad(directionWord));
+
                                                     previousStreet = currentStreet;
                                                 }
                                             } else // Find other street by looking at determinant
@@ -415,6 +432,8 @@ public class EnvironmentAnalyzer {
 
                                                     if (currentStreet == null && !previousStreetFound && testCase.getStreetList().size() < 2) {
                                                         if (previousStreet == null) {
+                                                            String directionWord =
+                                                                AccidentConstructorUtil.convertDirectionWordToDirectionLetter(otherWord);
                                                             currentStreet = testCase.createNewStreet();
                                                         } else {
                                                             currentStreet = previousStreet;
@@ -433,6 +452,7 @@ public class EnvironmentAnalyzer {
                             if (currentStreet != null) {
                                 ConsoleLogger.print('d', "Current Street " + currentStreet.getStreetProp().get("road_ID"));
                                 currentStreetProp = currentStreet.getStreetProp();
+
                             }
 
 
@@ -991,6 +1011,13 @@ public class EnvironmentAnalyzer {
             // Try to assign assumed value to an important empty tag, or find the value in the file
             // Negate the curve radius if the curve direction is right
 
+            // Add rotated angle to a street, if it is not a north road but road_angle is 0
+            if (streetProp.get("road_angle").equals("0")
+                && !streetProp.get("road_navigation").equals("N")) {
+
+                streetProp.put("road_angle", "" +
+                    fuzzAngleOfRoad(streetProp.get("road_navigation")));
+            }
 
             try {
                 for (String key : streetProp.keySet()) {

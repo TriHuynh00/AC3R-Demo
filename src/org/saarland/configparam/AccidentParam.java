@@ -55,7 +55,7 @@ public class AccidentParam {
     public static double shoulderPadding = 0.5;
 
     public static int defaultSpeed  = 20; // mph
-    public static double accelerationTo20Mph = 2.9; // 2.9; // m/s2
+    public static double accelerationTo20Mph = 2.5; // 2.9; // m/s2
 
     public static String NO_CRASH_STR = "noCrash";
     public static String FAILED_TO_GENERATE = "generationFail";
