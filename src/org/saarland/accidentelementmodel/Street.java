@@ -24,7 +24,7 @@ public class Street {
         streetProp.put("road_ID", "");
         streetProp.put("lane_num", ""); // total number of lane
         streetProp.put("road_division", "undivided"); // divided, undivided
-        streetProp.put("road_park_line", ""); // #parking_lines : 0 - none; 1 - left only, 2 - right only, 3 - both
+        streetProp.put("road_park_line", ""); // #parking_lines : 0 or "" - none; 1 - left only, 2 - right only, 3 - both
         streetProp.put("road_park_line_fill", ""); // specify whether parking line(s) is filled with cars
         streetProp.put("road_type", ""); // street; road
         streetProp.put("road_shape", ""); // RoadShape.STRAIGHT

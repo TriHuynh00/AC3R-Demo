@@ -41,10 +41,10 @@ public class AccidentParam {
     public static String pointLightFilePath             = templateFilePath + "\\pointLight.txt";
 
 
-    public static String beamNGpyPath = "D:\\University\\MasterProgram\\Thesis\\Draft\\AC3RGithub\\demo\\ac3r.py";
+    public static String beamNGpyPath =  userFolder + "AC3RGithub\\demo\\ac3r.py";
 
-//    public static String beamNGpyPath = userFolder + "AC3R-Demo\\demo\\ac3r.py";
-    public static String beamNGpyPlusPath = "D:\\University\\MasterProgram\\Thesis\\Draft\\AC3RGithub\\demo\\BeamNGpy\\ac3rp.py";
+    public static String beamNGpyPlusPath = userFolder + "AC3R-Demo\\demo\\ac3r.py";
+//    public static String beamNGpyPlusPath = "D:\\University\\MasterProgram\\Thesis\\Draft\\AC3RGithub\\demo\\BeamNGpy\\ac3rp.py";
 
 
     public static DecimalFormat df2Digit = new DecimalFormat("####.##");
@@ -55,7 +55,7 @@ public class AccidentParam {
     public static double shoulderPadding = 0.5;
 
     public static int defaultSpeed  = 20; // mph
-    public static double accelerationTo20Mph = 2.9; // 2.9; // m/s2
+    public static double accelerationTo20Mph = 2.5; // 2.9; // m/s2
 
     public static String NO_CRASH_STR = "noCrash";
     public static String FAILED_TO_GENERATE = "generationFail";

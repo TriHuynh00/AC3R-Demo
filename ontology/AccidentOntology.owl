@@ -623,6 +623,7 @@
     <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#drift">
         <rdf:type rdf:resource="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#vehicle_action-leaflvl"/>
         <TrafficAccidentOntology:is_collision_verb rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</TrafficAccidentOntology:is_collision_verb>
+        <TrafficAccidentOntology:turn_angle rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">45</TrafficAccidentOntology:turn_angle>
         <TrafficAccidentOntology:velocity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">20</TrafficAccidentOntology:velocity>
     </owl:NamedIndividual>
     
@@ -695,7 +696,7 @@
     <owl:NamedIndividual rdf:about="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#enter">
         <rdf:type rdf:resource="file:/D:/University/MasterProgram/Thesis/AlessioTopic/Draft/tri-huynh-minh/ontology/TrafficAccidentOntology#vehicle_action-leaflvl"/>
         <TrafficAccidentOntology:is_collision_verb rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</TrafficAccidentOntology:is_collision_verb>
-        <TrafficAccidentOntology:turn_angle rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">45</TrafficAccidentOntology:turn_angle>
+        <TrafficAccidentOntology:turn_angle rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</TrafficAccidentOntology:turn_angle>
         <TrafficAccidentOntology:velocity rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">20</TrafficAccidentOntology:velocity>
     </owl:NamedIndividual>
     

@@ -12,7 +12,9 @@ import org.saarland.nlptools.Stemmer;
 import org.saarland.ontologyparser.AccidentConcept;
 import org.saarland.ontologyparser.OntologyHandler;
 
+import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public class CrashDevAnalyzer {
@@ -357,6 +359,8 @@ public class CrashDevAnalyzer {
 
                                     VehicleAttr actingVehicle = AccidentConstructorUtil.findVehicleBasedOnId(vehicleID,
                                             vehicleList);
+                                    if (actingVehicle != null)
+                                        actingVehicle.setOnStreet(-1);
 
                                     for (AccidentConcept concept : pavementConcepts)
                                     {
@@ -366,6 +370,7 @@ public class CrashDevAnalyzer {
                                             if (actingVehicle.getStandingStreet() != null) {
                                                 actingVehicle.getStandingStreet().putValToKey("pavement_type",
                                                         conceptName);
+                                                actingVehicle.setOnStreet(0);
 
                                             }
                                             // Find whether the parking side is "left" or "right"
@@ -399,6 +404,9 @@ public class CrashDevAnalyzer {
                         } // End Processing vehicle action
                         else if (actionConcept.getLeafLevelName().equals("vehicle_direction"))
                         {
+                            if (!action.endsWith("bound")) {
+                                continue;
+                            }
                             int wordTokenIndex = AccidentConstructorUtil.getPositionFromToken(wordToken);
                             // If "[cardinal direction]bound" is not a verb, don't process it
                             ConsoleLogger.print('d', "WordToken is " + wordToken);
@@ -464,8 +472,11 @@ public class CrashDevAnalyzer {
 
     public void constructVehicleActionEventList(LinkedList<ActionDescription> actionList, ArrayList<VehicleAttr> vehicleList) {
 
-        for (ActionDescription actionDesc : actionList)
+
+//        for (ActionDescription actionDesc : actionList)
+        for (Iterator<ActionDescription> iterator = actionList.iterator(); iterator.hasNext();)
         {
+            ActionDescription actionDesc = iterator.next();
             String subject = actionDesc.getSubject().trim();
             String verb    = AccidentConstructorUtil.getWordFromToken(actionDesc.getVerb().trim());
 
@@ -487,7 +498,8 @@ public class CrashDevAnalyzer {
                         objVehicleName = actionDesc.getVerbProps().get(0);
                     }
                     catch (Exception ex) {
-                        actionList.remove(actionDesc);
+//                        actionList.remove(actionDesc);
+                        iterator.remove();
                         continue;
                     }
 

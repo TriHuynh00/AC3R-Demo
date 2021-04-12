@@ -93,8 +93,9 @@ public class DamagedComponentAnalyzer {
 
         VehicleAttr damagedVehicle = null;
 
-        if (!vehicleName.equals(""))
+        if (!vehicleName.equals("") && !vehicleName.equals("vehicle") && !vehicleName.equals("vehicles"))
         {
+            System.out.println("Vehicle name " + vehicleName + " after replace is " + vehicleName.replace("vehicle", ""));
             damagedVehicle = AccidentConstructorUtil.findVehicleBasedOnId(
                     Integer.parseInt(vehicleName.replace("vehicle", "")), vehicleList);
         }

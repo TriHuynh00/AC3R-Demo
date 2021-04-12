@@ -252,16 +252,16 @@ public class RoadConstructor {
         StringBuilder environmentFileTemplate = new StringBuilder();
 
         Path headerFilePath = Paths.get(AccidentParam.headerFilePath);
-//
-//        // Construct the header of BeamNG prefab file
-//        try
-//        {
-//            environmentFileStrBuilder.append(AccidentConstructorUtil.loadTemplateContent(AccidentParam.headerFilePath));
-//        }
-//        catch (Exception ex)
-//        {
-//            ConsoleLogger.print('e',"Error at constructing header of BeamNG file " + ex);
-//        }
+
+        // Construct the header of BeamNG prefab file
+        try
+        {
+            environmentFileStrBuilder.append(AccidentConstructorUtil.loadTemplateContent(AccidentParam.headerFilePath));
+        }
+        catch (Exception ex)
+        {
+            ConsoleLogger.print('e',"Error at constructing header of BeamNG file " + ex);
+        }
 //
 //        for (int s = 0; s < streetList.size(); s++) {
 //            Street road = streetList.get(s);
@@ -513,7 +513,8 @@ public class RoadConstructor {
         // Construct waypoints and trajectory of vehicles
         try {
             ConsoleLogger.print('d', "Crash type is " + testCaseInfo.getCrashType());
-            if (testCaseInfo.getCrashType().contains("forward impact") || testCaseInfo.getCrashType().contains("sideswipe"))
+            if (testCaseInfo.getCrashType().contains("forward impact")
+                || testCaseInfo.getCrashType().contains("sideswipe"))
             {
                 environmentFileStrBuilder.append(constructWaypointsAndVehicles(scenarioName));
             }
@@ -2644,6 +2645,9 @@ public class RoadConstructor {
                 // lane then construct a symmetric car on the left lane
                 if (currentVehicle.getStandingRoadSide().equals("left"))
                 {
+//                    basePos = updateCoordElementAtDimension(1, basePos,
+//                            "" + (Double.parseDouble(baseParkedCarElem[1]) -
+//                                    laneNumber * AccidentParam.laneWidth - AccidentParam.parkingLineWidth / 2));
                     basePos = updateCoordElementAtDimension(1, basePos,
                             "" + (Double.parseDouble(baseParkedCarElem[1]) -
                                     laneNumber * AccidentParam.laneWidth - AccidentParam.parkingLineWidth / 2));
@@ -2656,8 +2660,11 @@ public class RoadConstructor {
 //                    String parkedVehicleInfoStr = vehicleTemplate.replace("$actorID",
 //                            "rightLineParkedCarF" + c);
 
+//                    basePos = updateCoordElementAtDimension(1, basePos,
+//                            (Double.parseDouble(basePos.split(" ")[1]) - 2) + "") ;
+
                     basePos = updateCoordElementAtDimension(1, basePos,
-                            (Double.parseDouble(basePos.split(" ")[1]) - 2) + "") ;
+                        (Double.parseDouble(basePos.split(" ")[1])) + "") ;
 
                     String updatedXPos = updateCoordElementAtDimension(0, basePos,
                             (Double.parseDouble(baseParkedCarElem[0]) - c * distanceBetweenCars - 2) + "") ;
