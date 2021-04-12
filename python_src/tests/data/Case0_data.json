@@ -12,14 +12,32 @@
 "rot_quat":[0.00993774, 0.03947598, -0.70593404, 0.7071068],
 "damage_components":"any",
 "driving_actions":[ {
+"name":"stop",
+"trajectory":[[[-10,-2.0,0]]],
+"speed":20},{
 "name":"follow",
-"trajectory":[[[-20,-2.0,0], [0,-2.0,0]]],
-"speed":30}]},{
+"trajectory":[[[-10,-2.0,0], [0,-2.0,0]]],
+"speed":20},{
+"name":"follow",
+"trajectory":[[[-30,-2.0,0], [-10,-2.0,0]]],
+"speed":20},{
+"name":"follow",
+"trajectory":[[[-50,-2.0,0], [-30,-2.0,0]]],
+"speed":20},{
+"name":"follow",
+"trajectory":[[[-70,-2.0,0], [-50,-2.0,0]]],
+"speed":20}]},{
 "name":"vehicle2",
 "color":"1 1 1",
 "rot_quat":[0.00993774, 0.03947598, -0.70593404, 0.7071068],
 "damage_components":"rear",
 "driving_actions":[ {
 "name":"follow",
-"trajectory":[[[-10,-2.0,0], [10,-2.0,0]]],
-"speed":20}]}]}
+"trajectory":[[[-30,-2.0,0], [0,-2.0,0]]],
+"speed":30},{
+"name":"follow",
+"trajectory":[[[-60,-2.0,0], [-30,-2.0,0]]],
+"speed":30},{
+"name":"follow",
+"trajectory":[[[-90,-2.0,0], [-60,-2.0,0]]],
+"speed":30}]}]}

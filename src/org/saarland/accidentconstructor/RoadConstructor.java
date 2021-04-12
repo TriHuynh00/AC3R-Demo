@@ -252,16 +252,16 @@ public class RoadConstructor {
         StringBuilder environmentFileTemplate = new StringBuilder();
 
         Path headerFilePath = Paths.get(AccidentParam.headerFilePath);
-//
-//        // Construct the header of BeamNG prefab file
-//        try
-//        {
-//            environmentFileStrBuilder.append(AccidentConstructorUtil.loadTemplateContent(AccidentParam.headerFilePath));
-//        }
-//        catch (Exception ex)
-//        {
-//            ConsoleLogger.print('e',"Error at constructing header of BeamNG file " + ex);
-//        }
+
+        // Construct the header of BeamNG prefab file
+        try
+        {
+            environmentFileStrBuilder.append(AccidentConstructorUtil.loadTemplateContent(AccidentParam.headerFilePath));
+        }
+        catch (Exception ex)
+        {
+            ConsoleLogger.print('e',"Error at constructing header of BeamNG file " + ex);
+        }
 //
 //        for (int s = 0; s < streetList.size(); s++) {
 //            Street road = streetList.get(s);

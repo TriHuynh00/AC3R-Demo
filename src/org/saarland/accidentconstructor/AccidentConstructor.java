@@ -701,10 +701,10 @@ public class AccidentConstructor {
                 // ontologyHandler, scenarioName);
 
                 // crashAnalyzer.checkWhetherCrashOccur(hasCrash);
-//                boolean hasCrash = testCaseRunner.runScenario(scenarioName);
-//                DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList, ontologyHandler, scenarioName);
-//                crashAnalyzer.checkWhetherCrashOccur(hasCrash);
-//                ConsoleLogger.print('d', "Finish running scenario");
+                boolean hasCrash = testCaseRunner.runScenario(scenarioName);
+                DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList, ontologyHandler, scenarioName);
+                crashAnalyzer.checkWhetherCrashOccur(hasCrash);
+                ConsoleLogger.print('d', "Finish running scenario");
 
                 /************ END SCENARIO EXECUTION ***********/
                 long scenarioEndTime = System.nanoTime() - scenarioStartTime;
@@ -2966,7 +2966,7 @@ public class AccidentConstructor {
                 ConsoleLogger.print('r', "Close BeamNG connection ");
                 break;
             }
-            System.exit(0);
+//            System.exit(0);
 
         } catch (Exception ex) {
             ConsoleLogger.print('e', "Error at control BeamNG client \n" + ex.toString());

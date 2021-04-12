@@ -41,10 +41,10 @@ public class AccidentParam {
     public static String pointLightFilePath             = templateFilePath + "\\pointLight.txt";
 
 
-    public static String beamNGpyPath = "D:\\University\\MasterProgram\\Thesis\\Draft\\AC3RGithub\\demo\\ac3r.py";
+    public static String beamNGpyPath =  userFolder + "AC3RGithub\\demo\\ac3r.py";
 
-//    public static String beamNGpyPath = userFolder + "AC3R-Demo\\demo\\ac3r.py";
-    public static String beamNGpyPlusPath = "D:\\University\\MasterProgram\\Thesis\\Draft\\AC3RGithub\\demo\\BeamNGpy\\ac3rp.py";
+    public static String beamNGpyPlusPath = userFolder + "AC3R-Demo\\demo\\ac3r.py";
+//    public static String beamNGpyPlusPath = "D:\\University\\MasterProgram\\Thesis\\Draft\\AC3RGithub\\demo\\BeamNGpy\\ac3rp.py";
 
 
     public static DecimalFormat df2Digit = new DecimalFormat("####.##");
