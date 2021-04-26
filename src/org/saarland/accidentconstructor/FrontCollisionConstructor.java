@@ -103,22 +103,21 @@ public class FrontCollisionConstructor {
             Street currentStreet = null;
 
             // If there is only 1 road, take that road as standard road
-            if (testCase.getStreetList().size() == 1)
-            {
+            if (testCase.getStreetList().size() == 1) {
                 currentStreet = testCase.getStreetList().get(0);
             }
 
-            if (!currentStreet.getStreetPropertyValue("road_shape").equals(RoadShape.STRAIGHT))
-            {
+            if (!currentStreet.getStreetPropertyValue("road_shape").equals(RoadShape.STRAIGHT)) {
                 curvyRoad = true;
                 radius = Double.parseDouble(currentStreet.getStreetPropertyValue("curve_radius").replace("m", ""));
             }
 
-            ConsoleLogger.print('d',"Curvy Road? " + curvyRoad);
-            ConsoleLogger.print('d',"Road Shape " + currentStreet.getStreetPropertyValue("road_shape"));
+            ConsoleLogger.print('d', "Curvy Road? " + curvyRoad);
+            ConsoleLogger.print('d', "Road Shape " + currentStreet.getStreetPropertyValue("road_shape"));
 
             // Construct coord before crash
-            for (int i = 0; i < strikerImpactAtSteps.get(0); i++) {
+            if (!strikerImpactAtSteps.isEmpty()) {
+                for (int i = 0; i < strikerImpactAtSteps.get(0); i++) {
                 String actionAtI = strikerVehicleActionList.get(i);
                 if (actionAtI.contains(" ")) {
                     actionAtI = actionAtI.split(" ")[0];
@@ -132,7 +131,7 @@ public class FrontCollisionConstructor {
 
                     // Processing moving actions
                     if (estimateActionVelocity > 0) {
-                        ConsoleLogger.print('d',"FrontColl Set after impact coord for Striker " + estimateActionVelocity);
+                        ConsoleLogger.print('d', "FrontColl Set after impact coord for Striker " + estimateActionVelocity);
                         // Calculate Xcoord value
                         double xCoord = estimateActionVelocity * (strikerImpactAtSteps.get(0) - i) * -1.0;
 
@@ -140,34 +139,31 @@ public class FrontCollisionConstructor {
                         if (curvyRoad) {
 //                            yCoord = 1000 + -1.0 * Math.sqrt(1000000 - Math.pow(xCoord, 2));
                             yCoord = AccidentConstructorUtil.computeYCircleFunc(radius, xCoord);
-                            ConsoleLogger.print('d',"ycoord is " + yCoord);
+                            ConsoleLogger.print('d', "ycoord is " + yCoord);
                         }
 
                         vehicleCoordStriker.set(i, xCoord + ":" + df.format(yCoord));
                     }
                     // Processing stop/park actions
-                    else if (estimateActionVelocity == 0)
-                    {
-                        ConsoleLogger.print('d',"Set after impact coord for Striker STOP " + estimateActionVelocity);
+                    else if (estimateActionVelocity == 0) {
+                        ConsoleLogger.print('d', "Set after impact coord for Striker STOP " + estimateActionVelocity);
 
                         // Set the stop coord the same as previous coord
-                        if (i > 0)
-                        {
+                        if (i > 0) {
                             vehicleCoordStriker.set(i, vehicleCoordStriker.get(i - 1) + "");
-                        }
-                        else
-                        {
+                        } else {
                             double xCoord = -100;
                             double yCoord = 0;
                             if (curvyRoad) {
                                 yCoord = AccidentConstructorUtil.computeYCircleFunc(radius, xCoord);
-                                ConsoleLogger.print('d',"ycoord is " + yCoord);
+                                ConsoleLogger.print('d', "ycoord is " + yCoord);
                             }
                             vehicleCoordStriker.set(i, xCoord + ":" + df.format(yCoord));
                         }
                     }
                 } // End assign coord to each action before crash
             } // End looping through all action prior to crash
+            }
             constructedCoordVeh.set(strikerVehicle.getVehicleId() - 1, vehicleCoordStriker);
         } // End checking if there is only 1 impact location
 
