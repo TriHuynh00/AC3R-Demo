@@ -2878,7 +2878,7 @@ public class AccidentConstructor {
             for (VehicleTrajectory v : vehicleTrajectories) {
                 vDriving += '{';
                 vDriving += formatJSONKey("name") + formatJSONValueString(v.getAction());
-                vDriving += formatJSONKey("trajectory") + v.getTrajectory().toString() + ",";
+                vDriving += formatJSONKey("trajectory") + "[" + v.getTrajectory().toString() + "],";
                 vDriving += formatJSONKey("speed") + vehicle.getVelocity();
                 vDriving += "},";
             }
