@@ -2870,27 +2870,17 @@ public class AccidentConstructor {
             String damageComponentData = vehicle.getDamagedComponents().size() == 0  ?
                     "any" : vehicle.getDamagedComponents().get(0);
             String vDamage = formatJSONKey("damage_components") + formatJSONValueString(damageComponentData);
-
-            // Append Driving Actions
-            HashMap<String, LinkedList> vehicleActionAndCoord = mapActionToRoadSegment(vehicle);
             String vDriving = formatJSONKey("driving_actions") + "[ ";
+            HashMap<String, LinkedList> vehicleActionAndCoord = mapActionToRoadSegment(vehicle);
+            VehicleTrajectoryFactory vtf = new VehicleTrajectoryFactory(vehicle, vehicleActionAndCoord);
+            ArrayList<VehicleTrajectory> vehicleTrajectories = vtf.generateVehicleTrajectories();
 
-            for (Map.Entry<String, LinkedList> entry : vehicleActionAndCoord.entrySet()) {
-                if (entry.getKey().toString() == "follow" || entry.getKey().toString() == "turn" || entry.getKey().toString() == "stop") {
-                    for (Object st : entry.getValue()) {
-                        String trajectory = (String)st;
-                        vDriving += '{';
-
-                        vDriving += formatJSONKey("name") + formatJSONValueString(entry.getKey().toString());
-
-                        vDriving += formatJSONKey("trajectory") + "[[" + trajectory + "]],";
-
-                        vDriving += formatJSONKey("speed") + vehicle.getVelocity();
-
-                        vDriving += "},";
-
-                    }
-                }
+            for (VehicleTrajectory v : vehicleTrajectories) {
+                vDriving += '{';
+                vDriving += formatJSONKey("name") + formatJSONValueString(v.getAction());
+                vDriving += formatJSONKey("trajectory") + v.getTrajectory().toString() + ",";
+                vDriving += formatJSONKey("speed") + vehicle.getVelocity();
+                vDriving += "},";
             }
             vDriving = removeLastChar(vDriving) + "]";
 
