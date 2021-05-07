@@ -2896,7 +2896,7 @@ public class AccidentConstructor {
         for (VehicleAttr vehicle : vehicleList) {
             if (vehicle.getDamagedComponents().size() > 0) {
                 crashData += '{';
-                String vName = "v" + vehicle.getVehicleId();
+                crashData += formatJSONKey("name") + formatJSONValueString("v" + vehicle.getVehicleId());
 
                 // Get damage components of each vehicle
                 String damageComponentData = "";
@@ -2905,7 +2905,7 @@ public class AccidentConstructor {
                 }
                 damageComponentData = removeLastChar(damageComponentData);
                 String vDamage = '[' + damageComponentData + ']';
-                crashData += formatJSONKey(vName) + vDamage;
+                crashData += formatJSONKey("parts") + vDamage;
                 crashData += "},";
             }
         }
