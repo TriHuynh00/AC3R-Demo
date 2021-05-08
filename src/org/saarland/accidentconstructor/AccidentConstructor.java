@@ -701,15 +701,15 @@ public class AccidentConstructor {
                 // ontologyHandler, scenarioName);
 
                 // crashAnalyzer.checkWhetherCrashOccur(hasCrash);
-                boolean hasCrash = testCaseRunner.runScenario(scenarioName);
-                DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList, ontologyHandler, scenarioName);
-                crashAnalyzer.checkWhetherCrashOccur(hasCrash);
-                ConsoleLogger.print('d', "Finish running scenario");
+//                boolean hasCrash = testCaseRunner.runScenario(scenarioName);
+//                DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList, ontologyHandler, scenarioName);
+//                crashAnalyzer.checkWhetherCrashOccur(hasCrash);
+//                ConsoleLogger.print('d', "Finish running scenario");
 
                 /************ END SCENARIO EXECUTION ***********/
-                long scenarioEndTime = System.nanoTime() - scenarioStartTime;
-                ConsoleLogger.print('r', String.format("Finish running simulation after %d seconds\n",
-                        TimeUnit.NANOSECONDS.toSeconds(scenarioEndTime)));
+//                long scenarioEndTime = System.nanoTime() - scenarioStartTime;
+//                ConsoleLogger.print('r', String.format("Finish running simulation after %d seconds\n",
+//                        TimeUnit.NANOSECONDS.toSeconds(scenarioEndTime)));
 
             } catch (Exception e) {
 
@@ -725,15 +725,15 @@ public class AccidentConstructor {
 
         // Summarize the number of total / partial / no match, and generation
         // failure scenarios
-        CrashScenarioSummarizer csr = new CrashScenarioSummarizer();
-        csr.summarizeAllScenarios();
-
-        long total = 0;
-        for (String key : scenarioConstructionTime.keySet()) {
-            ConsoleLogger.print('d', key + "," + scenarioConstructionTime.get(key));
-            total += scenarioConstructionTime.get(key);
-        }
-        ConsoleLogger.print('d', "Average: " + total / scenarioConstructionTime.size() + " ms");
+//        CrashScenarioSummarizer csr = new CrashScenarioSummarizer();
+//        csr.summarizeAllScenarios();
+//
+//        long total = 0;
+//        for (String key : scenarioConstructionTime.keySet()) {
+//            ConsoleLogger.print('d', key + "," + scenarioConstructionTime.get(key));
+//            total += scenarioConstructionTime.get(key);
+//        }
+//        ConsoleLogger.print('d', "Average: " + total / scenarioConstructionTime.size() + " ms");
 
     }
 
@@ -2870,27 +2870,17 @@ public class AccidentConstructor {
             String damageComponentData = vehicle.getDamagedComponents().size() == 0  ?
                     "any" : vehicle.getDamagedComponents().get(0);
             String vDamage = formatJSONKey("damage_components") + formatJSONValueString(damageComponentData);
-
-            // Append Driving Actions
-            HashMap<String, LinkedList> vehicleActionAndCoord = mapActionToRoadSegment(vehicle);
             String vDriving = formatJSONKey("driving_actions") + "[ ";
+            HashMap<String, LinkedList> vehicleActionAndCoord = mapActionToRoadSegment(vehicle);
+            VehicleTrajectoryFactory vtf = new VehicleTrajectoryFactory(vehicle, vehicleActionAndCoord);
+            ArrayList<VehicleTrajectory> vehicleTrajectories = vtf.generateVehicleTrajectories();
 
-            for (Map.Entry<String, LinkedList> entry : vehicleActionAndCoord.entrySet()) {
-                if (entry.getKey().toString() == "follow" || entry.getKey().toString() == "turn" || entry.getKey().toString() == "stop") {
-                    for (Object st : entry.getValue()) {
-                        String trajectory = (String)st;
-                        vDriving += '{';
-
-                        vDriving += formatJSONKey("name") + formatJSONValueString(entry.getKey().toString());
-
-                        vDriving += formatJSONKey("trajectory") + "[[" + trajectory + "]],";
-
-                        vDriving += formatJSONKey("speed") + vehicle.getVelocity();
-
-                        vDriving += "},";
-
-                    }
-                }
+            for (VehicleTrajectory v : vehicleTrajectories) {
+                vDriving += '{';
+                vDriving += formatJSONKey("name") + formatJSONValueString(v.getAction());
+                vDriving += formatJSONKey("trajectory") + "[" + v.getTrajectory().toString() + "],";
+                vDriving += formatJSONKey("speed") + vehicle.getVelocity();
+                vDriving += "},";
             }
             vDriving = removeLastChar(vDriving) + "]";
 
@@ -2899,6 +2889,30 @@ public class AccidentConstructor {
         }
         vehicleData = removeLastChar(vehicleData);
         return vehicleData;
+    }
+
+    private String writeExpectedCrashDataFromReport(ArrayList<VehicleAttr> vehicleList) {
+        String crashData = "";
+        for (VehicleAttr vehicle : vehicleList) {
+            if (vehicle.getDamagedComponents().size() > 0) {
+                crashData += '{';
+                crashData += formatJSONKey("name") + formatJSONValueString("v" + vehicle.getVehicleId());
+
+                // Get damage components of each vehicle
+                String damageComponentData = "";
+                for(String components: vehicle.getDamagedComponents()) {
+                    damageComponentData += "{\"name\":\""+ components+"\",\"damage\":0},";
+                }
+                damageComponentData = removeLastChar(damageComponentData);
+                String vDamage = '[' + damageComponentData + ']';
+                crashData += formatJSONKey("parts") + vDamage;
+                crashData += "},";
+            }
+        }
+        if (crashData.length() > 0) {
+            crashData = removeLastChar(crashData);
+        }
+        return crashData;
     }
 
     private void generateScenarioJSONData(String scenarioDataPath, String scenarioName) {
@@ -2916,7 +2930,10 @@ public class AccidentConstructor {
             scenarioData += formatJSONKey("roads") + '[' + writeRoadObjects(this.testCase.getStreetList()) + "],";
 
             /* Start writing vehicle objects */
-            scenarioData += formatJSONKey("vehicles") + '[' + writeVehicleObjects(this.vehicleList) + "]";
+            scenarioData += formatJSONKey("vehicles") + '[' + writeVehicleObjects(this.vehicleList) + "],";
+
+            /* Start writing expected crash data from report */
+            scenarioData += formatJSONKey("expected_crash_components") + '[' + writeExpectedCrashDataFromReport(this.vehicleList) + "]";
 
             /* End json file */
             scenarioData += '}';
