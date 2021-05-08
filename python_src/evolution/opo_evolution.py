@@ -6,7 +6,7 @@ FIRST = 0
 
 
 class OpoEvolution:
-    def __init__(self, orig_ind, fitness, generate, generate_params, select, mutate, mutate_params, timeout=None, fitness_repetitions=1, fitness_aggregate=np.mean):
+    def __init__(self, orig_ind, fitness, generate, generate_params, select, mutate, mutate_params, timeout=None, fitness_repetitions=1, select_aggregate=None):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
@@ -17,8 +17,8 @@ class OpoEvolution:
         self.toolbox.register("individual", tools.initRepeat, creator.Individual, self.toolbox.random_ind, 1)
         self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
         self.toolbox.register("mutate", mutate, mutate_params)
-        self.toolbox.register("evaluate", fitness, fitness_repetitions, fitness_aggregate)
-        self.toolbox.register("select", select)
+        self.toolbox.register("evaluate", fitness, fitness_repetitions)
+        self.toolbox.register("select", select, select_aggregate)
 
         stats_fit = tools.Statistics(key=lambda ind: ind.fitness.values)
         stats_size = tools.Statistics(key=len)
@@ -36,7 +36,7 @@ class OpoEvolution:
         pop = self.toolbox.population(n=1)
         pop[FIRST][FIRST] = self.orig_ind
         # Evaluate the entire population
-        print("Start evaluation")
+        print("Initial OpO evaluation")
         start_time = time.time()
         fitnesses = list(map(self.toolbox.evaluate, pop))
         for ind, fit in zip(pop, fitnesses):
@@ -50,7 +50,10 @@ class OpoEvolution:
         # Begin the evolution
         print("Start of evolution")
         start_time = time.time()
-        timeout = time.time() + 60 if self.timeout is None else time.time() + self.timeout
+        timeout = time.time() + 60
+        if self.timeout is not None:
+            timeout = time.time() + self.timeout
+
         epochs = 0
         while time.time() < timeout:
             epochs = epochs + 1
@@ -59,6 +62,7 @@ class OpoEvolution:
             pop[:] = [mutant]
 
             # Evaluate the entire population
+            print("Epoch: ", str(epochs))
             print("Compare 2 scenarios: ")
             s1 = best_ind[0]
             s2 = pop[0][0]

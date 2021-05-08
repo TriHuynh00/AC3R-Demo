@@ -1,11 +1,13 @@
 import time
+import libs
+import numpy as np
 from simulation import Simulation
-from libs import _collect_sim_data, _collect_police_report
+from libs import _collect_sim_data
 
 
 class Fitness:
     @staticmethod
-    def evaluate(repetitions, aggregate_function, deap_inds):
+    def evaluate(repetitions, deap_inds):
         individual = deap_inds[0]
         scores = []
         for _ in range(repetitions):
@@ -19,10 +21,9 @@ class Fitness:
 
             # Fixed sample report data
             # TODO: change the sample police report to dynamic variable
-            report_data = _collect_police_report("./data/sample_report.json")
-            crash_scenario.cal_fitness(report_data)  # Calculate fitness score
+            crash_scenario.cal_fitness(police_report_path=
+                                       libs.PATH_TEST + "./data/Case6_report.json")  # Calculate fitness score
             scores.append(crash_scenario.score)
 
-        print("Scores: ", scores)
-        print("Fitness score: ", aggregate_function(scores))
-        return aggregate_function(scores),
+        individual.simulation_results = scores
+        return np.mean(scores),
