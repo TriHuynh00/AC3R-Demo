@@ -6,6 +6,7 @@ from scipy.spatial import geometric_slerp
 from math import sin, cos, radians, degrees, atan2, copysign
 from models.ac3rp.common import _interpolate, _find_radius_and_center, _compute_initial_state, _f7
 
+PARKING_CONSTRAINT = 0.0001
 
 class Vehicle:
     @staticmethod
@@ -115,7 +116,11 @@ class Vehicle:
             # Generate the segment
             segment = None
             if s["type"] == "parking":
-                return [(last_location.x, last_location.y, self.driving_actions[0]['speed'])]
+                segment = LineString([(x, 0) for x in linspace(0, PARKING_CONSTRAINT, 2)])
+                segment = rotate(segment, last_rotation, (0, 0))
+                segment = translate(segment, last_location.x, last_location.y)
+                last_rotation = last_rotation  # Parking segments do not change the rotation
+                last_location = Point(list(segment.coords)[-1])
             if s["type"] == 'straight':
                 # Create an horizontal line of given length from the origin
                 segment = LineString([(x, 0) for x in linspace(0, s["length"], 8)])
