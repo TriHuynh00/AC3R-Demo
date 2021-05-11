@@ -3,7 +3,7 @@ class Vehicle:
     def from_dict(vehicle_dict):
         trajectory_points = []
         for driving_action_dict in vehicle_dict["driving_actions"]:
-            # Iterate all the trajectory_list, i.e., list of poitns that define the segments
+            # Iterate all the trajectory_list, i.e., list of points that define the segments
             for trajectory_list in driving_action_dict["trajectory"]:
                 if len(trajectory_list) < 4:
                     for t in trajectory_list:
@@ -29,9 +29,10 @@ class CrashScenario:
         vehicles = []
         for vehicle_dict in ac3r_json_data["vehicles"]:
             vehicles.append(Vehicle.from_dict(vehicle_dict))
-        return CrashScenario(vehicles)
+        return CrashScenario(ac3r_json_data["name"], vehicles)
 
-    def __init__(self, vehicles):
+    def __init__(self, name, vehicles):
+        self.name = name
         self.vehicles = vehicles
 
     def __str__(self):

@@ -13,19 +13,19 @@
 "damage_components":"front left",
 "driving_actions":[ {
 "name":"follow",
-"trajectory":[[[3.0,-6.0,0], [5.0,-2.0,0]]],
+"trajectory":[[[-80.0, -2.0, 0.0], [-60.0, -2.0, 0.0]]],
 "speed":20},{
 "name":"follow",
-"trajectory":[[[-20.0,-2.0,0], [3.0,-6.0,0]]],
+"trajectory":[[[-60.0, -2.0, 0.0], [-40.0, -2.0, 0.0]]],
 "speed":20},{
 "name":"follow",
-"trajectory":[[[-40.0,-2.0,0], [-20.0,-2.0,0]]],
+"trajectory":[[[-40.0, -2.0, 0.0], [-20.0, -2.0, 0.0]]],
 "speed":20},{
 "name":"follow",
-"trajectory":[[[-60.0,-2.0,0], [-40.0,-2.0,0]]],
+"trajectory":[[[-20.0, -2.0, 0.0], [3.0, -6.0, 0.0]]],
 "speed":20},{
 "name":"follow",
-"trajectory":[[[-80.0,-2.0,0], [-60.0,-2.0,0]]],
+"trajectory":[[[3.0, -6.0, 0.0], [5.0, -2.0, 0.0]]],
 "speed":20}]},{
 "name":"vehicle2",
 "color":"0.5 0 0",
@@ -33,5 +33,8 @@
 "damage_components":"any",
 "driving_actions":[ {
 "name":"stop",
-"trajectory":[[[0.0,-6.0,0]]],
-"speed":20}]}]}
+"trajectory":[[[0.0, -6.0, 0.0]]],
+"speed":20}]}],
+"expected_crash_components":[{
+"name":"v1",
+"parts":[{"name":"front left","damage":0}]}]}
