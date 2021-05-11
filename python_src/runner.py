@@ -1,12 +1,11 @@
 import json
 
 import libs
-from models import ac3r
-from ac3r_plus import CrashScenario
-from libs import _collect_sim_data, _calculate_score_police_report
+from models import ac3r, ac3rp
+from libs import _collect_sim_data
 from matplotlib import pyplot as plt
 
-sources = [libs.PATH_TEST + "/data/Case1_data.json"]
+sources = [libs.PATH_TEST + "/data/Case0_data.json"]
 for source in sources:
     with open(source) as file:
         data = json.load(file)
@@ -19,11 +18,11 @@ for source in sources:
         plt.plot(xs, ys, 'o-', label=vehicle.name, color=colors[i])
     plt.legend()
     plt.title(f'AC3R {ac3r_scenario.name}')
-    plt.show()
+    # plt.show()
 
     with open(source) as file:
         scenario_data = json.load(file)
-    ac3rp_scenario = CrashScenario.from_json(scenario_data)
+    ac3rp_scenario = ac3rp.CrashScenario.from_json(scenario_data)
     bng_vehicles = _collect_sim_data(ac3rp_scenario)[2]
     colors = ["#ff8c00", "#4069e1"]
     for i, v in enumerate(bng_vehicles):
@@ -33,4 +32,4 @@ for source in sources:
         plt.plot(xs, ys, 'o-', label=v.vehicle.vid, color=colors[i])
     plt.legend()
     plt.title(f'AC3R Plus {ac3rp_scenario.name}')
-    plt.show()
+    # plt.show()
