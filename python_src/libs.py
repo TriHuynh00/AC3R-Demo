@@ -4,7 +4,9 @@ from pathlib import Path
 
 from beamngpy import Road, Vehicle
 from beamngpy.sensors import Damage
+
 from models import RoadProfiler, BNGVehicle
+from models.ac3rp import CrashScenario
 from typing import List
 import scipy.stats as stats
 from bisect import bisect_left
@@ -37,7 +39,7 @@ def _collect_police_report(path):
 
 
 # Collect simulation data from CrashScenario object
-def _collect_sim_data(crash_scenario):
+def _collect_sim_data(crash_scenario: CrashScenario):
     # JSON READ: Building scenario's streets
     bng_roads = []
     for road in crash_scenario.roads:
