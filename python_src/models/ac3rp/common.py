@@ -151,7 +151,7 @@ def compute_initial_state(driving_actions):
     return initial_location, intial_rotation
 
 
-def f7(seq):
+def remove_duplicates(seq):
     seen = set()
     seen_add = seen.add
     return [x for x in seq if not (x in seen or seen_add(x))]

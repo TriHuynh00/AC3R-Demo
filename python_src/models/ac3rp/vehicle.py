@@ -141,7 +141,7 @@ class Vehicle:
                 len_coor.append(len(list(segment.coords)))
                 trajectory_points.extend([Point(x, y) for x, y in list(segment.coords)])
 
-        the_trajectory = LineString(common.f7([(p.x, p.y) for p in trajectory_points]))
+        the_trajectory = LineString(common.remove_duplicates([(p.x, p.y) for p in trajectory_points]))
 
         # Make sure we use as reference the NORTH
         the_trajectory = translate(the_trajectory, - self.initial_location.x, - self.initial_location.y)

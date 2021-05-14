@@ -16,7 +16,7 @@ class Straight:
     def __init__(self, point_a: Point, point_b: Point):
         # Straight segment - Note we care about length only at this point
         # Rotation is implied by the previous elements or initial rotation
-        self.type = "parking"
+        self.type = "straight"
         self.length = point_a.distance(point_b)
 
 
