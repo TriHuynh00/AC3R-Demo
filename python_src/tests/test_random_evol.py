@@ -1,7 +1,7 @@
 import json
 import unittest
 import numpy
-from ac3r_plus import CrashScenario
+from models.ac3rp import CrashScenario
 from evolution import RandomEvolution, OpoEvolution, Selector, Mutator, Generator, Fitness, LogBook
 
 
