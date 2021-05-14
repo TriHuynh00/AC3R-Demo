@@ -31,7 +31,7 @@ class Turn:
         A = array([point_a.x - center.x, point_a.y - center.y])
         B = array([point_c.x - center.x, point_c.y - center.y])
         # For us clockwise must be positive so we need to invert the sign
-        direction = -1.0 * copysign(1.0, cross(A, B))
+        direction = 1.0 * copysign(1.0, cross(A, B))
         angle_between_segments = atan2(abs(cross(A, B)), dot(A, B))
         #
         the_angle = degrees(direction * angle_between_segments)

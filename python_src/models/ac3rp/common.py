@@ -181,7 +181,7 @@ def interpolate(road_nodes, sampling_unit=interpolation_distance):
         # With three points we use an arc, using linear interpolation will result in invalid road tests
         k = 2
     else:
-        # Otheriwse, use cubic splines
+        # Otherwise, use cubic splines
         k = 3
 
     pos_tck, pos_u = splprep([old_x_vals, old_y_vals], s=smoothness, k=k)
@@ -196,7 +196,7 @@ def interpolate(road_nodes, sampling_unit=interpolation_distance):
         width_tck, width_u = splprep([pos_u, old_width_vals], s=smoothness, k=k)
         _, new_width_vals = splev(unew, width_tck)
 
-        # Return the 4-tuple with default z and defatul road width
+        # Return the 4-tuple with default z and default road width
         return list(zip([round(v, rounding_precision) for v in new_x_vals],
                         [round(v, rounding_precision) for v in new_y_vals],
                         [round(v, rounding_precision) for v in new_z_vals],
