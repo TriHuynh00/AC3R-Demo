@@ -3,7 +3,7 @@ import logging
 import random
 from copy import deepcopy
 from deap import tools, creator, base
-from ac3r_plus import CrashScenario
+from models.ac3rp import CrashScenario
 from libs import collect_sim_data, collect_police_report
 from simulation import Simulation
 

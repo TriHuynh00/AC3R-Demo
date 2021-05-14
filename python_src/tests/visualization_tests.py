@@ -2,7 +2,7 @@ import unittest
 import json
 import matplotlib.pyplot as plt
 
-from ac3r_plus import Road, Vehicle
+from models.ac3rp import Road, Vehicle
 from visualization import RoadVisualizer, VehicleTrajectoryVisualizer
 
 class RoadVisualizationTest(unittest.TestCase):
