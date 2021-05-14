@@ -1,4 +1,4 @@
-from models.ac3rp.common import _interpolate
+from models.ac3rp.common import interpolate
 
 
 class Road:
@@ -13,7 +13,7 @@ class Road:
         #         [100.0, 20.0, 0.0, 8.0]
         #       ]
         #     },
-        interpolated_road_points = _interpolate(road_dict["road_node_list"])
+        interpolated_road_points = interpolate(road_dict["road_node_list"])
         return Road(road_dict["name"], road_dict["road_type"], road_dict["road_shape"], interpolated_road_points)
 
     def __init__(self, name, road_type, road_shape, road_nodes):
