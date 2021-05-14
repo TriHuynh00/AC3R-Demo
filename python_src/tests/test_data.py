@@ -46,7 +46,7 @@ def collect_police_report():
 
 
 def collect_scenario_data(scenario):
-    with open("./data/Case6_mod.json") as file:
+    with open("./data/Case6_data.json") as file:
         scenario_data = json.load(file)
     crash_scenario = CrashScenario.from_json(scenario_data)
     # JSON READ: Building scenario's streets

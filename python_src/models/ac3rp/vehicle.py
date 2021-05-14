@@ -8,6 +8,7 @@ from models.ac3rp.common import _interpolate, _find_radius_and_center, _compute_
 
 PARKING_CONSTRAINT = 0.0001
 
+
 class Vehicle:
     @staticmethod
     def from_dict(vehicle_dict):

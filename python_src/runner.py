@@ -5,7 +5,7 @@ from models import ac3r, ac3rp
 from libs import _collect_sim_data
 from matplotlib import pyplot as plt
 
-sources = [libs.PATH_TEST + "/data/Case0_data.json"]
+sources = [libs.PATH_TEST + "/data/Case6_data.json"]
 for source in sources:
     with open(source) as file:
         data = json.load(file)
@@ -18,7 +18,7 @@ for source in sources:
         plt.plot(xs, ys, 'o-', label=vehicle.name, color=colors[i])
     plt.legend()
     plt.title(f'AC3R {ac3r_scenario.name}')
-    # plt.show()
+    plt.show()
 
     with open(source) as file:
         scenario_data = json.load(file)
@@ -32,4 +32,4 @@ for source in sources:
         plt.plot(xs, ys, 'o-', label=v.vehicle.vid, color=colors[i])
     plt.legend()
     plt.title(f'AC3R Plus {ac3rp_scenario.name}')
-    # plt.show()
+    plt.show()
