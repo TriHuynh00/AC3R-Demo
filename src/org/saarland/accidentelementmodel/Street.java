@@ -43,7 +43,7 @@ public class Street {
         streetProp.put("left_pavement_node_list", ""); // Pavement constructed in negative y plan
         streetProp.put("right_parkline_node_list", ""); // parking line constructed in positive y plan
         streetProp.put("left_parkline_node_list", ""); // parking line constructed in negative y plan
-        streetProp.put("is_single_road_piece", "F"); // define whether this road is intersected in the middle: F = the road stops at intersection, T = the road continue after intersection
+        streetProp.put("is_single_road_piece", "F"); // F = the road stops at intersection, T = the road continue after intersection
         streetProp.put("traffic_sign_list", ""); // All traffic control signs in this road
     }
 
