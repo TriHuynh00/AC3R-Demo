@@ -9,7 +9,7 @@ import json
 from simulation import Simulation
 from beamngpy import Road, Vehicle
 from beamngpy.sensors import Damage
-from ac3r_plus import CrashScenario
+from models.ac3rp import CrashScenario
 from models import RoadProfiler, ScriptFactory, BNGVehicle
 
 

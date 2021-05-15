@@ -1,5 +1,5 @@
 import json
-from ac3r_plus import CrashScenario
+from models.ac3rp import CrashScenario
 from models import RoadProfiler, ScriptFactory, BNGVehicle
 from beamngpy import Road, Vehicle
 from beamngpy.sensors import Damage
@@ -46,7 +46,7 @@ def collect_police_report():
 
 
 def collect_scenario_data(scenario):
-    with open("./data/Case6_mod.json") as file:
+    with open("./data/Case6_data.json") as file:
         scenario_data = json.load(file)
     crash_scenario = CrashScenario.from_json(scenario_data)
     # JSON READ: Building scenario's streets
