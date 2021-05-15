@@ -1,0 +1,31 @@
+postCrash:[ 
+	v1:{
+		storyline: [
+			{
+				action: 'rotate',
+				direction: 'counterclockwise'
+			},
+			{
+				action: 'rest',
+				direction' 'southwest',
+				location: 'south curb of eastbound lane'
+			}
+		]
+	}
+	v2:{
+		storyline: [
+			{
+				action: 'rotate',
+				direction: 'counterclockwise'
+			},
+			{
+				action: 'forward',
+				direction: 'south'
+			},
+			{
+				action: 'rest',
+				direction: 'east'
+			}
+		]
+	}
+]

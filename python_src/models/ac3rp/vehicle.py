@@ -4,62 +4,33 @@ from shapely.geometry import LineString, Point
 from shapely.affinity import translate, rotate, scale
 from scipy.spatial import geometric_slerp
 from math import sin, cos, radians, degrees, atan2, copysign
-from models.ac3rp.common import _interpolate, _find_radius_and_center, _compute_initial_state, _f7
+from models.ac3rp import common
+from models.ac3rp import segment
 
-PARKING_CONSTRAINT = 0.0001
+SAMPLING_UNIT = 5
+
 
 class Vehicle:
     @staticmethod
     def from_dict(vehicle_dict):
         driving_actions = []
-
         for driving_action_dict in vehicle_dict["driving_actions"]:
-
             trajectory_segments = []
-
             # Iterate all the trajectory_list, i.e., list of poitns that define the segments
             for trajectory_list in driving_action_dict["trajectory"]:
-
                 if len(trajectory_list) == 1:
-                    trajectory_segments.append({
-                        "type": "parking",
-                        "length": 0
-                    })
+                    trajectory_segments.append(segment.Parking())
                 elif len(trajectory_list) == 2:
-                    # Straight segment - Note we care about length only at this point
-                    # Rotation is implied by the previous elements or initial rotation
-                    initial_point = Point(trajectory_list[0][0], trajectory_list[0][1])
-                    final_point = Point(trajectory_list[1][0], trajectory_list[1][1])
-
-                    trajectory_segments.append({
-                        "type": "straight",
-                        "length": initial_point.distance(final_point)
-                    })
-
+                    trajectory_segments.append(segment.Straight(
+                        Point(trajectory_list[0][0], trajectory_list[0][1]),
+                        Point(trajectory_list[1][0], trajectory_list[1][1])
+                    ))
                 elif len(trajectory_list) == 3:
-                    initial_point = Point(trajectory_list[0][0], trajectory_list[0][1])
-                    middle_point = Point(trajectory_list[1][0], trajectory_list[1][1])
-                    final_point = Point(trajectory_list[2][0], trajectory_list[2][1])
-
-                    # Interpolate the arc and find the corresponding values...
-                    radius, center = _find_radius_and_center(initial_point, middle_point, final_point)
-
-                    # Find the angle between: the vectors center-initial_point, center-final_point
-                    # initialize arrays
-                    A = array([initial_point.x - center.x, initial_point.y - center.y])
-                    B = array([final_point.x - center.x, final_point.y - center.y])
-                    # For us clockwise must be positive so we need to invert the sign
-                    direction = -1.0 * copysign(1.0, cross(A, B))
-                    angle_between_segments = atan2(abs(cross(A, B)), dot(A, B))
-                    #
-                    the_angle = degrees(direction * angle_between_segments)
-
-                    trajectory_segments.append({
-                        "type": "turn",
-                        "angle": the_angle,
-                        "radius": radius
-                    })
-
+                    trajectory_segments.append(segment.Turn(
+                        Point(trajectory_list[0][0], trajectory_list[0][1]),
+                        Point(trajectory_list[1][0], trajectory_list[1][1]),
+                        Point(trajectory_list[2][0], trajectory_list[2][1])
+                    ))
                 else:
                     raise Exception("Too many points in the trajectory_dict")
 
@@ -71,7 +42,7 @@ class Vehicle:
             })
 
         # Extract the initial location: the first point of the trajectory
-        initial_location, initial_rotation = _compute_initial_state(vehicle_dict["driving_actions"])
+        initial_location, initial_rotation = common.compute_initial_state(vehicle_dict["driving_actions"])
 
         # Extract the initial rotation. The rotation the first point of the trajectory
         ## TODO rotation is extracted by first interpolating the points
@@ -115,15 +86,15 @@ class Vehicle:
         for s in segments:
             # Generate the segment
             segment = None
-            if s["type"] == "parking":
-                segment = LineString([(x, 0) for x in linspace(0, PARKING_CONSTRAINT, 2)])
+            if s.type == "parking":
+                segment = LineString([(x, 0) for x in linspace(0, s.length, 2)])
                 segment = rotate(segment, last_rotation, (0, 0))
                 segment = translate(segment, last_location.x, last_location.y)
                 last_rotation = last_rotation  # Parking segments do not change the rotation
                 last_location = Point(list(segment.coords)[-1])
-            if s["type"] == 'straight':
+            if s.type == 'straight':
                 # Create an horizontal line of given length from the origin
-                segment = LineString([(x, 0) for x in linspace(0, s["length"], 8)])
+                segment = LineString([(x, 0) for x in linspace(0, s.length, 8)])
                 # Rotate it
                 segment = rotate(segment, last_rotation, (0, 0))
                 # Move it
@@ -132,7 +103,7 @@ class Vehicle:
                 last_rotation = last_rotation  # Straight segments do not change the rotation
                 last_location = Point(list(segment.coords)[-1])
 
-            elif s["type"] == 'turn':
+            elif s.type == 'turn':
                 # Generate the points over the circle with 1.0 radius
                 # # Vector (0,1)
                 # start = array([cos(radians(90.0)), sin(radians(90.0))])
@@ -142,7 +113,7 @@ class Vehicle:
 
                 # Make sure that positive is
                 # TODO Pay attention to left/right positive/negative
-                end = array([cos(radians(s["angle"])), sin(radians(s["angle"]))])
+                end = array([cos(radians(s.angle)), sin(radians(s.angle))])
                 # Interpolate over 8 points
                 t_vals = linspace(0, 1, 8)
                 result = geometric_slerp(start, end, t_vals)
@@ -151,26 +122,26 @@ class Vehicle:
                 # Translate that back to origin
                 segment = translate(segment, -1.0, 0.0)
                 # Rotate
-                if s["angle"] > 0:
+                if s.angle > 0:
                     segment = rotate(segment, -90.0, (0.0, 0.0), use_radians=False)
                 else:
                     segment = rotate(segment, +90.0, (0.0, 0.0), use_radians=False)
 
                 # Scale to radius on both x and y
-                segment = scale(segment, s["radius"], s["radius"], 1.0, (0.0, 0.0))
+                segment = scale(segment, s.radius, s.radius, 1.0, (0.0, 0.0))
                 # Rotate it
                 segment = rotate(segment, last_rotation, (0, 0))
                 # Translate it
                 segment = translate(segment, last_location.x, last_location.y)
                 # Update last rotation and last location
-                last_rotation = last_rotation + s["angle"]  # Straight segments do not change the rotation
+                last_rotation = last_rotation + s.angle  # Straight segments do not change the rotation
                 last_location = Point(list(segment.coords)[-1])
 
             if segment is not None:
                 len_coor.append(len(list(segment.coords)))
                 trajectory_points.extend([Point(x, y) for x, y in list(segment.coords)])
 
-        the_trajectory = LineString(_f7([(p.x, p.y) for p in trajectory_points]))
+        the_trajectory = LineString(common.remove_duplicates([(p.x, p.y) for p in trajectory_points]))
 
         # Make sure we use as reference the NORTH
         the_trajectory = translate(the_trajectory, - self.initial_location.x, - self.initial_location.y)
@@ -181,7 +152,7 @@ class Vehicle:
 
         # Interpolate and resample uniformly - Make sure no duplicates are there. Hopefully we do not change the order
         # TODO Sampling unit is 5 meters for the moment. Can be changed later
-        interpolated_points = _interpolate([(p[0], p[1]) for p in list(the_trajectory.coords)], sampling_unit=5)
+        interpolated_points = common.interpolate([(p[0], p[1]) for p in list(the_trajectory.coords)], sampling_unit=SAMPLING_UNIT)
 
         # Concat the speed to the point
         trajectory_points = list(the_trajectory.coords)

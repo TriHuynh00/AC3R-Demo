@@ -1,0 +1,18 @@
+postCrash:[ 
+	v1:{
+		storyline: [
+			{
+				action: 'rest',
+				direction: 'west'
+			}
+		]
+	}
+	v2:{
+		storyline: [
+			{
+				action: 'rest',
+				direction: 'west'
+			}
+		]
+	}
+]

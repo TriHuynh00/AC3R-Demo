@@ -1,0 +1,30 @@
+postCrash:[ 
+	v1:{
+		storyline: [
+			{
+				action: 'rotate',
+				direction: 'clockwise',
+				distance: '90 degree'
+			},
+			{
+				action: 'rest',
+				direction: 'west',
+				location: '10m from crash'
+			}
+		]
+	}
+	v2:{
+		storyline: [
+			{
+				action: 'rotate',
+				direction: 'counterclockwise',
+				distance: '90 degree'
+			},
+			{
+				action: 'rest',
+				direction: 'south',
+				location: '3m from crash'
+			}
+		]
+	}
+]

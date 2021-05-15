@@ -14,7 +14,7 @@ CRASHED = 1
 NO_CRASH = 0
 
 
-def _find_radius_and_center(p1, p2, p3):
+def find_radius_and_center(p1, p2, p3):
     """
     Returns the center and radius of the circle passing the given 3 points.
     In case the 3 points form a line, returns (None, infinity).
@@ -36,7 +36,7 @@ def _find_radius_and_center(p1, p2, p3):
     return radius, Point(cx, cy)
 
 
-def _interpolate(road_nodes, sampling_unit=interpolation_distance):
+def interpolate(road_nodes, sampling_unit=interpolation_distance):
     """
         Interpolate the road points using cubic splines and ensure we handle 4F tuples for compatibility
     """
@@ -85,7 +85,7 @@ def _interpolate(road_nodes, sampling_unit=interpolation_distance):
                         [round(v, rounding_precision) for v in new_y_vals]))
 
 
-def _compute_initial_state(driving_actions):
+def compute_initial_state(driving_actions):
     # "driving-actions": [
     #         {
     #           "name": "follow",
@@ -108,7 +108,7 @@ def _compute_initial_state(driving_actions):
         middle_arc_point = Point(trajectory_points[1][0], trajectory_points[1][1])
         final_arc_point = Point(trajectory_points[2][0], trajectory_points[2][1])
         #
-        radius, center = _find_radius_and_center(initial_arc_point, middle_arc_point, final_arc_point)
+        radius, center = find_radius_and_center(initial_arc_point, middle_arc_point, final_arc_point)
         # Take the vector from the center to the initial point
         the_radius_vector = LineString([center, initial_arc_point])
         # Translate that to the origin
@@ -151,13 +151,13 @@ def _compute_initial_state(driving_actions):
     return initial_location, intial_rotation
 
 
-def _f7(seq):
+def remove_duplicates(seq):
     seen = set()
     seen_add = seen.add
     return [x for x in seq if not (x in seen or seen_add(x))]
 
 
-def _interpolate(road_nodes, sampling_unit=interpolation_distance):
+def interpolate(road_nodes, sampling_unit=interpolation_distance):
     """
         Interpolate the road points using cubic splines and ensure we handle 4F tuples for compatibility
     """
@@ -181,7 +181,7 @@ def _interpolate(road_nodes, sampling_unit=interpolation_distance):
         # With three points we use an arc, using linear interpolation will result in invalid road tests
         k = 2
     else:
-        # Otheriwse, use cubic splines
+        # Otherwise, use cubic splines
         k = 3
 
     pos_tck, pos_u = splprep([old_x_vals, old_y_vals], s=smoothness, k=k)
@@ -196,7 +196,7 @@ def _interpolate(road_nodes, sampling_unit=interpolation_distance):
         width_tck, width_u = splprep([pos_u, old_width_vals], s=smoothness, k=k)
         _, new_width_vals = splev(unew, width_tck)
 
-        # Return the 4-tuple with default z and defatul road width
+        # Return the 4-tuple with default z and default road width
         return list(zip([round(v, rounding_precision) for v in new_x_vals],
                         [round(v, rounding_precision) for v in new_y_vals],
                         [round(v, rounding_precision) for v in new_z_vals],
