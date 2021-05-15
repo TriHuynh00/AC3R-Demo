@@ -753,9 +753,6 @@ public class StraightPathConstructor {
 ////                                vehicleCoordAtI.add(vehicleCoordAtI.size(), extraXCoord + ":" + extraYCoord);
 //                            } // End processing northbound direction
                             //else
-                            // Test environment
-                            isCurrentVehicleTurn = false;
-                            isSingleRoad = "T";
                             if (travelDirection.equals("N") || travelDirection.equals("S")
                                 || travelDirection.equals("E") || travelDirection.equals("W"))
                             {
@@ -771,14 +768,18 @@ public class StraightPathConstructor {
                                 // If this is a continuous road, let the car move to the other end of the intersection
                                 if (!isCurrentVehicleTurn && isSingleRoad.equals("F")) {
                                     ConsoleLogger.print('d', "go Straight on non continuous road");
+
                                     String afterCrashCoord = NavigationDictionary.createNESWCoordBasedOnNavigation(
                                         extraDistance, radius, "forward",
                                         NavigationDictionary.selectDictionaryFromTravelingDirection(travelDirection),
                                         AccidentParam.defaultCoordDelimiter
                                     );
+
                                     String[] afterCrashCoordXYZ = afterCrashCoord.split(AccidentParam.defaultCoordDelimiter);
+
                                     extraXCoord = Double.parseDouble(crashXCoord) + Double.parseDouble(afterCrashCoordXYZ[0]);
                                     extraYCoord = Double.parseDouble(crashYCoord) + Double.parseDouble(afterCrashCoordXYZ[1]);
+
                                     ConsoleLogger.print('d', String.format("afterCrashCoord = (%.2f, %.2f)",
                                         extraXCoord, extraYCoord));
                                     // If the current vehicle runs on a non-continuous road,
@@ -840,16 +841,8 @@ public class StraightPathConstructor {
                                 extraXCoord = Double.parseDouble(crashXCoord);
                                 extraYCoord = Double.parseDouble(crashYCoord) + extraDistance;
                                 // TODO: Compute turning behavior of the car
-                                // If this road is a continuous road, then keep going on the opposite direction
-                                if (vehicleStandingStreet.getStreetPropertyValue("is_single_road_piece").equals("F")) {
 
-                                    int oppositeAngle = AccidentConstructorUtil.computeOppositeAngle(streetRotateAngle + extraDistance);
-                                    double newCoord[] = AccidentConstructorUtil.computeNewCoordOfRotatedLine(extraYCoord,
-                                            oppositeAngle);
-                                    extraXCoord = newCoord[0];
-                                    extraYCoord = newCoord[1];
-                                }
-                                else
+                                if (vehicleStandingStreet.getStreetPropertyValue("is_single_road_piece").equals("T"))
                                 {
                                     for (Street otherStreet : testCase.getStreetList()) {
                                         // skip if see the same road
@@ -875,6 +868,18 @@ public class StraightPathConstructor {
                                             otherStreet.getStreetPropertyValue("road_node_list")));
                                         break;
                                     }
+                                }
+                                else // If this road is a continuous road, then keep going on the opposite direction
+                                {
+                                    int oppositeAngle = AccidentConstructorUtil.computeOppositeAngle(streetRotateAngle + extraDistance);
+                                    double newCoord[] = AccidentConstructorUtil.computeNewCoordOfRotatedLine(extraYCoord,
+                                        oppositeAngle);
+                                    extraXCoord = newCoord[0];
+                                    extraYCoord = newCoord[1];
+                                    ConsoleLogger.print('d', "opposite angle of this street " + oppositeAngle);
+                                    ConsoleLogger.print('d', String.format("Extra coord of this road %.2f %.2f",
+                                        extraXCoord, extraYCoord));
+
                                 }
                             } // End appending extra crash point to ensure crash happens
 
