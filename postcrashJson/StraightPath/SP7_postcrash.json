@@ -1,0 +1,18 @@
+postCrash:[ 
+	v1:{
+		storyline: [
+			{
+				action: 'rest',
+				location: 'southwest intersection'
+			}
+		]
+	}
+	v2:{
+		storyline: [
+			{
+				action: 'rest',
+				location: 'southwest intersection'
+			}
+		]
+	}
+]
