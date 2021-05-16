@@ -1,4 +1,3 @@
-from .car import Car
 from .script import ScriptFactory
 from .player import Player
 from .road_profiler import RoadProfiler

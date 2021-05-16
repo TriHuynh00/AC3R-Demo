@@ -2,12 +2,30 @@ import beamngpy
 import time
 from models.road_profiler import RoadProfiler
 
+VEHICLE_PARTS_DICT = {
+    'Tailgate': 'B',
+    'Wagon Unibody': 'M',
+    'Rear Bumper': 'B',
+    'Front Bumper Support': 'F',
+    'Front Bumper': 'F',
+    'Hood': 'F',
+    'Right Headlight': 'FR',
+    'Left Headlight': 'FL',
+    'Front Right Fender': 'FR',
+    'Front Left Fender': 'FL',
+    'Single Exhaust': 'B',
+    'Front Right Door': 'MR',
+    'Front Left Door': 'ML',
+    'Rear Right Door': 'MR',
+    'Rear Left Door': 'ML',
+    'Wagon Right Taillight': 'MR',
+    'Right Mirror': 'FR',
+    'Left Mirror': 'LR',
+}
+
 
 class Player:
-    def __init__(self,
-                 vehicle: beamngpy.Vehicle,
-                 road_pf: RoadProfiler,
-                 pos, rot, rot_quat):
+    def __init__(self, vehicle: beamngpy.Vehicle, road_pf: RoadProfiler, pos, rot, rot_quat):
         self.vehicle = vehicle
         self.pos = pos
         self.rot = rot
@@ -31,7 +49,12 @@ class Player:
         dam_comp = {}
         for k in tmp_comp:
             v = tmp_comp[k]
-            dam_comp[v['name']] = v['damage']
+            part_name = v['name']
+            try:
+                dam_comp[VEHICLE_PARTS_DICT[part_name]] = v['damage']
+            except KeyError:
+                print(f'Warning: A part {part_name} is NOT FOUND in a dictionary!')
+                dam_comp[part_name] = v['damage']
         return dam_comp
 
     def __str__(self):
