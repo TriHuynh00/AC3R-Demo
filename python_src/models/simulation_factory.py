@@ -17,7 +17,7 @@ class SimFactory:
             self.roads.append(sim_road)
         return self.roads
 
-    def generate_vehicles(self) -> List[Player]:
+    def generate_players(self) -> List[Player]:
         for vehicle in self.scenario.vehicles:
             trajectory = vehicle.generate_trajectory()
             initial_position = (trajectory[0][0], trajectory[0][1], 0)

@@ -24,7 +24,7 @@ class SimulationReport:
 class Simulation:
     def __init__(self, sim_factory: SimFactory, debug: bool = False):
         self.roads = sim_factory.generate_roads()
-        self.players = sim_factory.generate_vehicles()
+        self.players = sim_factory.generate_players()
         self.status = NO_CRASH
         self.debug = debug
 
