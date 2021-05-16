@@ -33,6 +33,10 @@ def run_from_scenario(scenario_file):
     sim_factory = SimFactory(CrashScenario.from_json(scenario_data))
     simulation = Simulation(sim_factory=sim_factory)
     simulation.execute_scenario(60)
+    simulation_report = simulation.get_report()
+    for player in simulation_report.players:
+        print(player.vehicle.vid)
+        print(player.get_damage())
 
 
 # make sure we invoke cli

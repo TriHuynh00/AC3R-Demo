@@ -3,7 +3,7 @@ import time
 from models.road_profiler import RoadProfiler
 
 
-class SimVehicle:
+class Player:
     def __init__(self,
                  vehicle: beamngpy.Vehicle,
                  road_pf: RoadProfiler,

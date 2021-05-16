@@ -1,14 +1,14 @@
 import beamngpy
 from typing import List
-from models import RoadProfiler, SimVehicle
+from models import RoadProfiler, Player
 from models.ac3rp import CrashScenario
 
 
 class SimFactory:
     def __init__(self, scenario: CrashScenario):
         self.scenario: CrashScenario = scenario
-        self.roads: list = []
-        self.vehicles: list = []
+        self.roads: List[beamngpy.Road] = []
+        self.players: List[Player] = []
 
     def generate_roads(self) -> List[beamngpy.Road]:
         for road in self.scenario.roads:
@@ -17,7 +17,7 @@ class SimFactory:
             self.roads.append(sim_road)
         return self.roads
 
-    def generate_vehicles(self) -> List[SimVehicle]:
+    def generate_vehicles(self) -> List[Player]:
         for vehicle in self.scenario.vehicles:
             trajectory = vehicle.generate_trajectory()
             initial_position = (trajectory[0][0], trajectory[0][1], 0)
@@ -33,8 +33,8 @@ class SimFactory:
             road_pf.compute_ai_script(trajectory, vehicle.color)
 
             # Create a mask vehicle to collect data later
-            self.vehicles.append(SimVehicle(vehicle=sim_vehicle,
-                                            road_pf=road_pf,
-                                            pos=initial_position,
-                                            rot=None, rot_quat=vehicle.rot_quat))
-        return self.vehicles
+            self.players.append(Player(vehicle=sim_vehicle,
+                                       road_pf=road_pf,
+                                       pos=initial_position,
+                                       rot=None, rot_quat=vehicle.rot_quat))
+        return self.players
