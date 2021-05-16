@@ -1,6 +1,5 @@
 import click
 import json
-import time
 from visualization import VehicleTrajectoryVisualizer
 from models import SimFactory, Simulation
 from models.ac3rp import CrashScenario
@@ -33,7 +32,7 @@ def run_from_scenario(scenario_file):
         scenario_data = json.load(file)
     sim_factory = SimFactory(CrashScenario.from_json(scenario_data))
     simulation = Simulation(sim_factory=sim_factory)
-    simulation.execute_scenario(time.time() + 60 * 1)
+    simulation.execute_scenario(60)
 
 
 # make sure we invoke cli

@@ -1,4 +1,5 @@
 import beamngpy
+from typing import List
 from models import RoadProfiler, SimVehicle
 from models.ac3rp import CrashScenario
 
@@ -9,14 +10,14 @@ class SimFactory:
         self.roads: list = []
         self.vehicles: list = []
 
-    def generate_roads(self) -> list:
+    def generate_roads(self) -> List[beamngpy.Road]:
         for road in self.scenario.roads:
             sim_road = beamngpy.Road('road_asphalt_2lane', rid=road.name)
             sim_road.nodes.extend(road.road_nodes)
             self.roads.append(sim_road)
         return self.roads
 
-    def generate_vehicles(self) -> list:
+    def generate_vehicles(self) -> List[SimVehicle]:
         for vehicle in self.scenario.vehicles:
             trajectory = vehicle.generate_trajectory()
             initial_position = (trajectory[0][0], trajectory[0][1], 0)
