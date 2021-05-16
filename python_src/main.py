@@ -32,7 +32,7 @@ def run_from_scenario(scenario_file):
     with open(scenario_file) as file:
         scenario_data = json.load(file)
     sim_factory = SimFactory(CrashScenario.from_json(scenario_data))
-    simulation = Simulation(sim_factory)
+    simulation = Simulation(sim_factory=sim_factory)
     simulation.execute_scenario(time.time() + 60 * 1)
 
 

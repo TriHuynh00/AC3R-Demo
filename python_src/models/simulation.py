@@ -2,8 +2,7 @@ import os
 import time
 from models.sim_factory import SimFactory
 from beamngpy import BeamNGpy, Scenario
-from models.simulation_data import VehicleStateReader, SimulationDataCollector, SimulationParams, \
-    SimulationDataContainer
+from models.simulation_data import VehicleStateReader, SimulationDataCollector, SimulationParams, SimulationDataContainer
 import traceback
 
 CRASHED = 1
@@ -57,8 +56,7 @@ class Simulation:
         bng_vehicles = self.bng_vehicles
         # Init BeamNG simulation
         bng_instance = self.init_simulation()
-        simulation_id = time.strftime('%Y-%m-%d--%H-%M-%S', time.localtime())
-        scenario = Scenario('smallgrid', simulation_id)
+        scenario = Scenario("smallgrid", "test_01")
 
         for road in bng_roads:
             scenario.add_road(road)
@@ -70,12 +68,14 @@ class Simulation:
         scenario.make(bng_instance)
         bng_instance.open(launch=True)
         bng_instance.set_deterministic()
+        bng_instance.remove_step_limit()
 
         if timeout is None:
             # 45 seconds for each scenario
             timeout = time.time() + 45
-        is_crash = False
 
+        is_crash = False
+        simulation_id = time.strftime('%Y-%m-%d--%H-%M-%S', time.localtime())
         simulation_name = 'beamng_executor/sim_$(id)'.replace('$(id)', simulation_id)
         sim_data_collectors = SimulationDataContainer(debug=self.debug)
         for i in range(len(self.bng_vehicles)):
@@ -109,8 +109,8 @@ class Simulation:
             # Update the vehicle information
             sim_data_collectors.start()
             while time.time() < timeout:
-                # Record the vehicle state for every 250ms
-                bng_instance.step(25, True)
+                # Record the vehicle state for every 50 steps
+                bng_instance.step(50, True)
                 sim_data_collectors.collect()
 
                 for bng_vehicle in bng_vehicles:
