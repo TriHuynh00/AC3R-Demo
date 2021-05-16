@@ -1,7 +1,8 @@
 import os
 import time
+from models.sim_factory import SimFactory
 from beamngpy import BeamNGpy, Scenario
-from simulation_data import VehicleStateReader, SimulationDataCollector, SimulationParams
+from models.simulation_data import VehicleStateReader, SimulationDataCollector, SimulationParams
 import traceback
 
 CRASHED = 1
@@ -42,9 +43,9 @@ class SimulationDataContainer:
 
 
 class Simulation:
-    def __init__(self, bng_roads, bng_vehicles):
-        self.bng_roads = bng_roads
-        self.bng_vehicles = bng_vehicles
+    def __init__(self, sim_factory: SimFactory):
+        self.bng_roads = sim_factory.generate_roads()
+        self.bng_vehicles = sim_factory.generate_vehicles()
         self.status = NO_CRASH
 
     @staticmethod

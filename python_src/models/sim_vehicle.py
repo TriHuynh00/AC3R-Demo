@@ -1,8 +1,13 @@
+import beamngpy
 import time
+from models.road_profiler import RoadProfiler
 
 
-class BNGVehicle:
-    def __init__(self, vehicle, pos, rot, rot_quat, road_pf):
+class SimVehicle:
+    def __init__(self,
+                 vehicle: beamngpy.Vehicle,
+                 road_pf: RoadProfiler,
+                 pos, rot, rot_quat):
         self.vehicle = vehicle
         self.pos = pos
         self.rot = rot
