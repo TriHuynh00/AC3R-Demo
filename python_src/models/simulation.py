@@ -51,17 +51,16 @@ class Simulation:
     def get_report(self):
         return SimulationReport(self.bng_vehicles, self.status)
 
-    def execute_scenario(self, timeout=None):
-        bng_roads = self.bng_roads
-        bng_vehicles = self.bng_vehicles
+    def execute_scenario(self, timeout: int = 60):
+        start_time = 0
         # Init BeamNG simulation
         bng_instance = self.init_simulation()
         scenario = Scenario("smallgrid", "test_01")
 
-        for road in bng_roads:
+        for road in self.bng_roads:
             scenario.add_road(road)
 
-        for bng_vehicle in bng_vehicles:
+        for bng_vehicle in self.bng_vehicles:
             scenario.add_vehicle(bng_vehicle.vehicle, pos=bng_vehicle.pos,
                                  rot=bng_vehicle.rot, rot_quat=bng_vehicle.rot_quat)
 
@@ -69,10 +68,6 @@ class Simulation:
         bng_instance.open(launch=True)
         bng_instance.set_deterministic()
         bng_instance.remove_step_limit()
-
-        if timeout is None:
-            # 45 seconds for each scenario
-            timeout = time.time() + 45
 
         is_crash = False
         simulation_id = time.strftime('%Y-%m-%d--%H-%M-%S', time.localtime())
@@ -89,13 +84,12 @@ class Simulation:
                                         vehicle_state_reader=vehicle_state,
                                         simulation_name=simulation_name + "_v" + str(i + 1))
             )
-
         try:
             bng_instance.load_scenario(scenario)
             bng_instance.start_scenario()
 
             # Drawing debug line and forcing vehicle moving by given trajectory
-            for bng_vehicle in bng_vehicles:
+            for bng_vehicle in self.bng_vehicles:
                 vehicle = bng_vehicle.vehicle
                 road_pf = bng_vehicle.road_pf
                 # ai_set_script not working for parking vehicle
@@ -108,12 +102,13 @@ class Simulation:
 
             # Update the vehicle information
             sim_data_collectors.start()
-            while time.time() < timeout:
+            start_time = time.time()
+            while time.time() < (start_time + timeout):
                 # Record the vehicle state for every 50 steps
                 bng_instance.step(50, True)
                 sim_data_collectors.collect()
 
-                for bng_vehicle in bng_vehicles:
+                for bng_vehicle in self.bng_vehicles:
                     # Find the position of moving car
                     self.collect_vehicle_position(bng_vehicle)
                     # Collect the damage sensor information
@@ -132,14 +127,14 @@ class Simulation:
             else:
                 print("Crash detected!")
                 self.status = CRASHED
-                for bng_vehicle in bng_vehicles:
+                for bng_vehicle in self.bng_vehicles:
                     vehicle = bng_vehicle.vehicle
                     sensor = bng_instance.poll_sensors(vehicle)['damage']
                     if sensor['damage'] != 0:
                         bng_vehicle.collect_damage(sensor['part_damage'])
 
             # Save the last position of vehicle
-            for bng_vehicle in bng_vehicles:
+            for bng_vehicle in self.bng_vehicles:
                 self.collect_vehicle_position(bng_vehicle)
         except Exception as ex:
             sim_data_collectors.save()
@@ -149,3 +144,4 @@ class Simulation:
         finally:
             sim_data_collectors.save()
             bng_instance.close()
+            print("Simulation Time: ", time.time() - start_time)
