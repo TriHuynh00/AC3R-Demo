@@ -2,7 +2,8 @@ import os
 import time
 from models.sim_factory import SimFactory
 from beamngpy import BeamNGpy, Scenario
-from models.simulation_data import VehicleStateReader, SimulationDataCollector, SimulationParams
+from models.simulation_data import VehicleStateReader, SimulationDataCollector, SimulationParams, \
+    SimulationDataContainer
 import traceback
 
 CRASHED = 1
@@ -18,35 +19,12 @@ class SimulationReport:
         return str(self.__class__) + ": " + str(self.__dict__)
 
 
-class SimulationDataContainer:
-    def __init__(self):
-        self.simulations = []
-
-    def start(self):
-        for sim_data_collector in self.simulations:
-            sim_data_collector.get_simulation_data().start()
-
-    def save(self):
-        for sim_data_collector in self.simulations:
-            sim_data_collector.save()
-
-    def end(self, success: bool, exception=None):
-        for sim_data_collector in self.simulations:
-            sim_data_collector.get_simulation_data().end(success=success, exception=exception)
-
-    def append(self, sim_data_collector):
-        self.simulations.append(sim_data_collector)
-
-    def collect(self):
-        for sim_data_collector in self.simulations:
-            sim_data_collector.collect_current_data()
-
-
 class Simulation:
-    def __init__(self, sim_factory: SimFactory):
+    def __init__(self, sim_factory: SimFactory, debug: bool = False):
         self.bng_roads = sim_factory.generate_roads()
         self.bng_vehicles = sim_factory.generate_vehicles()
         self.status = NO_CRASH
+        self.debug = debug
 
     @staticmethod
     def init_simulation():
@@ -79,7 +57,8 @@ class Simulation:
         bng_vehicles = self.bng_vehicles
         # Init BeamNG simulation
         bng_instance = self.init_simulation()
-        scenario = Scenario('smallgrid', 'test_01')
+        simulation_id = time.strftime('%Y-%m-%d--%H-%M-%S', time.localtime())
+        scenario = Scenario('smallgrid', simulation_id)
 
         for road in bng_roads:
             scenario.add_road(road)
@@ -97,9 +76,8 @@ class Simulation:
             timeout = time.time() + 45
         is_crash = False
 
-        simulation_id = time.strftime('%Y-%m-%d--%H-%M-%S', time.localtime())
         simulation_name = 'beamng_executor/sim_$(id)'.replace('$(id)', simulation_id)
-        sim_data_collectors = SimulationDataContainer()
+        sim_data_collectors = SimulationDataContainer(debug=self.debug)
         for i in range(len(self.bng_vehicles)):
             bng_vehicle = self.bng_vehicles[i]
             vehicle_state = VehicleStateReader(bng_vehicle.vehicle, bng_instance)
@@ -109,7 +87,7 @@ class Simulation:
                                         SimulationParams(beamng_steps=25,
                                                          delay_msec=int(25 * 0.05 * 1000)),
                                         vehicle_state_reader=vehicle_state,
-                                        simulation_name=simulation_name + "_v" + str(i+1))
+                                        simulation_name=simulation_name + "_v" + str(i + 1))
             )
 
         try:
