@@ -34,9 +34,10 @@ def run_from_scenario(scenario_file):
     simulation = Simulation(sim_factory=sim_factory)
     simulation.execute_scenario(60)
     simulation_report = simulation.get_report()
+    data_outputs = {}
     for player in simulation_report.players:
-        print(player.vehicle.vid)
-        print(player.get_damage())
+        data_outputs[player.vehicle.vid] = player.get_damage()
+    print(data_outputs)
 
 
 # make sure we invoke cli

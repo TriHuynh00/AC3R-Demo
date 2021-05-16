@@ -42,20 +42,25 @@ class Player:
     def collect_damage(self, damage):
         self.damage.append(damage)
 
-    def get_damage(self):
+    def get_damage(self, debug: bool = False) -> list:
         if len(self.damage) == 0:  # handle a crash scenario without damage
-            return {}
+            return []
+        if debug is True:
+            print(self.vehicle.vid)
         tmp_comp = self.damage[0]
-        dam_comp = {}
+        components = []
         for k in tmp_comp:
             v = tmp_comp[k]
             part_name = v['name']
+            part_damage = v['damage']
+            if debug is True:
+                print(f'{part_name}: {part_damage}')
             try:
-                dam_comp[VEHICLE_PARTS_DICT[part_name]] = v['damage']
+                components.append({"name": VEHICLE_PARTS_DICT[part_name], "damage": part_damage})
             except KeyError:
                 print(f'Warning: A part {part_name} is NOT FOUND in a dictionary!')
-                dam_comp[part_name] = v['damage']
-        return dam_comp
+                components.append({"name": part_name, "damage": part_damage})
+        return components
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
