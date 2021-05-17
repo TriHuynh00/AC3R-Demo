@@ -36,7 +36,7 @@
 "trajectory":[[[0.0, -2.0, 0.0], [5.0, 0.0, 0.0]]],
 "speed":20}]}],
 "expected_crash_components":[{
-"name":"v1",
+"name":"vehicle1",
 "parts":[{"name":"front left","damage":0}]},{
-"name":"v2",
+"name":"vehicle2",
 "parts":[{"name":"side right","damage":0}]}]}
