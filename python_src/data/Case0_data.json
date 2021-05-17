@@ -42,5 +42,5 @@
 "trajectory":[[[-30.0, -2.0, 0.0], [0.0, -2.0, 0.0]]],
 "speed":30}]}],
 "expected_crash_components":[{
-"name":"v2",
+"name":"vehicle2",
 "parts":[{"name":"rear","damage":0}]}]}

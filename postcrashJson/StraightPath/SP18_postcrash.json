@@ -1,0 +1,28 @@
+postCrash:[ 
+	v1:{
+		storyline: [
+			{
+				action: 'rotate',
+				direction: 'clockwise'
+			},
+			{
+				action: 'rest'
+			}
+		]
+	}
+	v2:{
+		storyline: [
+			{
+				action: 'rotate',
+				direction: 'clockwise'
+			},
+			{
+				action: 'forward',
+				direction: 'north'
+			},
+			{
+				action: 'rest'
+			}
+		]
+	}
+]

@@ -63,7 +63,7 @@ class SimulationData:
 
     def __init__(self, simulation_name: str):
         self.name = simulation_name
-        root: Path = Path(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+        root: Path = Path(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
         self.simulations: Path = root.joinpath('simulations')
         self.path_root: Path = self.simulations.joinpath(simulation_name)
         self.path_json: Path = self.path_root.joinpath('simulation.full.json')

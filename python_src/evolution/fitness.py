@@ -1,9 +1,6 @@
 import time
-import libs
-import numpy as np
-from simulation import Simulation
-from libs import _collect_sim_data
-
+from models.simulation import Simulation
+from libs import _collect_sim_data, _collect_police_report
 
 class Fitness:
     @staticmethod

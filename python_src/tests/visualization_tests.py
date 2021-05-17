@@ -15,7 +15,7 @@ class RoadVisualizationTest(unittest.TestCase):
 
     def test_load_roads_from_simple_and_visualize_them(self):
 
-        simple_file = "./data/simple.json"
+        simple_file = "../data/simple.json"
 
         with open(simple_file, 'r') as input_file:
             scenario_data = json.load(input_file)
@@ -42,7 +42,7 @@ class RoadVisualizationTest(unittest.TestCase):
 
         ## TODO Test this code by starting the car in a TURN !
 
-        simple_file = "./data/simple.json"
+        simple_file = "../data/simple.json"
 
         with open(simple_file, 'r') as input_file:
             scenario_data = json.load(input_file)

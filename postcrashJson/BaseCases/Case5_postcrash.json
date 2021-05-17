@@ -1,0 +1,55 @@
+postCrash:[ 
+	v1:{
+		storyline: [
+			{
+				action: 'rotate',
+				direction: 'counterclockwise'
+			},
+			{
+				action: 'move',
+				direction: 'right',
+				struckObject: [
+					{
+						name: 'tree',
+						damagePosition: 'right',
+						hitApproach: 'swipe'
+					}
+				]
+			},
+			{
+				action: 'move',
+				direction: 'straight',
+				struckObject: [
+					{
+						name: 'tree',
+						damagePosition: 'front',
+						hitApproach: 'strike'
+					}
+				]
+			},
+			{
+				action: 'rest',
+				direction: 'west'
+			}
+		]
+	}
+	v2:{
+		storyline: [
+			{
+				action: 'move',
+				direction: 'forward',
+				struckObject:[
+					{
+						name: 'pole',
+						damagePosition: 'front',
+						hitApproach: 'strike'
+					}
+				]
+			},
+			{
+				action: 'rest',
+				direction: 'west'
+			}
+		]
+	}
+]

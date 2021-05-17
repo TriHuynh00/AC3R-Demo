@@ -1,0 +1,10 @@
+postCrash:[ 
+	v2:{
+		storyline: [
+			{
+				action: 'rotate',
+				direction: 'clockwise'
+			}
+		]
+	}
+]

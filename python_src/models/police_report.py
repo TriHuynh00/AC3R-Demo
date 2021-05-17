@@ -147,7 +147,7 @@ class Report(ABC):
         if len(outputs) is EMPTY_CRASH:
             raise Exception("The simulator did not report any crashes!")
         # The vehicle's crash element should be on the car
-        parts = CAT_D_DATA
+        parts = CAT_D_DATA + CAT_C_DATA + CAT_B_DATA + CAT_A_DATA
         for item in [i["name"] for i in outputs]:
             if item not in parts:
                 raise Exception(f'The code {item} is not found in the part dictionary!')
@@ -258,7 +258,7 @@ class ReportTypeD(Report):
         return crash_points, non_crash_points, point_target
 
 
-def _categorize_report(report_data: list) -> ReportCreator:
+def categorize_report(report_data: list) -> ReportCreator:
     """
     Categorizes the type of police report
     """
