@@ -25,6 +25,18 @@ VEHICLE_PARTS_DICT = {
 
 
 class Player:
+    """
+    The Player class declares the interface that provides necessary information to
+    add Vehicle to Scenario at the given position with the given orientation
+    and add a visual line to be rendered by BeamNG, but can also be used to drive Vehicle
+    using ai_set_script() method.
+
+    Args:
+        pos (tuple): (x,y,z) tuple specifying the position of the vehicle.
+        rot (tuple): (x,y,z) tuple expressing the rotation of the vehicle in Euler angles around each axis.
+        rot_quat (tuple): (x, y, z, w) tuple specifying the rotation as quaternion.
+        road_pf(RoadProfiler): list of timestamped positions defining to make the vehicle follow a given "script".
+    """
     def __init__(self, vehicle: beamngpy.Vehicle, road_pf: RoadProfiler, pos, rot, rot_quat):
         self.vehicle = vehicle
         self.pos = pos

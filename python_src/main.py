@@ -28,6 +28,8 @@ def plot_ac3rp(scenario_file):
 @click.argument('scenario_file', type=click.Path(exists=True))
 def run_from_scenario(scenario_file):
     """Take a JSON scenario file and run the entire search algorithm."""
+    # TODO: Can we read some configurations (like fitness function, mutation operators, speed min/max,
+    #  and other parameters), so we can add it from there?
     with open(scenario_file) as file:
         scenario_data = json.load(file)
     sim_factory = SimulationFactory(CrashScenario.from_json(scenario_data))
