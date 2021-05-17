@@ -1,5 +1,7 @@
 from models.ac3rp.vehicle import Vehicle
 from models.ac3rp.road import Road
+from models.ac3rp.report import Report
+from typing import List
 
 
 class CrashScenario:
@@ -21,9 +23,13 @@ class CrashScenario:
         for vehicle_dict in ac3r_json_data["vehicles"]:
             vehicles.append(Vehicle.from_dict(vehicle_dict))
 
-        return CrashScenario(ac3r_json_data["name"], roads, vehicles)
+        reports = []
+        for report_dict in ac3r_json_data["expected_crash_components"]:
+            reports.append(Report.from_dict(report_dict))
 
-    def __init__(self, name, roads, vehicles, original_scenario=False):
+        return CrashScenario(ac3r_json_data["name"], roads, vehicles, reports)
+
+    def __init__(self, name, roads: List[Road], vehicles: List[Vehicle], reports: List[Report], original_scenario: bool=False):
         # Meta Data
         self.name = name
         self.original_scenario = original_scenario
@@ -31,6 +37,8 @@ class CrashScenario:
         self.roads = roads
         # Vehicle Information and trajectory
         self.vehicles = vehicles
+        # Police Report
+        self.reports = reports
         # Scenario score
         self.score = 0
 

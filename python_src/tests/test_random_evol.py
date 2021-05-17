@@ -13,7 +13,7 @@ def expectations(gens):
 class RandomEvolutionTest(unittest.TestCase):
     def test_run_scenario_in_population(self):
         self.assertEqual(0, 0)
-        with open("./data/Case6_data.json") as file:
+        with open("../data/Case6_data.json") as file:
             scenario_data = json.load(file)
         orig_ind = CrashScenario.from_json(scenario_data)
         timeout = 60 * 20

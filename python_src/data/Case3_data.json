@@ -1,16 +1,16 @@
 {
-"name":"Case2",
+"name":"Case3",
 "roads":[{
 "name":"road1",
 "road_type":"roadway",
 "road_shape":"I",
-"road_node_list":[[-240.0,0.0,0,8.0], [240.0,0.0,0,8.0]]
+"road_node_list":[[-240.0,0.0,0,12.0], [240.0,0.0,0,12.0]]
 }],
 "vehicles":[{
 "name":"vehicle1",
-"color":"0.871 0.878 0.871",
+"color":"0 0 0.5",
 "rot_quat":[0.00993774, 0.03947598, -0.70593404, 0.7071068],
-"damage_components":"front left",
+"damage_components":"front left left",
 "driving_actions":[ {
 "name":"follow",
 "trajectory":[[[-80.0, -2.0, 0.0], [-60.0, -2.0, 0.0]]],
@@ -21,14 +21,14 @@
 "name":"follow",
 "trajectory":[[[-40.0, -2.0, 0.0], [-20.0, -2.0, 0.0]]],
 "speed":20},{
-"name":"follow",
-"trajectory":[[[-20.0, -2.0, 0.0], [3.0, -6.0, 0.0]]],
+"name":"turn",
+"trajectory":[[[-20.0, -2.0, 0.0], [3.0, -6.0, 0.0], [5.0, -2.0, 0.0]]],
 "speed":20},{
 "name":"follow",
 "trajectory":[[[3.0, -6.0, 0.0], [5.0, -2.0, 0.0]]],
 "speed":20}]},{
 "name":"vehicle2",
-"color":"0.5 0 0",
+"color":"0 0.3 0",
 "rot_quat":[0.00993774, 0.03947598, -0.70593404, 0.7071068],
 "damage_components":"any",
 "driving_actions":[ {
@@ -36,5 +36,5 @@
 "trajectory":[[[0.0, -6.0, 0.0]]],
 "speed":20}]}],
 "expected_crash_components":[{
-"name":"v1",
-"parts":[{"name":"front left","damage":0}]}]}
+"name":"vehicle1",
+"parts":[{"name":"front left left","damage":0}]}]}

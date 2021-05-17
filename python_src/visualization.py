@@ -1,3 +1,5 @@
+import json
+from models import ac3r, ac3rp
 from matplotlib import pyplot as plt
 import matplotlib.patches as patches
 from shapely.geometry import LineString, Polygon
@@ -16,6 +18,7 @@ from math import atan2, pi, degrees
 #     square = Polygon([(5, 5), (5, -5), (-5, -5), (-5, 5), (5, 5)])
 #
 #
+
 
 class RoadVisualizer:
 
@@ -59,6 +62,36 @@ class VehicleTrajectoryVisualizer:
         ys = [p[1] for p in trajectory_points]
 
         plt.plot(xs, ys, 'o-')
+
+    @staticmethod
+    def plot_ac3r(scenario_file):
+        with open(scenario_file) as file:
+            data = json.load(file)
+        ac3r_scenario = ac3r.CrashScenario.from_json(data)
+        colors = ["#ffdab9", "#b1c3de"]
+        for i, vehicle in enumerate(ac3r_scenario.vehicles):
+            trajectory_points = vehicle.trajectory_points
+            xs = [p[0] for p in trajectory_points]
+            ys = [p[1] for p in trajectory_points]
+            plt.plot(xs, ys, 'o-', label=vehicle.name, color=colors[i])
+        plt.legend()
+        plt.title(f'AC3R {ac3r_scenario.name}')
+        plt.show()
+
+    @staticmethod
+    def plot_ac3rp(scenario_file):
+        with open(scenario_file) as file:
+            data = json.load(file)
+        ac3rp_scenario = ac3rp.CrashScenario.from_json(data)
+        colors = ["#ff8c00", "#4069e1"]
+        for i, v in enumerate(ac3rp_scenario.vehicles):
+            trajectory_points = v.generate_trajectory()
+            xs = [p[0] for p in trajectory_points]
+            ys = [p[1] for p in trajectory_points]
+            plt.plot(xs, ys, 'o-', label=v.name, color=colors[i])
+        plt.legend()
+        plt.title(f'AC3R Plus {ac3rp_scenario.name}')
+        plt.show()
 
 
 class CrashScenarioVisualizer:
