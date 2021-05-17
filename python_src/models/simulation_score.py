@@ -21,7 +21,7 @@ class SimulationScore:
         self.simulation = simulation
 
     @staticmethod
-    def _formula(alpha: float, beta: float, tpl: Tuple[int, int, int] = (0, 0, 0)):
+    def formula(alpha: float, beta: float, tpl: Tuple[int, int, int] = (0, 0, 0)):
         return 1 + (alpha * tpl[MATCHING_CRASH_INDEX]) + (beta * tpl[MATCHING_NONCRASH_INDEX])
 
     def calculate(self, debug: bool = False):
@@ -41,4 +41,4 @@ class SimulationScore:
         if debug is True:
             print(result)
 
-        return self._formula(self.alpha, self.beta, result)
+        return self.formula(self.alpha, self.beta, result)
