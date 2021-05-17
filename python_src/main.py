@@ -1,7 +1,7 @@
 import click
 import json
 from visualization import VehicleTrajectoryVisualizer
-from models import SimulationFactory, Simulation, categorize_report
+from models import SimulationFactory, Simulation, SimulationScore, categorize_report
 from models.ac3rp import CrashScenario
 
 
@@ -38,15 +38,14 @@ def run_from_scenario(scenario_file):
 
     data_targets = simulation.targets
     data_outputs = simulation.get_data_outputs()
-    print(data_targets)
-    print(data_outputs)
-    target = (0, 0, 0)
+    result = (0, 0, 0)
     for vehicle in data_targets:
         data_target = data_targets[vehicle]
         creator = categorize_report(data_target)
         data_output = data_outputs[vehicle]
-        target = tuple(map(lambda x, y: x + y, target, creator.match(data_output, data_target)))
-    print(f'Result: {target}')
+        result = tuple(map(lambda x, y: x + y, result, creator.match(data_output, data_target)))
+    print(f'Result: {result}')
+    print(f'SimulationScore: {SimulationScore(simulation_tuple=result).calculate()}')
 
 
 # make sure we invoke cli
