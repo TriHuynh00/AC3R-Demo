@@ -12,21 +12,13 @@ CRASHED = 1
 NO_CRASH = 0
 
 
-class SimulationRecord:
-    def __init__(self, players: List[models.Player], status: int):
-        self.players = players
-        self.status = status
-
-    def __str__(self):
-        return str(self.__class__) + ": " + str(self.__dict__)
-
-
 class Simulation:
     def __init__(self, sim_factory: SimFactory, debug: bool = False):
-        self.roads = sim_factory.generate_roads()
-        self.players = sim_factory.generate_players()
-        self.status = NO_CRASH
-        self.debug = debug
+        self.roads: List[beamngpy.Road] = sim_factory.generate_roads()
+        self.players: List[models.Player] = sim_factory.generate_players()
+        self.targets: {} = sim_factory.generate_targets()
+        self.status: int = NO_CRASH
+        self.debug: bool = debug
 
     @staticmethod
     def init_simulation() -> BeamNGpy:
@@ -51,8 +43,11 @@ class Simulation:
 
         return player
 
-    def get_record(self) -> SimulationRecord:
-        return SimulationRecord(self.players, self.status)
+    def get_data_outputs(self) -> {}:
+        data_outputs = {}
+        for player in self.players:
+            data_outputs[player.vehicle.vid] = player.get_damage()
+        return data_outputs
 
     def execute_scenario(self, timeout: int = 60):
         start_time = 0

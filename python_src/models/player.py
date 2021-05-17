@@ -20,7 +20,7 @@ VEHICLE_PARTS_DICT = {
     'Rear Left Door': 'ML',
     'Wagon Right Taillight': 'MR',
     'Right Mirror': 'FR',
-    'Left Mirror': 'LR',
+    'Left Mirror': 'FL',
 }
 
 

@@ -9,7 +9,6 @@ class SimFactory:
         self.scenario: CrashScenario = scenario
         self.roads: List[beamngpy.Road] = []
         self.players: List[Player] = []
-        self.reports: {} = self._generate_reports()
 
     def generate_roads(self) -> List[beamngpy.Road]:
         for road in self.scenario.roads:
@@ -40,7 +39,7 @@ class SimFactory:
                                        rot=None, rot_quat=vehicle.rot_quat))
         return self.players
 
-    def _generate_reports(self) -> {}:
+    def generate_targets(self) -> {}:
         data_target = {}
         for report in self.scenario.reports:
             data_target[report.name] = report.parts

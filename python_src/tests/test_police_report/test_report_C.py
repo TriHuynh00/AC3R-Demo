@@ -1,6 +1,6 @@
 import json
 import unittest
-from models import _categorize_report
+from models import categorize_report
 
 
 data_targets_01 = json.loads('{"v1":[{"name":"R","damage":1.4163608690724},{"name":"L","damage":0.095952279865742}]}')
@@ -13,7 +13,7 @@ class TestPoliceReportTypeC(unittest.TestCase):
         data_outputs = [{"name": "FL", "damage": 1}]
         for report in data_targets_01:
             data_targets = data_targets_01[report]
-            creator = _categorize_report(data_targets)
+            creator = categorize_report(data_targets)
             self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
     def test_simulation_FL_ML_must_match_SIDE_report_R_L(self):
@@ -21,7 +21,7 @@ class TestPoliceReportTypeC(unittest.TestCase):
         data_outputs = [{"name": "FL", "damage": 1}, {"name": "ML", "damage": 1}]
         for report in data_targets_01:
             data_targets = data_targets_01[report]
-            creator = _categorize_report(data_targets)
+            creator = categorize_report(data_targets)
             self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
     def test_simulation_FL_FR_must_match_SIDE_report_R_L(self):
@@ -29,7 +29,7 @@ class TestPoliceReportTypeC(unittest.TestCase):
         data_outputs = [{"name": "FL", "damage": 1}, {"name": "FR", "damage": 1}]
         for report in data_targets_01:
             data_targets = data_targets_01[report]
-            creator = _categorize_report(data_targets)
+            creator = categorize_report(data_targets)
             self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
     def test_simulation_FL_must_match_SIDE_report_L(self):
@@ -37,7 +37,7 @@ class TestPoliceReportTypeC(unittest.TestCase):
         data_outputs = [{"name": "FL", "damage": 1}]
         for report in data_targets_02:
             data_targets = data_targets_02[report]
-            creator = _categorize_report(data_targets)
+            creator = categorize_report(data_targets)
             self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
     def test_simulation_FL_MR_must_match_SIDE_report_L(self):
@@ -45,7 +45,7 @@ class TestPoliceReportTypeC(unittest.TestCase):
         data_outputs = [{"name": "FL", "damage": 1}, {"name": "MR", "damage": 1}]
         for report in data_targets_02:
             data_targets = data_targets_02[report]
-            creator = _categorize_report(data_targets)
+            creator = categorize_report(data_targets)
             self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
     def test_simulation_FL_FR_must_match_SIDE_report_L(self):
@@ -53,7 +53,7 @@ class TestPoliceReportTypeC(unittest.TestCase):
         data_outputs = [{"name": "FL", "damage": 1}, {"name": "FR", "damage": 1}]
         for report in data_targets_02:
             data_targets = data_targets_02[report]
-            creator = _categorize_report(data_targets)
+            creator = categorize_report(data_targets)
             self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
     def test_simulation_MR_FR_not_match_SIDE_report_L(self):
@@ -61,7 +61,7 @@ class TestPoliceReportTypeC(unittest.TestCase):
         data_outputs = [{"name": "MR", "damage": 1}, {"name": "FR", "damage": 1}]
         for report in data_targets_02:
             data_targets = data_targets_02[report]
-            creator = _categorize_report(data_targets)
+            creator = categorize_report(data_targets)
             self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
     def test_exception_is_raised_when_no_crash(self):
@@ -69,7 +69,7 @@ class TestPoliceReportTypeC(unittest.TestCase):
         data_outputs = []
         for report in data_targets_02:
             data_targets = data_targets_02[report]
-            creator = _categorize_report(data_targets)
+            creator = categorize_report(data_targets)
             with self.assertRaises(expected):
                 creator.match(data_outputs, data_targets)
 
@@ -78,7 +78,7 @@ class TestPoliceReportTypeC(unittest.TestCase):
         data_outputs = [{"name": "NON_DEFINED", "damage": 1}]
         for report in data_targets_02:
             data_targets = data_targets_02[report]
-            creator = _categorize_report(data_targets)
+            creator = categorize_report(data_targets)
             with self.assertRaises(expected):
                 creator.match(data_outputs, data_targets)
 
