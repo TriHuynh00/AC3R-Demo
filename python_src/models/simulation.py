@@ -12,7 +12,7 @@ CRASHED = 1
 NO_CRASH = 0
 
 
-class SimulationReport:
+class SimulationRecord:
     def __init__(self, players: List[models.Player], status: int):
         self.players = players
         self.status = status
@@ -51,8 +51,8 @@ class Simulation:
 
         return player
 
-    def get_report(self) -> SimulationReport:
-        return SimulationReport(self.players, self.status)
+    def get_record(self) -> SimulationRecord:
+        return SimulationRecord(self.players, self.status)
 
     def execute_scenario(self, timeout: int = 60):
         start_time = 0
