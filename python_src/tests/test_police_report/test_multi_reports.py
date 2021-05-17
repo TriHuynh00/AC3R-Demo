@@ -1,6 +1,6 @@
 import json
 import unittest
-from models import _categorize_report
+from models import categorize_report
 
 data_targets = json.loads('{"v1":[{"name":"F","damage":0.053689561784267}, {"name":"M","damage":0.053689561784267}],'
                           '"v2":[{"name":"R","damage":1.4163608690724},{"name":"L","damage":0.095952279865742}],'
@@ -17,7 +17,22 @@ class TestMultiReports(unittest.TestCase):
         target = (0, 0, 0)
         for vehicle in data_targets:
             data_target = data_targets[vehicle]
-            creator = _categorize_report(data_target)
+            creator = categorize_report(data_target)
+            data_output = data_outputs[vehicle]
+            target = tuple(map(lambda x, y: x + y, target, creator.match(data_output, data_target)))
+
+        self.assertEqual(expected, target)
+
+    def test_multi_types_report_Case6(self):
+        expected = (2, 3, 5)
+        data_targets = json.loads('{"vehicle2": [{"name": "F", "damage": 0}],"vehicle1": [{"name": "L", "damage": 0}]}')
+        data_outputs = {"vehicle2": [{"name": "FR", "damage": 0.010666666666666666}, {"name": "FR", "damage": 1}],
+                        "vehicle1": [{"name": "FL", "damage": 1}]}
+
+        target = (0, 0, 0)
+        for vehicle in data_targets:
+            data_target = data_targets[vehicle]
+            creator = categorize_report(data_target)
             data_output = data_outputs[vehicle]
             target = tuple(map(lambda x, y: x + y, target, creator.match(data_output, data_target)))
 
