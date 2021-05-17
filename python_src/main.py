@@ -1,7 +1,7 @@
 import click
 import json
 from visualization import VehicleTrajectoryVisualizer
-from models import SimFactory, Simulation, categorize_report
+from models import SimulationFactory, Simulation, categorize_report
 from models.ac3rp import CrashScenario
 
 
@@ -30,7 +30,7 @@ def run_from_scenario(scenario_file):
     """Take a JSON scenario file and run the entire search algorithm."""
     with open(scenario_file) as file:
         scenario_data = json.load(file)
-    sim_factory = SimFactory(CrashScenario.from_json(scenario_data))
+    sim_factory = SimulationFactory(CrashScenario.from_json(scenario_data))
     simulation = Simulation(sim_factory=sim_factory)
     simulation.execute_scenario(60)
 

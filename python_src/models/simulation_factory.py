@@ -4,7 +4,7 @@ from models import RoadProfiler, Player
 from models.ac3rp import CrashScenario
 
 
-class SimFactory:
+class SimulationFactory:
     def __init__(self, scenario: CrashScenario):
         self.scenario: CrashScenario = scenario
         self.roads: List[beamngpy.Road] = []

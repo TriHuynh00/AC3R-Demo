@@ -5,7 +5,7 @@ import traceback
 import models
 from typing import List
 from beamngpy import BeamNGpy, Scenario
-from models import SimFactory
+from models import SimulationFactory
 from models.simulation_data import VehicleStateReader, SimulationDataCollector, SimulationParams, SimulationDataContainer
 
 CRASHED = 1
@@ -13,7 +13,7 @@ NO_CRASH = 0
 
 
 class Simulation:
-    def __init__(self, sim_factory: SimFactory, debug: bool = False):
+    def __init__(self, sim_factory: SimulationFactory, debug: bool = False):
         self.roads: List[beamngpy.Road] = sim_factory.generate_roads()
         self.players: List[models.Player] = sim_factory.generate_players()
         self.targets: {} = sim_factory.generate_targets()

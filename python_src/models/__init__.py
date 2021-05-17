@@ -4,5 +4,5 @@ from .road_profiler import RoadProfiler
 from .tests_generation import RoadTestFactory
 from .police_report import categorize_report
 from .ac3r import CrashScenario
-from .simulation_factory import SimFactory
+from .simulation_factory import SimulationFactory
 from .simulation import Simulation
