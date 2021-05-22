@@ -375,6 +375,32 @@ public class AccidentConstructor {
                     }
                     Stemmer stemmer = new Stemmer();
 
+                    // if no vehicle is found, this means the vehicle does not have a
+                    // vehicle number in it. Hence, find the vehicle that is not the same
+                    // as the actor.
+
+                    if (accidentConstructor.vehicleList.size() == 2) {
+                        ArrayList<Integer> vehicleInSentence = new ArrayList<Integer>();
+                        for (VehicleAttr vehicle : accidentConstructor.vehicleList) {
+                            if (sentence.contains("vehicle" + vehicle.getVehicleId())
+                                || sentence.contains("v" + vehicle.getVehicleId())) {
+                                vehicleInSentence.add(vehicle.getVehicleId());
+                            }
+                        }
+
+                        String[] unidentifiedVehiclePattern = {" vehicle ", " vehicle.", " vehicle,"};
+                        for (String pattern : unidentifiedVehiclePattern) {
+                            if (sentence.contains(pattern)) {
+                                if (vehicleInSentence.size() == 1) {
+                                    int otherVehicleId = 3 - vehicleInSentence.get(0);
+                                    sentence = sentence.replace(pattern,
+                                        pattern.replace("vehicle", "vehicle" + otherVehicleId));
+                                }
+                            }
+                        }
+                    }
+
+
                     LinkedList<LinkedList<String>> relevantTaggedWordsAndDependencies = stanfordCoreferencer
                             .findDependencies(sentence);
 
