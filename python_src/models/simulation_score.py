@@ -1,8 +1,10 @@
 import models
-from typing import Tuple
+from typing import Tuple, List
+from shapely.geometry import Point
 
 MATCHING_CRASH_INDEX = 0
 MATCHING_NONCRASH_INDEX = 1
+NO_CRASH = 0
 
 
 class SimulationScore:
@@ -15,20 +17,27 @@ class SimulationScore:
         beta (float): weight for number of matching non-crashed parts
         simulation (models.Simulation): a running simulation of specific scenario
     """
+
     def __init__(self, simulation: models.Simulation, alpha: float = 0.2, beta: float = 0.1):
         self.alpha = alpha
         self.beta = beta
         self.simulation = simulation
+        self.expected_score = 0
 
     @staticmethod
     def formula(alpha: float, beta: float, tpl: Tuple[int, int, int] = (0, 0, 0)):
         return 1 + (alpha * tpl[MATCHING_CRASH_INDEX]) + (beta * tpl[MATCHING_NONCRASH_INDEX])
 
-    def calculate(self, debug: bool = False):
-        data_targets = self.simulation.targets
-        data_outputs = self.simulation.get_data_outputs()
+    @staticmethod
+    def distance_between_two_players(players: List[models.Player]):
+        p0 = Point(players[0].positions[-1][0], players[0].positions[-1][1])
+        p1 = Point(players[1].positions[-1][0], players[1].positions[-1][1])
+        return round(-p0.distance(p1), 2)
+
+    def _compute(self, data_targets: {}, data_outputs: {},
+                 debug: bool = False, debug_message: str = "Method Name"):
         if debug is True:
-            print("Log SimulationScore.calculate(): ")
+            print(f'Log {debug_message}: ')
             print(data_targets)
             print(data_outputs)
 
@@ -42,3 +51,23 @@ class SimulationScore:
             print(result)
 
         return self.formula(self.alpha, self.beta, result)
+
+    def get_expected_score(self, debug: bool = False):
+        # Calculate the max (expected) score of this scenario
+        self.expected_score = self._compute(self.simulation.targets, self.simulation.targets,
+                                            debug=debug, debug_message="SimulationScore.get_expected_score()")
+        return self.expected_score
+
+    def calculate(self, debug: bool = False):
+        # If a crash doesn't occur, a score is distance between 2 vehicles' position
+        if self.simulation.status is NO_CRASH:
+            if debug is True:
+                print("Log SimulationScore.calculate() - NO_CRASH: ")
+                for player in self.simulation.players:
+                    print(player.vehicle.vid)
+                    print(player.positions)
+            return self.distance_between_two_players(self.simulation.players)
+
+        # Else
+        return self._compute(self.simulation.targets, self.simulation.get_data_outputs(),
+                             debug=debug, debug_message="SimulationScore.calculate() - CRASH")
