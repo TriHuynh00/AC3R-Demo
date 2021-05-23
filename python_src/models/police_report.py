@@ -25,6 +25,7 @@ class ReportCreator(ABC):
     The ReportCreator class declares the factory method that returns new report objects.
     The return type of this method must match the Report interface.
     """
+
     @abstractmethod
     def create(self) -> Report:
         pass
@@ -45,6 +46,7 @@ class AnyCreator(ReportCreator):
     AnyCreator override the factory method in order to
     generate a report with any crash.
     """
+
     def create(self) -> Report:
         return ReportTypeA()
 
@@ -54,6 +56,7 @@ class ComponentCreator(ReportCreator):
     ComponentCreator override the factory method in order to
     generate a report with crashed components.
     """
+
     def create(self) -> Report:
         return ReportTypeB()
 
@@ -63,6 +66,7 @@ class SideCreator(ReportCreator):
     SideCreator override the factory method in order to
     generate a report with crashed sides.
     """
+
     def create(self) -> Report:
         return ReportTypeC()
 
@@ -73,6 +77,7 @@ class ComponentSideCreator(ReportCreator):
     generate a report with crashed parts including their component
     and side.
     """
+
     def create(self) -> Report:
         return ReportTypeD()
 
@@ -195,8 +200,9 @@ class ReportTypeB(Report):
         # From Simulation:
         # List crashes_from_simulation contains CRASHED component
         # List non_crashes_from_simulation contains NON-CRASHED component
-        # Remove duplicates from a list outputs
-        outputs = list(dict.fromkeys([self._categorize_part(i["name"], CAT_B) for i in outputs]))
+        # Remove duplicates from a list outputs by dict.fromkeys
+        outputs = list(
+            (dict.fromkeys([i for output in outputs for i in self._categorize_part_reportB(output["name"])])))
         crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_B_DATA) - set(outputs))
 
         crash_points, non_crash_points = self._match(CAT_B_DATA,
@@ -222,8 +228,9 @@ class ReportTypeC(Report):
         # From Simulation:
         # List crashes_from_simulation contains CRASHED side
         # List non_crashes_from_simulation contains NON-CRASHED side
-        # Remove duplicates from a list outputs
-        outputs = list(dict.fromkeys([self._categorize_part(i["name"], CAT_C) for i in outputs]))
+        # Remove duplicates from a list outputs by dict.fromkeys
+        outputs = list(
+            (dict.fromkeys([i for output in outputs for i in self._categorize_part_reportC(output["name"])])))
         crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_C_DATA) - set(outputs))
 
         crash_points, non_crash_points = self._match(CAT_C_DATA,
