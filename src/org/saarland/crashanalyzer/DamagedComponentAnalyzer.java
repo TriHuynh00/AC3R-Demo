@@ -51,7 +51,7 @@ public class DamagedComponentAnalyzer {
         String vehicleName = "";
 
         String relatedWords = AccidentConstructorUtil.findAllConnectedWordsBottomUp(
-            dependencyList, damagedComponent, damagedComponent, 0, 2);
+            dependencyList, damagedComponent, damagedComponent, 0, 1);
 
 //        for (String dependency : dependencies)
         for (String word : relatedWords.split(","))
@@ -72,15 +72,18 @@ public class DamagedComponentAnalyzer {
 //                    }
 //                }
             }
-
+            boolean foundDmgSide = false;
             // Record left/right side of impact
             for (String side : AccidentParam.LEFTRIGHTARR)
             {
                 if (word.startsWith(side + "-"))
                 {
                     damagedComponent += " " + side;
+                    foundDmgSide = true;
                 }
             }
+
+            if (foundDmgSide) break;
 //            else if (word.startsWith(AccidentParam.LEFTRIGHTARR[0]))
 //            {
 //                damagedComponent += " left";
@@ -111,7 +114,7 @@ public class DamagedComponentAnalyzer {
         // Check if damaged component and position already exists
         boolean hasDmgComponent = false;
         for (String dmgComponent : damagedVehicle.getDamagedComponents()) {
-            if (dmgComponent.equals(damagedComponent)) {
+            if (dmgComponent.contains(damagedComponent)) {
                 hasDmgComponent = true;
                 break;
 

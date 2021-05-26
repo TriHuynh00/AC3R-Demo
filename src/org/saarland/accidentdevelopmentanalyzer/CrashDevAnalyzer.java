@@ -689,10 +689,12 @@ public class CrashDevAnalyzer {
     private String findImpactedSideAndArea(String vehicleName, LinkedList<String> dependencyList,
                                            DamagedComponentAnalyzer damagedComponentAnalyzer, LinkedList<String> tagWordList)
     {
-        String finalVictimDmgSide = "";
+        String finalVehicleDmgSide = "";
         if (vehicleName.matches("vehicle\\d+")) {
             String wordChain = AccidentConstructorUtil
                 .findAllConnectedWordsBottomUp(dependencyList, vehicleName, vehicleName, 0, 2);
+            ConsoleLogger.print('d', String.format("Word Chain Dmg of %s is %s",
+                vehicleName, wordChain));
 
             for (String dmgComponent : wordChain.split(",")) {
                 AccidentConcept elemConcept = ontologyHandler.findExactConcept(
@@ -701,17 +703,17 @@ public class CrashDevAnalyzer {
                 if (elemConcept != null && elemConcept.getLeafLevelName()
                     .equals("vehicle_impact_side")) {
                     // TODO: use findAllConnectedWords instead of looping through dependencies
-                    finalVictimDmgSide = damagedComponentAnalyzer
+                    finalVehicleDmgSide = damagedComponentAnalyzer
                         .findSideOfCrashedComponents(dependencyList, dmgComponent, vehicleName,
                             tagWordList);
 
                     ConsoleLogger.print('d', "Final victim damaged side in nsubjpass "
-                        + finalVictimDmgSide);
+                        + finalVehicleDmgSide);
                 }
             }
 
         }
-        return finalVictimDmgSide;
+        return finalVehicleDmgSide;
     }
 
 
