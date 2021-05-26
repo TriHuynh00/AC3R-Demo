@@ -122,12 +122,13 @@ class Report(ABC):
             # Count matching expected CRASHED component
             crash_points += 1 if part in (set(crashes_from_police_report) & set(crashes_from_simulation)) else 0
             # Count matching expected NON-CRASHED component
-            non_crash_points += 1 if part in (set(non_crashes_from_police_report) & set(non_crashes_from_simulation)) else 0
+            non_crash_points += 1 if part in (
+                        set(non_crashes_from_police_report) & set(non_crashes_from_simulation)) else 0
 
         return crash_points, non_crash_points
 
-    @staticmethod
-    def _categorize_part(part: str, report_type: chr) -> chr:
+    @abstractmethod
+    def categorize_part(self, part: str) -> [chr]:
         """
         Categorizes the type of vehicle part based on the type of police report.
 
@@ -135,13 +136,6 @@ class Report(ABC):
             part (str): The code name of vehicle part
             report_type (chr): Type of report is used to categorize
         """
-        if report_type == CAT_B:
-            # Police Report is Component Type: [F]L, [M]L, [B]L -> F, M, B
-            return part[0]
-        elif report_type == CAT_C:
-            # Police Report is Side Type: F[L], B[R] -> L, R
-            return part[1]
-        return None
 
     @staticmethod
     def _validate_output(outputs: list) -> True:
@@ -165,6 +159,9 @@ Concrete Reports provide various implementations of the Report interface.
 
 
 class ReportTypeA(Report):
+    def categorize_part(self, part: str):
+        pass
+
     def process(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         # Validate given output from simulation
         self._validate_output(outputs)
@@ -184,6 +181,16 @@ class ReportTypeA(Report):
 
 
 class ReportTypeB(Report):
+    def categorize_part(self, part: str) -> [chr]:
+        if len(part) == 1:
+            if part in ['L', 'R']:  # Police Report is Side Type: [L], [R] -> L, R
+                return ['F', 'M', 'B']
+            elif part in ['F', 'M', 'B']:  # Police Report is Side Type: [F], [B], [M] -> L and R
+                return part[0]
+        else:
+            # Police Report is Side Type: F[L], B[R] -> L, R
+            return part[0]
+
     def process(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         # Validate given output from simulation
         self._validate_output(outputs)
@@ -201,8 +208,7 @@ class ReportTypeB(Report):
         # List crashes_from_simulation contains CRASHED component
         # List non_crashes_from_simulation contains NON-CRASHED component
         # Remove duplicates from a list outputs by dict.fromkeys
-        outputs = list(
-            (dict.fromkeys([i for output in outputs for i in self._categorize_part_reportB(output["name"])])))
+        outputs = list((dict.fromkeys([i for output in outputs for i in self.categorize_part(output["name"])])))
         crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_B_DATA) - set(outputs))
 
         crash_points, non_crash_points = self._match(CAT_B_DATA,
@@ -212,6 +218,16 @@ class ReportTypeB(Report):
 
 
 class ReportTypeC(Report):
+    def categorize_part(self, part: str) -> [chr]:
+        if len(part) == 1:
+            if part in ['L', 'R']:  # Police Report is Side Type: [L], [R] -> L, R
+                return part[0]
+            elif part in ['F', 'M', 'B']:  # Police Report is Side Type: [F], [B], [M] -> L and R
+                return ['L', 'R']
+        else:
+            # Police Report is Side Type: F[L], B[R] -> L, R
+            return part[1]
+
     def process(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         # Validate given output from simulation
         self._validate_output(outputs)
@@ -229,8 +245,7 @@ class ReportTypeC(Report):
         # List crashes_from_simulation contains CRASHED side
         # List non_crashes_from_simulation contains NON-CRASHED side
         # Remove duplicates from a list outputs by dict.fromkeys
-        outputs = list(
-            (dict.fromkeys([i for output in outputs for i in self._categorize_part_reportC(output["name"])])))
+        outputs = list((dict.fromkeys([i for output in outputs for i in self.categorize_part(output["name"])])))
         crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_C_DATA) - set(outputs))
 
         crash_points, non_crash_points = self._match(CAT_C_DATA,
@@ -240,6 +255,9 @@ class ReportTypeC(Report):
 
 
 class ReportTypeD(Report):
+    def categorize_part(self, part: str):
+        pass
+
     def process(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         # Validate given output from simulation
         self._validate_output(outputs)
