@@ -2865,7 +2865,7 @@ public class AccidentConstructor {
         String vehicleData = "";
         for (VehicleAttr vehicle : vehicleList) {
             vehicleData += '{';
-            String vName = formatJSONKey("name") + formatJSONValueString("vehicle" + vehicle.getVehicleId());
+            String vName = formatJSONKey("name") + formatJSONValueString("v" + vehicle.getVehicleId());
             String vColor = formatJSONKey("color") + formatJSONValueString(vehicle.getColor());
 
             // Get rotation degree
