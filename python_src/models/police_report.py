@@ -128,7 +128,7 @@ class Report(ABC):
         return crash_points, non_crash_points
 
     @abstractmethod
-    def categorize_part(self, part: str) -> [chr]:
+    def categorize_part(self, part: str) -> [str]:
         """
         Categorizes the type of vehicle part based on the type of police report.
 
@@ -181,15 +181,15 @@ class ReportTypeA(Report):
 
 
 class ReportTypeB(Report):
-    def categorize_part(self, part: str) -> [chr]:
+    def categorize_part(self, part: str) -> [str]:
         if len(part) == 1:
             if part in ['L', 'R']:  # Police Report is Side Type: [L], [R] -> L, R
                 return ['F', 'M', 'B']
             elif part in ['F', 'M', 'B']:  # Police Report is Side Type: [F], [B], [M] -> L and R
-                return part[0]
+                return [part[0]]
         else:
             # Police Report is Side Type: F[L], B[R] -> L, R
-            return part[0]
+            return [part[0]]
 
     def process(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         # Validate given output from simulation
@@ -218,15 +218,15 @@ class ReportTypeB(Report):
 
 
 class ReportTypeC(Report):
-    def categorize_part(self, part: str) -> [chr]:
+    def categorize_part(self, part: str) -> [str]:
         if len(part) == 1:
             if part in ['L', 'R']:  # Police Report is Side Type: [L], [R] -> L, R
-                return part[0]
+                return [part[0]]
             elif part in ['F', 'M', 'B']:  # Police Report is Side Type: [F], [B], [M] -> L and R
                 return ['L', 'R']
         else:
             # Police Report is Side Type: F[L], B[R] -> L, R
-            return part[1]
+            return [part[1]]
 
     def process(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         # Validate given output from simulation
@@ -255,8 +255,18 @@ class ReportTypeC(Report):
 
 
 class ReportTypeD(Report):
-    def categorize_part(self, part: str):
-        pass
+    def categorize_part(self, part: str) -> [str]:
+        if len(part) == 1:
+            # Police Report is Side-Component Type and Simulation is Side Type:
+            # Side is [L] or [R] -> [ F{Side}, M{Side}, M{Side} ]
+            if part in ['L', 'R']:
+                return [f'F{part}', f'M{part}', f'B{part}']
+            # Police Report is Side-Component Type and Simulation is Component Type:
+            # Component is [F], [B], [M] -> [ {Component}L, {Component}R ]
+            elif part in ['F', 'M', 'B']:
+                return [f'{part}L', f'{part}R']
+        else:
+            return [part]
 
     def process(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         # Validate given output from simulation
@@ -274,7 +284,7 @@ class ReportTypeD(Report):
         # From Simulation:
         # List crashes_from_simulation contains CRASHED parts
         # List non_crashes_from_simulation contains NON-CRASHED parts
-        outputs = [i["name"] for i in outputs]
+        outputs = list((dict.fromkeys([i for output in outputs for i in self.categorize_part(output["name"])])))
         crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_D_DATA) - set(outputs))
 
         crash_points, non_crash_points = self._match(CAT_D_DATA,
