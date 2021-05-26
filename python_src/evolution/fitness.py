@@ -1,5 +1,5 @@
 import time
-from simulation import Simulation
+from models.simulation import Simulation
 from libs import _collect_sim_data, _collect_police_report
 
 

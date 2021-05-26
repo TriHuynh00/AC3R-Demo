@@ -6,11 +6,9 @@ import click
 import logging as log
 import sys
 import json
-from simulation import Simulation
+from models.simulation import Simulation
 from beamngpy import Road, Vehicle
-from beamngpy.sensors import Damage
 from models.ac3rp import CrashScenario
-from models import RoadProfiler, ScriptFactory, BNGVehicle
 
 
 def _log_exception(extype, value, trace):

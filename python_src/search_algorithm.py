@@ -5,7 +5,7 @@ from copy import deepcopy
 from deap import tools, creator, base
 from models.ac3rp import CrashScenario
 from libs import collect_sim_data, collect_police_report
-from simulation import Simulation
+from models.simulation import Simulation
 
 module_logger = logging.getLogger('Search Algorithm')
 
