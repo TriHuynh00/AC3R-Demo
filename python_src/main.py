@@ -33,9 +33,10 @@ def run_from_scenario(scenario_file):
     with open(scenario_file) as file:
         scenario_data = json.load(file)
     sim_factory = SimulationFactory(CrashScenario.from_json(scenario_data))
-    simulation = Simulation(sim_factory=sim_factory)
+    simulation = Simulation(sim_factory=sim_factory, debug=True)
     simulation.execute_scenario(timeout=60)
-    print(f'Simulation Score: {SimulationScore(simulation).calculate(debug=True)}')
+    print(f'Simulation Score: {SimulationScore(simulation).calculate(debug=True)} / '
+          f'{SimulationScore(simulation).get_expected_score(debug=True)}')
 
 
 # make sure we invoke cli

@@ -64,6 +64,46 @@ class TestPoliceReportTypeC(unittest.TestCase):
             creator = categorize_report(data_targets)
             self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
+    def test_simulation_L_match_SIDE_report_L(self):
+        expected = (1, 1, 2)
+        data_outputs = [{"name": "L", "damage": 1}]
+        for report in data_targets_02:
+            data_targets = data_targets_02[report]
+            creator = categorize_report(data_targets)
+            self.assertEqual(expected, creator.match(data_outputs, data_targets))
+
+    def test_simulation_R_not_match_SIDE_report_L(self):
+        expected = (0, 0, 2)
+        data_outputs = [{"name": "R", "damage": 1}]
+        for report in data_targets_02:
+            data_targets = data_targets_02[report]
+            creator = categorize_report(data_targets)
+            self.assertEqual(expected, creator.match(data_outputs, data_targets))
+
+    def test_simulation_F_match_SIDE_report_L(self):
+        expected = (1, 0, 2)
+        data_outputs = [{"name": "F", "damage": 1}, {"name": "M", "damage": 1}]
+        for report in data_targets_02:
+            data_targets = data_targets_02[report]
+            creator = categorize_report(data_targets)
+            self.assertEqual(expected, creator.match(data_outputs, data_targets))
+
+    def test_simulation_M_match_SIDE_report_L(self):
+        expected = (1, 0, 2)
+        data_outputs = [{"name": "M", "damage": 1}]
+        for report in data_targets_02:
+            data_targets = data_targets_02[report]
+            creator = categorize_report(data_targets)
+            self.assertEqual(expected, creator.match(data_outputs, data_targets))
+
+    def test_simulation_B_match_SIDE_report_L(self):
+        expected = (1, 0, 2)
+        data_outputs = [{"name": "B", "damage": 1}]
+        for report in data_targets_02:
+            data_targets = data_targets_02[report]
+            creator = categorize_report(data_targets)
+            self.assertEqual(expected, creator.match(data_outputs, data_targets))
+
     def test_exception_is_raised_when_no_crash(self):
         expected = Exception
         data_outputs = []
