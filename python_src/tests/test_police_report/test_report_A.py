@@ -39,7 +39,7 @@ class TestPoliceReportTypeA(unittest.TestCase):
             report_data = data_targets[report]
             creator = categorize_report(report_data)
             with self.assertRaises(expected):
-                creator.match(data_outputs, targets)
+                creator.match(data_outputs, data_targets)
 
 
 if __name__ == '__main__':

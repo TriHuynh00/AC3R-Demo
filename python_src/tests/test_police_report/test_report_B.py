@@ -49,6 +49,30 @@ class TestPoliceReportTypeB(unittest.TestCase):
             creator = categorize_report(data_targets)
             self.assertEqual(expected, creator.match(data_outputs, data_targets))
 
+    def test_simulation_L_match_COMP_report_M(self):
+        expected = (1, 0, 3)
+        data_outputs = [{"name": "L", "damage": 1}]
+        for report in data_targets_03:
+            data_targets = data_targets_03[report]
+            creator = categorize_report(data_targets)
+            self.assertEqual(expected, creator.match(data_outputs, data_targets))
+
+    def test_simulation_R_match_COMP_report_M(self):
+        expected = (1, 0, 3)
+        data_outputs = [{"name": "R", "damage": 1}]
+        for report in data_targets_03:
+            data_targets = data_targets_03[report]
+            creator = categorize_report(data_targets)
+            self.assertEqual(expected, creator.match(data_outputs, data_targets))
+
+    def test_simulation_M_match_COMP_report_M(self):
+        expected = (1, 2, 3)
+        data_outputs = [{"name": "M", "damage": 1}]
+        for report in data_targets_03:
+            data_targets = data_targets_03[report]
+            creator = categorize_report(data_targets)
+            self.assertEqual(expected, creator.match(data_outputs, data_targets))
+
     def test_simulation_FL_FR_not_match_COMP_report_M(self):
         expected = (0, 1, 3)
         data_outputs = [{"name": "FL", "damage": 1}, {"name": "FR", "damage": 1}]
