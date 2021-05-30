@@ -39,8 +39,8 @@ class CrashScenario:
         self.vehicles = vehicles
         # Police Report
         self.reports = reports
-        # Scenario score
-        self.score = 0
+        # Scenario scores to store scores for evaluation
+        self.scores = []
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
