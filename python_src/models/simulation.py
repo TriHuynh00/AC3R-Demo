@@ -129,7 +129,12 @@ class Simulation:
                     vehicle = player.vehicle
                     sensor = bng_instance.poll_sensors(vehicle)['damage']
                     if sensor['damage'] != 0:
-                        player.collect_damage(sensor['part_damage'])
+                        if not sensor['part_damage']:
+                            # There is a case that a simulation reports a crash damage
+                            # without any damaged components
+                            player.collect_damage({"etk800_any": {"name": "Any", "damage": 0}})
+                        else:
+                            player.collect_damage(sensor['part_damage'])
 
             # Save the last position of vehicle
             for player in self.players:
