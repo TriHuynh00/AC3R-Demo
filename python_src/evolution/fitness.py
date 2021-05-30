@@ -1,26 +1,23 @@
-import time
+import numpy
+from models import SimulationFactory, SimulationScore
 from models.simulation import Simulation
-from libs import _collect_sim_data, _collect_police_report
+from models.ac3rp import CrashScenario
+
 
 class Fitness:
     @staticmethod
-    def evaluate(repetitions, deap_inds):
-        individual = deap_inds[0]
+    def evaluate(repetitions: int, deap_inds):
+        individual: CrashScenario = deap_inds[0]
         scores = []
         for _ in range(repetitions):
-            crash_scenario, bng_roads, bng_vehicles = _collect_sim_data(individual)
-            # Execute crash scenario and collect simulation's result
-            simulation = Simulation(bng_roads, bng_vehicles)
-            start_time = time.time()
-            simulation.execute_scenario(time.time() + 60 * 1)
-            print("Execution time: ", time.time() - start_time)
-            crash_scenario.sim_report = simulation.get_report()
-
-            # Fixed sample report data
-            # TODO: change the sample police report to dynamic variable
-            crash_scenario.cal_fitness(police_report_path=
-                                       libs.PATH_TEST + "./data/Case6_report.json")  # Calculate fitness score
-            scores.append(crash_scenario.score)
-
-        individual.simulation_results = scores
-        return np.mean(scores),
+            sim_factory = SimulationFactory(individual)
+            simulation = Simulation(sim_factory=sim_factory)
+            try:
+                simulation.execute_scenario(timeout=60)
+                scores.append(SimulationScore(simulation).calculate())
+            except Exception as e:
+                print(str(e))
+                scores.append(0)
+        individual.scores = scores
+        print(f'Scores: {scores}')
+        return numpy.mean(scores),
