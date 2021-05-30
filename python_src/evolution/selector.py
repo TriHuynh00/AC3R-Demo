@@ -1,27 +1,43 @@
 import numpy as np
 import scipy.stats as stats
+from models.ac3rp import CrashScenario
 
 
 class Selector:
     @staticmethod
-    def select_by_aggregate(aggregate_func, orig_inds, pop_ind):
+    def by_fitness_value(null_func, orig_inds, pop_ind):
         deap_inds = pop_ind[0]  # deap_pop is a list
-        if aggregate_func is None:
-            aggregate_func = np.mean
 
-        f1 = aggregate_func(orig_inds[0].simulation_results)
-        f2 = aggregate_func(deap_inds[0].simulation_results)
+        f1 = orig_inds.fitness.values
+        f2 = deap_inds.fitness.values
 
         if f1 >= f2:
             return orig_inds
         return deap_inds  # return deap_individual
 
     @staticmethod
-    def select_by_vda(vda_func, orig_inds, pop_ind):
+    def by_aggregate_f(aggregate_func, orig_inds, pop_ind):
+        deap_inds = pop_ind[0]  # deap_pop is a list
+        if aggregate_func is None:
+            aggregate_func = np.mean
+
+        orig_ind: CrashScenario = orig_inds[0]
+        deap_ind: CrashScenario = deap_inds[0]
+        f1 = aggregate_func(orig_ind.scores)
+        f2 = aggregate_func(deap_ind.scores)
+
+        if f1 >= f2:
+            return orig_inds
+        return deap_inds  # return deap_individual
+
+    @staticmethod
+    def by_vda_f(vda_func, orig_inds, pop_ind):
         deap_inds = pop_ind[0]
 
-        f1 = orig_inds[0].simulation_results
-        f2 = deap_inds[0].simulation_results
+        orig_ind: CrashScenario = orig_inds[0]
+        deap_ind: CrashScenario = deap_inds[0]
+        f1 = orig_ind.scores
+        f2 = deap_ind.scores
 
         # Calculate the p-value to know if two populations are different
         alpha = 0.05  # significance level to reject H0
