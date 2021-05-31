@@ -32,24 +32,24 @@ class Experiment:
         rev = RandomEvolution(
             scenario=CrashScenario.from_json(self.scenario),
             fitness=Fitness.evaluate,
-            fitness_repetitions=5,
+            # fitness_repetitions=5,
             generate=Generator.generate_random_from,
             generate_params={"min": 10, "max": 50},
-            select=Selector.by_vda_f,
-            select_aggregate=libs._VD_A,
-            epochs=10
+            select=Selector.by_fitness_value,
+            # select_aggregate=libs._VD_A,
+            epochs=30
         )
         oev = OpoEvolution(
             scenario=CrashScenario.from_json(self.scenario),
             fitness=Fitness.evaluate,
-            fitness_repetitions=5,
+            # fitness_repetitions=5,
             generate=Generator.generate_random_from,
             generate_params={"min": 10, "max": 50},
             mutate=Mutator.by_speed,
             mutate_params={"mean": 2.1, "std": 1, "min": 10, "max": 50},
-            select=Selector.by_vda_f,
-            select_aggregate=libs._VD_A,
-            epochs=10
+            select=Selector.by_fitness_value,
+            # select_aggregate=libs._VD_A,
+            epochs=30
         )
         rev.run()
         oev.run()
