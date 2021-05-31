@@ -3,6 +3,7 @@ import json
 from visualization import VehicleTrajectoryVisualizer
 from models import SimulationFactory, Simulation, SimulationScore
 from models.ac3rp import CrashScenario
+from experiment import Experiment
 
 
 @click.group()
@@ -37,6 +38,13 @@ def run_from_scenario(scenario_file):
     simulation.execute_scenario(timeout=60)
     print(f'Simulation Score: {SimulationScore(simulation).calculate(debug=True)} / '
           f'{SimulationScore(simulation).get_expected_score(debug=True)}')
+
+
+@cli.command()
+@click.argument('scenario_file', type=click.Path(exists=True))
+def evol_scenario(scenario_file):
+    experiment: Experiment = Experiment(scenario_file)
+    experiment.run()
 
 
 # make sure we invoke cli
