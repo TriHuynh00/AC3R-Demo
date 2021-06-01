@@ -10,6 +10,9 @@ class SimulationFactory:
         self.roads: List[beamngpy.Road] = []
         self.players: List[Player] = []
 
+    def set_scenario(self, scenario: CrashScenario):
+        self.scenario = scenario
+
     def generate_roads(self) -> List[beamngpy.Road]:
         for road in self.scenario.roads:
             sim_road = beamngpy.Road('road_asphalt_2lane', rid=road.name)

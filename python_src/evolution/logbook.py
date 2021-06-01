@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 
 
 class LogBook:
-    def __init__(self, expectations):
-        self.expectations = expectations
+    def __init__(self, score: float):
+        self.score = score
 
     @staticmethod
     def print_logbook(logbook):
@@ -20,7 +20,7 @@ class LogBook:
         line1 = ax1.plot(gen, fit_maxs, "b-", label=label)
 
         # Expectation
-        line3 = ax1.plot(gen, self.expectations(len(gen)), "r-", label="Expectation")
+        line3 = ax1.plot(gen, [self.score for _ in range(len(gen))], "r-", label="Expectation")
         ax1.set_xlabel("Generation")
         ax1.set_ylabel("Fitness", color="b")
         ax1.set_xticks(gen)
@@ -51,7 +51,7 @@ class LogBook:
         line2 = ax1.plot(gen, fit_maxs, "c-", label=label_2)
 
         # Expectation
-        line3 = ax1.plot(gen, self.expectations(len(gen)), "r-", label="Expectation")
+        line3 = ax1.plot(gen, [self.score for _ in range(len(gen))], "r-", label="Expectation")
         ax1.set_xlabel("Generation")
         ax1.set_ylabel("Fitness", color="b")
         ax1.set_xticks(gen)
