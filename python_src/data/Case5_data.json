@@ -48,6 +48,6 @@
 "speed":20}]}],
 "expected_crash_components":[{
 "name":"v1",
-"parts":[{"name":"side right","damage":0},{"name":"front","damage":0}]},{
+"parts":[{"name":"back right","damage":0},{"name":"middle right","damage":0},{"name":"front right","damage":0},{"name":"front left","damage":0}]},{
 "name":"v2",
-"parts":[{"name":"front","damage":0},{"name":"side left","damage":0}]}]}
+"parts":[{"name":"front right","damage":0},{"name":"front left","damage":0},{"name":"back left","damage":0},{"name":"middle left","damage":0}]}]}
