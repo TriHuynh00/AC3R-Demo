@@ -72,14 +72,12 @@ class Experiment:
         # logbook.visualize(rev.logbook, oev.logbook, "Random", "OPO")
 
     def visualize(self):
-        root_path = "data/rov/"
-        case_paths = ["c0/", "c1/", "c2/", "c3/", "c4/", "c5/", "c6/"]
-        # case_paths = ["c6/"]
+        root_path = "data/random/"
+        case_paths = ["Case0_", "Case1_", "Case2_", "Case3_", "Case4_", "Case5_", "Case6_"]
         for case in case_paths:
             df = pd.DataFrame()
-            case_path = root_path + case
-            for file in ["a.csv", "b.csv", "c.csv", "d.csv", "e.csv"]:
-                data = pd.read_csv(case_path + file)
+            for file in ["1.csv", "2.csv", "3.csv", "4.csv", "5.csv"]:
+                data = pd.read_csv(root_path + case + file)
                 a = pd.DataFrame({'group': numpy.repeat(file[0].upper(), 30), 'value': data["score"].to_numpy()})
                 df = df.append(a)
 
