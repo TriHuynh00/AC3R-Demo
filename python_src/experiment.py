@@ -47,7 +47,7 @@ class Experiment:
             generate_params={"min": 10, "max": 50},
             select=Selector.by_fitness_value,
             # select_aggregate=numpy.mean,
-            epochs=3,
+            epochs=30,
             logfile=rev_logfile
         )
         oev = OpoEvolution(
