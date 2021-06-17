@@ -21,9 +21,6 @@
 "name":"follow",
 "trajectory":[[[-30.0, -2.0, 0.0], [-10.0, -2.0, 0.0]]],
 "speed":20},{
-"name":"stop",
-"trajectory":[[[-10.0, -2.0, 0.0]]],
-"speed":20},{
 "name":"follow",
 "trajectory":[[[-10.0, -2.0, 0.0], [0.0, -2.0, 0.0]]],
 "speed":20}]},{
