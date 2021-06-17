@@ -2901,7 +2901,7 @@ public class AccidentConstructor {
             HashMap<String, LinkedList> vehicleActionAndCoord = mapActionToRoadSegment(vehicle);
             VehicleTrajectoryFactory vtf = new VehicleTrajectoryFactory(vehicle, vehicleActionAndCoord);
             ArrayList<VehicleTrajectory> vehicleTrajectories = vtf.generateVehicleTrajectories();
-            if (vehicleTrajectories.size() > 1) {
+            if (vehicleTrajectories.size() > 1 && !testCase.getCrashType().contains("turn into")) {
                 vehicleTrajectories = new Player(vehicleTrajectories).getTrajectories();
             }
             for (VehicleTrajectory v :vehicleTrajectories) {

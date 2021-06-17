@@ -18,10 +18,10 @@
 "damage_components":"side right",
 "driving_actions":[ {
 "name":"follow",
-"trajectory":[[[2.0, 17.0, 0.0], [2.0, -14.0, 0.0]]],
+"trajectory":[[[2.0, -14.0, 0.0], [2.0, 2.0, 0.0]]],
 "speed":20},{
 "name":"follow",
-"trajectory":[[[2.0, -14.0, 0.0], [2.0, 2.0, 0.0]]],
+"trajectory":[[[2.0, 2.0, 0.0], [2.0, 17.0, 0.0]]],
 "speed":20}]},{
 "name":"v2",
 "color":"0 0 0.5",
@@ -29,16 +29,16 @@
 "damage_components":"front",
 "driving_actions":[ {
 "name":"follow",
+"trajectory":[[[99.33344, 2.0, 0.0], [79.33344, 2.0, 0.0]]],
+"speed":20},{
+"name":"follow",
 "trajectory":[[[79.33344, 2.0, 0.0], [59.33344, 2.0, 0.0]]],
 "speed":20},{
 "name":"follow",
 "trajectory":[[[59.33344, 2.0, 0.0], [39.33344, 2.0, 0.0]]],
 "speed":20},{
 "name":"follow",
-"trajectory":[[[39.33344, 2.0, 0.0], [99.33344, 2.0, 0.0]]],
-"speed":20},{
-"name":"follow",
-"trajectory":[[[99.33344, 2.0, 0.0], [2.0, 2.0, 0.0]]],
+"trajectory":[[[39.33344, 2.0, 0.0], [2.0, 2.0, 0.0]]],
 "speed":20},{
 "name":"follow",
 "trajectory":[[[2.0, 2.0, 0.0], [-13.0, 2.0, 0.0]]],
