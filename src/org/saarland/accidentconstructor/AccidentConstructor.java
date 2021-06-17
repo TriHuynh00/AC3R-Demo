@@ -26,6 +26,7 @@ import org.saarland.configparam.FilePathsConfig;
 import org.saarland.crashanalyzer.CrashScenarioSummarizer;
 import org.saarland.crashanalyzer.DamagedComponentAnalyzer;
 import org.saarland.environmentanalyzer.EnvironmentAnalyzer;
+import org.saarland.jsonfile.Player;
 import org.saarland.nlptools.StanfordCoreferencer;
 import org.saarland.nlptools.Stemmer;
 import org.saarland.ontologyparser.AccidentConcept;
@@ -2900,8 +2901,9 @@ public class AccidentConstructor {
             HashMap<String, LinkedList> vehicleActionAndCoord = mapActionToRoadSegment(vehicle);
             VehicleTrajectoryFactory vtf = new VehicleTrajectoryFactory(vehicle, vehicleActionAndCoord);
             ArrayList<VehicleTrajectory> vehicleTrajectories = vtf.generateVehicleTrajectories();
+            Player player = new Player(vehicleTrajectories);
 
-            for (VehicleTrajectory v : vehicleTrajectories) {
+            for (VehicleTrajectory v : player.getTrajectories()) {
                 vDriving += '{';
                 vDriving += formatJSONKey("name") + formatJSONValueString(v.getAction());
                 vDriving += formatJSONKey("trajectory") + "[" + v.getTrajectory().toString() + "],";
