@@ -21,7 +21,8 @@ VEHICLE_PARTS_DICT = {
     'Wagon Right Taillight': 'MR',
     'Right Mirror': 'FR',
     'Left Mirror': 'FL',
-    "Dual Outlet Exhaust": "B"
+    "Dual Outlet Exhaust": "B",
+    "Wagon Left Taillight": "ML"
 }
 
 
