@@ -28,11 +28,15 @@ public class Player {
             trajectories.addAll(v.getTrajectory());
         }
 
-        // Remove duplicates
-        Set<ArrayList<Float>> noDuplicateTrajectories = new HashSet<>(trajectories);
+        ArrayList<ArrayList<Float>> list = new ArrayList<>();
+        for (ArrayList<Float> el : trajectories) {
+            if (!list.contains(el)) {
+                list.add(el);
+            }
+        }
 
         ArrayList<Point> points = new ArrayList<Point>();
-        for (ArrayList<Float> trajec : noDuplicateTrajectories) {
+        for (ArrayList<Float> trajec : list) {
             points.add(new Point(trajec.get(0), trajec.get(1), trajec.get(2)));
         }
         this.points = points;
