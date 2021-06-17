@@ -2901,9 +2901,10 @@ public class AccidentConstructor {
             HashMap<String, LinkedList> vehicleActionAndCoord = mapActionToRoadSegment(vehicle);
             VehicleTrajectoryFactory vtf = new VehicleTrajectoryFactory(vehicle, vehicleActionAndCoord);
             ArrayList<VehicleTrajectory> vehicleTrajectories = vtf.generateVehicleTrajectories();
-            Player player = new Player(vehicleTrajectories);
-
-            for (VehicleTrajectory v : player.getTrajectories()) {
+            if (vehicleTrajectories.size() > 1) {
+                vehicleTrajectories = new Player(vehicleTrajectories).getTrajectories();
+            }
+            for (VehicleTrajectory v :vehicleTrajectories) {
                 vDriving += '{';
                 vDriving += formatJSONKey("name") + formatJSONValueString(v.getAction());
                 vDriving += formatJSONKey("trajectory") + "[" + v.getTrajectory().toString() + "],";
