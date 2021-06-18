@@ -173,7 +173,7 @@ class Vehicle:
         for line, speed in zip(sls, speeds):
             for p in interpolated_points:
                 point = Point(p[0], p[1])
-                if point.distance(line) < 0.5 and p not in trajectory_points:
+                if point.distance(line) < 0.5 and (p[0], p[1], speed) not in trajectory_points:
                     trajectory_points.append((p[0], p[1], speed))
 
         # Return triplet
