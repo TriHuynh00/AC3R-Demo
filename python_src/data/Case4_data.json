@@ -26,14 +26,14 @@
 "rot_quat":[0.00993774, 0.03947598, -0.70593404, 0.7071068],
 "damage_components":"side right",
 "driving_actions":[ {
-"name":"stop",
-"trajectory":[[[-3.0, -6.0, 0.0]]],
-"speed":20},{
 "name":"follow",
 "trajectory":[[[-3.0, -6.0, 0.0], [0.0, -2.0, 0.0]]],
 "speed":20},{
 "name":"follow",
-"trajectory":[[[0.0, -2.0, 0.0], [5.0, 0.0, 0.0]]],
+"trajectory":[[[0.0, -2.0, 0.0], [0.3, -1.6, 0.0]]],
+"speed":20},{
+"name":"turn",
+"trajectory":[[[0.3, -1.6, 0.0], [4.06, -0.64, 0.0], [5.0, 0.0, 0.0]]],
 "speed":20}]}],
 "expected_crash_components":[{
 "name":"v1",
