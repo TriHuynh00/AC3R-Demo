@@ -18,8 +18,8 @@ class Mutator:
             return value
 
         for vehicle in individual.vehicles:
+            action["speed"] = new_speed  # 1 speed / 1 vehicle for all actions
             for action in vehicle.driving_actions:
                 new_speed = _mutate_val(action["speed"], mutate_params)
-                action["speed"] = new_speed
 
         return mutant  # return deap_individual
