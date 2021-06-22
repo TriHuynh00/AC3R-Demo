@@ -77,7 +77,7 @@ class Simulation:
             sim_data_collectors.append(
                 SimulationDataCollector(player.vehicle,
                                         bng_instance,
-                                        SimulationParams(beamng_steps=25,
+                                        SimulationParams(beamng_steps=50,
                                                          delay_msec=int(25 * 0.05 * 1000)),
                                         vehicle_state_reader=vehicle_state,
                                         simulation_name=simulation_name + "_v" + str(i + 1))
