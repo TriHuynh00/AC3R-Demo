@@ -11,7 +11,8 @@ class Generator:
 
         # Assign a new average speed to all driving actions belong to random crash scenario
         for vehicle in randomScenario.vehicles:
+            random_speed = numpy.random.choice(list(range(generate_params["min"], generate_params["max"])))
             for action in vehicle.driving_actions:
-                action["speed"] = numpy.random.choice(list(range(generate_params["min"], generate_params["max"])))
+                action["speed"] = random_speed
 
         return randomScenario
