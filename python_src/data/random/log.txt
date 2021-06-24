@@ -1,0 +1,3651 @@
+C:\Python37\python.exe C:/Users/Vuong/Documents/AC3R-Demo/python_src/main.py
+Level Case6_1...
+C:\Python37\lib\site-packages\deap\creator.py:141: RuntimeWarning: A class named 'FitnessMax' has already been created and it will be overwritten. Consider deleting previous creation of that class or rename it.
+  RuntimeWarning)
+C:\Python37\lib\site-packages\deap\creator.py:141: RuntimeWarning: A class named 'Individual' has already been created and it will be overwritten. Consider deleting previous creation of that class or rename it.
+  RuntimeWarning)
+Crash detected!
+Crash detected!
+Simulation Time:  62.05127453804016
+Scores: [1.5999999999999999]
+Initial Random evaluation
+Evaluation time:  78.27373170852661
+Start of evolution
+Timed out!
+Simulation Time:  60.17054319381714
+Scores: [-43.83]
+-----------------------------------------------------------------------------------------------
+Epoch:  1
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-16.0) (Speed v2-26.5) (Fitness Value--43.83)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19496774673462
+Scores: [1.5]
+-----------------------------------------------------------------------------------------------
+Epoch:  2
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-25.0) (Speed v2-23.0) (Fitness Value-1.5)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.22193479537964
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  3
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-27.0) (Speed v2-10.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.13697957992554
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  4
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-42.666666666666664) (Speed v2-34.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.15257287025452
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  5
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-41.0) (Speed v2-35.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.22743558883667
+Scores: [-40.81]
+-----------------------------------------------------------------------------------------------
+Epoch:  6
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-19.666666666666668) (Speed v2-30.0) (Fitness Value--40.81)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.138896226882935
+Scores: [-31.69]
+-----------------------------------------------------------------------------------------------
+Epoch:  7
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-35.333333333333336) (Speed v2-24.5) (Fitness Value--31.69)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.1563720703125
+Scores: [-59.82]
+-----------------------------------------------------------------------------------------------
+Epoch:  8
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-26.0) (Speed v2-41.0) (Fitness Value--59.82)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.190234661102295
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  9
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-31.666666666666668) (Speed v2-20.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.105647563934326
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  10
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-30.666666666666668) (Speed v2-19.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.188438177108765
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  11
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-34.0) (Speed v2-21.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19690942764282
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  12
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-34.666666666666664) (Speed v2-17.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.209274768829346
+Scores: [1.5999999999999999]
+-----------------------------------------------------------------------------------------------
+Epoch:  13
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-34.666666666666664) (Speed v2-26.5) (Fitness Value-1.5999999999999999)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.17626237869263
+Scores: [-42.18]
+-----------------------------------------------------------------------------------------------
+Epoch:  14
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-27.333333333333332) (Speed v2-30.0) (Fitness Value--42.18)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.27797174453735
+Scores: [1.5]
+-----------------------------------------------------------------------------------------------
+Epoch:  15
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-31.666666666666668) (Speed v2-29.5) (Fitness Value-1.5)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.192686319351196
+Scores: [-63.01]
+-----------------------------------------------------------------------------------------------
+Epoch:  16
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-16.0) (Speed v2-31.5) (Fitness Value--63.01)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.238118410110474
+Scores: [-46.61]
+-----------------------------------------------------------------------------------------------
+Epoch:  17
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-21.666666666666668) (Speed v2-32.0) (Fitness Value--46.61)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected! But no broken component is specified!
+Crash detected! But no broken component is specified!
+Simulation Time:  60.2093939781189
+Scores: [-2.1]
+-----------------------------------------------------------------------------------------------
+Epoch:  18
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-40.333333333333336) (Speed v2-39.5) (Fitness Value--2.1)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.260377645492554
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  19
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-29.666666666666668) (Speed v2-12.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.24507808685303
+Scores: [-50.19]
+-----------------------------------------------------------------------------------------------
+Epoch:  20
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-23.0) (Speed v2-39.0) (Fitness Value--50.19)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.17778539657593
+Scores: [-42.32]
+-----------------------------------------------------------------------------------------------
+Epoch:  21
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-26.666666666666668) (Speed v2-21.5) (Fitness Value--42.32)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.21845102310181
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  22
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-38.0) (Speed v2-30.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19715166091919
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  23
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-32.0) (Speed v2-21.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.19141411781311
+Scores: [-51.29]
+-----------------------------------------------------------------------------------------------
+Epoch:  24
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-22.333333333333332) (Speed v2-34.5) (Fitness Value--51.29)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.25900173187256
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  25
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-25.666666666666668) (Speed v2-20.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.115363359451294
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  26
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-25.333333333333332) (Speed v2-21.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.250099658966064
+Scores: [-42.45]
+-----------------------------------------------------------------------------------------------
+Epoch:  27
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-24.0) (Speed v2-34.0) (Fitness Value--42.45)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.24980187416077
+Scores: [1.7]
+-----------------------------------------------------------------------------------------------
+Epoch:  28
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-33.666666666666664) (Speed v2-30.0) (Fitness Value-1.7)
+We select the best scenario: 
+Best Ind: (Speed v1-33.666666666666664) (Speed v2-30.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.20602869987488
+Scores: [-55.37]
+-----------------------------------------------------------------------------------------------
+Epoch:  29
+We have 2 scenarios: 
+Last Ind: (Speed v1-33.666666666666664) (Speed v2-30.0) (Fitness Value-1.7)
+New Ind: (Speed v1-25.0) (Speed v2-32.0) (Fitness Value--55.37)
+We select the best scenario: 
+Best Ind: (Speed v1-33.666666666666664) (Speed v2-30.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.22023415565491
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  30
+We have 2 scenarios: 
+Last Ind: (Speed v1-33.666666666666664) (Speed v2-30.0) (Fitness Value-1.7)
+New Ind: (Speed v1-35.333333333333336) (Speed v2-22.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-33.666666666666664) (Speed v2-30.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Evolution time:  2254.3223690986633
+End of evolution
+Level Case6_2...
+Crash detected!
+Crash detected! But no broken component is specified!
+Simulation Time:  60.258880376815796
+Scores: [-2.29]
+Initial Random evaluation
+Evaluation time:  72.58781051635742
+Start of evolution
+Timed out!
+Simulation Time:  60.25160050392151
+Scores: [-46.75]
+-----------------------------------------------------------------------------------------------
+Epoch:  1
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value--2.29)
+New Ind: (Speed v1-25.666666666666668) (Speed v2-21.0) (Fitness Value--46.75)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value--2.29)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.22952461242676
+Scores: [-37.14]
+-----------------------------------------------------------------------------------------------
+Epoch:  2
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value--2.29)
+New Ind: (Speed v1-27.666666666666668) (Speed v2-33.5) (Fitness Value--37.14)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value--2.29)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.154192209243774
+Scores: [-44.44]
+-----------------------------------------------------------------------------------------------
+Epoch:  3
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value--2.29)
+New Ind: (Speed v1-25.333333333333332) (Speed v2-23.0) (Fitness Value--44.44)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value--2.29)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.16844654083252
+Scores: [-55.62]
+-----------------------------------------------------------------------------------------------
+Epoch:  4
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value--2.29)
+New Ind: (Speed v1-22.0) (Speed v2-37.0) (Fitness Value--55.62)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value--2.29)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.22018027305603
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  5
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value--2.29)
+New Ind: (Speed v1-42.333333333333336) (Speed v2-19.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-42.333333333333336) (Speed v2-19.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.16996741294861
+Scores: [-63.52]
+-----------------------------------------------------------------------------------------------
+Epoch:  6
+We have 2 scenarios: 
+Last Ind: (Speed v1-42.333333333333336) (Speed v2-19.5) (Fitness Value-1.3)
+New Ind: (Speed v1-25.0) (Speed v2-47.0) (Fitness Value--63.52)
+We select the best scenario: 
+Best Ind: (Speed v1-42.333333333333336) (Speed v2-19.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.119112491607666
+Scores: [-50.59]
+-----------------------------------------------------------------------------------------------
+Epoch:  7
+We have 2 scenarios: 
+Last Ind: (Speed v1-42.333333333333336) (Speed v2-19.5) (Fitness Value-1.3)
+New Ind: (Speed v1-17.333333333333332) (Speed v2-29.0) (Fitness Value--50.59)
+We select the best scenario: 
+Best Ind: (Speed v1-42.333333333333336) (Speed v2-19.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.22551250457764
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  8
+We have 2 scenarios: 
+Last Ind: (Speed v1-42.333333333333336) (Speed v2-19.5) (Fitness Value-1.3)
+New Ind: (Speed v1-36.0) (Speed v2-16.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-42.333333333333336) (Speed v2-19.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.2015905380249
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  9
+We have 2 scenarios: 
+Last Ind: (Speed v1-42.333333333333336) (Speed v2-19.5) (Fitness Value-1.3)
+New Ind: (Speed v1-29.0) (Speed v2-25.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-42.333333333333336) (Speed v2-19.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.121410846710205
+Scores: [-28.0]
+-----------------------------------------------------------------------------------------------
+Epoch:  10
+We have 2 scenarios: 
+Last Ind: (Speed v1-42.333333333333336) (Speed v2-19.5) (Fitness Value-1.3)
+New Ind: (Speed v1-25.333333333333332) (Speed v2-20.0) (Fitness Value--28.0)
+We select the best scenario: 
+Best Ind: (Speed v1-42.333333333333336) (Speed v2-19.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.13776755332947
+Scores: [1.5999999999999999]
+-----------------------------------------------------------------------------------------------
+Epoch:  11
+We have 2 scenarios: 
+Last Ind: (Speed v1-42.333333333333336) (Speed v2-19.5) (Fitness Value-1.3)
+New Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19926881790161
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  12
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-44.0) (Speed v2-35.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.109405279159546
+Scores: [-43.81]
+-----------------------------------------------------------------------------------------------
+Epoch:  13
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-23.0) (Speed v2-33.5) (Fitness Value--43.81)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.19078874588013
+Scores: [-57.38]
+-----------------------------------------------------------------------------------------------
+Epoch:  14
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-26.666666666666668) (Speed v2-39.0) (Fitness Value--57.38)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.23838257789612
+Scores: [1.5999999999999999]
+-----------------------------------------------------------------------------------------------
+Epoch:  15
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-39.0) (Speed v2-33.0) (Fitness Value-1.5999999999999999)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.23066759109497
+Scores: [-58.17]
+-----------------------------------------------------------------------------------------------
+Epoch:  16
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-15.0) (Speed v2-29.5) (Fitness Value--58.17)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.22771096229553
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  17
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-41.333333333333336) (Speed v2-24.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.27017331123352
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  18
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-32.666666666666664) (Speed v2-25.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.189953327178955
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  19
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-34.666666666666664) (Speed v2-31.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.17255735397339
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  20
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-39.666666666666664) (Speed v2-25.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.2134804725647
+Scores: [-50.77]
+-----------------------------------------------------------------------------------------------
+Epoch:  21
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-30.333333333333332) (Speed v2-47.0) (Fitness Value--50.77)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.244131088256836
+Scores: [1.5999999999999999]
+-----------------------------------------------------------------------------------------------
+Epoch:  22
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-22.666666666666668) (Speed v2-21.5) (Fitness Value-1.5999999999999999)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.22152662277222
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  23
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-41.333333333333336) (Speed v2-34.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.18108940124512
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  24
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-33.0) (Speed v2-26.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.09506893157959
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  25
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-36.0) (Speed v2-27.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.13419795036316
+Scores: [-51.14]
+-----------------------------------------------------------------------------------------------
+Epoch:  26
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-22.666666666666668) (Speed v2-36.5) (Fitness Value--51.14)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19247531890869
+Warning: A part Steering is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Steering is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  27
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-34.333333333333336) (Speed v2-32.5) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.186402559280396
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  28
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-25.666666666666668) (Speed v2-16.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.24396896362305
+Scores: [-43.48]
+-----------------------------------------------------------------------------------------------
+Epoch:  29
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-30.666666666666668) (Speed v2-33.5) (Fitness Value--43.48)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.25933265686035
+Scores: [1.5999999999999999]
+-----------------------------------------------------------------------------------------------
+Epoch:  30
+We have 2 scenarios: 
+Last Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-27.666666666666668) (Speed v2-22.0) (Fitness Value-1.5999999999999999)
+We select the best scenario: 
+Best Ind: (Speed v1-35.666666666666664) (Speed v2-32.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Evolution time:  2247.576521873474
+End of evolution
+Level Case6_3...
+Crash detected!
+Crash detected! But no broken component is specified!
+Simulation Time:  60.26829147338867
+Scores: [-11.74]
+Initial Random evaluation
+Evaluation time:  72.52567505836487
+Start of evolution
+Timed out!
+Simulation Time:  60.24818134307861
+Scores: [-50.15]
+-----------------------------------------------------------------------------------------------
+Epoch:  1
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value--11.74)
+New Ind: (Speed v1-25.666666666666668) (Speed v2-28.0) (Fitness Value--50.15)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value--11.74)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.127012729644775
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  2
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value--11.74)
+New Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.23352313041687
+Scores: [-51.7]
+-----------------------------------------------------------------------------------------------
+Epoch:  3
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-24.666666666666668) (Speed v2-31.0) (Fitness Value--51.7)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.15389394760132
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  4
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-37.666666666666664) (Speed v2-37.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.13012337684631
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  5
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-36.666666666666664) (Speed v2-20.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.159950733184814
+Scores: [-55.01]
+-----------------------------------------------------------------------------------------------
+Epoch:  6
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-21.333333333333332) (Speed v2-33.0) (Fitness Value--55.01)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.24597382545471
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  7
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-35.666666666666664) (Speed v2-28.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.16806602478027
+Scores: [-53.03]
+-----------------------------------------------------------------------------------------------
+Epoch:  8
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-16.0) (Speed v2-35.0) (Fitness Value--53.03)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.16614389419556
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  9
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-25.333333333333332) (Speed v2-24.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.15354251861572
+Scores: [-40.9]
+-----------------------------------------------------------------------------------------------
+Epoch:  10
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-25.666666666666668) (Speed v2-29.5) (Fitness Value--40.9)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.24296045303345
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  11
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-25.333333333333332) (Speed v2-23.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.20146870613098
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  12
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-33.0) (Speed v2-23.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.10222268104553
+Scores: [-41.33]
+-----------------------------------------------------------------------------------------------
+Epoch:  13
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-28.666666666666668) (Speed v2-33.5) (Fitness Value--41.33)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.2151939868927
+Scores: [-44.75]
+-----------------------------------------------------------------------------------------------
+Epoch:  14
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-22.333333333333332) (Speed v2-13.5) (Fitness Value--44.75)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.131861209869385
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  15
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-27.333333333333332) (Speed v2-18.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.18394875526428
+Scores: [-53.35]
+-----------------------------------------------------------------------------------------------
+Epoch:  16
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-11.666666666666666) (Speed v2-40.5) (Fitness Value--53.35)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.185317277908325
+Scores: [-38.78]
+-----------------------------------------------------------------------------------------------
+Epoch:  17
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-25.666666666666668) (Speed v2-24.5) (Fitness Value--38.78)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected! But no broken component is specified!
+Simulation Time:  60.14698505401611
+Scores: [-53.09]
+-----------------------------------------------------------------------------------------------
+Epoch:  18
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-25.666666666666668) (Speed v2-27.5) (Fitness Value--53.09)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.20879077911377
+Scores: [-56.07]
+-----------------------------------------------------------------------------------------------
+Epoch:  19
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-22.666666666666668) (Speed v2-41.5) (Fitness Value--56.07)
+We select the best scenario: 
+Best Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19260239601135
+Scores: [1.5999999999999999]
+-----------------------------------------------------------------------------------------------
+Epoch:  20
+We have 2 scenarios: 
+Last Ind: (Speed v1-36.0) (Speed v2-30.5) (Fitness Value-1.3)
+New Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+We select the best scenario: 
+Best Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.158552169799805
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  21
+We have 2 scenarios: 
+Last Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-34.0) (Speed v2-13.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.240004777908325
+Scores: [-57.41]
+-----------------------------------------------------------------------------------------------
+Epoch:  22
+We have 2 scenarios: 
+Last Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-29.666666666666668) (Speed v2-39.5) (Fitness Value--57.41)
+We select the best scenario: 
+Best Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.102421283721924
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  23
+We have 2 scenarios: 
+Last Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-26.0) (Speed v2-23.5) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.14752388000488
+Scores: [-44.95]
+-----------------------------------------------------------------------------------------------
+Epoch:  24
+We have 2 scenarios: 
+Last Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-12.0) (Speed v2-31.0) (Fitness Value--44.95)
+We select the best scenario: 
+Best Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.113725662231445
+Scores: [-59.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  25
+We have 2 scenarios: 
+Last Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-22.333333333333332) (Speed v2-37.5) (Fitness Value--59.4)
+We select the best scenario: 
+Best Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.17356538772583
+Scores: [1.5]
+-----------------------------------------------------------------------------------------------
+Epoch:  26
+We have 2 scenarios: 
+Last Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-23.0) (Speed v2-28.0) (Fitness Value-1.5)
+We select the best scenario: 
+Best Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.224128007888794
+Scores: [-40.66]
+-----------------------------------------------------------------------------------------------
+Epoch:  27
+We have 2 scenarios: 
+Last Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-20.666666666666668) (Speed v2-30.0) (Fitness Value--40.66)
+We select the best scenario: 
+Best Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.23023700714111
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  28
+We have 2 scenarios: 
+Last Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-39.0) (Speed v2-30.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.13079762458801
+Scores: [-53.31]
+-----------------------------------------------------------------------------------------------
+Epoch:  29
+We have 2 scenarios: 
+Last Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-21.666666666666668) (Speed v2-39.0) (Fitness Value--53.31)
+We select the best scenario: 
+Best Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.19680666923523
+Scores: [-45.75]
+-----------------------------------------------------------------------------------------------
+Epoch:  30
+We have 2 scenarios: 
+Last Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-22.666666666666668) (Speed v2-36.5) (Fitness Value--45.75)
+We select the best scenario: 
+Best Ind: (Speed v1-37.666666666666664) (Speed v2-28.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Evolution time:  2246.424925327301
+End of evolution
+Level Case6_4...
+Crash detected!
+Crash detected!
+Simulation Time:  60.243961811065674
+Scores: [1.5999999999999999]
+Initial Random evaluation
+Evaluation time:  72.5164246559143
+Start of evolution
+Timed out!
+Simulation Time:  60.22724938392639
+Scores: [-58.27]
+-----------------------------------------------------------------------------------------------
+Epoch:  1
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-19.666666666666668) (Speed v2-29.5) (Fitness Value--58.27)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.11732602119446
+Warning: A part Steering is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Steering is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  2
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-36.0) (Speed v2-30.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected! But no broken component is specified!
+Crash detected!
+Simulation Time:  60.125184059143066
+Scores: [-3.92]
+-----------------------------------------------------------------------------------------------
+Epoch:  3
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-32.333333333333336) (Speed v2-19.0) (Fitness Value--3.92)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.22130727767944
+Scores: [-35.84]
+-----------------------------------------------------------------------------------------------
+Epoch:  4
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-24.333333333333332) (Speed v2-30.0) (Fitness Value--35.84)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.23821830749512
+Warning: A part Tailgate Glass is NOT FOUND in a dictionary!
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Tailgate Glass is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  5
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-41.666666666666664) (Speed v2-34.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.141523122787476
+Scores: [-53.86]
+-----------------------------------------------------------------------------------------------
+Epoch:  6
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-20.666666666666668) (Speed v2-39.5) (Fitness Value--53.86)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected! But no broken component is specified!
+Crash detected!
+Simulation Time:  60.23769998550415
+Scores: [-8.17]
+-----------------------------------------------------------------------------------------------
+Epoch:  7
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-38.333333333333336) (Speed v2-23.5) (Fitness Value--8.17)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.23543572425842
+Scores: [-50.58]
+-----------------------------------------------------------------------------------------------
+Epoch:  8
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-27.666666666666668) (Speed v2-40.0) (Fitness Value--50.58)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.13076090812683
+Scores: [-53.6]
+-----------------------------------------------------------------------------------------------
+Epoch:  9
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-34.333333333333336) (Speed v2-42.5) (Fitness Value--53.6)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.10617399215698
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  10
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-36.666666666666664) (Speed v2-31.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.21802520751953
+Scores: [1.5]
+-----------------------------------------------------------------------------------------------
+Epoch:  11
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-19.0) (Speed v2-18.0) (Fitness Value-1.5)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.173709869384766
+Scores: [-42.74]
+-----------------------------------------------------------------------------------------------
+Epoch:  12
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-32.666666666666664) (Speed v2-39.5) (Fitness Value--42.74)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.18588948249817
+Scores: [1.7]
+-----------------------------------------------------------------------------------------------
+Epoch:  13
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.113818407058716
+Scores: [-39.98]
+-----------------------------------------------------------------------------------------------
+Epoch:  14
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-25.0) (Speed v2-18.5) (Fitness Value--39.98)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19224953651428
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  15
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-32.666666666666664) (Speed v2-23.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.125810861587524
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  16
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-23.666666666666668) (Speed v2-16.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.16153335571289
+Scores: [1.5]
+-----------------------------------------------------------------------------------------------
+Epoch:  17
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-24.333333333333332) (Speed v2-24.0) (Fitness Value-1.5)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.2871515750885
+Scores: [1.5]
+-----------------------------------------------------------------------------------------------
+Epoch:  18
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-36.666666666666664) (Speed v2-37.0) (Fitness Value-1.5)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.26354765892029
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  19
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-32.0) (Speed v2-16.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19590735435486
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  20
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-34.333333333333336) (Speed v2-32.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.22571635246277
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  21
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-45.0) (Speed v2-29.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.1892409324646
+Warning: A part Steering is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Steering is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  22
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-31.333333333333332) (Speed v2-25.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.231677770614624
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  23
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-43.666666666666664) (Speed v2-33.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.257067918777466
+Scores: [-44.9]
+-----------------------------------------------------------------------------------------------
+Epoch:  24
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-32.666666666666664) (Speed v2-33.5) (Fitness Value--44.9)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected! But no broken component is specified!
+Crash detected! But no broken component is specified!
+Simulation Time:  60.17735695838928
+Scores: [-3.25]
+-----------------------------------------------------------------------------------------------
+Epoch:  25
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-29.666666666666668) (Speed v2-32.5) (Fitness Value--3.25)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.16133427619934
+Scores: [-35.06]
+-----------------------------------------------------------------------------------------------
+Epoch:  26
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-30.666666666666668) (Speed v2-23.5) (Fitness Value--35.06)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.093022108078
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  27
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-39.0) (Speed v2-29.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.23689937591553
+Scores: [-48.81]
+-----------------------------------------------------------------------------------------------
+Epoch:  28
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-26.0) (Speed v2-26.0) (Fitness Value--48.81)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.17128801345825
+Scores: [-45.62]
+-----------------------------------------------------------------------------------------------
+Epoch:  29
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-22.333333333333332) (Speed v2-25.5) (Fitness Value--45.62)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.28551244735718
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  30
+We have 2 scenarios: 
+Last Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+New Ind: (Speed v1-33.0) (Speed v2-22.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-31.666666666666668) (Speed v2-14.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Evolution time:  2247.411251306534
+End of evolution
+Level Case6_5...
+Crash detected!
+Crash detected! But no broken component is specified!
+Simulation Time:  60.16779184341431
+Scores: [-14.38]
+Initial Random evaluation
+Evaluation time:  72.44087100028992
+Start of evolution
+Crash detected!
+Crash detected!
+Simulation Time:  60.14636206626892
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  1
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value--14.38)
+New Ind: (Speed v1-30.0) (Speed v2-13.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-30.0) (Speed v2-13.5) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19711971282959
+Scores: [1.5999999999999999]
+-----------------------------------------------------------------------------------------------
+Epoch:  2
+We have 2 scenarios: 
+Last Ind: (Speed v1-30.0) (Speed v2-13.5) (Fitness Value-1.3)
+New Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.174240589141846
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  3
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-39.666666666666664) (Speed v2-16.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.128971099853516
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  4
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-24.666666666666668) (Speed v2-16.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.250370025634766
+Warning: A part Tailgate Glass is NOT FOUND in a dictionary!
+Warning: A part Independent Rear Suspension is NOT FOUND in a dictionary!
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Tailgate Glass is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  5
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-27.333333333333332) (Speed v2-30.5) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.13801169395447
+Scores: [-45.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  6
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-16.0) (Speed v2-30.5) (Fitness Value--45.3)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.15289092063904
+Scores: [-47.09]
+-----------------------------------------------------------------------------------------------
+Epoch:  7
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-26.333333333333332) (Speed v2-41.0) (Fitness Value--47.09)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.15075159072876
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  8
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-26.666666666666668) (Speed v2-18.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.1222288608551
+Scores: [-53.47]
+-----------------------------------------------------------------------------------------------
+Epoch:  9
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-26.333333333333332) (Speed v2-46.5) (Fitness Value--53.47)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19577383995056
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  10
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-24.333333333333332) (Speed v2-14.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.21649408340454
+Scores: [-43.54]
+-----------------------------------------------------------------------------------------------
+Epoch:  11
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-32.0) (Speed v2-38.0) (Fitness Value--43.54)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.16470813751221
+Scores: [-43.32]
+-----------------------------------------------------------------------------------------------
+Epoch:  12
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-29.0) (Speed v2-30.5) (Fitness Value--43.32)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.18852639198303
+Scores: [-51.07]
+-----------------------------------------------------------------------------------------------
+Epoch:  13
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-21.666666666666668) (Speed v2-34.0) (Fitness Value--51.07)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.224557399749756
+Scores: [-57.37]
+-----------------------------------------------------------------------------------------------
+Epoch:  14
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-25.0) (Speed v2-25.5) (Fitness Value--57.37)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.1489155292511
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  15
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-35.0) (Speed v2-30.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.0947687625885
+Scores: [-47.36]
+-----------------------------------------------------------------------------------------------
+Epoch:  16
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-22.333333333333332) (Speed v2-32.0) (Fitness Value--47.36)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.19684672355652
+Scores: [-47.46]
+-----------------------------------------------------------------------------------------------
+Epoch:  17
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-34.0) (Speed v2-40.5) (Fitness Value--47.46)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.113853454589844
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  18
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-35.666666666666664) (Speed v2-22.5) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.270742654800415
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  19
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-28.666666666666668) (Speed v2-16.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.22834348678589
+Scores: [-58.05]
+-----------------------------------------------------------------------------------------------
+Epoch:  20
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-17.666666666666668) (Speed v2-44.0) (Fitness Value--58.05)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.110361099243164
+Scores: [-52.48]
+-----------------------------------------------------------------------------------------------
+Epoch:  21
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-18.0) (Speed v2-24.5) (Fitness Value--52.48)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.09511637687683
+Scores: [-57.34]
+-----------------------------------------------------------------------------------------------
+Epoch:  22
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-17.333333333333332) (Speed v2-44.0) (Fitness Value--57.34)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.286426305770874
+Scores: [1.5]
+-----------------------------------------------------------------------------------------------
+Epoch:  23
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-33.666666666666664) (Speed v2-37.5) (Fitness Value-1.5)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.182058334350586
+Scores: [-54.25]
+-----------------------------------------------------------------------------------------------
+Epoch:  24
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-22.333333333333332) (Speed v2-22.5) (Fitness Value--54.25)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.10688042640686
+Scores: [-54.12]
+-----------------------------------------------------------------------------------------------
+Epoch:  25
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-20.666666666666668) (Speed v2-33.0) (Fitness Value--54.12)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.15426731109619
+Scores: [-43.44]
+-----------------------------------------------------------------------------------------------
+Epoch:  26
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-25.333333333333332) (Speed v2-35.0) (Fitness Value--43.44)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19754505157471
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  27
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-29.333333333333332) (Speed v2-25.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.20760178565979
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  28
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-44.333333333333336) (Speed v2-34.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.2865469455719
+Warning: A part Steering is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Steering is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  29
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-35.0) (Speed v2-29.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.21125912666321
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  30
+We have 2 scenarios: 
+Last Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-27.666666666666668) (Speed v2-17.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-25.666666666666668) (Speed v2-18.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Evolution time:  2246.7436723709106
+End of evolution
+Level Case6_6...
+Crash detected!
+Crash detected! But no broken component is specified!
+Simulation Time:  60.207096099853516
+Scores: [-1.85]
+Initial Random evaluation
+Evaluation time:  72.49548840522766
+Start of evolution
+Crash detected!
+Crash detected!
+Simulation Time:  60.17863416671753
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  1
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value--1.85)
+New Ind: (Speed v1-37.0) (Speed v2-17.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-37.0) (Speed v2-17.0) (Fitness Value-1.3)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.17001485824585
+Scores: [1.5]
+-----------------------------------------------------------------------------------------------
+Epoch:  2
+We have 2 scenarios: 
+Last Ind: (Speed v1-37.0) (Speed v2-17.0) (Fitness Value-1.3)
+New Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.09374523162842
+Scores: [-50.34]
+-----------------------------------------------------------------------------------------------
+Epoch:  3
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-24.333333333333332) (Speed v2-18.0) (Fitness Value--50.34)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Crash detected! But no broken component is specified!
+Crash detected! But no broken component is specified!
+Simulation Time:  60.241761445999146
+Scores: [-2.05]
+-----------------------------------------------------------------------------------------------
+Epoch:  4
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-28.333333333333332) (Speed v2-30.5) (Fitness Value--2.05)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.26795506477356
+Warning: A part Steering is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Steering is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  5
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-29.333333333333332) (Speed v2-26.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.210482358932495
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  6
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-35.333333333333336) (Speed v2-37.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.163517236709595
+Scores: [-39.37]
+-----------------------------------------------------------------------------------------------
+Epoch:  7
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-26.666666666666668) (Speed v2-31.0) (Fitness Value--39.37)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.2395133972168
+Scores: [-43.9]
+-----------------------------------------------------------------------------------------------
+Epoch:  8
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-33.666666666666664) (Speed v2-33.0) (Fitness Value--43.9)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.22768545150757
+Scores: [-51.72]
+-----------------------------------------------------------------------------------------------
+Epoch:  9
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-36.666666666666664) (Speed v2-38.5) (Fitness Value--51.72)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.20342946052551
+Scores: [-49.54]
+-----------------------------------------------------------------------------------------------
+Epoch:  10
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-20.666666666666668) (Speed v2-23.5) (Fitness Value--49.54)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.16191053390503
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  11
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-28.666666666666668) (Speed v2-16.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.21633434295654
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  12
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-37.0) (Speed v2-19.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.216055393218994
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  13
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-30.0) (Speed v2-20.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.179835081100464
+Scores: [1.5]
+-----------------------------------------------------------------------------------------------
+Epoch:  14
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-23.0) (Speed v2-25.0) (Fitness Value-1.5)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.13825869560242
+Scores: [-37.66]
+-----------------------------------------------------------------------------------------------
+Epoch:  15
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-35.666666666666664) (Speed v2-36.0) (Fitness Value--37.66)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.2806658744812
+Scores: [-48.14]
+-----------------------------------------------------------------------------------------------
+Epoch:  16
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-37.333333333333336) (Speed v2-44.0) (Fitness Value--48.14)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.089686155319214
+Scores: [-45.64]
+-----------------------------------------------------------------------------------------------
+Epoch:  17
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-33.333333333333336) (Speed v2-37.5) (Fitness Value--45.64)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.20553469657898
+Scores: [-40.0]
+-----------------------------------------------------------------------------------------------
+Epoch:  18
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-33.666666666666664) (Speed v2-38.0) (Fitness Value--40.0)
+We select the best scenario: 
+Best Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.18824553489685
+Scores: [1.5999999999999999]
+-----------------------------------------------------------------------------------------------
+Epoch:  19
+We have 2 scenarios: 
+Last Ind: (Speed v1-34.666666666666664) (Speed v2-21.5) (Fitness Value-1.5)
+New Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+We select the best scenario: 
+Best Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.21942901611328
+Scores: [-50.97]
+-----------------------------------------------------------------------------------------------
+Epoch:  20
+We have 2 scenarios: 
+Last Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-19.666666666666668) (Speed v2-35.0) (Fitness Value--50.97)
+We select the best scenario: 
+Best Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.092567682266235
+Scores: [-48.91]
+-----------------------------------------------------------------------------------------------
+Epoch:  21
+We have 2 scenarios: 
+Last Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-24.333333333333332) (Speed v2-25.5) (Fitness Value--48.91)
+We select the best scenario: 
+Best Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.104148864746094
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  22
+We have 2 scenarios: 
+Last Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-34.333333333333336) (Speed v2-34.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.110629081726074
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  23
+We have 2 scenarios: 
+Last Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-41.333333333333336) (Speed v2-21.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.220144748687744
+Scores: [-52.93]
+-----------------------------------------------------------------------------------------------
+Epoch:  24
+We have 2 scenarios: 
+Last Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-31.333333333333332) (Speed v2-38.5) (Fitness Value--52.93)
+We select the best scenario: 
+Best Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.16605234146118
+Scores: [-42.82]
+-----------------------------------------------------------------------------------------------
+Epoch:  25
+We have 2 scenarios: 
+Last Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-16.333333333333332) (Speed v2-21.0) (Fitness Value--42.82)
+We select the best scenario: 
+Best Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.2074077129364
+Scores: [-53.18]
+-----------------------------------------------------------------------------------------------
+Epoch:  26
+We have 2 scenarios: 
+Last Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-30.666666666666668) (Speed v2-41.0) (Fitness Value--53.18)
+We select the best scenario: 
+Best Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.09558153152466
+Scores: [-46.15]
+-----------------------------------------------------------------------------------------------
+Epoch:  27
+We have 2 scenarios: 
+Last Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-27.0) (Speed v2-25.0) (Fitness Value--46.15)
+We select the best scenario: 
+Best Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.1270010471344
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  28
+We have 2 scenarios: 
+Last Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-34.0) (Speed v2-21.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.111995220184326
+Scores: [-58.07]
+-----------------------------------------------------------------------------------------------
+Epoch:  29
+We have 2 scenarios: 
+Last Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-21.333333333333332) (Speed v2-43.5) (Fitness Value--58.07)
+We select the best scenario: 
+Best Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.15196490287781
+Scores: [-43.55]
+-----------------------------------------------------------------------------------------------
+Epoch:  30
+We have 2 scenarios: 
+Last Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-24.0) (Speed v2-28.0) (Fitness Value--43.55)
+We select the best scenario: 
+Best Ind: (Speed v1-26.333333333333332) (Speed v2-29.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Evolution time:  2245.5172910690308
+End of evolution
+Level Case6_7...
+Crash detected!
+Crash detected!
+Simulation Time:  60.2492516040802
+Scores: [1.7]
+Initial Random evaluation
+Evaluation time:  72.52009797096252
+Start of evolution
+Crash detected!
+Crash detected!
+Simulation Time:  60.20739459991455
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  1
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-34.333333333333336) (Speed v2-24.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.23985171318054
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  2
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-39.0) (Speed v2-26.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.18085503578186
+Scores: [-32.47]
+-----------------------------------------------------------------------------------------------
+Epoch:  3
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-34.666666666666664) (Speed v2-33.0) (Fitness Value--32.47)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected! But no broken component is specified!
+Crash detected! But no broken component is specified!
+Simulation Time:  60.20046949386597
+Scores: [-2.08]
+-----------------------------------------------------------------------------------------------
+Epoch:  4
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-21.666666666666668) (Speed v2-27.5) (Fitness Value--2.08)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.22761821746826
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  5
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-27.666666666666668) (Speed v2-16.5) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.213135719299316
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  6
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-35.333333333333336) (Speed v2-32.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.201711893081665
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  7
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-41.0) (Speed v2-31.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.104241609573364
+Scores: [-60.0]
+-----------------------------------------------------------------------------------------------
+Epoch:  8
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-26.666666666666668) (Speed v2-40.0) (Fitness Value--60.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.14340853691101
+Scores: [-46.88]
+-----------------------------------------------------------------------------------------------
+Epoch:  9
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-15.0) (Speed v2-32.0) (Fitness Value--46.88)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.09471893310547
+Scores: [-47.43]
+-----------------------------------------------------------------------------------------------
+Epoch:  10
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-27.0) (Speed v2-22.5) (Fitness Value--47.43)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.21356678009033
+Scores: [-49.58]
+-----------------------------------------------------------------------------------------------
+Epoch:  11
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-21.666666666666668) (Speed v2-38.0) (Fitness Value--49.58)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.28111672401428
+Scores: [1.5999999999999999]
+-----------------------------------------------------------------------------------------------
+Epoch:  12
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-27.0) (Speed v2-33.5) (Fitness Value-1.5999999999999999)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected! But no broken component is specified!
+Simulation Time:  60.11824297904968
+Scores: [-1.83]
+-----------------------------------------------------------------------------------------------
+Epoch:  13
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-30.0) (Speed v2-32.0) (Fitness Value--1.83)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.100794553756714
+Scores: [1.5999999999999999]
+-----------------------------------------------------------------------------------------------
+Epoch:  14
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-28.666666666666668) (Speed v2-30.0) (Fitness Value-1.5999999999999999)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.16476893424988
+Scores: [1.5999999999999999]
+-----------------------------------------------------------------------------------------------
+Epoch:  15
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-24.666666666666668) (Speed v2-31.0) (Fitness Value-1.5999999999999999)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.134077310562134
+Scores: [-57.42]
+-----------------------------------------------------------------------------------------------
+Epoch:  16
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-23.333333333333332) (Speed v2-34.0) (Fitness Value--57.42)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.140023946762085
+Scores: [-38.1]
+-----------------------------------------------------------------------------------------------
+Epoch:  17
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-28.333333333333332) (Speed v2-27.0) (Fitness Value--38.1)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected! But no broken component is specified!
+Simulation Time:  60.123581409454346
+Scores: [-10.78]
+-----------------------------------------------------------------------------------------------
+Epoch:  18
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-27.666666666666668) (Speed v2-17.5) (Fitness Value--10.78)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.2429621219635
+Scores: [-45.46]
+-----------------------------------------------------------------------------------------------
+Epoch:  19
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-34.333333333333336) (Speed v2-28.5) (Fitness Value--45.46)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.12846040725708
+Scores: [-61.44]
+-----------------------------------------------------------------------------------------------
+Epoch:  20
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-19.666666666666668) (Speed v2-40.5) (Fitness Value--61.44)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected! But no broken component is specified!
+Crash detected!
+Simulation Time:  60.17066931724548
+Scores: [-2.37]
+-----------------------------------------------------------------------------------------------
+Epoch:  21
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-25.666666666666668) (Speed v2-16.5) (Fitness Value--2.37)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.111809730529785
+Scores: [1.5999999999999999]
+-----------------------------------------------------------------------------------------------
+Epoch:  22
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-27.666666666666668) (Speed v2-23.5) (Fitness Value-1.5999999999999999)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.16473913192749
+Scores: [-61.37]
+-----------------------------------------------------------------------------------------------
+Epoch:  23
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-27.666666666666668) (Speed v2-34.5) (Fitness Value--61.37)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.213539838790894
+Warning: A part Tailgate Glass is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Tailgate Glass is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  24
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-41.0) (Speed v2-31.5) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected! But no broken component is specified!
+Crash detected! But no broken component is specified!
+Simulation Time:  60.13527059555054
+Scores: [-2.04]
+-----------------------------------------------------------------------------------------------
+Epoch:  25
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-34.0) (Speed v2-22.0) (Fitness Value--2.04)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.124719858169556
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  26
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-27.0) (Speed v2-12.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.19518160820007
+Scores: [-48.43]
+-----------------------------------------------------------------------------------------------
+Epoch:  27
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-20.0) (Speed v2-23.5) (Fitness Value--48.43)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.11353349685669
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  28
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-38.666666666666664) (Speed v2-33.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.21119928359985
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  29
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-43.333333333333336) (Speed v2-14.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.206522941589355
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  30
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-33.666666666666664) (Speed v2-22.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Evolution time:  2245.820498228073
+End of evolution
+Level Case6_8...
+Crash detected!
+Crash detected!
+Simulation Time:  60.14679837226868
+Scores: [1.5999999999999999]
+Initial Random evaluation
+Evaluation time:  72.35134530067444
+Start of evolution
+Crash detected!
+Crash detected!
+Simulation Time:  60.25321888923645
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  1
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-39.0) (Speed v2-20.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.25832390785217
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  2
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-32.0) (Speed v2-21.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.122363567352295
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  3
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-39.333333333333336) (Speed v2-14.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.130436420440674
+Scores: [-38.68]
+-----------------------------------------------------------------------------------------------
+Epoch:  4
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-32.333333333333336) (Speed v2-27.5) (Fitness Value--38.68)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.22435164451599
+Scores: [-59.37]
+-----------------------------------------------------------------------------------------------
+Epoch:  5
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-19.333333333333332) (Speed v2-33.5) (Fitness Value--59.37)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.16424489021301
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  6
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-31.0) (Speed v2-15.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.215524673461914
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  7
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-36.333333333333336) (Speed v2-32.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.28507900238037
+Scores: [1.5]
+-----------------------------------------------------------------------------------------------
+Epoch:  8
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-33.666666666666664) (Speed v2-25.5) (Fitness Value-1.5)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.22441267967224
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  9
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-37.333333333333336) (Speed v2-32.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.151418924331665
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  10
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-34.0) (Speed v2-19.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.215404748916626
+Scores: [-58.62]
+-----------------------------------------------------------------------------------------------
+Epoch:  11
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-20.333333333333332) (Speed v2-41.0) (Fitness Value--58.62)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.24304175376892
+Scores: [-53.63]
+-----------------------------------------------------------------------------------------------
+Epoch:  12
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-25.0) (Speed v2-35.0) (Fitness Value--53.63)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.21497893333435
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  13
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-33.666666666666664) (Speed v2-26.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected! But no broken component is specified!
+Crash detected! But no broken component is specified!
+Simulation Time:  60.18981170654297
+Scores: [-7.92]
+-----------------------------------------------------------------------------------------------
+Epoch:  14
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-23.666666666666668) (Speed v2-24.5) (Fitness Value--7.92)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.181995153427124
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  15
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-33.0) (Speed v2-28.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.266146183013916
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  16
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-30.333333333333332) (Speed v2-20.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.161940813064575
+Warning: A part Steering is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Steering is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  17
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-40.0) (Speed v2-28.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.12011194229126
+Scores: [-44.71]
+-----------------------------------------------------------------------------------------------
+Epoch:  18
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-28.333333333333332) (Speed v2-41.5) (Fitness Value--44.71)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.1353018283844
+Scores: [-31.72]
+-----------------------------------------------------------------------------------------------
+Epoch:  19
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-35.333333333333336) (Speed v2-33.0) (Fitness Value--31.72)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.213841676712036
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  20
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-35.333333333333336) (Speed v2-28.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.12956500053406
+Scores: [-45.56]
+-----------------------------------------------------------------------------------------------
+Epoch:  21
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-28.666666666666668) (Speed v2-38.0) (Fitness Value--45.56)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.22189450263977
+Scores: [-45.36]
+-----------------------------------------------------------------------------------------------
+Epoch:  22
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-26.333333333333332) (Speed v2-23.5) (Fitness Value--45.36)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.12627649307251
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  23
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-31.666666666666668) (Speed v2-30.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.24937582015991
+Scores: [-45.04]
+-----------------------------------------------------------------------------------------------
+Epoch:  24
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-20.333333333333332) (Speed v2-35.5) (Fitness Value--45.04)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.10542321205139
+Scores: [-42.34]
+-----------------------------------------------------------------------------------------------
+Epoch:  25
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-23.666666666666668) (Speed v2-25.0) (Fitness Value--42.34)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.26637411117554
+Scores: [1.5]
+-----------------------------------------------------------------------------------------------
+Epoch:  26
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-24.666666666666668) (Speed v2-27.5) (Fitness Value-1.5)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.17312502861023
+Scores: [-63.45]
+-----------------------------------------------------------------------------------------------
+Epoch:  27
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-18.666666666666668) (Speed v2-46.5) (Fitness Value--63.45)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.2274866104126
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  28
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-38.333333333333336) (Speed v2-12.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.23879933357239
+Scores: [-48.03]
+-----------------------------------------------------------------------------------------------
+Epoch:  29
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-17.666666666666668) (Speed v2-21.5) (Fitness Value--48.03)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.24904918670654
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  30
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-28.666666666666668) (Speed v2-23.0) (Fitness Value-1.4)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Evolution time:  2244.9097151756287
+End of evolution
+Level Case6_9...
+Crash detected!
+Crash detected!
+Simulation Time:  60.25691270828247
+Scores: [1.5999999999999999]
+Initial Random evaluation
+Evaluation time:  72.4242696762085
+Start of evolution
+Timed out!
+Simulation Time:  60.21250772476196
+Scores: [-47.08]
+-----------------------------------------------------------------------------------------------
+Epoch:  1
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-23.333333333333332) (Speed v2-35.5) (Fitness Value--47.08)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.163564920425415
+Scores: [-48.47]
+-----------------------------------------------------------------------------------------------
+Epoch:  2
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-23.0) (Speed v2-31.0) (Fitness Value--48.47)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.23581862449646
+Scores: [1.5]
+-----------------------------------------------------------------------------------------------
+Epoch:  3
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-18.333333333333332) (Speed v2-18.5) (Fitness Value-1.5)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.15841865539551
+Scores: [-45.09]
+-----------------------------------------------------------------------------------------------
+Epoch:  4
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-31.333333333333332) (Speed v2-27.5) (Fitness Value--45.09)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.089916706085205
+Scores: [-46.91]
+-----------------------------------------------------------------------------------------------
+Epoch:  5
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-32.666666666666664) (Speed v2-36.5) (Fitness Value--46.91)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.20602107048035
+Scores: [-57.27]
+-----------------------------------------------------------------------------------------------
+Epoch:  6
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-23.0) (Speed v2-27.5) (Fitness Value--57.27)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.1987829208374
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  7
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-38.0) (Speed v2-16.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.12320160865784
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  8
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-39.0) (Speed v2-31.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.210405111312866
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  9
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-37.666666666666664) (Speed v2-34.5) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.21954321861267
+Scores: [-54.38]
+-----------------------------------------------------------------------------------------------
+Epoch:  10
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-16.0) (Speed v2-37.5) (Fitness Value--54.38)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.246582984924316
+Scores: [-43.15]
+-----------------------------------------------------------------------------------------------
+Epoch:  11
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-20.333333333333332) (Speed v2-22.0) (Fitness Value--43.15)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected! But no broken component is specified!
+Simulation Time:  60.22135663032532
+Scores: [-41.09]
+-----------------------------------------------------------------------------------------------
+Epoch:  12
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-26.666666666666668) (Speed v2-34.0) (Fitness Value--41.09)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.26219463348389
+Scores: [1.5]
+-----------------------------------------------------------------------------------------------
+Epoch:  13
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-26.333333333333332) (Speed v2-28.5) (Fitness Value-1.5)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.25927519798279
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  14
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-25.333333333333332) (Speed v2-22.5) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19580292701721
+Warning: A part Steering is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Steering is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  15
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-22.333333333333332) (Speed v2-29.5) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.14864921569824
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  16
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-39.333333333333336) (Speed v2-18.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.13924837112427
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  17
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-26.666666666666668) (Speed v2-22.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.20545196533203
+Scores: [-47.93]
+-----------------------------------------------------------------------------------------------
+Epoch:  18
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-27.666666666666668) (Speed v2-24.0) (Fitness Value--47.93)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.15548229217529
+Scores: [-51.0]
+-----------------------------------------------------------------------------------------------
+Epoch:  19
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-27.0) (Speed v2-45.5) (Fitness Value--51.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.10735511779785
+Scores: [-47.1]
+-----------------------------------------------------------------------------------------------
+Epoch:  20
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-27.0) (Speed v2-39.0) (Fitness Value--47.1)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.21391415596008
+Scores: [-48.01]
+-----------------------------------------------------------------------------------------------
+Epoch:  21
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-30.0) (Speed v2-34.0) (Fitness Value--48.01)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.21329379081726
+Scores: [-43.7]
+-----------------------------------------------------------------------------------------------
+Epoch:  22
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-25.666666666666668) (Speed v2-13.0) (Fitness Value--43.7)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.27227854728699
+Scores: [1.5]
+-----------------------------------------------------------------------------------------------
+Epoch:  23
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-25.333333333333332) (Speed v2-30.5) (Fitness Value-1.5)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.10664415359497
+Scores: [1.5]
+-----------------------------------------------------------------------------------------------
+Epoch:  24
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-26.666666666666668) (Speed v2-19.0) (Fitness Value-1.5)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.232460498809814
+Scores: [1.5999999999999999]
+-----------------------------------------------------------------------------------------------
+Epoch:  25
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-24.666666666666668) (Speed v2-27.0) (Fitness Value-1.5999999999999999)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected! But no broken component is specified!
+Simulation Time:  60.18866038322449
+Scores: [-45.44]
+-----------------------------------------------------------------------------------------------
+Epoch:  26
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-29.0) (Speed v2-26.5) (Fitness Value--45.44)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.19425630569458
+Scores: [-45.23]
+-----------------------------------------------------------------------------------------------
+Epoch:  27
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-28.666666666666668) (Speed v2-31.0) (Fitness Value--45.23)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.09746479988098
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  28
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-43.333333333333336) (Speed v2-26.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.1222984790802
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  29
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-28.666666666666668) (Speed v2-28.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.124746322631836
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  30
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+New Ind: (Speed v1-37.666666666666664) (Speed v2-15.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.5999999999999999)
+-----------------------------------------------------------------------------------------------
+Evolution time:  2243.959434747696
+End of evolution
+Level Case6_10...
+Crash detected!
+Crash detected!
+Simulation Time:  60.138654947280884
+Scores: [1.7]
+Initial Random evaluation
+Evaluation time:  72.41750049591064
+Start of evolution
+Crash detected!
+Crash detected!
+Simulation Time:  60.21061420440674
+Scores: [1.5999999999999999]
+-----------------------------------------------------------------------------------------------
+Epoch:  1
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-27.333333333333332) (Speed v2-23.0) (Fitness Value-1.5999999999999999)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.18986415863037
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  2
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-44.666666666666664) (Speed v2-31.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.2397096157074
+Scores: [-57.64]
+-----------------------------------------------------------------------------------------------
+Epoch:  3
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-31.666666666666668) (Speed v2-47.0) (Fitness Value--57.64)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.14077067375183
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  4
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-34.666666666666664) (Speed v2-19.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.09124684333801
+Warning: A part Tailgate Glass is NOT FOUND in a dictionary!
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Tailgate Glass is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  5
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-39.333333333333336) (Speed v2-37.5) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.194133043289185
+Scores: [-49.45]
+-----------------------------------------------------------------------------------------------
+Epoch:  6
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-24.333333333333332) (Speed v2-29.0) (Fitness Value--49.45)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19683861732483
+Warning: A part Tailgate Glass is NOT FOUND in a dictionary!
+The code Tailgate Glass is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  7
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-38.666666666666664) (Speed v2-30.5) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.2524254322052
+Scores: [-35.93]
+-----------------------------------------------------------------------------------------------
+Epoch:  8
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-26.666666666666668) (Speed v2-24.0) (Fitness Value--35.93)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.12363147735596
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  9
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-33.666666666666664) (Speed v2-18.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.21208310127258
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  10
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-33.0) (Speed v2-28.0) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.19139122962952
+Scores: [-26.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  11
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-26.666666666666668) (Speed v2-22.0) (Fitness Value--26.4)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.20187306404114
+Scores: [-39.14]
+-----------------------------------------------------------------------------------------------
+Epoch:  12
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-37.0) (Speed v2-38.0) (Fitness Value--39.14)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.17732501029968
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  13
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-30.0) (Speed v2-20.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.16861963272095
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  14
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-40.666666666666664) (Speed v2-24.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.17656111717224
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  15
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-30.0) (Speed v2-29.0) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.25210738182068
+Scores: [-42.78]
+-----------------------------------------------------------------------------------------------
+Epoch:  16
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-27.333333333333332) (Speed v2-37.0) (Fitness Value--42.78)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.15007662773132
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  17
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-33.333333333333336) (Speed v2-25.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected! But no broken component is specified!
+Crash detected!
+Simulation Time:  60.27420163154602
+Scores: [-5.39]
+-----------------------------------------------------------------------------------------------
+Epoch:  18
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-28.333333333333332) (Speed v2-13.0) (Fitness Value--5.39)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.15036368370056
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  19
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-29.0) (Speed v2-25.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.10875844955444
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  20
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-22.666666666666668) (Speed v2-13.5) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.2681303024292
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  21
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-21.0) (Speed v2-26.5) (Fitness Value-0.0)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.234556913375854
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  22
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-43.333333333333336) (Speed v2-33.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.131678342819214
+Scores: [-54.26]
+-----------------------------------------------------------------------------------------------
+Epoch:  23
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-30.333333333333332) (Speed v2-37.0) (Fitness Value--54.26)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.17137837409973
+Scores: [-40.78]
+-----------------------------------------------------------------------------------------------
+Epoch:  24
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-26.333333333333332) (Speed v2-35.5) (Fitness Value--40.78)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.13888168334961
+Scores: [-43.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  25
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-24.0) (Speed v2-27.5) (Fitness Value--43.4)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.18127989768982
+Scores: [-56.24]
+-----------------------------------------------------------------------------------------------
+Epoch:  26
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-25.333333333333332) (Speed v2-35.0) (Fitness Value--56.24)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.13377547264099
+Scores: [-60.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  27
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-23.0) (Speed v2-39.5) (Fitness Value--60.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Timed out!
+Simulation Time:  60.130478382110596
+Scores: [-52.61]
+-----------------------------------------------------------------------------------------------
+Epoch:  28
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-22.0) (Speed v2-32.5) (Fitness Value--52.61)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.114973306655884
+Scores: [1.3]
+-----------------------------------------------------------------------------------------------
+Epoch:  29
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-33.333333333333336) (Speed v2-17.0) (Fitness Value-1.3)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.13841700553894
+Scores: [1.2]
+-----------------------------------------------------------------------------------------------
+Epoch:  30
+We have 2 scenarios: 
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+New Ind: (Speed v1-32.666666666666664) (Speed v2-22.5) (Fitness Value-1.2)
+We select the best scenario: 
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.7)
+-----------------------------------------------------------------------------------------------
+Evolution time:  2243.7808537483215
+End of evolution
+-------------------- End of data/Case6_data.json --------------------------------------------------------------
+
+
+Process finished with exit code 0
