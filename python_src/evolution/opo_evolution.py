@@ -7,7 +7,7 @@ FIRST = 0
 
 
 class OpoEvolution:
-    def __init__(self, scenario, fitness, generate, generate_params, select, mutate, mutate_params, epochs=1,
+    def __init__(self, scenario, fitness, generate, generate_params, select, mutate, mutate_params, logfile, epochs=1,
                  fitness_repetitions=1, select_aggregate=None):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMax)
@@ -33,6 +33,7 @@ class OpoEvolution:
 
         self.epochs = epochs
         self.orig_ind = scenario
+        self.logfile = logfile
 
     def run(self):
         pop = self.toolbox.population(n=1)
@@ -41,6 +42,11 @@ class OpoEvolution:
         fitnesses = list(map(self.toolbox.evaluate, pop))
         for ind, fit in zip(pop, fitnesses):
             ind.fitness.values = fit
+
+        # Write original scenario
+        self.logfile.write(f'{pop[FIRST][FIRST].vehicles[0].get_speed()},'
+                           f'{pop[FIRST][FIRST].vehicles[1].get_speed()},'
+                           f'{pop[FIRST].fitness.values[0]}\n')
 
         # Evaluate the entire population
         print("Initial OpO evaluation")
@@ -95,6 +101,11 @@ class OpoEvolution:
                   f'(Fitness Value-{best_ind.fitness.values[0]})')
             print("-----------------------------------------------------------------------------------------------")
             ##############################################################################
+
+            # Write to logfile
+            self.logfile.write(f'{s.vehicles[0].get_speed()},'
+                               f'{s.vehicles[1].get_speed()},'
+                               f'{best_ind.fitness.values[0]}\n')
 
         print("Evolution time: ", time.time() - start_time)
         print("End of evolution")

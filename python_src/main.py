@@ -55,7 +55,7 @@ if __name__ == '__main__':
             sim_name: str = s[5:11] + str(i)
             print(f'Level {sim_name}...')
             exp: Experiment = Experiment(file_path=s, simulation_name=sim_name)
-            exp.run()
+            exp.run(method_name="OpO")
         print(f'-------------------- End of {s} --------------------------------------------------------------')
         print()
 

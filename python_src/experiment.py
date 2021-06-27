@@ -21,52 +21,25 @@ class Experiment:
         except Exception as ex:
             print(f'Scenario is not found. Exception: {ex}')
 
-    def run(self):
+    def run(self, method_name: str):
         if self.scenario is None:
             print(f'Scenario is not found')
             return False
 
         # Seeds
         # numpy.random.seed(64)
+
+        # Run the experiment
+        if method_name == "Random":
+            self._run_rev()
+        elif method_name == "OpO":
+            self._run_opo()
+
         # Calculate the expected score
         sim_factory: SimulationFactory = SimulationFactory(CrashScenario.from_json(self.scenario))
         simulation: Simulation = Simulation(sim_factory=sim_factory)
         expected_score: float = SimulationScore(simulation).get_expected_score()
         logbook: LogBook = LogBook(score=expected_score)
-
-        # Write data file
-        rev_logfile = open("data/random/" + self.simulation_name + ".csv", "a")
-        rev_logfile.write("v1,v2,score\n")
-
-        # Experiment run
-        rev = RandomEvolution(
-            scenario=CrashScenario.from_json(self.scenario),
-            fitness=Fitness.evaluate,
-            # fitness_repetitions=5,
-            generate=Generator.generate_random_from,
-            generate_params={"min": 10, "max": 50},
-            select=Selector.by_fitness_value,
-            # select_aggregate=numpy.mean,
-            epochs=30,
-            logfile=rev_logfile
-        )
-        oev = OpoEvolution(
-            scenario=CrashScenario.from_json(self.scenario),
-            fitness=Fitness.evaluate,
-            # fitness_repetitions=5,
-            generate=Generator.generate_random_from,
-            generate_params={"min": 10, "max": 50},
-            mutate=Mutator.by_speed,
-            mutate_params={"mean": 2.1, "std": 1, "min": 10, "max": 50},
-            select=Selector.by_fitness_value,
-            # select_aggregate=libs._VD_A,
-            epochs=30
-        )
-        rev.run()
-        # oev.run()
-
-        # Close logfiles
-        rev_logfile.close()
 
         # Provide plot chart
         # logbook.visualize(rev.logbook, oev.logbook, "Random", "OPO")
@@ -98,3 +71,49 @@ class Experiment:
             # show the graph
             plt.legend()
             plt.show()
+
+    def _run_rev(self):
+        # Write data file
+        rev_logfile = open("data/random/" + self.simulation_name + ".csv", "a")
+        rev_logfile.write("v1,v2,score\n")
+
+        # Experiment run
+        rev = RandomEvolution(
+            scenario=CrashScenario.from_json(self.scenario),
+            fitness=Fitness.evaluate,
+            # fitness_repetitions=5,
+            generate=Generator.generate_random_from,
+            generate_params={"min": 10, "max": 50},
+            select=Selector.by_fitness_value,
+            # select_aggregate=numpy.mean,
+            epochs=30,
+            logfile=rev_logfile
+        )
+        rev.run()
+
+        # Close logfiles
+        rev_logfile.close()
+
+    def _run_opo(self):
+        # Write data file
+        opo_logfile = open("data/opo/" + self.simulation_name + ".csv", "a")
+        opo_logfile.write("v1,v2,score\n")
+
+        # Experiment run
+        oev = OpoEvolution(
+            scenario=CrashScenario.from_json(self.scenario),
+            fitness=Fitness.evaluate,
+            # fitness_repetitions=5,
+            generate=Generator.generate_random_from,
+            generate_params={"min": 10, "max": 50},
+            mutate=Mutator.by_speed,
+            mutate_params={"mean": 2.1, "std": 1, "min": 10, "max": 50},
+            select=Selector.by_fitness_value,
+            # select_aggregate=libs._VD_A,
+            epochs=30,
+            logfile=opo_logfile
+        )
+        oev.run()
+
+        # Close logfiles
+        opo_logfile.close()
