@@ -1,5 +1,6 @@
 import click
 import json
+import numpy as np
 from visualization import VehicleTrajectoryVisualizer
 from models import SimulationFactory, Simulation, SimulationScore
 from models.ac3rp import CrashScenario
@@ -49,4 +50,15 @@ def evol_scenario(scenario_file):
 
 # make sure we invoke cli
 if __name__ == '__main__':
-    cli()
+    for s in ["data/Case6_data.json"]:
+        for i in np.arange(start=1, stop=11, step=1):
+            sim_name: str = s[5:11] + str(i)
+            print(f'Level {sim_name}...')
+            exp: Experiment = Experiment(file_path=s, simulation_name=sim_name)
+            exp.run(method_name="OpO")
+        print(f'-------------------- End of {s} --------------------------------------------------------------')
+        print()
+
+
+
+
