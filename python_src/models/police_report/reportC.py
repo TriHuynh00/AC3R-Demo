@@ -50,6 +50,7 @@ class ReportTypeC(Report):
         if len(decode_parts) == 0 and is_contain_components:
             decode_parts = ['L', 'R']
 
+        # Final outputs
         outputs = list((dict.fromkeys(decode_parts)))
 
         crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_C_DATA) - set(outputs))

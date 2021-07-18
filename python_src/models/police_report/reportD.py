@@ -16,7 +16,9 @@ class ReportTypeD(Report):
             # Police Report is Side-Component Type and Simulation is Component Type:
             # Component is [F], [B], [M] -> [ {Component}L, {Component}R ]
             elif part in ['F', 'M', 'B']:
-                return [f'{part}L', f'{part}R']
+                # Empty list - discard since it doesn't tell you the accurate side
+                # Assume we have an another broken part will tell us the side
+                return []
         else:
             return [part]
 
@@ -36,7 +38,28 @@ class ReportTypeD(Report):
         # From Simulation:
         # List crashes_from_simulation contains CRASHED parts
         # List non_crashes_from_simulation contains NON-CRASHED parts
-        outputs = list((dict.fromkeys([i for output in outputs for i in self.decode_part(output["name"])])))
+        is_contain_components = False
+        component_parts = list()
+        decode_parts = list()
+        for output in outputs:
+            if output["name"] in ['F', 'M', 'B']:
+                is_contain_components = True
+                if output["name"] not in component_parts:
+                    component_parts.append(output["name"])
+            for i in self.decode_part(output["name"]):
+                decode_parts.append(i)
+
+        # TODO:
+        # If we don't have any L or R in outputs and the output already contains component parts F M B,
+        # we will add 'L', 'R' to the outputs
+        if len(decode_parts) == 0 and is_contain_components:
+            for part in component_parts:
+                decode_parts.append(f'{part}L')
+                decode_parts.append(f'{part}R')
+
+        # Final outputs
+        outputs = list((dict.fromkeys(decode_parts)))
+
         crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_D_DATA) - set(outputs))
 
         crash_points, non_crash_points = self._match(CAT_D_DATA,
