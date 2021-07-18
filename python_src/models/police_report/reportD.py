@@ -58,6 +58,7 @@ class ReportTypeD(Report):
                 decode_parts.append(f'{part}R')
 
         # Final outputs
+        # Remove duplicates from a list outputs by dict.fromkeys
         outputs = list((dict.fromkeys(decode_parts)))
 
         crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_D_DATA) - set(outputs))

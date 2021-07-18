@@ -35,7 +35,6 @@ class ReportTypeC(Report):
         # From Simulation:
         # List crashes_from_simulation contains CRASHED side
         # List non_crashes_from_simulation contains NON-CRASHED side
-        # Remove duplicates from a list outputs by dict.fromkeys
         is_contain_components = False
         decode_parts = list()
         for output in outputs:
@@ -51,6 +50,7 @@ class ReportTypeC(Report):
             decode_parts = ['L', 'R']
 
         # Final outputs
+        # Remove duplicates from a list outputs by dict.fromkeys
         outputs = list((dict.fromkeys(decode_parts)))
 
         crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_C_DATA) - set(outputs))
