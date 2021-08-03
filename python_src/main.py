@@ -50,14 +50,7 @@ def evol_scenario(scenario_file):
 
 # make sure we invoke cli
 if __name__ == '__main__':
-    for s in ["data/Case1_data.json", "data/Case2_data.json", "data/Case3_data.json"]:
-        for i in np.arange(start=1, stop=6, step=1):
-            sim_name: str = s[5:11] + str(i)
-            print(f'Level {sim_name}...')
-            exp: Experiment = Experiment(file_path=s, simulation_name=sim_name)
-            exp.run(method_name="OpO")
-        print(f'-------------------- End of {s} --------------------------------------------------------------')
-        print()
+    cli()
 
 
 
