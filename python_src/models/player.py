@@ -22,7 +22,10 @@ VEHICLE_PARTS_DICT = {
     'Right Mirror': 'FR',
     'Left Mirror': 'FL',
     "Dual Outlet Exhaust": "B",
-    "Wagon Left Taillight": "ML"
+    "Wagon Left Taillight": "ML",
+    "Radiator": 'F',
+    "Independent Front Suspension": 'F',
+    "Independent Rear Suspension": 'B'
 }
 
 

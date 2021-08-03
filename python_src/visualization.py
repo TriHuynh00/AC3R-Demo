@@ -75,6 +75,9 @@ class VehicleTrajectoryVisualizer:
             ys = [p[1] for p in trajectory_points]
             plt.plot(xs, ys, 'o-', label=vehicle.name, color=colors[i])
         plt.legend()
+        plt.gca().set_aspect('equal')
+        # plt.xlim([-100, 100])
+        # plt.ylim([-100, 100])
         plt.title(f'AC3R {ac3r_scenario.name}')
         plt.show()
 
@@ -90,6 +93,9 @@ class VehicleTrajectoryVisualizer:
             ys = [p[1] for p in trajectory_points]
             plt.plot(xs, ys, 'o-', label=v.name, color=colors[i])
         plt.legend()
+        plt.gca().set_aspect('equal')
+        # plt.xlim([-100, 100])
+        # plt.ylim([-100, 100])
         plt.title(f'AC3R Plus {ac3rp_scenario.name}')
         plt.show()
 

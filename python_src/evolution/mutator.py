@@ -1,6 +1,8 @@
 import numpy
 import copy
+from numpy.random import default_rng
 from models.ac3rp import CrashScenario
+import matplotlib.pyplot as plt
 
 
 class Mutator:

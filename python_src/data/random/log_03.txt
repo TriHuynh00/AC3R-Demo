@@ -1,0 +1,1982 @@
+Level Case3_1...
+Crash detected!
+Crash detected!
+Simulation Time:  60.15477418899536
+Scores: [1.4]
+Initial Random evaluation
+Evaluation time:  72.42165088653564
+Start of evolution
+Crash detected!
+Crash detected!
+Simulation Time:  60.20899534225464
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  1
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-41.0) (Speed v2-34.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.23325037956238
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  2
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-27.0) (Speed v2-25.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.12536382675171
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  3
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-21.0) (Speed v2-18.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.18319034576416
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  4
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-46.0) (Speed v2-16.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.16105628013611
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  5
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-29.0) (Speed v2-39.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.24821138381958
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  6
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-20.0) (Speed v2-42.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.132153034210205
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  7
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-23.0) (Speed v2-39.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.09754705429077
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  8
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-36.0) (Speed v2-18.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19155764579773
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  9
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-26.0) (Speed v2-49.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.23923683166504
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  10
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-15.0) (Speed v2-49.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.09868407249451
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  11
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-32.0) (Speed v2-26.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.233110189437866
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  12
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-14.0) (Speed v2-14.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.24339723587036
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  13
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-42.0) (Speed v2-37.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.13161563873291
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  14
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-37.0) (Speed v2-23.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.13568663597107
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  15
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-25.0) (Speed v2-18.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.164959192276
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  16
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-37.0) (Speed v2-24.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.12974739074707
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  17
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-36.0) (Speed v2-27.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.20813584327698
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  18
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-12.0) (Speed v2-48.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.241310119628906
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  19
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-25.0) (Speed v2-17.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19105887413025
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  20
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-38.0) (Speed v2-16.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.1603102684021
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  21
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-27.0) (Speed v2-12.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.23401594161987
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  22
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-35.0) (Speed v2-31.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.183088064193726
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  23
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-42.0) (Speed v2-31.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.260005474090576
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  24
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-36.0) (Speed v2-35.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.223371267318726
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  25
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-17.0) (Speed v2-46.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.248305320739746
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  26
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-40.0) (Speed v2-10.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.12143921852112
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  27
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-18.0) (Speed v2-21.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.12810206413269
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  28
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-22.0) (Speed v2-28.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.12075734138489
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  29
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-28.0) (Speed v2-18.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.2326877117157
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  30
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-13.0) (Speed v2-39.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Evolution time:  2242.749173641205
+End of evolution
+Level Case3_2...
+Crash detected!
+Crash detected!
+Simulation Time:  60.152817726135254
+Scores: [1.4]
+Initial Random evaluation
+Evaluation time:  72.31245160102844
+Start of evolution
+Crash detected!
+Crash detected!
+Simulation Time:  60.11468005180359
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  1
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-31.0) (Speed v2-11.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.11519169807434
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  2
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-26.0) (Speed v2-42.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.1209077835083
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  3
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-26.0) (Speed v2-22.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.25847148895264
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  4
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-42.0) (Speed v2-48.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.17480111122131
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  5
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-23.0) (Speed v2-38.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.20761561393738
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  6
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-43.0) (Speed v2-26.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.254151344299316
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  7
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-39.0) (Speed v2-34.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.18461847305298
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  8
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-15.0) (Speed v2-19.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.200135946273804
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  9
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-27.0) (Speed v2-16.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.184481620788574
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  10
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-38.0) (Speed v2-47.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.10892176628113
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  11
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-20.0) (Speed v2-26.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.184645891189575
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  12
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-20.0) (Speed v2-23.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.10647654533386
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  13
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-38.0) (Speed v2-49.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.141589641571045
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  14
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-41.0) (Speed v2-41.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.14714813232422
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  15
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-13.0) (Speed v2-18.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.23492455482483
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  16
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-36.0) (Speed v2-34.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.24795889854431
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  17
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-21.0) (Speed v2-41.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.27869701385498
+Scores: [1.6]
+-----------------------------------------------------------------------------------------------
+Epoch:  18
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.18661975860596
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  19
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+New Ind: (Speed v1-30.0) (Speed v2-35.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.21812152862549
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  20
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+New Ind: (Speed v1-17.0) (Speed v2-23.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.235395193099976
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  21
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+New Ind: (Speed v1-32.0) (Speed v2-45.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.11365628242493
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  22
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+New Ind: (Speed v1-46.0) (Speed v2-11.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.20428919792175
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  23
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+New Ind: (Speed v1-41.0) (Speed v2-30.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.23253679275513
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  24
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+New Ind: (Speed v1-13.0) (Speed v2-28.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.151145935058594
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  25
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+New Ind: (Speed v1-22.0) (Speed v2-46.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.11431670188904
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  26
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+New Ind: (Speed v1-23.0) (Speed v2-36.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.160698652267456
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  27
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+New Ind: (Speed v1-15.0) (Speed v2-13.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.21807670593262
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  28
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+New Ind: (Speed v1-23.0) (Speed v2-17.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.18521022796631
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  29
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+New Ind: (Speed v1-36.0) (Speed v2-29.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.24280548095703
+Scores: [1.6]
+-----------------------------------------------------------------------------------------------
+Epoch:  30
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+New Ind: (Speed v1-10.0) (Speed v2-38.0) (Fitness Value-1.6)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-29.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Evolution time:  2242.5111949443817
+End of evolution
+Level Case3_3...
+Crash detected!
+Crash detected!
+Simulation Time:  60.169681549072266
+Scores: [1.4]
+Initial Random evaluation
+Evaluation time:  72.43243360519409
+Start of evolution
+Crash detected!
+Crash detected!
+Simulation Time:  60.20489859580994
+Scores: [1.6]
+-----------------------------------------------------------------------------------------------
+Epoch:  1
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.22691988945007
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  2
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-37.0) (Speed v2-43.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.16993236541748
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  3
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-37.0) (Speed v2-17.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.22178769111633
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  4
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-34.0) (Speed v2-43.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.18232345581055
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  5
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-13.0) (Speed v2-46.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.20014762878418
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  6
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-27.0) (Speed v2-23.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.2597930431366
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  7
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-36.0) (Speed v2-49.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19495487213135
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  8
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-34.0) (Speed v2-17.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.146644592285156
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  9
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-12.0) (Speed v2-34.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.2165641784668
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  10
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-12.0) (Speed v2-28.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.27997136116028
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  11
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-32.0) (Speed v2-12.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.159146547317505
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  12
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-44.0) (Speed v2-43.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.15756630897522
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  13
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-26.0) (Speed v2-10.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.249671936035156
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  14
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-18.0) (Speed v2-41.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.09855079650879
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  15
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-34.0) (Speed v2-39.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.15108942985535
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  16
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-41.0) (Speed v2-13.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.2480731010437
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  17
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-33.0) (Speed v2-26.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.25991773605347
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  18
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-27.0) (Speed v2-16.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.26679253578186
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  19
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-32.0) (Speed v2-18.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.20927977561951
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  20
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-27.0) (Speed v2-35.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.18323850631714
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  21
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-48.0) (Speed v2-44.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.1902015209198
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  22
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-37.0) (Speed v2-49.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.14221978187561
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  23
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-15.0) (Speed v2-49.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19105410575867
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  24
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-22.0) (Speed v2-44.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.22562098503113
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  25
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-32.0) (Speed v2-46.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.221935510635376
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  26
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-29.0) (Speed v2-18.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.156527280807495
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  27
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-46.0) (Speed v2-40.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.165436029434204
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  28
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-34.0) (Speed v2-41.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.243977546691895
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  29
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-14.0) (Speed v2-20.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.155110120773315
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  30
+We have 2 scenarios:
+Last Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+New Ind: (Speed v1-23.0) (Speed v2-44.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-10.0) (Speed v2-30.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Evolution time:  2243.3950781822205
+End of evolution
+Level Case3_4...
+Crash detected!
+Crash detected!
+Simulation Time:  60.24283289909363
+Scores: [1.4]
+Initial Random evaluation
+Evaluation time:  72.39536452293396
+Start of evolution
+Crash detected!
+Crash detected!
+Simulation Time:  60.17125105857849
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  1
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-25.0) (Speed v2-35.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.18211317062378
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  2
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-28.0) (Speed v2-28.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.11759805679321
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  3
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-48.0) (Speed v2-41.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.23304724693298
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  4
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-34.0) (Speed v2-32.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.165647983551025
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  5
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-31.0) (Speed v2-42.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.168203592300415
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  6
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-17.0) (Speed v2-17.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.24591040611267
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  7
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-45.0) (Speed v2-19.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.128589153289795
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+Warning: A part Independent Rear Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  8
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-49.0) (Speed v2-41.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.1219527721405
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  9
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-33.0) (Speed v2-49.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.16419053077698
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  10
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-40.0) (Speed v2-38.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.27578139305115
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  11
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-33.0) (Speed v2-43.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.177916288375854
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  12
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-27.0) (Speed v2-32.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.252798318862915
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  13
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-43.0) (Speed v2-37.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.199012756347656
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  14
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-27.0) (Speed v2-33.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.17057538032532
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  15
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-38.0) (Speed v2-19.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.17064070701599
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  16
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-24.0) (Speed v2-17.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.242390394210815
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  17
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-14.0) (Speed v2-47.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.138649463653564
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  18
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-11.0) (Speed v2-15.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.236883878707886
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  19
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-36.0) (Speed v2-43.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.243653535842896
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  20
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-43.0) (Speed v2-11.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.13523292541504
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  21
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-44.0) (Speed v2-44.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.13253927230835
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  22
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-46.0) (Speed v2-23.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.18001461029053
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  23
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-44.0) (Speed v2-19.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.154417753219604
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  24
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-28.0) (Speed v2-34.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.31684756278992
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  25
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-24.0) (Speed v2-24.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.288604497909546
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  26
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-31.0) (Speed v2-29.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.296815156936646
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  27
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-19.0) (Speed v2-19.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.27410554885864
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  28
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-13.0) (Speed v2-21.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.25726246833801
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  29
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-34.0) (Speed v2-26.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.2702317237854
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  30
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-18.0) (Speed v2-20.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Evolution time:  2245.158734560013
+End of evolution
+Level Case3_5...
+Crash detected!
+Crash detected!
+Simulation Time:  60.24032115936279
+Scores: [1.4]
+Initial Random evaluation
+Evaluation time:  72.49954581260681
+Start of evolution
+Crash detected!
+Crash detected!
+Simulation Time:  60.29214954376221
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  1
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-14.0) (Speed v2-44.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.24813485145569
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  2
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-26.0) (Speed v2-34.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.244444131851196
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+Warning: A part Independent Rear Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  3
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-49.0) (Speed v2-45.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.1340913772583
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  4
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-18.0) (Speed v2-22.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.25627040863037
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  5
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-46.0) (Speed v2-33.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.09327530860901
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  6
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-40.0) (Speed v2-26.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.11906552314758
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  7
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-33.0) (Speed v2-12.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.1091992855072
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  8
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-33.0) (Speed v2-39.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.17758083343506
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  9
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-17.0) (Speed v2-31.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.181166887283325
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  10
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-38.0) (Speed v2-20.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.111019134521484
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  11
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-24.0) (Speed v2-23.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.12272882461548
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  12
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-24.0) (Speed v2-11.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.21299743652344
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  13
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-17.0) (Speed v2-44.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.155250549316406
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  14
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-43.0) (Speed v2-39.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.247079849243164
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  15
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-44.0) (Speed v2-25.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.16416144371033
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  16
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-26.0) (Speed v2-43.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.2513484954834
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  17
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-40.0) (Speed v2-20.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.23545718193054
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  18
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-41.0) (Speed v2-10.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.256892681121826
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  19
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-19.0) (Speed v2-23.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.10532331466675
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  20
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-15.0) (Speed v2-40.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.14410090446472
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  21
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-29.0) (Speed v2-13.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.14888286590576
+Scores: [1.6]
+-----------------------------------------------------------------------------------------------
+Epoch:  22
+We have 2 scenarios:
+Last Ind: (Speed v1-20.0) (Speed v2-20.0) (Fitness Value-1.4)
+New Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+We select the best scenario:
+Best Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.1852810382843
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+Warning: A part Independent Rear Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  23
+We have 2 scenarios:
+Last Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+New Ind: (Speed v1-49.0) (Speed v2-49.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.2001256942749
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  24
+We have 2 scenarios:
+Last Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+New Ind: (Speed v1-23.0) (Speed v2-42.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.105175733566284
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+Warning: A part Independent Rear Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  25
+We have 2 scenarios:
+Last Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+New Ind: (Speed v1-49.0) (Speed v2-49.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.133543252944946
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Independent Front Suspension is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  26
+We have 2 scenarios:
+Last Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+New Ind: (Speed v1-42.0) (Speed v2-47.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.116026401519775
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+Warning: A part Independent Rear Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  27
+We have 2 scenarios:
+Last Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+New Ind: (Speed v1-48.0) (Speed v2-30.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19046115875244
+Scores: [1.4]
+-----------------------------------------------------------------------------------------------
+Epoch:  28
+We have 2 scenarios:
+Last Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+New Ind: (Speed v1-36.0) (Speed v2-11.0) (Fitness Value-1.4)
+We select the best scenario:
+Best Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.17087769508362
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  29
+We have 2 scenarios:
+Last Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+New Ind: (Speed v1-46.0) (Speed v2-11.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Crash detected!
+Crash detected!
+Simulation Time:  60.19488215446472
+Warning: A part Radiator is NOT FOUND in a dictionary!
+Warning: A part Independent Front Suspension is NOT FOUND in a dictionary!
+The code Radiator is not found in the part dictionary!
+Scores: [0]
+-----------------------------------------------------------------------------------------------
+Epoch:  30
+We have 2 scenarios:
+Last Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+New Ind: (Speed v1-44.0) (Speed v2-33.0) (Fitness Value-0.0)
+We select the best scenario:
+Best Ind: (Speed v1-11.0) (Speed v2-19.0) (Fitness Value-1.6)
+-----------------------------------------------------------------------------------------------
+Evolution time:  2243.2568821907043
+End of evolution
+-------------------- End of data/Case3_data.json --------------------------------------------------------------

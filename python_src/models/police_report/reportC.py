@@ -12,7 +12,9 @@ class ReportTypeC(Report):
             if part in ['L', 'R']:  # Police Report is Side Type: [L], [R] -> same
                 return [part[0]]
             elif part in ['F', 'M', 'B']:  # Police Report is Side Type: [F], [B], [M] -> L and R
-                return ['L', 'R']
+                # Empty list - discard since it doesn't tell you the accurate side
+                # Assume we have an another broken part will tell us the side
+                return []
         else:
             # Police Report is Side Type: F[L], B[R] -> L, R
             return [part[1]]
@@ -33,8 +35,24 @@ class ReportTypeC(Report):
         # From Simulation:
         # List crashes_from_simulation contains CRASHED side
         # List non_crashes_from_simulation contains NON-CRASHED side
+        is_contain_components = False
+        decode_parts = list()
+        for output in outputs:
+            if output["name"] in ['F', 'M', 'B']:
+                is_contain_components = True
+            for i in self.decode_part(output["name"]):
+                decode_parts.append(i)
+
+        # TODO:
+        # If we don't have any L or R in outputs and the output already contains component parts F M B,
+        # we will add 'L', 'R' to the outputs
+        if len(decode_parts) == 0 and is_contain_components:
+            decode_parts = ['L', 'R']
+
+        # Final outputs
         # Remove duplicates from a list outputs by dict.fromkeys
-        outputs = list((dict.fromkeys([i for output in outputs for i in self.decode_part(output["name"])])))
+        outputs = list((dict.fromkeys(decode_parts)))
+
         crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_C_DATA) - set(outputs))
 
         crash_points, non_crash_points = self._match(CAT_C_DATA,

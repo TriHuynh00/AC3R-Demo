@@ -78,10 +78,10 @@ class OpoEvolution:
             s2: CrashScenario = pop[0][0]
             print(f'Last Ind: '
                   f'(Speed v1-{s1.vehicles[0].get_speed()}) '
-                  f'(Speed v2-{s1.vehicles[0].get_speed()}) '
+                  f'(Speed v2-{s1.vehicles[1].get_speed()}) '
                   f'(Fitness Value-{best_ind.fitness.values[0]})')
             print(f'New Ind: '
-                  f'(Speed v1-{s2.vehicles[1].get_speed()}) '
+                  f'(Speed v1-{s2.vehicles[0].get_speed()}) '
                   f'(Speed v2-{s2.vehicles[1].get_speed()}) '
                   f'(Fitness Value-{pop[0].fitness.values[0]})')
             ##############################################################################
@@ -96,7 +96,7 @@ class OpoEvolution:
             print("We select the best scenario: ")
             s: CrashScenario = best_ind[0]
             print(f'Best Ind: '
-                  f'(Speed v1-{s.vehicles[1].get_speed()}) '
+                  f'(Speed v1-{s.vehicles[0].get_speed()}) '
                   f'(Speed v2-{s.vehicles[1].get_speed()}) '
                   f'(Fitness Value-{best_ind.fitness.values[0]})')
             print("-----------------------------------------------------------------------------------------------")
