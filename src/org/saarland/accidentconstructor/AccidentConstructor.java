@@ -2840,18 +2840,21 @@ public class AccidentConstructor {
             String roadType = formatJSONKey("road_type") + formatJSONValueString(street.getStreetPropertyValue("road_type"));
             String roadShape = formatJSONKey("road_shape") + formatJSONValueString(street.getStreetPropertyValue("road_shape"));
             String roadNodeList = "road_node_list";
+
             String[] paths = street.getStreetPropertyValue(roadNodeList)
                     .replaceAll(" ", ",").split(";");
+
             List<String> pathList = Arrays.asList(paths);
             ArrayList<String> points = new ArrayList<String>();
-            /* Now we only take 1st and last elements of road node list */
+
             points.add('[' + pathList.get(0) + ']');
             points.add('[' + pathList.get(pathList.size() - 1) + ']');
-            /* Following code will take all elements to json data but not now
+
+            // Following code will take all elements to json data
             for(String point: pathList){
                 points.add("[" + point + "]");
             }
-            */
+
             roadNodeList = formatJSONKey(roadNodeList) + points.toString();
 
             // Update scenario JSON data
