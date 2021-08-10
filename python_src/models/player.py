@@ -25,7 +25,8 @@ VEHICLE_PARTS_DICT = {
     "Wagon Left Taillight": "ML",
     "Radiator": 'F',
     "Independent Front Suspension": 'F',
-    "Independent Rear Suspension": 'B'
+    "Independent Rear Suspension": 'B',
+    "Tailgate Glass": 'B'
 }
 
 
