@@ -711,7 +711,6 @@ public class AccidentConstructor {
                             "vehicle " + vehicle.getVehicleId() +
                                     " action & coord = " + accidentConstructor.mapActionToRoadSegment(vehicle));
                 }
-
                 accidentConstructor.generateScenarioJSONData(scenarioDataPath, scenarioName);
 //                System.exit(0);
 //                accidentConstructor.controlBeamNgAlgorithm(scenarioName);
@@ -719,19 +718,10 @@ public class AccidentConstructor {
                 /************ END SCENARIO DATA FILE ***********/
 
                 /************ BEGIN SCENARIO EXECUTION ***********/
-
-                // boolean hasCrash = testCaseRunner.runScenario(scenarioName);
-
-                // Add BeamNG Server Socket handling here
-
-                // DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList,
-                // ontologyHandler, scenarioName);
-
-                // crashAnalyzer.checkWhetherCrashOccur(hasCrash);
-//                boolean hasCrash = testCaseRunner.runScenario(scenarioName);
-//                DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList, ontologyHandler, scenarioName);
-//                crashAnalyzer.checkWhetherCrashOccur(hasCrash);
-//                ConsoleLogger.print('d', "Finish running scenario");
+//                 boolean hasCrash = testCaseRunner.runScenario(scenarioName);
+//                 DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList, ontologyHandler, scenarioName);
+//                 crashAnalyzer.checkWhetherCrashOccur(hasCrash);
+//                 ConsoleLogger.print('d', "Finish running scenario");
 
                 /************ END SCENARIO EXECUTION ***********/
 //                long scenarioEndTime = System.nanoTime() - scenarioStartTime;
@@ -2892,6 +2882,7 @@ public class AccidentConstructor {
                     rotDeg = new ArrayList<>(Arrays.asList(0.00673789,  0.02676513, -0.47863063,  0.87758244));
             }
             String vRotQuat = formatJSONKey("rot_quat") + rotDeg.toString() + ",";
+            String vDistanceToTrigger = formatJSONKey("distance_to_trigger") + vehicle.getLeaveTriggerDistance() + ",";
 
             // Get damage components of each vehicle
             String damageComponentData = vehicle.getDamagedComponents().size() == 0  ?
@@ -2913,7 +2904,7 @@ public class AccidentConstructor {
             }
             vDriving = removeLastChar(vDriving) + "]";
 
-            vehicleData += vName + vColor + vRotQuat + vDamage + vDriving;
+            vehicleData += vName + vColor + vRotQuat + vDistanceToTrigger + vDamage + vDriving;
             vehicleData += "},";
         }
         vehicleData = removeLastChar(vehicleData);

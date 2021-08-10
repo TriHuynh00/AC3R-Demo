@@ -10,6 +10,7 @@
 "name":"v1",
 "color":"0 0 0.5",
 "rot_quat":[0.00993774, 0.03947598, -0.70593404, 0.7071068],
+"distance_to_trigger":-1.0,
 "damage_components":"front left",
 "driving_actions":[ {
 "name":"follow",
@@ -39,6 +40,7 @@
 "name":"v2",
 "color":"0 0.3 0",
 "rot_quat":[0.00993774, 0.03947598, -0.70593404, 0.7071068],
+"distance_to_trigger":-1.0,
 "damage_components":"any",
 "driving_actions":[ {
 "name":"stop",
