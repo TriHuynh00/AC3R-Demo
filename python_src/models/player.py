@@ -26,7 +26,8 @@ VEHICLE_PARTS_DICT = {
     "Radiator": 'F',
     "Independent Front Suspension": 'F',
     "Independent Rear Suspension": 'B',
-    "Steering": 'FL'
+    "Steering": 'FL',
+    "Tailgate Glass": 'B'
 }
 
 
