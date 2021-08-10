@@ -45,27 +45,41 @@ class Simulation:
 
         return player
 
-    def get_vehicles_distance(self) -> float:
+    def get_vehicles_distance(self, debug: bool = False) -> float:
         v1, v2 = self.players[0].vehicle, self.players[1].vehicle
         p1, p2 = Point(v1.state['pos'][0], v1.state['pos'][1]), Point(v2.state['pos'][0], v2.state['pos'][1])
         distance = p1.distance(p2)
-        print("Distances between vehicles: ", distance)
+
+        # Debug line
+        if debug is True:
+            print("Distances between vehicles: ", distance)
 
         return distance
 
     @staticmethod
-    def trigger_vehicle(player: models.Player, distance_to_trigger: float, distance_report: float):
-        # The 2nd car stills wait until their current distance <= distance_to_trigger
-        if distance_to_trigger < distance_report:
-            return False
+    def trigger_vehicle(player: models.Player, distance_report: float = None, debug: bool = False) -> bool:
+        is_trigger = False
+        # The car stills wait until their current distance <= distance_to_trigger
+        if distance_report is not None and player.distance_to_trigger > distance_report:
+            is_trigger = True
 
-        print("Alert: the second vehicle starts to move.")
-        vehicle = player.vehicle
-        road_pf = player.road_pf
-        if len(road_pf.script) > 2:
-            vehicle.ai_set_mode("manual")
-            vehicle.ai_set_script(road_pf.script, cling=False)
-        return True
+        # Trigger normal vehicles which move in the beginning
+        if distance_report is None and player.distance_to_trigger == -1:
+            is_trigger = True
+
+        # Add vehicle to a scenario
+        if is_trigger:
+            vehicle = player.vehicle
+            road_pf = player.road_pf
+            if len(road_pf.script) > 2:
+                vehicle.ai_set_mode("manual")
+                vehicle.ai_set_script(road_pf.script, cling=False)
+
+        # Debug line
+        if debug is True:
+            print(f'Alert! The vehicle starts to move. Distance to Trigger/Current Distance: '
+                  f'{str(round(player.distance_to_trigger, 2))}/{str(round(distance_report, 2))}')
+        return is_trigger
 
     def get_data_outputs(self) -> {}:
         data_outputs = {}
@@ -115,18 +129,15 @@ class Simulation:
 
             # Drawing debug line and forcing vehicle moving by given trajectory
             for player in self.players:
-                vehicle = player.vehicle
                 road_pf = player.road_pf
-                # ai_set_script not working for parking vehicle
+                # ai_set_script not working for parking vehicle, so
+                # the number of node from road_pf.script must > 2
                 if len(road_pf.script) > 2:
                     bng_instance.add_debug_line(road_pf.points, road_pf.sphere_colors,
                                                 spheres=road_pf.spheres, sphere_colors=road_pf.sphere_colors,
                                                 cling=True, offset=0.1)
-                    if player.distance_to_trigger <= 0:
-                        vehicle.ai_set_mode("manual")
-                        vehicle.ai_set_script(road_pf.script, cling=False)
-                    else:
-                        distance_to_trigger = player.distance_to_trigger
+                    distance_to_trigger = player.distance_to_trigger if player.distance_to_trigger > 0 else distance_to_trigger
+                    self.trigger_vehicle(player)
 
             # Prevent the function still running after 2nd car moving
             is_computed_distance = distance_to_trigger > -1
@@ -134,7 +145,7 @@ class Simulation:
             sim_data_collectors.start()
             start_time = time.time()
             while time.time() < (start_time + timeout):
-                # Record the vehicle state for every 50 steps
+                # Record the vehicle state for every 10 steps
                 bng_instance.step(10, True)
                 sim_data_collectors.collect()
 
@@ -142,7 +153,9 @@ class Simulation:
                 if is_computed_distance:
                     distance_change = self.get_vehicles_distance()
                     # Trigger the 2nd vehicle
-                    if self.trigger_vehicle(self.players[1], distance_to_trigger, distance_change):
+                    if self.trigger_vehicle(player=self.players[1],
+                                            distance_report=distance_change,
+                                            debug=True):
                         is_computed_distance = False  # No need to compute distance anymore
 
                 for player in self.players:
