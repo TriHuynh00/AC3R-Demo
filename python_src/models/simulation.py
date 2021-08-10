@@ -3,10 +3,12 @@ import time
 import beamngpy
 import traceback
 import models
+from shapely.geometry import Point
 from typing import List
 from beamngpy import BeamNGpy, Scenario
 from models import SimulationFactory
-from models.simulation_data import VehicleStateReader, SimulationDataCollector, SimulationParams, SimulationDataContainer
+from models.simulation_data import VehicleStateReader, SimulationDataCollector
+from models.simulation_data import SimulationParams, SimulationDataContainer
 
 CRASHED = 1
 NO_CRASH = 0
@@ -43,6 +45,28 @@ class Simulation:
 
         return player
 
+    def get_vehicles_distance(self) -> float:
+        v1, v2 = self.players[0].vehicle, self.players[1].vehicle
+        p1, p2 = Point(v1.state['pos'][0], v1.state['pos'][1]), Point(v2.state['pos'][0], v2.state['pos'][1])
+        distance = p1.distance(p2)
+        print("Distances between vehicles: ", distance)
+
+        return distance
+
+    @staticmethod
+    def trigger_vehicle(player: models.Player, distance_to_trigger: float, distance_report: float):
+        # The 2nd car stills wait until their current distance <= distance_to_trigger
+        if distance_to_trigger < distance_report:
+            return False
+
+        print("Alert: the second vehicle starts to move.")
+        vehicle = player.vehicle
+        road_pf = player.road_pf
+        if len(road_pf.script) > 2:
+            vehicle.ai_set_mode("manual")
+            vehicle.ai_set_script(road_pf.script, cling=False)
+        return True
+
     def get_data_outputs(self) -> {}:
         data_outputs = {}
         for player in self.players:
@@ -51,6 +75,9 @@ class Simulation:
 
     def execute_scenario(self, timeout: int = 60):
         start_time = 0
+        # Condition to start the 2nd vehicle after driving 1st for a while
+        # -1: 1st and 2nd start at the same time
+        distance_to_trigger = -1
         # Init BeamNG simulation
         bng_instance = self.init_simulation()
         scenario = Scenario("smallgrid", "test_01")
@@ -95,16 +122,28 @@ class Simulation:
                     bng_instance.add_debug_line(road_pf.points, road_pf.sphere_colors,
                                                 spheres=road_pf.spheres, sphere_colors=road_pf.sphere_colors,
                                                 cling=True, offset=0.1)
-                    vehicle.ai_set_mode('manual')
-                    vehicle.ai_set_script(road_pf.script, cling=False)
+                    if player.distance_to_trigger <= 0:
+                        vehicle.ai_set_mode("manual")
+                        vehicle.ai_set_script(road_pf.script, cling=False)
+                    else:
+                        distance_to_trigger = player.distance_to_trigger
 
+            # Prevent the function still running after 2nd car moving
+            is_computed_distance = distance_to_trigger > -1
             # Update the vehicle information
             sim_data_collectors.start()
             start_time = time.time()
             while time.time() < (start_time + timeout):
                 # Record the vehicle state for every 50 steps
-                bng_instance.step(50, True)
+                bng_instance.step(10, True)
                 sim_data_collectors.collect()
+
+                # Compute the distance between two vehicles
+                if is_computed_distance:
+                    distance_change = self.get_vehicles_distance()
+                    # Trigger the 2nd vehicle
+                    if self.trigger_vehicle(self.players[1], distance_to_trigger, distance_change):
+                        is_computed_distance = False  # No need to compute distance anymore
 
                 for player in self.players:
                     # Find the position of moving car

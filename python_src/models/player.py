@@ -25,7 +25,8 @@ VEHICLE_PARTS_DICT = {
     "Wagon Left Taillight": "ML",
     "Radiator": 'F',
     "Independent Front Suspension": 'F',
-    "Independent Rear Suspension": 'B'
+    "Independent Rear Suspension": 'B',
+    "Steering": 'FL'
 }
 
 
@@ -42,7 +43,7 @@ class Player:
         rot_quat (tuple): (x, y, z, w) tuple specifying the rotation as quaternion.
         road_pf(RoadProfiler): list of timestamped positions defining to make the vehicle follow a given "script".
     """
-    def __init__(self, vehicle: beamngpy.Vehicle, road_pf: RoadProfiler, pos, rot, rot_quat):
+    def __init__(self, vehicle: beamngpy.Vehicle, road_pf: RoadProfiler, pos, rot, rot_quat, distance_to_trigger):
         self.vehicle = vehicle
         self.pos = pos
         self.rot = rot
@@ -51,6 +52,7 @@ class Player:
         self.positions = []
         self.damage = []
         self.times = []
+        self.distance_to_trigger = distance_to_trigger
 
     def collect_positions(self, position):
         self.positions.append(position)
