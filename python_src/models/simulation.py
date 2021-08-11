@@ -156,11 +156,11 @@ class Simulation:
 
                 # Compute the distance between two vehicles
                 if is_computed_distance:
-                    distance_change = self.get_vehicles_distance()
+                    distance_change = self.get_vehicles_distance(debug=self.debug)
                     # Trigger the 2nd vehicle
                     if self.trigger_vehicle(player=self.players[vehicleId_to_trigger],
                                             distance_report=distance_change,
-                                            debug=True):
+                                            debug=self.debug):
                         is_computed_distance = False  # No need to compute distance anymore
 
                 for player in self.players:

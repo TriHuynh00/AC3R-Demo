@@ -30,6 +30,7 @@ VEHICLE_PARTS_DICT = {
     "Tailgate Glass": 'B',
     "Front Strut Brace": 'F',
     "Front Left Door Glass": "FL",
+    "Front Right Door Glass": "FR",
 }
 
 
@@ -44,18 +45,22 @@ class Player:
         pos (tuple): (x,y,z) tuple specifying the position of the vehicle.
         rot (tuple): (x,y,z) tuple expressing the rotation of the vehicle in Euler angles around each axis.
         rot_quat (tuple): (x, y, z, w) tuple specifying the rotation as quaternion.
-        road_pf(RoadProfiler): list of timestamped positions defining to make the vehicle follow a given "script".
+        road_pf (RoadProfiler): list of timestamped positions defining to make the vehicle follow a given "script".
+        distance_to_trigger (float): a floating number specifies the distance between 2 vehicles. When the distance
+                                     between 2 vehicles <= this number, an event in the simulation will trigger
+                                     this vehicle starting to move. By default, the value is -1 which means the vehicle
+                                     will run at the beginning of simulation.
     """
-    def __init__(self, vehicle: beamngpy.Vehicle, road_pf: RoadProfiler, pos, rot, rot_quat, distance_to_trigger):
+    def __init__(self, vehicle: beamngpy.Vehicle, road_pf: RoadProfiler, pos, rot, rot_quat, distance_to_trigger: float):
         self.vehicle = vehicle
         self.pos = pos
         self.rot = rot
         self.rot_quat = rot_quat
         self.road_pf = road_pf
+        self.distance_to_trigger = distance_to_trigger
         self.positions = []
         self.damage = []
         self.times = []
-        self.distance_to_trigger = distance_to_trigger
 
     def collect_positions(self, position):
         self.positions.append(position)
