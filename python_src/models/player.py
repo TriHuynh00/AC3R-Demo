@@ -27,7 +27,9 @@ VEHICLE_PARTS_DICT = {
     "Independent Front Suspension": 'F',
     "Independent Rear Suspension": 'B',
     "Steering": 'FL',
-    "Tailgate Glass": 'B'
+    "Tailgate Glass": 'B',
+    "Front Strut Brace": 'F',
+    "Front Left Door Glass": "FL",
 }
 
 

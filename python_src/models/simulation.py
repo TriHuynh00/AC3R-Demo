@@ -92,6 +92,7 @@ class Simulation:
         # Condition to start the 2nd vehicle after driving 1st for a while
         # -1: 1st and 2nd start at the same time
         distance_to_trigger = -1
+        vehicleId_to_trigger = 0
         # Init BeamNG simulation
         bng_instance = self.init_simulation()
         scenario = Scenario("smallgrid", "test_01")
@@ -128,16 +129,20 @@ class Simulation:
             bng_instance.start_scenario()
 
             # Drawing debug line and forcing vehicle moving by given trajectory
+            idx = 0
             for player in self.players:
                 road_pf = player.road_pf
+                if player.distance_to_trigger > 0:
+                    distance_to_trigger = player.distance_to_trigger
+                    vehicleId_to_trigger = idx
                 # ai_set_script not working for parking vehicle, so
                 # the number of node from road_pf.script must > 2
                 if len(road_pf.script) > 2:
+                    self.trigger_vehicle(player)
                     bng_instance.add_debug_line(road_pf.points, road_pf.sphere_colors,
                                                 spheres=road_pf.spheres, sphere_colors=road_pf.sphere_colors,
                                                 cling=True, offset=0.1)
-                    distance_to_trigger = player.distance_to_trigger if player.distance_to_trigger > 0 else distance_to_trigger
-                    self.trigger_vehicle(player)
+                idx += 1
 
             # Prevent the function still running after 2nd car moving
             is_computed_distance = distance_to_trigger > -1
@@ -153,7 +158,7 @@ class Simulation:
                 if is_computed_distance:
                     distance_change = self.get_vehicles_distance()
                     # Trigger the 2nd vehicle
-                    if self.trigger_vehicle(player=self.players[1],
+                    if self.trigger_vehicle(player=self.players[vehicleId_to_trigger],
                                             distance_report=distance_change,
                                             debug=True):
                         is_computed_distance = False  # No need to compute distance anymore
