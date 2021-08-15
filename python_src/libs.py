@@ -9,6 +9,7 @@ ROOT: Path = Path(os.path.abspath(os.path.join(os.path.dirname(__file__))))
 PATH_TEST = str(ROOT.joinpath("tests"))
 PATH_DATA = str(ROOT.joinpath("data"))
 
+
 def _collect_police_report(path):
     with open(path) as file:
         report_data = json.load(file)
@@ -31,3 +32,8 @@ def _VD_A(treatment: List[float], control: List[float]):
     # magnitude = magnitude[bisect_left(levels, abs(scaled_A))]
     estimate = A
     return estimate
+
+
+def dump(obj):
+    for attr in dir(obj):
+        print("obj.%s = %r" % (attr, getattr(obj, attr)))

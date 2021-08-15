@@ -13,12 +13,13 @@ NO_CRASH = 0
 
 
 class Simulation:
-    def __init__(self, sim_factory: SimulationFactory, debug: bool = False):
+    def __init__(self, sim_factory: SimulationFactory, file_name=None, debug: bool = False):
         self.roads: List[beamngpy.Road] = sim_factory.generate_roads()
         self.players: List[models.Player] = sim_factory.generate_players()
         self.targets: {} = sim_factory.generate_targets()
         self.status: int = NO_CRASH
         self.debug: bool = debug
+        self.file_name: str = file_name
 
     @staticmethod
     def init_simulation() -> BeamNGpy:
@@ -50,6 +51,22 @@ class Simulation:
         return data_outputs
 
     def execute_scenario(self, timeout: int = 60):
+        def getBboxRect(vehicle):
+            bbox = vehicle.get_bbox()
+            boundary_x = [
+                bbox['front_bottom_left'][0],
+                bbox['front_bottom_right'][0],
+                bbox['rear_bottom_right'][0],
+                bbox['rear_bottom_left'][0],
+            ]
+            boundary_y = [
+                bbox['front_bottom_left'][1],
+                bbox['front_bottom_right'][1],
+                bbox['rear_bottom_right'][1],
+                bbox['rear_bottom_left'][1],
+            ]
+            return bbox, boundary_x, boundary_y
+
         start_time = 0
         # Init BeamNG simulation
         bng_instance = self.init_simulation()
@@ -107,6 +124,7 @@ class Simulation:
                 sim_data_collectors.collect()
 
                 for player in self.players:
+                    player.final_bboxes.append(getBboxRect(player.vehicle)[0])
                     # Find the position of moving car
                     self.collect_vehicle_position(player)
                     # Collect the damage sensor information
@@ -141,6 +159,33 @@ class Simulation:
             # Save the last position of vehicle
             for player in self.players:
                 self.collect_vehicle_position(player)
+
+            if self.file_name is not None:
+                toCSV = []
+                for player in self.players:
+                    v = dict.fromkeys(['vid', 'vehicle', 'initial_position', 'initial_direction', 'init_bbox',
+                                       'final_bboxes', 'crashed_happened', 'simulation_damage', 'crash_side_generic',
+                                       'crash_side_specific', 'crash_impact_match', 'crash_side_match',
+                                       'crash_impact_hits', 'crash_impact_miss', 'missed_values', 'out_of_bound',
+                                       'pos_sim', 'orient_sim', 'cum_iou', 'cum_iou_error', 'displacement_error'])
+                    v["vid"] = player.vehicle.vid
+                    v["final_bboxes"] = player.final_bboxes
+                    v["initial_position"] = player.positions[0]
+                    v["crashed_happened"] = is_crash
+                    v["simulation_damage"] = player.damage
+                    toCSV.append(v)
+
+                import csv
+                import json
+                keys = toCSV[0].keys()
+                fn = self.file_name.split('/')[-1].split('.')[0]
+                with open(fn + ".csv", 'w', newline='') as output_file:
+                    dict_writer = csv.DictWriter(output_file, keys)
+                    dict_writer.writeheader()
+                    dict_writer.writerows(toCSV)
+                with open(fn + ".json", "w") as output_file:
+                    json.dump(toCSV, output_file)
+
         except Exception as ex:
             sim_data_collectors.save()
             sim_data_collectors.end(success=False, exception=ex)

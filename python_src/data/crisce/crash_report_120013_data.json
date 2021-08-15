@@ -1,0 +1,45 @@
+{
+"name":"crash_report_120013",
+"roads":[{
+"name":"road1",
+"road_type":"roadway",
+"road_shape":"I",
+"road_node_list":[[-240.0,0.0,0,8.0], [240.0,0.0,0,8.0], [-240.0,0.0,0,8.0], [-180.0,0.0,0,8.0], [-120.0,0.0,0,8.0], [-60.0,0.0,0,8.0], [0,0,0,8.0], [60.0,0.0,0,8.0], [120.0,0.0,0,8.0], [180.0,0.0,0,8.0], [240.0,0.0,0,8.0]]
+}],
+"vehicles":[{
+"name":"vehicle1",
+"color":"",
+"rot_quat":[0.00993774, 0.03947598, -0.70593404, 0.7071068],
+"damage_components":"front",
+"driving_actions":[ {
+"name":"stop",
+"trajectory":[[[-93.41, -2.0, 0.0]]],
+"speed":20},{
+"name":"follow",
+"trajectory":[[[-93.41, -2.0, 0.0], [-13.41, -2.0, 0.0]]],
+"speed":20},{
+"name":"stop",
+"trajectory":[[[-13.41, -2.0, 0.0]]],
+"speed":20},{
+"name":"turn",
+"trajectory":[[[-13.41, -2.0, 0.0], [0.0, -4.0, 0.0], [0.0, -2.0, 0.0]]],
+"speed":20}]},{
+"name":"vehicle2",
+"color":"",
+"rot_quat":[0.00993774, 0.03947598, -0.70593404, 0.7071068],
+"damage_components":"rear",
+"driving_actions":[ {
+"name":"follow",
+"trajectory":[[[-97.88, -2.0, 0.0], [-17.88, -2.0, 0.0]]],
+"speed":20},{
+"name":"follow",
+"trajectory":[[[-17.88, -2.0, 0.0], [0.0, -4.0, 0.0]]],
+"speed":20},{
+"name":"follow",
+"trajectory":[[[0.0, -4.0, 0.0], [0.0, -2.0, 0.0]]],
+"speed":20}]}],
+"expected_crash_components":[{
+"name":"v1",
+"parts":[{"name":"front","damage":0}]},{
+"name":"v2",
+"parts":[{"name":"rear","damage":0}]}]}

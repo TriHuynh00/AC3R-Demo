@@ -9,16 +9,16 @@ def pairs(lst):
 
 class RoadProfiler:
     def __init__(self):
-        self = self
         self.script = []
         self.points = []
         self.spheres = []
         self.sphere_colors = []
 
-    def compute_ai_script(self, trajectory, color=None):
+    def compute_ai_script(self, trajectory, color):
         segment_times = [0]
         segment_x = [p[0] for p in trajectory]
         segment_y = [p[1] for p in trajectory]
+        color = "1 0 0" if color == "" else color
 
         for segment in pairs(trajectory):
             p1, p2 = segment[0], segment[1]

@@ -50,7 +50,7 @@ def evol_scenario(scenario_file):
 
 # make sure we invoke cli
 if __name__ == '__main__':
-    cli()
+    # cli()
 
     # for s in ["data/Case4_data.json"]:
     #     for i in np.arange(start=1, stop=6, step=1):
@@ -61,14 +61,27 @@ if __name__ == '__main__':
     #     print(f'-------------------- End of {s} --------------------------------------------------------------')
     #     print()
 
-    # scenario_files = ["data/Case0_data.json","data/Case1_data.json","data/Case2_data.json","data/Case3_data.json","data/Case4_data.json","data/Case5_data.json","data/Case6_data.json"]
-    # with open("data/Case6_data.json") as file:
-    #     scenario_data = json.load(file)
-    # sim_factory = SimulationFactory(CrashScenario.from_json(scenario_data))
-    # simulation = Simulation(sim_factory=sim_factory)
-    # simulation.execute_scenario(timeout=30)
-    # print(f'Simulation Score: {SimulationScore(simulation).calculate()} / '
-    #       f'{SimulationScore(simulation).get_expected_score()}')
+    scenario_files = ["data/crisce/crash_report_100343_data.json",
+                      "data/crisce/crash_report_103378_data.json",
+                      "data/crisce/crash_report_105222_data.json",
+                      "data/crisce/crash_report_108812_data.json",
+                      "data/crisce/crash_report_108909_data.json",
+                      "data/crisce/crash_report_119897_data.json",
+                      "data/crisce/crash_report_120013_data.json",
+                      "data/crisce/crash_report_120278_data.json",
+                      "data/crisce/crash_report_120305_data.json",
+                      "data/crisce/crash_report_120565_data.json",
+                      "data/crisce/crash_report_122080_data.json",
+                      "data/crisce/crash_report_122168_data.json",
+                      "data/crisce/crash_report_128697_data.json"]
+    for s in scenario_files:
+        with open(s) as file:
+            scenario_data = json.load(file)
+        sim_factory = SimulationFactory(CrashScenario.from_json(scenario_data))
+        simulation = Simulation(sim_factory=sim_factory, file_name=s)
+        simulation.execute_scenario(timeout=30)
+        # print(f'Simulation Score: {SimulationScore(simulation).calculate()} / '
+        #       f'{SimulationScore(simulation).get_expected_score()}')
 
     # import libs
     # import scipy.stats as stats

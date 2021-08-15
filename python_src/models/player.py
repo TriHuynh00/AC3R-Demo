@@ -52,6 +52,7 @@ class Player:
         self.positions = []
         self.damage = []
         self.times = []
+        self.final_bboxes = []
 
     def collect_positions(self, position):
         self.positions.append(position)
