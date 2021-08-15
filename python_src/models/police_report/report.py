@@ -11,6 +11,7 @@ CAT_A_DATA = ["ANY"]
 CAT_B_DATA = ['F', 'M', 'B']
 CAT_C_DATA = ['L', 'R']
 CAT_D_DATA = ["FL", "FR", "ML", "MR", "BL", "BR"]
+CAT_BC_DATA = ['F', 'M', 'B', 'L', 'R']
 
 CATEGORIES = [{"type": CAT_A, "data": CAT_A_DATA},
               {"type": CAT_B, "data": CAT_B_DATA},
@@ -86,6 +87,17 @@ class ComponentSideCreator(ReportCreator):
         return ReportTypeD()
 
 
+class ComponentSideShortCreator(ReportCreator):
+    """
+    ComponentSideShortCreator override the factory method in order to
+    generate a report with crashed parts including F M B L R.
+    """
+
+    def create(self) -> Report:
+        from models.police_report import ReportTypeBC  # Fix Circular Dependencies
+        return ReportTypeBC()
+
+
 class Report(ABC):
     """
     The Report interface declares the operations that all concrete reports
@@ -148,12 +160,12 @@ class Report(ABC):
         """
         # Invalid given outputs
         if len(outputs) is EMPTY_CRASH:
-            raise Exception("The simulator did not report any crashes!")
+            raise Exception("Exception: The simulator did not report any crashes!")
         # The vehicle's crash element should be on the car
         parts = CAT_D_DATA + CAT_C_DATA + CAT_B_DATA + CAT_A_DATA
         for item in [i["name"] for i in outputs]:
             if item not in parts:
-                raise Exception(f'The code {item} is not found in the part dictionary!')
+                raise Exception(f'Exception: The code {item} is not found in the part dictionary!')
         return True
 
 
@@ -167,9 +179,7 @@ def categorize_report(report_data: list) -> ReportCreator:
             if part["name"] in category["data"] and category["type"] not in categories:
                 categories.append(category["type"])
 
-    if len(categories) > 1:  # Not support multi-categories
-        raise Exception("Report Type not found. More than 1 category reported!")
-    else:
+    if len(categories) == 1:
         if CAT_A in categories:
             return AnyCreator()
         if CAT_B in categories:
@@ -178,3 +188,8 @@ def categorize_report(report_data: list) -> ReportCreator:
             return SideCreator()
         if CAT_D in categories:
             return ComponentSideCreator()
+    if len(categories) == 2:
+        if CAT_B in categories and CAT_C in categories:
+            return ComponentSideShortCreator()
+
+    raise Exception("Exception: Report Type not found!")
