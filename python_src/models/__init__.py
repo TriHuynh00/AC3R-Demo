@@ -7,5 +7,3 @@ from .ac3r import CrashScenario
 from .simulation_factory import SimulationFactory
 from .simulation import Simulation
 from .simulation_score import SimulationScore
-from .vehicle_parts_dict import VEHICLE_PARTS_DICT
-
