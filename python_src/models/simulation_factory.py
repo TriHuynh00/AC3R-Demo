@@ -39,7 +39,9 @@ class SimulationFactory:
             self.players.append(Player(vehicle=sim_vehicle,
                                        road_pf=road_pf,
                                        pos=initial_position,
-                                       rot=None, rot_quat=vehicle.rot_quat))
+                                       rot=None,
+                                       rot_quat=vehicle.rot_quat,
+                                       distance_to_trigger=vehicle.distance_to_trigger))
         return self.players
 
     def generate_targets(self) -> {}:

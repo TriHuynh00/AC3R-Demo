@@ -3,10 +3,12 @@ import time
 import beamngpy
 import traceback
 import models
+from shapely.geometry import Point
 from typing import List
 from beamngpy import BeamNGpy, Scenario
 from models import SimulationFactory
-from models.simulation_data import VehicleStateReader, SimulationDataCollector, SimulationParams, SimulationDataContainer
+from models.simulation_data import VehicleStateReader, SimulationDataCollector
+from models.simulation_data import SimulationParams, SimulationDataContainer
 
 CRASHED = 1
 NO_CRASH = 0
@@ -43,6 +45,42 @@ class Simulation:
 
         return player
 
+    def get_vehicles_distance(self, debug: bool = False) -> float:
+        v1, v2 = self.players[0].vehicle, self.players[1].vehicle
+        p1, p2 = Point(v1.state['pos'][0], v1.state['pos'][1]), Point(v2.state['pos'][0], v2.state['pos'][1])
+        distance = p1.distance(p2)
+
+        # Debug line
+        if debug is True:
+            print("Distances between vehicles: ", distance)
+
+        return distance
+
+    @staticmethod
+    def trigger_vehicle(player: models.Player, distance_report: float = None, debug: bool = False) -> bool:
+        is_trigger = False
+        # The car stills wait until their current distance <= distance_to_trigger
+        if distance_report is not None and player.distance_to_trigger > distance_report:
+            is_trigger = True
+
+        # Trigger normal vehicles which move in the beginning
+        if distance_report is None and player.distance_to_trigger == -1:
+            is_trigger = True
+
+        # Add vehicle to a scenario
+        if is_trigger:
+            vehicle = player.vehicle
+            road_pf = player.road_pf
+            if len(road_pf.script) > 2:
+                vehicle.ai_set_mode("manual")
+                vehicle.ai_set_script(road_pf.script, cling=False)
+
+        # Debug line
+        if debug is True:
+            print(f'Alert! The vehicle starts to move. Distance to Trigger/Current Distance: '
+                  f'{str(round(player.distance_to_trigger, 2))}/{str(round(distance_report, 2))}')
+        return is_trigger
+
     def get_data_outputs(self) -> {}:
         data_outputs = {}
         for player in self.players:
@@ -51,23 +89,31 @@ class Simulation:
 
     def execute_scenario(self, timeout: int = 60):
         start_time = 0
+        is_crash = False
+        # Condition to start the 2nd vehicle after driving 1st for a while
+        # -1: 1st and 2nd start at the same time
+        distance_to_trigger = -1
+        vehicleId_to_trigger = 0
         # Init BeamNG simulation
         bng_instance = self.init_simulation()
         scenario = Scenario("smallgrid", "test_01")
 
+        # Import roads from scenario obj to beamNG instance
         for road in self.roads:
             scenario.add_road(road)
 
+        # Import vehicles from scenario obj to beamNG instance
         for player in self.players:
             scenario.add_vehicle(player.vehicle, pos=player.pos,
                                  rot=player.rot, rot_quat=player.rot_quat)
 
+        # BeamNG scenario init
         scenario.make(bng_instance)
         bng_instance.open(launch=True)
         bng_instance.set_deterministic()
         bng_instance.remove_step_limit()
 
-        is_crash = False
+        # Prepare simulation data collection
         simulation_id = time.strftime('%Y-%m-%d--%H-%M-%S', time.localtime())
         simulation_name = 'beamng_executor/sim_$(id)'.replace('$(id)', simulation_id)
         sim_data_collectors = SimulationDataContainer(debug=self.debug)
@@ -87,32 +133,52 @@ class Simulation:
             bng_instance.start_scenario()
 
             # Drawing debug line and forcing vehicle moving by given trajectory
+            idx = 0
             for player in self.players:
-                vehicle = player.vehicle
                 road_pf = player.road_pf
-                # ai_set_script not working for parking vehicle
+                if player.distance_to_trigger > 0:
+                    distance_to_trigger = player.distance_to_trigger
+                    vehicleId_to_trigger = idx
+                # ai_set_script not working for parking vehicle, so
+                # the number of node from road_pf.script must > 2
                 if len(road_pf.script) > 2:
+                    self.trigger_vehicle(player)
                     bng_instance.add_debug_line(road_pf.points, road_pf.sphere_colors,
                                                 spheres=road_pf.spheres, sphere_colors=road_pf.sphere_colors,
                                                 cling=True, offset=0.1)
-                    vehicle.ai_set_mode('manual')
-                    vehicle.ai_set_script(road_pf.script, cling=False)
+                idx += 1
 
+            # We need to compute distance between vehicles if and only if one of two vehicle
+            # has a distance_to_trigger property > 0
+            # In addition, this variable will prevent the function keep running after 2nd car moving
+            is_require_computed_distance = distance_to_trigger > -1
             # Update the vehicle information
             sim_data_collectors.start()
             start_time = time.time()
+
+            # Begin a scenario
             while time.time() < (start_time + timeout):
-                # Record the vehicle state for every 50 steps
-                bng_instance.step(50, True)
+                # Record the vehicle state for every 10 steps
+                bng_instance.step(10, True)
                 sim_data_collectors.collect()
+
+                # Compute the distance between two vehicles
+                if is_require_computed_distance:
+                    distance_change = self.get_vehicles_distance(debug=self.debug)
+                    # Trigger the 2nd vehicle
+                    if self.trigger_vehicle(player=self.players[vehicleId_to_trigger],
+                                            distance_report=distance_change,
+                                            debug=self.debug):
+                        is_require_computed_distance = False  # No need to compute distance anymore
 
                 for player in self.players:
                     # Find the position of moving car
                     self.collect_vehicle_position(player)
                     # Collect the damage sensor information
                     vehicle = player.vehicle
+                    # Check whether the imported vehicle existed in beamNG instance or not
                     if bool(bng_instance.poll_sensors(vehicle)) is False:
-                        raise Exception("Vehicle not found in bng_instance")
+                        raise Exception("Exception: Vehicle not found in bng_instance!")
                     sensor = bng_instance.poll_sensors(vehicle)['damage']
                     if sensor['damage'] != 0:  # Crash detected
                         # Disable AI control

@@ -15,6 +15,7 @@
 "name":"v1",
 "color":"0 0 0.5",
 "rot_quat":[-0.0140540931, -0.0558274572, 0.998341513, -4.37275224E-8],
+"distance_to_trigger":41.75068265589916,
 "damage_components":"side right",
 "driving_actions":[ {
 "name":"follow",
@@ -26,6 +27,7 @@
 "name":"v2",
 "color":"0 0 0.5",
 "rot_quat":[-0.00993774, -0.03947598, 0.70593404, 0.7071068],
+"distance_to_trigger":-1.0,
 "damage_components":"front",
 "driving_actions":[ {
 "name":"follow",
@@ -45,6 +47,6 @@
 "speed":20}]}],
 "expected_crash_components":[{
 "name":"v1",
-"parts":[{"name":"back right","damage":0},{"name":"middle right","damage":0},{"name":"front right","damage":0},{"name":"front left","damage":0}]},{
+"parts":[{"name":"side right","damage":0},{"name":"front","damage":0}]},{
 "name":"v2",
-"parts":[{"name":"front right","damage":0},{"name":"front left","damage":0},{"name":"back left","damage":0},{"name":"middle left","damage":0}]}]}
+"parts":[{"name":"front","damage":0},{"name":"side left","damage":0}]}]}

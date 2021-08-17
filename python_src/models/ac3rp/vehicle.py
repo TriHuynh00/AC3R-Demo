@@ -55,16 +55,18 @@ class Vehicle:
                        initial_rotation,
                        driving_actions,
                        vehicle_dict["color"],
-                       rot_quat)
+                       rot_quat,
+                       vehicle_dict["distance_to_trigger"])
 
     # Rotation defined against NORTH = [0, 1]
-    def __init__(self, name, initial_location, initial_rotation, driving_actions, color, rot_quat):
+    def __init__(self, name, initial_location, initial_rotation, driving_actions, color, rot_quat, distance_to_trigger=-1):
         self.name = name
         self.initial_location = Point(initial_location[0], initial_location[1])
         self.initial_rotation = initial_rotation
         self.driving_actions = driving_actions
         self.color = color
         self.rot_quat = rot_quat
+        self.distance_to_trigger = distance_to_trigger
 
     def generate_trajectory(self):
         # First generate the trajectory, then rotate it according to NORTH

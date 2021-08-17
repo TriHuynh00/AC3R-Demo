@@ -1,33 +1,7 @@
 import beamngpy
 import time
 from models.road_profiler import RoadProfiler
-
-VEHICLE_PARTS_DICT = {
-    'Tailgate': 'B',
-    'Wagon Unibody': 'M',
-    'Rear Bumper': 'B',
-    'Front Bumper Support': 'F',
-    'Front Bumper': 'F',
-    'Hood': 'F',
-    'Right Headlight': 'FR',
-    'Left Headlight': 'FL',
-    'Front Right Fender': 'FR',
-    'Front Left Fender': 'FL',
-    'Single Exhaust': 'B',
-    'Front Right Door': 'MR',
-    'Front Left Door': 'ML',
-    'Rear Right Door': 'MR',
-    'Rear Left Door': 'ML',
-    'Wagon Right Taillight': 'MR',
-    'Right Mirror': 'FR',
-    'Left Mirror': 'FL',
-    "Dual Outlet Exhaust": "B",
-    "Wagon Left Taillight": "ML",
-    "Radiator": 'F',
-    "Independent Front Suspension": 'F',
-    "Independent Rear Suspension": 'B',
-    "Tailgate Glass": 'B'
-}
+from .vehicle_parts_dict import VEHICLE_PARTS_DICT
 
 
 class Player:
@@ -41,14 +15,19 @@ class Player:
         pos (tuple): (x,y,z) tuple specifying the position of the vehicle.
         rot (tuple): (x,y,z) tuple expressing the rotation of the vehicle in Euler angles around each axis.
         rot_quat (tuple): (x, y, z, w) tuple specifying the rotation as quaternion.
-        road_pf(RoadProfiler): list of timestamped positions defining to make the vehicle follow a given "script".
+        road_pf (RoadProfiler): list of timestamped positions defining to make the vehicle follow a given "script".
+        distance_to_trigger (float): a floating number specifies the distance between 2 vehicles. When the distance
+                                     between 2 vehicles <= this number, an event in the simulation will trigger
+                                     this vehicle starting to move. By default, the value is -1 which means the vehicle
+                                     will run at the beginning of simulation.
     """
-    def __init__(self, vehicle: beamngpy.Vehicle, road_pf: RoadProfiler, pos, rot, rot_quat):
+    def __init__(self, vehicle: beamngpy.Vehicle, road_pf: RoadProfiler, pos, rot, rot_quat, distance_to_trigger: float):
         self.vehicle = vehicle
         self.pos = pos
         self.rot = rot
         self.rot_quat = rot_quat
         self.road_pf = road_pf
+        self.distance_to_trigger = distance_to_trigger
         self.positions = []
         self.damage = []
         self.times = []
