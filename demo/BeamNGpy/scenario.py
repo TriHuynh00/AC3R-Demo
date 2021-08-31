@@ -90,6 +90,21 @@ class BeamNg:
         for car in self.cars:
             print(car.name)
             print(car.position)
+
+        toCSV = []
+        for car in self.cars:
+            v = dict.fromkeys(['vid','position'])
+            v["vid"] = car.name
+            v["position"] = car.position
+            toCSV.append(v)
+
+        import csv
+        import json
+        keys = toCSV[0].keys()
+        fn = "case_vuong"
+        toJSON = {"vehicles": toCSV}
+        with open(fn + ".json", "w") as output_file:
+            json.dump(toJSON, output_file)
         # Timeout
         if not self.isCrash:
             print("Timed out!")
