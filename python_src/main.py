@@ -78,19 +78,49 @@ def visualize_csc(fn):
     fig.savefig(f'crisce_{fn.split("/")[1]}.png')
 
 
+def visualize_ac3r(fn):
+    import matplotlib.pyplot as plt
+    from models import ac3r
+    from descartes import PolygonPatch
+    from shapely.geometry import LineString
+    fig = plt.figure()
+
+    colors = ["red", "blue"]
+    with open(fn+"_a.json") as file:
+        scenario_data = json.load(file)
+
+    ac3r_scenario = ac3r.CrashScenario.from_json(scenario_data)
+
+    for i, road in enumerate(ac3r_scenario.roads):
+        trajectory_points = road.trajectory_points
+        road_width = 8
+        road_poly = LineString([(t[0], t[1]) for t in trajectory_points]).buffer(road_width, cap_style=2, join_style=2)
+        road_patch = PolygonPatch(road_poly, fc='gray', ec='dimgray')  # ec='#555555', alpha=0.5, zorder=4)
+        plt.gca().add_patch(road_patch)
+        xs = [p[0] for p in trajectory_points]
+        ys = [p[1] for p in trajectory_points]
+        plt.plot(xs, ys, '-', color="#9c9c9c")
+
+    for i, vehicle in enumerate(ac3r_scenario.vehicles):
+        trajectory_points = vehicle.trajectory_points
+        xs = [p[0] for p in trajectory_points]
+        ys = [p[1] for p in trajectory_points]
+        plt.plot(xs, ys, '-', label=vehicle.name, color=colors[i])
+
+
+    plt.legend()
+    plt.gca().set_aspect('equal')
+    plt.xlim([-240, 240])
+    plt.ylim([-240, 240])
+    plt.title(f'AC3R {ac3r_scenario.name}')
+    plt.show()
+    fig.savefig(f'ac3r_{fn.split("/")[1]}.png')
+
 # make sure we invoke cli
 if __name__ == '__main__':
-    cli()
-    # scenario_files = ["data/crisce/crash_report_122080_data.json"]
-    # for s in scenario_files:
-    #     with open(s) as file:
-    #         scenario_data = json.load(file)
-    #     VehicleTrajectoryVisualizer.plot_ac3r(s)
-    #     VehicleTrajectoryVisualizer.plot_ac3rp(s)
-
-    # scenario_files = ["data/122080"]
-    # for f in scenario_files:
-    #     VehicleTrajectoryVisualizer.plot_ac3r(f+"_a.json")
+    scenario_files = ["data/108812", "data/119897", "data/122080", "data/137780", "data/165428"]
+    for f in scenario_files:
+        visualize_ac3r(f)
         # visualize_csc(f)
 
 
