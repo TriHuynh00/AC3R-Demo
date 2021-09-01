@@ -48,8 +48,8 @@ def evol_scenario(scenario_file):
     experiment.run()
 
 
-def visualize_csc(fn):
-    with open(fn+"_c.json") as file:
+def visualize_csc(fn, case_name):
+    with open(fn) as file:
         csc = json.load(file)
 
     import matplotlib.pyplot as plt
@@ -73,12 +73,12 @@ def visualize_csc(fn):
     plt.gca().set_aspect("equal")
     plt.xlim([-100, 100])
     plt.ylim([-100, 100])
-    plt.title(f'CRISCEs crash_report_{fn.split("/")[1]}')
+    plt.title(f'CRISCEs {case_name}')
     plt.show()
-    fig.savefig(f'crisce_{fn.split("/")[1]}.png')
+    fig.savefig(f'{case_name}_crisce.png')
 
 
-def visualize_ac3r(fn):
+def visualize_ac3r(fn, case_name):
     import matplotlib.pyplot as plt
     from models import ac3r
     from descartes import PolygonPatch
@@ -86,7 +86,7 @@ def visualize_ac3r(fn):
     fig = plt.figure()
 
     colors = ["red", "blue"]
-    with open(fn+"_a.json") as file:
+    with open(fn) as file:
         scenario_data = json.load(file)
 
     ac3r_scenario = ac3r.CrashScenario.from_json(scenario_data)
@@ -107,21 +107,29 @@ def visualize_ac3r(fn):
         ys = [p[1] for p in trajectory_points]
         plt.plot(xs, ys, '-', label=vehicle.name, color=colors[i])
 
-
     plt.legend()
     plt.gca().set_aspect('equal')
     plt.xlim([-240, 240])
     plt.ylim([-240, 240])
-    plt.title(f'AC3R {ac3r_scenario.name}')
+    plt.title(f'AC3R {case_name}')
     plt.show()
-    fig.savefig(f'ac3r_{fn.split("/")[1]}.png')
+    fig.savefig(f'{case_name}_ac3r.png')
+
 
 # make sure we invoke cli
 if __name__ == '__main__':
-    scenario_files = ["data/108812", "data/119897", "data/122080", "data/137780", "data/165428"]
-    for f in scenario_files:
-        visualize_ac3r(f)
-        # visualize_csc(f)
+    import os
+    import re
 
+    directory_list = list()
+    for root, dirs, files in os.walk("/Users/vuong/Dropbox/CRISCE-AC3R-Datasets/AC3R_CIREN_JSON", topdown=False):
+        for name in dirs:
+            directory_list.append(os.path.join(root, name))
 
-
+    for case_dir in directory_list:
+        case_name = case_dir.split("/")[-1]
+        if not re.match("^[0-9]{1,6}$", case_name):
+            continue
+        crise_dir = f'/Users/vuong/Dropbox/CRISCE-AC3R-Datasets/Results/CIREN/{case_name}/output.json'
+        visualize_ac3r(f'{case_dir}/crash_report_{case_name}_data.json', case_name)
+        visualize_csc(crise_dir, case_name)
