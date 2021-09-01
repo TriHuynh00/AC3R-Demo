@@ -5,6 +5,10 @@ from visualization import VehicleTrajectoryVisualizer
 from models import SimulationFactory, Simulation, SimulationScore
 from models.ac3rp import CrashScenario
 from experiment import Experiment
+import matplotlib.pyplot as plt
+from models import ac3r
+from descartes import PolygonPatch
+from shapely.geometry import LineString
 
 
 @click.group()
@@ -49,26 +53,38 @@ def evol_scenario(scenario_file):
 
 
 def visualize_csc(fn, case_name):
-    with open(fn) as file:
+    with open(fn+".json") as file:
         csc = json.load(file)
 
     import matplotlib.pyplot as plt
     fig = plt.figure()
+    dist_x, dist_y = 0, 0
 
     for color in ["red", "blue"]:
         csc_cp = csc["vehicles"][color]["crash_point"]["coordinates"]
-        v1_line = csc["vehicles"][color]["trajectories"]["simulation_trajectory"]
         aspect_ratio = csc["vehicles"][color]["dimensions"]["car_length_sim"] / csc["vehicles"][color]["dimensions"][
             "car_length"]
         csc_cp = [csc_cp[0] * aspect_ratio, csc_cp[1] * aspect_ratio]
-
         # assign coordinates
         dist_x = - csc_cp[0]
         dist_y = - csc_cp[1]
+
+    for i, road_nodes in enumerate(csc["road_nodes"]):
+        road_width = 8
+        road_poly = LineString([(t[0] + dist_x, t[1] + dist_y) for t in road_nodes]).buffer(road_width, cap_style=2,
+                                                                                            join_style=2)
+        road_patch = PolygonPatch(road_poly, fc='gray', ec='dimgray')  # ec='#555555', alpha=0.5, zorder=4)
+        plt.gca().add_patch(road_patch)
+        xs = [p[0] + dist_x for p in road_nodes]
+        ys = [p[1] + dist_y for p in road_nodes]
+        plt.plot(xs, ys, '-', color="#9c9c9c")
+
+    for color in ["red", "blue"]:
+        v1_line = csc["vehicles"][color]["trajectories"]["simulation_trajectory"]
         xs = [p[0] + dist_x for p in v1_line]
         ys = [p[1] + dist_y for p in v1_line]
         plt.plot(xs, ys, '-', label=f'Vehicle {color}', color=color)
-    # plt.plot(0, 0, 'o-', color="black")
+
     plt.legend()
     plt.gca().set_aspect("equal")
     plt.xlim([-100, 100])
@@ -79,10 +95,6 @@ def visualize_csc(fn, case_name):
 
 
 def visualize_ac3r(fn, case_name):
-    import matplotlib.pyplot as plt
-    from models import ac3r
-    from descartes import PolygonPatch
-    from shapely.geometry import LineString
     fig = plt.figure()
 
     colors = ["red", "blue"]
@@ -109,8 +121,8 @@ def visualize_ac3r(fn, case_name):
 
     plt.legend()
     plt.gca().set_aspect('equal')
-    plt.xlim([-240, 240])
-    plt.ylim([-240, 240])
+    plt.xlim([-100, 100])
+    plt.ylim([-100, 100])
     plt.title(f'AC3R {case_name}')
     plt.show()
     fig.savefig(f'{case_name}_ac3r.png')
@@ -130,6 +142,10 @@ if __name__ == '__main__':
         case_name = case_dir.split("/")[-1]
         if not re.match("^[0-9]{1,6}$", case_name):
             continue
-        crise_dir = f'/Users/vuong/Dropbox/CRISCE-AC3R-Datasets/Results/CIREN/{case_name}/output.json'
-        visualize_ac3r(f'{case_dir}/crash_report_{case_name}_data.json', case_name)
-        visualize_csc(crise_dir, case_name)
+        if int(case_name) in [122080, 108812, 119897, 137780, 165428]:
+            crise_dir = f'/Users/vuong/Dropbox/CRISCE-AC3R-Datasets/Results/CIREN/{case_name}/output.json'
+            visualize_ac3r(f'{case_dir}/crash_report_{case_name}_data.json', case_name)
+        # visualize_csc(crise_dir, case_name)
+
+    for s in ["data/122080", "data/108812", "data/119897", "data/137780", "data/165428"]:
+        visualize_csc(s, s)
