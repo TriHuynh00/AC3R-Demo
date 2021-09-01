@@ -23,17 +23,37 @@ class Vehicle:
         return str(self.__class__) + ": " + str(self.__dict__)
 
 
+class Road:
+    @staticmethod
+    def from_dict(road_dict):
+        trajectory_points = []
+        for node in road_dict["road_node_list"]:
+            trajectory_points.append((node[0], node[1], node[3]))
+
+        return Road(road_dict["name"], trajectory_points)
+
+    def __init__(self, name, trajectory_points):
+        self.name = name
+        self.trajectory_points = trajectory_points
+
+    def __str__(self):
+        return str(self.__class__) + ": " + str(self.__dict__)
+
+
 class CrashScenario:
     @staticmethod
     def from_json(ac3r_json_data):
-        vehicles = []
+        vehicles, roads = [], []
         for vehicle_dict in ac3r_json_data["vehicles"]:
             vehicles.append(Vehicle.from_dict(vehicle_dict))
-        return CrashScenario(ac3r_json_data["name"], vehicles)
+        for road_dict in ac3r_json_data["roads"]:
+            roads.append(Road.from_dict(road_dict))
+        return CrashScenario(ac3r_json_data["name"], vehicles, roads)
 
-    def __init__(self, name, vehicles):
+    def __init__(self, name, vehicles, roads):
         self.name = name
         self.vehicles = vehicles
+        self.roads = roads
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
