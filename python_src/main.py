@@ -254,7 +254,7 @@ def run_nmvccs(scenario_id):
 
 # make sure we invoke cli
 if __name__ == '__main__':
-    files = os.listdir("C:\\Users\\vuong\\Documents\\NMVCCS\\")
+    files = os.listdir("C:\\Users\\harve\\Documents\\NMVCCS\\")
     cases = []
     for i, f in enumerate(files):
         case_name = f.split(".")[0]
@@ -263,5 +263,10 @@ if __name__ == '__main__':
     # cases = [c + ".json" for c in cases]
     print(cases)
 
-    for case in ["FI_10_2006048103049", "RE_1_2005003498523", "SP_2_2005003498061", "TIP_2_2005006445243"]:
-        run_nmvccs(case)
+    for case in cases:
+        import re
+        if re.match("(FI_)", case):
+            try:
+                run_nmvccs(case)
+            except Exception as ex:
+                print(str(ex))
