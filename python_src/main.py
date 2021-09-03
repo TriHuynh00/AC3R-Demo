@@ -178,10 +178,7 @@ def read_ciren_data():
         if int(case_name) in [122080, 108812, 119897, 137780, 165428]:
             crise_dir = f'/Users/vuong/Dropbox/CRISCE-AC3R-Datasets/Results/CIREN/{case_name}/output.json'
             visualize_ac3r(f'{case_dir}/crash_report_{case_name}_data.json', case_name)
-        # visualize_csc(crise_dir, case_name)
-
-    for s in ["data/122080", "data/108812", "data/119897", "data/137780", "data/165428"]:
-        visualize_csc(s, s)
+            visualize_csc(crise_dir, case_name)
 
 
 def run_nmvccs(scenario_id):
@@ -217,14 +214,14 @@ def run_nmvccs(scenario_id):
             self.trajectories.append(point)
 
     for v in bng_instance.find_objects_class("BeamNGVehicle"):
+        print(v.opts)
         CARS.append(Car(v.id, v.name))
 
     for dr in bng_instance.find_objects_class("DecalRoad"):
-        if (re.match("(road)\d", dr.name)) is not None:
-            road = Car(dr.id, dr.name)
-            for point in bng_instance.get_road_edges(dr.name):
-                road.set_trajectories([point["middle"][0], point["middle"][1]])
-            ROADS.append(road)
+        road = Car(dr.id, dr.name)
+        for point in bng_instance.get_road_edges(dr.name):
+            road.set_trajectories([point["middle"][0], point["middle"][1]])
+        ROADS.append(road)
 
     try:
         bng_instance.start_scenario()
@@ -254,19 +251,38 @@ def run_nmvccs(scenario_id):
 
 # make sure we invoke cli
 if __name__ == '__main__':
-    files = os.listdir("C:\\Users\\harve\\Documents\\NMVCCS\\")
-    cases = []
+    AC3R_PATH = "C:\\Users\\harve\\Documents\\NMVCSS"
+    CRISCE_ROAD_PATH = "C:\\Users\\harve\\Documents\\NMVCCS_roads"
+    CRISCE_VEHICLE_PATH = "C:\\Users\\harve\\Documents\\NMVCCS_vehicles"
+    files = os.listdir(AC3R_PATH)
+    ac3r_cases = []
     for i, f in enumerate(files):
         case_name = f.split(".")[0]
-        if case_name not in cases:
-            cases.append(case_name)
-    # cases = [c + ".json" for c in cases]
-    print(cases)
+        if case_name not in ac3r_cases:
+            ac3r_cases.append(case_name)
 
-    for case in cases:
-        import re
-        if re.match("(FI_)", case):
-            try:
-                run_nmvccs(case)
-            except Exception as ex:
-                print(str(ex))
+    crisce_cases = []
+    for case in ac3r_cases:
+        case_name = case.split('_')[-1]
+        if case_name not in crisce_cases:
+            crisce_cases.append(case_name)
+
+    for case_name in crisce_cases:
+        road_path = f'{CRISCE_ROAD_PATH}\\{case_name}.prefab'
+        vehicle_path = f'{CRISCE_VEHICLE_PATH}\\{case_name}\\output.json'
+        try:
+            with open(road_path) as file:
+                pass
+            with open(vehicle_path) as file:
+                pass
+        except Exception as e:
+            print(f'AC3R case {case_name} is not found in CRISCE dataset!')
+
+    #
+    # for case in ["100237"]:
+    #     import re
+    #     # if re.match("(FI_)", case):
+    #     try:
+    #         run_nmvccs(case)
+    #     except Exception as ex:
+    #         print(str(ex))
