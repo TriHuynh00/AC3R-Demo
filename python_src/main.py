@@ -2,7 +2,7 @@ import click
 import json
 import numpy as np
 from visualization import VehicleTrajectoryVisualizer
-from models import SimulationFactory, Simulation, SimulationScore
+from models import SimulationFactory, Simulation, SimulationScore, SimulationExec
 from models.ac3rp import CrashScenario
 from experiment import Experiment
 
@@ -36,7 +36,7 @@ def run_from_scenario(scenario_file):
         scenario_data = json.load(file)
     sim_factory = SimulationFactory(CrashScenario.from_json(scenario_data))
     simulation = Simulation(sim_factory=sim_factory, debug=True)
-    simulation.execute_scenario(timeout=60)
+    SimulationExec(simulation).execute_scenario(timeout=30)
     print(f'Simulation Score: {SimulationScore(simulation).calculate(debug=True)} / '
           f'{SimulationScore(simulation).get_expected_score(debug=True)}')
 
