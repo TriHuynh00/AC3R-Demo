@@ -19,6 +19,12 @@ class KMeans:
         self.n_clusters = NUM_CLUSTERS if n_clusters is None else n_clusters
         self.model = None
 
+        # Validate the input data
+        self._validate_input()
+
+        # Compute k-means model
+        self._set_km_model()
+
     def _set_km_model(self) -> None:
         """
         Compute k-means model.
@@ -45,12 +51,6 @@ class KMeans:
         Returns:
             km_dict dict[str, list]: e.g. {'LOW': [], 'MED': [], 'HIGH': []}
         """
-
-        # Validate the input data
-        self._validate_input()
-
-        # Compute k-means model
-        self._set_km_model()
 
         # Categorizing data points following low - med - high
         km_dict = {"LOW": [], "MED": [], "HIGH": []}

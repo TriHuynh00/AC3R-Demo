@@ -1,6 +1,7 @@
 import os
 import beamngpy
 import models
+import numpy as np
 from shapely.geometry import Point
 from typing import List
 from beamngpy import BeamNGpy
@@ -8,6 +9,7 @@ from models import SimulationFactory
 
 CRASHED = 1
 NO_CRASH = 0
+LOW, MED, HIGH = "LOW", "MED", "HIGH"
 
 
 class Simulation:
@@ -80,9 +82,24 @@ class Simulation:
     def get_data_outputs(self) -> {}:
         data_outputs = {}
         for player in self.players:
-            data_outputs[player.vehicle.vid] = player.get_damage()
-            # dam_values = list(set([c["damage"] for c in player.get_damage()]))
-            # if len(dam_values) < 3:
-            #     data_outputs[player.vehicle.vid] = player.get_damage()
-            # else:
+            # data_outputs[player.vehicle.vid] = player.get_damage()
+            dam_values = list(set([c["damage"] for c in player.get_damage()]))
+            if len(dam_values) > 3:
+                from models import KMeans
+                k_means = KMeans(dam_values).model
+                km_dict = {LOW: [], MED: [], HIGH: []}
+                labels = k_means.predict(sorted(k_means.cluster_centers_.tolist()))  # low, med, high ids
+                for comp in player.get_damage():
+                    value = comp["damage"]
+                    label = k_means.predict(np.array(value).reshape(-1, 1))
+                    if label == labels[0]:  # LOW
+                        km_dict[LOW].append(comp)
+                    elif label == labels[1]:  # MED
+                        km_dict[MED].append(comp)
+                    else:  # HIGH
+                        km_dict[HIGH].append(comp)
+                # Get the MED and HIGH damage components
+                data_outputs[player.vehicle.vid] = [comp for k in km_dict if k != LOW for comp in km_dict[k]]
+            else:
+                data_outputs[player.vehicle.vid] = player.get_damage()
         return data_outputs
