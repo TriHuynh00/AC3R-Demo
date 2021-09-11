@@ -30,7 +30,7 @@ class TestPoliceReportTypeA(unittest.TestCase):
             report_data = data_targets[report]
             creator = categorize_report(report_data)
             with self.assertRaises(expected):
-                creator.match(data_outputs, targets)
+                creator.match(data_outputs, [])
 
     def test_exception_is_raised_when_no_crash(self):
         expected = Exception
