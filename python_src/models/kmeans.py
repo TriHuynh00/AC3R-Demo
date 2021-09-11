@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Dict
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -38,7 +38,7 @@ class KMeans:
         if len(self.data) > 0 and all(elem == self.data[0] for elem in self.data) is True:
             raise Exception("Exception: All elements in list are equal!")
 
-    def get_clusters(self, debug: Optional[bool] = False) -> dict[str, list]:
+    def get_clusters(self, debug: Optional[bool] = False) -> Dict[str, list]:
         """
         Compute k-means clustering.
 
