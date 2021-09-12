@@ -13,7 +13,7 @@ class Fitness:
             sim_factory = SimulationFactory(individual)
             simulation = Simulation(sim_factory=sim_factory)
             try:
-                SimulationExec(simulation).execute_scenario(timeout=60)
+                SimulationExec(simulation).execute_scenario(timeout=40)
                 scores.append(SimulationScore(simulation).calculate())
             except Exception as e:
                 print(str(e))

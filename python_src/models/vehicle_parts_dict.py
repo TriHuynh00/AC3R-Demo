@@ -29,5 +29,9 @@ VEHICLE_PARTS_DICT = {
     "Front Right Door Glass": "FR",
     "Passenger Seat": "FR",
     "Driver Seat": "FL",
-    "Front Spindles": 'F'
+    "Front Spindles": 'F',
+    "Rear Spindles": 'B'
 }
+
+# TODO: find a position of this component
+# "Glass"
