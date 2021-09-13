@@ -24,7 +24,7 @@ public class TestCaseRunner {
 
     private Robot bot;
     private final int scenarioLoadTime = 30000; // ms
-    private final int scenarioRunTime = 36000; // ms
+    private final int scenarioRunTime = 90000; // ms
     private ProcessBuilder processBuilder;
     private Process p;
 
@@ -162,7 +162,7 @@ public class TestCaseRunner {
             long beginTime = System.currentTimeMillis();
             long currentTime = System.currentTimeMillis();
             // wait for 30s
-            while (currentTime - beginTime <= scenarioLoadTime + 3000)
+            while (currentTime - beginTime <= scenarioLoadTime)
             {
                 if (getStartTime() > 0)
                 {
