@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 from beamngpy import BeamNGpy, Scenario, Vehicle, setup_logging
 from beamngpy.sensors import Damage
 from BeamNGpy.car import Car
@@ -14,7 +15,7 @@ class BeamNg:
 		self.bng_log = bng_log
 		self.scenario = scenario
 		self.level = 'smallgrid'
-		self.timeout = 500
+		self.timeout = 90
 		self.isCrash = False
 
 	def create_vehicle(self, vehicles):
@@ -64,7 +65,8 @@ class BeamNg:
 		bng.start_scenario() # Start scenario
 
 		accident_log = {}
-		for _ in range(self.timeout):
+		start_time = time.time()
+		while time.time() < (start_time + self.timeout):
 			empty = not bool(accident_log)
 			if empty:
 				# Collects sensor data every 30 steps
@@ -85,6 +87,6 @@ class BeamNg:
 				break
 
 		# Timeout
-		if not self.isCrash:
-			print("Timed out!")
+# 		if not self.isCrash:
+# 			print("Timed out!")
 		self.close_scenario(bng)

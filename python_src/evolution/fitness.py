@@ -1,5 +1,5 @@
 import numpy
-from models import SimulationFactory, SimulationScore
+from models import SimulationFactory, SimulationScore, SimulationExec
 from models.simulation import Simulation
 from models.ac3rp import CrashScenario
 
@@ -13,7 +13,7 @@ class Fitness:
             sim_factory = SimulationFactory(individual)
             simulation = Simulation(sim_factory=sim_factory)
             try:
-                simulation.execute_scenario(timeout=60)
+                SimulationExec(simulation).execute_scenario(timeout=40)
                 scores.append(SimulationScore(simulation).calculate())
             except Exception as e:
                 print(str(e))
