@@ -76,7 +76,7 @@ class Experiment:
         # Write data file
         rev_logfile = open("data/random/" + self.simulation_name + ".csv", "a")
         rev_logfile.write("v1,v2,score\n")
-        rev_log_data_file = "data/random_data_" + self.simulation_name[:-2].lower() + ".csv"
+        rev_log_data_file = "data/random/log_" + self.simulation_name + ".csv"
 
         # Experiment run
         rev = RandomEvolution(
@@ -100,7 +100,7 @@ class Experiment:
         # Write data file
         opo_logfile = open("data/opo/" + self.simulation_name + ".csv", "a")
         opo_logfile.write("v1,v2,score\n")
-        opo_log_data_file = "data/opo_data_" + self.simulation_name[:-2].lower() + ".csv"
+        opo_log_data_file = "data/opo/log_" + self.simulation_name + ".csv"
 
         # Experiment run
         oev = OpoEvolution(
