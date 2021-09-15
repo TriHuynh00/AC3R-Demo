@@ -9,6 +9,7 @@ ROOT: Path = Path(os.path.abspath(os.path.join(os.path.dirname(__file__))))
 PATH_TEST = str(ROOT.joinpath("tests"))
 PATH_DATA = str(ROOT.joinpath("data"))
 
+
 def _collect_police_report(path):
     with open(path) as file:
         report_data = json.load(file)
