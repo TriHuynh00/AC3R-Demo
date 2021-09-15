@@ -8,7 +8,7 @@ def _write_log_file(simulation: Simulation, simulation_score: SimulationScore, f
     toCSV = []
     s = dict.fromkeys(["speeds", "vehicles_damage_full", "sim_damage_full", "vehicles_dam", "sim_dam",
                        "crashed_happened", "sim_score", "expected_score", "exception"])
-    s["speeds"], s["vehicles_damage"], s["vehicles_dam"], s["sim_dam"] = [], [], [], []
+    s["speeds"], s["vehicles_damage_full"], s["vehicles_dam"], s["sim_dam"] = [], [], [], []
     for player in simulation.players:
         s["speeds"].append({player.vehicle.vid: player.speed})
         s["vehicles_damage_full"].append({player.vehicle.vid: player.get_damage()})
