@@ -48,7 +48,7 @@
 "speed":20}]}],
 "expected_crash_components":[{
 "name":"v1",
-"parts":[{"name":"front right","damage":0}]},
+"parts":[{"name":"front left","damage":0}]},
 {
 "name":"v2",
 "parts":[{"name":"any","damage":0}]}]
