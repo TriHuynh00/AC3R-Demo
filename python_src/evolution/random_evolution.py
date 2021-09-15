@@ -8,7 +8,7 @@ FIRST = 0
 
 class RandomEvolution:
     def __init__(self, scenario, fitness, generate, generate_params, select, logfile, epochs=1, fitness_repetitions=1,
-                 select_aggregate=None):
+                 select_aggregate=None, log_data_file=None):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
@@ -19,7 +19,7 @@ class RandomEvolution:
         self.toolbox.register("individual", tools.initRepeat, creator.Individual, self.toolbox.random_ind, 1)
         self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
 
-        self.toolbox.register("evaluate", fitness, fitness_repetitions)
+        self.toolbox.register("evaluate", fitness, fitness_repetitions, log_data_file)
         self.toolbox.register("select", select, select_aggregate)
 
         stats_fit = tools.Statistics(key=lambda ind: ind.fitness.values)

@@ -5,7 +5,8 @@ PART_DICT = {
     "right": 'R',
     "rear": 'B',
     "back": 'B',
-    "middle": 'M'
+    "middle": 'M',
+    "any": "ANY"
 }
 
 

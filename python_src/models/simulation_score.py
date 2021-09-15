@@ -23,6 +23,7 @@ class SimulationScore:
         self.beta = beta
         self.simulation = simulation
         self.expected_score = 0
+        self.simulation_score = 0
 
     @staticmethod
     def formula(alpha: float, beta: float, tpl: Tuple[int, int, int] = (0, 0, 0)):
@@ -70,8 +71,40 @@ class SimulationScore:
                 for player in self.simulation.players:
                     print(player.vehicle.vid)
                     print(player.positions)
-            return self.distance_between_two_players(self.simulation.players)
+            self.simulation_score = self.distance_between_two_players(self.simulation.players)
 
         # Else
-        return self._compute(self.simulation.targets, self.simulation.get_data_outputs(),
-                             debug=debug, debug_message="SimulationScore.calculate() - CRASH")
+        self.simulation_score = self._compute(self.simulation.targets, self.simulation.get_data_outputs(),
+                                              debug=debug, debug_message="SimulationScore.calculate() - CRASH")
+
+        return self.simulation_score
+
+    def write_log_file(self, fn, ex_mes=None):
+        toCSV = []
+        s = dict.fromkeys(["speeds", "vehicles_damage", "sim_damage", "crashed_happened", "sim_score",
+                           "expected_score", "exception"])
+        s["speeds"] = []
+        s["vehicles_damage"] = []
+        for player in self.simulation.players:
+            s["speeds"].append({player.vehicle.vid: player.speed})
+            s["vehicles_damage"].append({player.vehicle.vid: player.get_damage()})
+        s["sim_damage"] = self.simulation.get_data_outputs()
+        s["crashed_happened"] = self.simulation.status
+        s["sim_score"] = self.simulation_score
+        s["expected_score"] = self.expected_score
+        s['exception'] = None if ex_mes == "" else ex_mes
+
+        import csv
+        import os
+        toCSV.append(s)
+        keys = toCSV[0].keys()
+        isFileExist = os.path.exists(fn)
+        with open(fn, 'a' if isFileExist else 'w') as f:
+            if isFileExist:
+                dict_writer = csv.DictWriter(f, keys)
+                dict_writer.writerows(toCSV)
+            else:
+                dict_writer = csv.DictWriter(f, keys)
+                dict_writer.writeheader()
+                dict_writer.writerows(toCSV)
+

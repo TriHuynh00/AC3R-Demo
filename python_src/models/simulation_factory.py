@@ -41,7 +41,8 @@ class SimulationFactory:
                                        pos=initial_position,
                                        rot=None,
                                        rot_quat=vehicle.rot_quat,
-                                       distance_to_trigger=vehicle.distance_to_trigger))
+                                       distance_to_trigger=vehicle.distance_to_trigger,
+                                       speed=vehicle.get_speed()))
         return self.players
 
     def generate_targets(self) -> {}:

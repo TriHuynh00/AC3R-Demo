@@ -76,6 +76,7 @@ class Experiment:
         # Write data file
         rev_logfile = open("data/random/" + self.simulation_name + ".csv", "a")
         rev_logfile.write("v1,v2,score\n")
+        rev_log_data_file = "data/random_data_" + self.simulation_name[:-2].lower() + ".csv"
 
         # Experiment run
         rev = RandomEvolution(
@@ -87,7 +88,8 @@ class Experiment:
             select=Selector.by_fitness_value,
             # select_aggregate=numpy.mean,
             epochs=30,
-            logfile=rev_logfile
+            logfile=rev_logfile,
+            log_data_file=rev_log_data_file
         )
         rev.run()
 
@@ -98,6 +100,7 @@ class Experiment:
         # Write data file
         opo_logfile = open("data/opo/" + self.simulation_name + ".csv", "a")
         opo_logfile.write("v1,v2,score\n")
+        opo_log_data_file = "data/opo_data_" + self.simulation_name[:-2].lower() + ".csv"
 
         # Experiment run
         oev = OpoEvolution(
@@ -111,7 +114,8 @@ class Experiment:
             select=Selector.by_fitness_value,
             # select_aggregate=libs._VD_A,
             epochs=30,
-            logfile=opo_logfile
+            logfile=opo_logfile,
+            log_data_file=opo_log_data_file
         )
         oev.run()
 
