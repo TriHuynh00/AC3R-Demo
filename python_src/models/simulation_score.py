@@ -23,6 +23,7 @@ class SimulationScore:
         self.beta = beta
         self.simulation = simulation
         self.expected_score = 0
+        self.simulation_score = 0
 
     @staticmethod
     def formula(alpha: float, beta: float, tpl: Tuple[int, int, int] = (0, 0, 0)):
@@ -38,8 +39,8 @@ class SimulationScore:
                  debug: bool = False, debug_message: str = "Method Name"):
         if debug is True:
             print(f'Log {debug_message}: ')
-            print(data_targets)
-            print(data_outputs)
+            print("Targets: ", data_targets)
+            print("Outputs", data_outputs)
 
         result = (0, 0, 0)
         for vehicle in data_targets:
@@ -47,8 +48,12 @@ class SimulationScore:
             creator = models.categorize_report(data_target)
             data_output = data_outputs[vehicle]
             result = tuple(map(lambda x, y: x + y, result, creator.match(data_output, data_target)))
+            if debug is True:
+                print(f'{vehicle} target: {data_target}')
+                print(f'{vehicle} output: {data_output}')
+                print(f'{vehicle}: {creator.match(data_output, data_target)}')
         if debug is True:
-            print(result)
+            print(f'Total Sum: {result}')
 
         return self.formula(self.alpha, self.beta, result)
 
@@ -66,8 +71,12 @@ class SimulationScore:
                 for player in self.simulation.players:
                     print(player.vehicle.vid)
                     print(player.positions)
-            return self.distance_between_two_players(self.simulation.players)
+            self.simulation_score = self.distance_between_two_players(self.simulation.players)
 
         # Else
-        return self._compute(self.simulation.targets, self.simulation.get_data_outputs(),
-                             debug=debug, debug_message="SimulationScore.calculate() - CRASH")
+        self.simulation_score = self._compute(self.simulation.targets, self.simulation.get_data_outputs(),
+                                              debug=debug, debug_message="SimulationScore.calculate() - CRASH")
+
+        return self.simulation_score
+
+

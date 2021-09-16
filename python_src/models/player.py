@@ -21,7 +21,8 @@ class Player:
                                      this vehicle starting to move. By default, the value is -1 which means the vehicle
                                      will run at the beginning of simulation.
     """
-    def __init__(self, vehicle: beamngpy.Vehicle, road_pf: RoadProfiler, pos, rot, rot_quat, distance_to_trigger: float):
+    def __init__(self, vehicle: beamngpy.Vehicle, road_pf: RoadProfiler, pos, rot, rot_quat, distance_to_trigger: float,
+                 speed: float):
         self.vehicle = vehicle
         self.pos = pos
         self.rot = rot
@@ -31,6 +32,7 @@ class Player:
         self.positions = []
         self.damage = []
         self.times = []
+        self.speed = speed
 
     def collect_positions(self, position):
         self.positions.append(position)

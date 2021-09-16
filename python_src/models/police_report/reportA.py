@@ -22,7 +22,7 @@ class ReportTypeA(Report):
         # List outputs contains CRASHED parts
         outputs = [i["name"] for i in outputs]
 
-        if any(item in CAT_D_DATA for item in outputs):
+        if any(item in ["ANY", 'F', 'M', 'B', 'L', 'R', "FL", "FR", "ML", "MR", "BL", "BR"] for item in outputs):
             return 1, non_crash_points, point_target
 
         return crash_points, 1, point_target
