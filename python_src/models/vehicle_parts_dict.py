@@ -30,7 +30,9 @@ VEHICLE_PARTS_DICT = {
     "Passenger Seat": "FR",
     "Driver Seat": "FL",
     "Front Spindles": 'F',
-    "Rear Spindles": 'B'
+    "Rear Spindles": 'B',
+    "Rear Right Door Glass": "BR",
+    "Rear Left Door Glass": "BL",
 }
 
 # TODO: find a position of this component
