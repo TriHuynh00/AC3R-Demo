@@ -6,8 +6,9 @@ from models.ac3rp import CrashScenario
 
 def _write_log_file(simulation: Simulation, simulation_score: SimulationScore, fn, ex_mes=None):
     toCSV = []
-    s = dict.fromkeys(["speeds", "vehicles_damage_full", "sim_damage_full", "vehicles_dam", "sim_dam",
-                       "crashed_happened", "sim_score", "expected_score", "exception"])
+    s = dict.fromkeys(["speeds", "vehicles_dam", "sim_dam",
+                       "crashed_happened", "sim_score", "expected_score", "exception",
+                       "vehicles_damage_full", "sim_damage_full"])
     s["speeds"], s["vehicles_damage_full"], s["vehicles_dam"], s["sim_dam"] = [], [], [], []
     for player in simulation.players:
         s["speeds"].append({player.vehicle.vid: player.speed})

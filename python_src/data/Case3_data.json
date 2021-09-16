@@ -26,7 +26,7 @@
 "trajectory":[[[-20.0, -2.0, 0.0], [-18.0, -2.0, 0.0]]],
 "speed":20},{
 "name":"turn",
-"trajectory":[[[-18.0, -2.0, 0.0], [-1.2, -4.4, 0.0], [3.0, -6.0, 0.0]]],
+"trajectory":[[[-18.0, -2.0, 0.0], [-1.2, 2.4, 0.0], [3.0, 6.0, 0.0]]],
 "speed":20},{
 "name":"follow",
 "trajectory":[[[-20.0, -2.0, 0.0], [3.0, -6.0, 0.0]]],
@@ -44,12 +44,12 @@
 "damage_components":"any",
 "driving_actions":[ {
 "name":"stop",
-"trajectory":[[[0.0, -6.0, 0.0]]],
+"trajectory":[[[0.0, 6.0, 0.0]]],
 "speed":20}]}],
 "expected_crash_components":[{
 "name":"v1",
 "parts":[{"name":"front left","damage":0}]},
 {
 "name":"v2",
-"parts":[{"name":"any","damage":0}]}]
+"parts":[{"name":"right","damage":0}]}]
 }
