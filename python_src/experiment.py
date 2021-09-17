@@ -74,9 +74,9 @@ class Experiment:
 
     def _run_rev(self):
         # Write data file
-        rev_logfile = open("data/random/" + self.simulation_name + ".csv", "a")
+        rev_logfile = open(f'data/{self.simulation_name[0:5]}/random/{self.simulation_name}.csv', "a")
         rev_logfile.write("v1,v2,score\n")
-        rev_log_data_file = "data/random/log_" + self.simulation_name + ".csv"
+        rev_log_data_file = f'data/{self.simulation_name[0:5]}/random/log_{self.simulation_name}.csv'
 
         # Experiment run
         rev = RandomEvolution(
@@ -97,27 +97,28 @@ class Experiment:
         rev_logfile.close()
 
     def _run_opo(self):
-        # Write data file
-        opo_logfile = open("data/opo/" + self.simulation_name + ".csv", "a")
-        opo_logfile.write("v1,v2,score\n")
-        opo_log_data_file = "data/opo/log_" + self.simulation_name + ".csv"
+        for i in [5, 10, 15, 20]:
+            # Write data file
+            opo_logfile = open(f'data/{self.simulation_name[0:5]}/opo_{i}/{self.simulation_name}.csv', "a")
+            opo_logfile.write("v1,v2,score\n")
+            opo_log_data_file = f'data/{self.simulation_name[0:5]}/opo_{i}/log_{self.simulation_name}.csv'
 
-        # Experiment run
-        oev = OpoEvolution(
-            scenario=CrashScenario.from_json(self.scenario),
-            fitness=Fitness.evaluate,
-            # fitness_repetitions=5,
-            generate=Generator.generate_random_from,
-            generate_params={"min": 10, "max": 50},
-            mutate=Mutator.by_speed,
-            mutate_params={"mean": 0, "std": 20, "min": 10, "max": 50},
-            select=Selector.by_fitness_value,
-            # select_aggregate=libs._VD_A,
-            epochs=30,
-            logfile=opo_logfile,
-            log_data_file=opo_log_data_file
-        )
-        oev.run()
+            # Experiment run
+            oev = OpoEvolution(
+                scenario=CrashScenario.from_json(self.scenario),
+                fitness=Fitness.evaluate,
+                # fitness_repetitions=5,
+                generate=Generator.generate_random_from,
+                generate_params={"min": 10, "max": 50},
+                mutate=Mutator.by_speed,
+                mutate_params={"mean": 0, "std": i, "min": 10, "max": 50},
+                select=Selector.by_fitness_value,
+                # select_aggregate=libs._VD_A,
+                epochs=30,
+                logfile=opo_logfile,
+                log_data_file=opo_log_data_file
+            )
+            oev.run()
 
-        # Close logfiles
-        opo_logfile.close()
+            # Close logfiles
+            opo_logfile.close()
