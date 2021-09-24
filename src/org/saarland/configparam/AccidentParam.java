@@ -50,6 +50,9 @@ public class AccidentParam {
     public static DecimalFormat df2Digit = new DecimalFormat("####.##");
     public static DecimalFormat df6Digit = new DecimalFormat("####.######");
 
+    public static String DB_CRASH_CIREN = "CIREN";
+    public static String DB_CRASH_NMVCCS = "NMVCCS";
+
     public static double laneWidth = 4;  // lane Width unit in Beamng
     public static int parkingLineWidth = 2;  // parking lane Width unit in Beamng
     public static double shoulderPadding = 0.5;
