@@ -50,11 +50,13 @@ public class XMLAccidentCaseParser {
         inputFile = new File(currentFilePath);
 //        removeSpecialCharsInXMLFile(inputFile);
 
-        String xmlDatabase = "CIREN"; // "NMVCCS"
+        String xmlDatabase = "CIREN";
+        //String xmlDatabase = "NMVCCS";
 
         HashMap<String, String> xmlTagCrashDB = new HashMap<String, String>();
 
         if (xmlDatabase.equals(AccidentParam.DB_CRASH_CIREN)) {
+            xmlTagCrashDB.put("Summary", "Summary");
             xmlTagCrashDB.put("Vehicle", "GeneralVehicleForm");
             xmlTagCrashDB.put("Make", "Make");
             xmlTagCrashDB.put("BodyType", "Model");
@@ -65,6 +67,7 @@ public class XMLAccidentCaseParser {
             xmlTagCrashDB.put("Vehicle", "VEHICLE");
             xmlTagCrashDB.put("Make", "XML_MAKEMODEL");
             xmlTagCrashDB.put("BodyType", "BODY_TYPE");
+            xmlTagCrashDB.put("Summary", "SUMMARY");
             xmlTagCrashDB.put("Transport", "TRANSPORT");
             xmlTagCrashDB.put("ModelYear", "MODELYEAR");
         }
@@ -128,7 +131,11 @@ public class XMLAccidentCaseParser {
 
                 else if (vehicleInfoIterator.getNodeName().trim().equalsIgnoreCase("VEHNUMBER")) {
                     ConsoleLogger.print('d', "Found VEHNUMBER");
-                    vehicle.setVehicleId(Integer.parseInt(vehicleInfoIterator.getAttributes().getNamedItem("VehicleNumber").getNodeValue().trim()));
+                    if (xmlDatabase.equals(AccidentParam.DB_CRASH_NMVCCS)) {
+                        vehicle.setVehicleId(Integer.parseInt(vehicleInfoIterator.getTextContent().trim()));
+                    } else {
+                        vehicle.setVehicleId(Integer.parseInt(vehicleInfoIterator.getAttributes().getNamedItem("VehicleNumber").getNodeValue().trim()));
+                    }
                     ConsoleLogger.print('d', "Vehicle ID " + i + " " + vehicleInfoIterator.getTextContent().trim());
                 }
 
@@ -279,8 +286,7 @@ public class XMLAccidentCaseParser {
         }
 
         // Find Summary
-        //NodeList summaryTag = rootElement.getElementsByTagName("SUMMARY");
-        NodeList summaryTag = rootElement.getElementsByTagName("Summary");
+        NodeList summaryTag = rootElement.getElementsByTagName(xmlTagCrashDB.get("Summary"));
         ConsoleLogger.print('d', summaryTag.getLength());
 
         String storyline = summaryTag.item(0).getTextContent().trim().replace("\t", "");

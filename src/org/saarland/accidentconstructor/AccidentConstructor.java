@@ -711,22 +711,22 @@ public class AccidentConstructor {
                             "vehicle " + vehicle.getVehicleId() +
                                     " action & coord = " + accidentConstructor.mapActionToRoadSegment(vehicle));
                 }
-                accidentConstructor.generateScenarioJSONData(scenarioDataPath, scenarioName);
+//                accidentConstructor.generateScenarioJSONData(scenarioDataPath, scenarioName);
 //                System.exit(0);
 //                accidentConstructor.controlBeamNgAlgorithm(scenarioName);
 
                 /************ END SCENARIO DATA FILE ***********/
 
                 /************ BEGIN SCENARIO EXECUTION ***********/
-//                 boolean hasCrash = testCaseRunner.runScenario(scenarioName);
-//                 DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList, ontologyHandler, scenarioName);
-//                 crashAnalyzer.checkWhetherCrashOccur(hasCrash);
-//                 ConsoleLogger.print('d', "Finish running scenario");
+                boolean hasCrash = testCaseRunner.runScenario(scenarioName);
+                DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList, ontologyHandler, scenarioName);
+                crashAnalyzer.checkWhetherCrashOccur(hasCrash);
+                ConsoleLogger.print('d', "Finish running scenario");
 
                 /************ END SCENARIO EXECUTION ***********/
-//                long scenarioEndTime = System.nanoTime() - scenarioStartTime;
-//                ConsoleLogger.print('r', String.format("Finish running simulation after %d seconds\n",
-//                        TimeUnit.NANOSECONDS.toSeconds(scenarioEndTime)));
+                long scenarioEndTime = System.nanoTime() - scenarioStartTime;
+                ConsoleLogger.print('r', String.format("Finish running simulation after %d seconds\n",
+                        TimeUnit.NANOSECONDS.toSeconds(scenarioEndTime)));
 
             } catch (Exception e) {
 
