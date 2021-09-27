@@ -14,13 +14,43 @@ SAMPLING_UNIT = 5
 class Vehicle:
     @staticmethod
     def from_dict(vehicle_dict):
+        # Extract the initial location: the first point of the trajectory
+        initial_location, initial_rotation = common.compute_initial_state(vehicle_dict["driving_actions"])
+
+        # Extract the initial rotation. The rotation the first point of the trajectory
+        ## TODO rotation is extracted by first interpolating the points
+
+        rot_quat = vehicle_dict["rot_quat"] if "rot_quat" in vehicle_dict else R.from_euler('z', initial_rotation,
+                                                                                            degrees=True).as_quat()
+        return Vehicle(vehicle_dict["name"],
+                       initial_location,
+                       initial_rotation,
+                       vehicle_dict["driving_actions"],
+                       vehicle_dict["color"],
+                       rot_quat,
+                       vehicle_dict["distance_to_trigger"])
+
+    # Rotation defined against NORTH = [0, 1]
+    def __init__(self, name, initial_location, initial_rotation, driving_actions, color, rot_quat,
+                 distance_to_trigger=-1):
+        self.name = name
+        self.initial_location = Point(initial_location[0], initial_location[1])
+        self.initial_rotation = initial_rotation
+        self.driving_actions = driving_actions
+        self.color = color
+        self.rot_quat = rot_quat
+        self.distance_to_trigger = distance_to_trigger
+
+    def process_driving_actions(self):
         driving_actions = []
-        for driving_action_dict in vehicle_dict["driving_actions"]:
+        for driving_action_dict in self.driving_actions:
             trajectory_segments = []
             # Iterate all the trajectory_list, i.e., list of poitns that define the segments
             for trajectory_list in driving_action_dict["trajectory"]:
                 if len(trajectory_list) == 1:
-                    trajectory_segments.append(segment.Parking())
+                    trajectory_segments.append(segment.Parking(
+                        Point(trajectory_list[0][0], trajectory_list[0][1])
+                    ))
                 elif len(trajectory_list) == 2:
                     trajectory_segments.append(segment.Straight(
                         Point(trajectory_list[0][0], trajectory_list[0][1]),
@@ -41,32 +71,7 @@ class Vehicle:
                 "trajectory_segments": trajectory_segments,
                 "speed": driving_action_dict["speed"]
             })
-
-        # Extract the initial location: the first point of the trajectory
-        initial_location, initial_rotation = common.compute_initial_state(vehicle_dict["driving_actions"])
-
-        # Extract the initial rotation. The rotation the first point of the trajectory
-        ## TODO rotation is extracted by first interpolating the points
-
-        rot_quat = vehicle_dict["rot_quat"] if "rot_quat" in vehicle_dict else R.from_euler('z', initial_rotation,
-                                                                                            degrees=True).as_quat()
-        return Vehicle(vehicle_dict["name"],
-                       initial_location,
-                       initial_rotation,
-                       driving_actions,
-                       vehicle_dict["color"],
-                       rot_quat,
-                       vehicle_dict["distance_to_trigger"])
-
-    # Rotation defined against NORTH = [0, 1]
-    def __init__(self, name, initial_location, initial_rotation, driving_actions, color, rot_quat, distance_to_trigger=-1):
-        self.name = name
-        self.initial_location = Point(initial_location[0], initial_location[1])
-        self.initial_rotation = initial_rotation
-        self.driving_actions = driving_actions
-        self.color = color
-        self.rot_quat = rot_quat
-        self.distance_to_trigger = distance_to_trigger
+        return driving_actions
 
     def generate_trajectory(self):
         # First generate the trajectory, then rotate it according to NORTH
@@ -77,9 +82,12 @@ class Vehicle:
 
         # Collect the trajectory segments from the driving actions
         segments = []
-        for driving_action in self.driving_actions:
+        for driving_action in self.process_driving_actions():
             segments.extend(driving_action["trajectory_segments"])
 
+        # Extract the initial location: the first point of the trajectory
+        self.initial_location, self.initial_rotation = common.compute_initial_state(self.driving_actions)
+        self.initial_location = Point(self.initial_location[0], self.initial_location[1])
         last_location = self.initial_location
         last_rotation = self.initial_rotation
 
@@ -155,7 +163,8 @@ class Vehicle:
 
         # Interpolate and resample uniformly - Make sure no duplicates are there. Hopefully we do not change the order
         # TODO Sampling unit is 5 meters for the moment. Can be changed later
-        interpolated_points = common.interpolate([(p[0], p[1]) for p in list(the_trajectory.coords)], sampling_unit=SAMPLING_UNIT)
+        interpolated_points = common.interpolate([(p[0], p[1]) for p in list(the_trajectory.coords)],
+                                                 sampling_unit=SAMPLING_UNIT)
 
         # Concat the speed to the point
         trajectory_points = list(the_trajectory.coords)
@@ -184,6 +193,18 @@ class Vehicle:
     def get_speed(self):
         speeds = [i["speed"] for i in self.driving_actions]
         return numpy.mean(speeds)
+
+    def get_driving_actions(self):
+        segments = list()
+        for driving_action in self.driving_actions:
+            segments.append(driving_action["trajectory"][0])
+        return segments
+
+    def set_driving_actions(self, driving_actions):
+        target = driving_actions.copy()
+        for driving_action in self.driving_actions:
+            driving_action["trajectory"][0] = target[:len(driving_action["trajectory"][0])]
+            target = target[len(driving_action["trajectory"][0]):]
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)

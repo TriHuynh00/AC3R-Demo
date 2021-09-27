@@ -7,9 +7,10 @@ PARKING_CONSTRAINT = 0.0001
 
 
 class Parking:
-    def __init__(self):
+    def __init__(self, point_a: Point):
         self.type = "parking"
         self.length = PARKING_CONSTRAINT
+        self.coords = [point_a]
 
 
 class Straight:
@@ -18,6 +19,7 @@ class Straight:
         # Rotation is implied by the previous elements or initial rotation
         self.type = "straight"
         self.length = point_a.distance(point_b)
+        self.coords = [point_a, point_b]
 
 
 class Turn:
@@ -38,3 +40,4 @@ class Turn:
         self.type = "turn"
         self.angle = the_angle
         self.radius = radius
+        self.coords = [point_a, point_b, point_c]
