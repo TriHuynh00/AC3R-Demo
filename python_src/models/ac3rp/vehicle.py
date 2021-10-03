@@ -13,7 +13,7 @@ SAMPLING_UNIT = 5
 
 class Vehicle:
     @staticmethod
-    def from_dict(vehicle_dict):
+    def from_dict(vehicle_dict, roads):
         # Extract the initial location: the first point of the trajectory
         initial_location, initial_rotation = common.compute_initial_state(vehicle_dict["driving_actions"])
 
@@ -22,16 +22,30 @@ class Vehicle:
 
         rot_quat = vehicle_dict["rot_quat"] if "rot_quat" in vehicle_dict else R.from_euler('z', initial_rotation,
                                                                                             degrees=True).as_quat()
+        road_data = None
+        for road in roads:
+            if common.is_inside_polygon(Point(initial_location[0], initial_location[1]), road.road_poly):
+                road_data = {
+                    "road_poly": road.road_poly,
+                    "road_equation": road.road_line_equation,
+                    "mutate_equation": common.cal_equation_line_one_point_and_line(
+                        Point(initial_location[0], initial_location[1]),
+                        road.road_line_equation
+                    )
+                }
+
         return Vehicle(vehicle_dict["name"],
                        initial_location,
                        initial_rotation,
                        vehicle_dict["driving_actions"],
                        vehicle_dict["color"],
                        rot_quat,
+                       road_data,
                        vehicle_dict["distance_to_trigger"])
 
     # Rotation defined against NORTH = [0, 1]
     def __init__(self, name, initial_location, initial_rotation, driving_actions, color, rot_quat,
+                 road_data,
                  distance_to_trigger=-1):
         self.name = name
         self.initial_location = Point(initial_location[0], initial_location[1])
@@ -39,6 +53,7 @@ class Vehicle:
         self.driving_actions = driving_actions
         self.color = color
         self.rot_quat = rot_quat
+        self.road_data = road_data
         self.distance_to_trigger = distance_to_trigger
 
     def process_driving_actions(self):
