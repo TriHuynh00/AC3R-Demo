@@ -8,17 +8,29 @@ class Movement:
     The Movement class declares the interface that capture all driving action of vehicle.
 
     Args:
-        driving_actions (tuple): (x,y,z) tuple specifying the position of the vehicle.
+        driving_actions (list): e.g.
+            [
+                {'name': 'follow', 'trajectory': [[[55, 77, 0.0], [-2.0, 2.0, 0.0]]], 'speed': 20},
+                {'name': 'follow', 'trajectory': [[[99, 11, 0.0], [-2.0, 2.0, 0.0]]], 'speed': 20}
+            ]
     """
 
     def __init__(self, driving_actions):
         self.driving_actions = driving_actions
+        self.mean_speeds = numpy.mean([i["speed"] for i in self.driving_actions])
+        self.speeds = [i["speed"] for i in self.driving_actions]
 
     def translate_to_segments(self):
+        """
+        Translate list of driving actions to suitable segment dictionary
+        which serves the trajectory generation in AC3RPlus
+
+        Return: driving_actions (list)
+        """
         driving_actions = []
         for driving_action_dict in self.driving_actions:
             trajectory_segments = []
-            # Iterate all the trajectory_list, i.e., list of poitns that define the segments
+            # Iterate all the trajectory_list, i.e., list of points that define the segments
             for trajectory_list in driving_action_dict["trajectory"]:
                 if len(trajectory_list) == 1:
                     trajectory_segments.append(segment.Parking(
@@ -46,21 +58,25 @@ class Movement:
             })
         return driving_actions
 
-    def get_speed(self):
-        speeds = [i["speed"] for i in self.driving_actions]
-        return numpy.mean(speeds)
-
-    def get_speeds(self):
-        return [i["speed"] for i in self.driving_actions]
-
     def get_driving_actions(self):
+        """
+        Translate list of driving actions to list of trajectory with its coordinates
+
+        Return: segments (list)
+        """
         segments = list()
         for driving_action in self.driving_actions:
             segments.append(driving_action["trajectory"][0])
         return segments
 
     def set_driving_actions(self, driving_actions):
+        """
+        Replace the current the list of trajectory with new points
+        """
         target = driving_actions.copy()
         for driving_action in self.driving_actions:
             driving_action["trajectory"][0] = target[:len(driving_action["trajectory"][0])]
             target = target[len(driving_action["trajectory"][0]):]
+
+    def __str__(self):
+        return str(self.__class__) + ": " + str(self.__dict__)

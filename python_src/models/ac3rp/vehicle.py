@@ -43,9 +43,8 @@ class Vehicle:
                        vehicle_dict["distance_to_trigger"])
 
     # Rotation defined against NORTH = [0, 1]
-    def __init__(self, name, color, rot_quat,
-                 initial_location, initial_rotation, driving_actions,
-                 road_data, distance_to_trigger=-1):
+    def __init__(self, name, initial_location, initial_rotation, driving_actions,
+                 color, rot_quat, road_data, distance_to_trigger=-1):
         self.name = name
         self.initial_location = Point(initial_location[0], initial_location[1])
         self.initial_rotation = initial_rotation
@@ -159,7 +158,7 @@ class Vehicle:
         for s in sl_coor:
             sls.append(LineString(trajectory_points[s[0]:s[1]]))
         speeds = []
-        for speed in self.movement.get_speeds():
+        for speed in self.movement.speeds:
             speeds.append(speed)
 
         trajectory_points = []
@@ -173,7 +172,7 @@ class Vehicle:
         return trajectory_points
 
     def get_speed(self):
-        return self.movement.get_speed()
+        return self.movement.mean_speeds
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
