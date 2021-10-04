@@ -18,19 +18,21 @@ class Vehicle:
 
         # Extract the initial rotation. The rotation the first point of the trajectory
         # TODO rotation is extracted by first interpolating the points
+        if "rot_quat" in vehicle_dict:
+            rot_quat = vehicle_dict["rot_quat"]
+        else:
+            rot_quat = R.from_euler('z', initial_rotation, degrees=True).as_quat()
 
-        rot_quat = vehicle_dict["rot_quat"] if "rot_quat" in vehicle_dict else R.from_euler('z', initial_rotation,
-                                                                                            degrees=True).as_quat()
+        # Attach road data to vehicle
         road_data = None
         for road in roads:
-            if common.is_inside_polygon(Point(initial_location[0], initial_location[1]), road.road_poly):
+            p0 = Point(initial_location[0], initial_location[1])
+            delta = road.road_line_equation
+            if common.is_inside_polygon(p0, road.road_poly):
                 road_data = {
                     "road_poly": road.road_poly,
                     "road_equation": road.road_line_equation,
-                    "mutate_equation": common.cal_equation_line_one_point_and_line(
-                        Point(initial_location[0], initial_location[1]),
-                        road.road_line_equation
-                    )
+                    "mutate_equation": common.cal_equation_line_one_point_and_line(p0, delta)
                 }
 
         return Vehicle(vehicle_dict["name"],
