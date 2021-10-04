@@ -2,7 +2,6 @@ import numpy
 import copy
 from numpy.random import default_rng
 from models.ac3rp import CrashScenario
-import matplotlib.pyplot as plt
 
 
 class Mutator:
@@ -21,7 +20,6 @@ class Mutator:
 
         for vehicle in individual.vehicles:
             mutated_speed = _mutate_val(vehicle.get_speed(), mutate_params)  # 1 speed / 1 vehicle for all actions
-            for action in vehicle.driving_actions:
-                action["speed"] = mutated_speed
+            vehicle.movement.set_speed(mutated_speed)
 
         return mutant  # return deap_individual

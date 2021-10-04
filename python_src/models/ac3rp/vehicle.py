@@ -160,7 +160,7 @@ class Vehicle:
         for s in sl_coor:
             sls.append(LineString(trajectory_points[s[0]:s[1]]))
         speeds = []
-        for speed in self.movement.speeds:
+        for speed in self.movement.get_speeds():
             speeds.append(speed)
 
         trajectory_points = []
@@ -174,7 +174,7 @@ class Vehicle:
         return trajectory_points
 
     def get_speed(self):
-        return self.movement.mean_speeds
+        return self.movement.get_mean_speed()
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)

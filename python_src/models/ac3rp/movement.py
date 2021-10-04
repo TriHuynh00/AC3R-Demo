@@ -17,8 +17,6 @@ class Movement:
 
     def __init__(self, driving_actions):
         self.driving_actions = driving_actions
-        self.mean_speeds = numpy.mean([i["speed"] for i in self.driving_actions])
-        self.speeds = [i["speed"] for i in self.driving_actions]
 
     def translate_to_segments(self):
         """
@@ -62,7 +60,12 @@ class Movement:
         """
         Translate list of driving actions to list of trajectory with its coordinates
 
-        Return: segments (list)
+        Return: segments (list) e.g:
+            [
+                [(59, 74), (13, 8)], # straight
+                [(13, 8), (2, -0)],  # straight
+                [(2, 17), (2, 2), (-30, -49)]  # curve
+            ]
         """
         return [driving_action["trajectory"][0] for driving_action in self.driving_actions]
 
@@ -74,6 +77,25 @@ class Movement:
         for driving_action in self.driving_actions:
             driving_action["trajectory"][0] = target[:len(driving_action["trajectory"][0])]
             target = target[len(driving_action["trajectory"][0]):]
+
+    def set_speed(self, speed):
+        """
+        Replace the current speed the list of trajectory with new speed value
+        """
+        for action in self.driving_actions:
+            action["speed"] = speed
+
+    def get_mean_speed(self):
+        """
+        Return the average speed of trajectories
+        """
+        return numpy.mean([i["speed"] for i in self.driving_actions])
+
+    def get_speeds(self):
+        """
+        Return the list of speed from different driving action
+        """
+        return [i["speed"] for i in self.driving_actions]
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
