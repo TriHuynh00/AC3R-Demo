@@ -21,7 +21,7 @@ class CrashScenario:
 
         vehicles = []
         for vehicle_dict in ac3r_json_data["vehicles"]:
-            vehicles.append(Vehicle.from_dict(vehicle_dict))
+            vehicles.append(Vehicle.from_dict(vehicle_dict, roads))
 
         reports = []
         for report_dict in ac3r_json_data["expected_crash_components"]:

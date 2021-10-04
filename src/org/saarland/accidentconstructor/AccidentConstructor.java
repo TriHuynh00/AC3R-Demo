@@ -711,22 +711,22 @@ public class AccidentConstructor {
                             "vehicle " + vehicle.getVehicleId() +
                                     " action & coord = " + accidentConstructor.mapActionToRoadSegment(vehicle));
                 }
-                accidentConstructor.generateScenarioJSONData(scenarioDataPath, scenarioName);
+//                accidentConstructor.generateScenarioJSONData(scenarioDataPath, scenarioName);
 //                System.exit(0);
 //                accidentConstructor.controlBeamNgAlgorithm(scenarioName);
 
                 /************ END SCENARIO DATA FILE ***********/
 
                 /************ BEGIN SCENARIO EXECUTION ***********/
-//                 boolean hasCrash = testCaseRunner.runScenario(scenarioName);
-//                 DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList, ontologyHandler, scenarioName);
-//                 crashAnalyzer.checkWhetherCrashOccur(hasCrash);
-//                 ConsoleLogger.print('d', "Finish running scenario");
+                boolean hasCrash = testCaseRunner.runScenario(scenarioName);
+                DamagedComponentAnalyzer crashAnalyzer = new DamagedComponentAnalyzer(accidentConstructor.vehicleList, ontologyHandler, scenarioName);
+                crashAnalyzer.checkWhetherCrashOccur(hasCrash);
+                ConsoleLogger.print('d', "Finish running scenario");
 
                 /************ END SCENARIO EXECUTION ***********/
-//                long scenarioEndTime = System.nanoTime() - scenarioStartTime;
-//                ConsoleLogger.print('r', String.format("Finish running simulation after %d seconds\n",
-//                        TimeUnit.NANOSECONDS.toSeconds(scenarioEndTime)));
+                long scenarioEndTime = System.nanoTime() - scenarioStartTime;
+                ConsoleLogger.print('r', String.format("Finish running simulation after %d seconds\n",
+                        TimeUnit.NANOSECONDS.toSeconds(scenarioEndTime)));
 
             } catch (Exception e) {
 
@@ -2831,18 +2831,21 @@ public class AccidentConstructor {
             String roadType = formatJSONKey("road_type") + formatJSONValueString(street.getStreetPropertyValue("road_type"));
             String roadShape = formatJSONKey("road_shape") + formatJSONValueString(street.getStreetPropertyValue("road_shape"));
             String roadNodeList = "road_node_list";
+
             String[] paths = street.getStreetPropertyValue(roadNodeList)
                     .replaceAll(" ", ",").split(";");
+
             List<String> pathList = Arrays.asList(paths);
             ArrayList<String> points = new ArrayList<String>();
-            /* Now we only take 1st and last elements of road node list */
+
             points.add('[' + pathList.get(0) + ']');
             points.add('[' + pathList.get(pathList.size() - 1) + ']');
-            /* Following code will take all elements to json data but not now
+
+            // Following code will take all elements to json data but not now
             for(String point: pathList){
                 points.add("[" + point + "]");
             }
-            */
+
             roadNodeList = formatJSONKey(roadNodeList) + points.toString();
 
             // Update scenario JSON data
