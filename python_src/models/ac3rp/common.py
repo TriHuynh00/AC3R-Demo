@@ -1,12 +1,12 @@
 from scipy.interpolate import splev, splprep
 from numpy import repeat, array, sqrt, inf, cross, dot
 from numpy.ma import arange
-from shapely.geometry import LineString, Point
+from shapely.geometry import LineString
 from shapely.affinity import translate, rotate
 from math import degrees, atan2, copysign
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
-from typing import List, Dict, Tuple
+from typing import List, Tuple, Optional
 
 # Constants
 rounding_precision = 3
@@ -311,16 +311,14 @@ def translate_ls_to_new_origin(lst: LineString, new_origin: Tuple):
     return LineString(new_lst)
 
 
-def mutate_initial_point(plt, vehicle_lst: LineString,
-                         road_poly: Polygon,
+def mutate_initial_point(vehicle_lst: LineString,
                          delta: Tuple,
                          minR: int, maxR: int, num_points: int = 1):
     """
     Mutate an initial point of vehicle trajectory by generated a new initial point
 
     Args:
-        vehicle_lst (LineString): LineString of all vehicle's segments
-        road_poly (Polygon): A road polygon that a vehicle stays in
+        vehicle_lst (LineString): LineString of vehicle's trajectory
         delta (Tuple): Given line equation (a, c) y = ax + b going through the initial point of vehicle. This equation
                        also guarantees the generated point is in the same line of the initial point
         minR, maxR (int): Minimum and maximum distance between a new point and center point
@@ -330,18 +328,9 @@ def mutate_initial_point(plt, vehicle_lst: LineString,
     Returns:
         random_points (List): A list of new initial points on the circle or on the same line of an old initial point
     """
-    print(num_points)
-    random_points = list()
     first, last = vehicle_lst.boundary
-    for i in range(num_points):
-        # (x, y) = generate_random_point_within_circle(first, minR, maxR)
-        (x, y) = generate_random_point_within_line(first, minR, maxR, delta)
-        if not is_inside_polygon(Point(x, y), road_poly):
-            plt.plot(x, y, '.', color="red")
-            pass
-        else:
-            plt.plot(x, y, '.', color="green")
-            random_points.append((x, y))
+    # random_points = [generate_random_point_within_circle(first, minR, maxR, delta) for i in range(num_points)]
+    random_points = [generate_random_point_within_line(first, minR, maxR, delta) for i in range(num_points)]
     return random_points
 
 

@@ -64,10 +64,7 @@ class Movement:
 
         Return: segments (list)
         """
-        segments = list()
-        for driving_action in self.driving_actions:
-            segments.append(driving_action["trajectory"][0])
-        return segments
+        return [driving_action["trajectory"][0] for driving_action in self.driving_actions]
 
     def set_driving_actions(self, driving_actions):
         """
