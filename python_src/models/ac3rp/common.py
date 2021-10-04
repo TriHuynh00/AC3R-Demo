@@ -247,14 +247,14 @@ def generate_random_point_within_circle(center: Point, minR: int, maxR: int):
     return x, y
 
 
-def generate_random_point_within_line(center: Point, minR: int, maxR: int, delta: Tuple):
+def generate_random_point_within_line(center: Point, distance: int, delta: Tuple):
     """
     Generate a random point by given a line equation,
     central point, min and max distance.
 
     Args:
         center (Point): Given a center point
-        minR, maxR (int): Minimum and maximum distance between a new point and center point
+        distance (int): Distance between a new point and center point
         delta (Tuple): Given line equation (a, c) e.g y = ax + b
 
     Returns:
@@ -264,7 +264,8 @@ def generate_random_point_within_line(center: Point, minR: int, maxR: int, delta
     import random
     # Reference:
     # https://math.stackexchange.com/questions/426807/how-does-this-vector-addition-work-in-geometry
-    random_direction = 1 if random.random() < 0.5 else -1
+    # random_direction = 1 if random.random() < 0.5 else -1
+    random_direction = 1
 
     if delta[0] is None:  # any x, y unchanged
         point2 = Point(center.x + random.random(), delta[1])
@@ -275,7 +276,6 @@ def generate_random_point_within_line(center: Point, minR: int, maxR: int, delta
         x = center.x + random.random()
         point2 = Point(x, a * x + b)
 
-    distance = random.randint(minR, maxR)
     v = (point2.x - center.x, point2.y - center.y)
     length_v = math.sqrt(v[0] ** 2 + v[1] ** 2)
     x_new = center.x + distance / length_v * v[0] * random_direction
@@ -313,7 +313,7 @@ def translate_ls_to_new_origin(lst: LineString, new_origin: Point):
 
 def mutate_initial_point(lst: LineString,
                          delta: Tuple,
-                         minR: int, maxR: int, num_points: int = 1):
+                         distance: int, num_points: int = 1):
     """
     Mutate an initial point of vehicle trajectory by generated a new initial point
 
@@ -321,7 +321,7 @@ def mutate_initial_point(lst: LineString,
         lst (LineString): LineString of vehicle's trajectory
         delta (Tuple): Given line equation (a, c) y = ax + b going through the initial point of vehicle. This equation
                        also guarantees the generated point is in the same line of the initial point
-        minR, maxR (int): Minimum and maximum distance between a new point and center point
+        distance (int): A distance between a new point and center point
         num_points (int): An expected number of point we would generate
 
 
@@ -330,7 +330,7 @@ def mutate_initial_point(lst: LineString,
     """
     first, last = lst.boundary
     # random_points = [generate_random_point_within_circle(first, minR, maxR, delta) for i in range(num_points)]
-    random_points = [generate_random_point_within_line(first, minR, maxR, delta) for i in range(num_points)]
+    random_points = [generate_random_point_within_line(first, distance, delta) for i in range(num_points)]
     return random_points
 
 
