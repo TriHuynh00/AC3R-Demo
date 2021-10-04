@@ -69,6 +69,20 @@ class Movement:
         """
         return [driving_action["trajectory"][0] for driving_action in self.driving_actions]
 
+    def get_driving_points(self):
+        """
+        Translate list of driving actions to list of continuous points
+
+        Return: segments (list) e.g:
+            [
+                [(59, 74), (13, 8)] # straight, (13, 8), (2, -0) # straight, (2, 17), (2, 2), (-30, -49) # curve]
+            ]
+        """
+        segments = list()
+        for s in self.get_driving_actions():
+            segments.extend(s)
+        return segments
+
     def set_driving_actions(self, driving_actions):
         """
         Replace the current the list of trajectory with new points

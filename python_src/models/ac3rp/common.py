@@ -284,20 +284,20 @@ def generate_random_point_within_line(center: Point, minR: int, maxR: int, delta
     return x_new, y_new
 
 
-def translate_ls_to_new_origin(lst: LineString, new_origin: Tuple):
+def translate_ls_to_new_origin(lst: LineString, new_origin: Point):
     """
     Translate an existed linestring to a new origin.
 
     Args:
         lst (LineString): An existed linestring
-        new_origin (Tuple): A new origin of a new linestring eg (x, y)
+        new_origin (Point): A new origin of a new linestring eg (x, y)
     Returns:
         new_lst (LineString)
     """
     import math
     first, last = lst.boundary
-    dx = first.x - new_origin[0]
-    dy = first.y - new_origin[1]
+    dx = first.x - new_origin.x
+    dy = first.y - new_origin.y
 
     new_lst = list()
     for p in list(lst.coords):
@@ -311,14 +311,14 @@ def translate_ls_to_new_origin(lst: LineString, new_origin: Tuple):
     return LineString(new_lst)
 
 
-def mutate_initial_point(vehicle_lst: LineString,
+def mutate_initial_point(lst: LineString,
                          delta: Tuple,
                          minR: int, maxR: int, num_points: int = 1):
     """
     Mutate an initial point of vehicle trajectory by generated a new initial point
 
     Args:
-        vehicle_lst (LineString): LineString of vehicle's trajectory
+        lst (LineString): LineString of vehicle's trajectory
         delta (Tuple): Given line equation (a, c) y = ax + b going through the initial point of vehicle. This equation
                        also guarantees the generated point is in the same line of the initial point
         minR, maxR (int): Minimum and maximum distance between a new point and center point
@@ -328,7 +328,7 @@ def mutate_initial_point(vehicle_lst: LineString,
     Returns:
         random_points (List): A list of new initial points on the circle or on the same line of an old initial point
     """
-    first, last = vehicle_lst.boundary
+    first, last = lst.boundary
     # random_points = [generate_random_point_within_circle(first, minR, maxR, delta) for i in range(num_points)]
     random_points = [generate_random_point_within_line(first, minR, maxR, delta) for i in range(num_points)]
     return random_points
