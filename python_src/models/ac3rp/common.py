@@ -334,7 +334,7 @@ def mutate_initial_point(plt, vehicle_lst: LineString,
     random_points = list()
     first, last = vehicle_lst.boundary
     for i in range(num_points):
-        #         (x, y) = generate_random_point_within_circle(first, minR, maxR)
+        # (x, y) = generate_random_point_within_circle(first, minR, maxR)
         (x, y) = generate_random_point_within_line(first, minR, maxR, delta)
         if not is_inside_polygon(Point(x, y), road_poly):
             plt.plot(x, y, '.', color="red")

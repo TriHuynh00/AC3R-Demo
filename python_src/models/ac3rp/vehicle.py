@@ -1,12 +1,11 @@
-import numpy
 from scipy.spatial.transform import Rotation as R
-from numpy import linspace, array, cross, dot
+from numpy import linspace, array
 from shapely.geometry import LineString, Point
 from shapely.affinity import translate, rotate, scale
 from scipy.spatial import geometric_slerp
-from math import sin, cos, radians, degrees, atan2, copysign
+from math import sin, cos, radians
 from models.ac3rp import common
-from models.ac3rp import segment
+from models.ac3rp.movement import Movement
 
 SAMPLING_UNIT = 5
 
@@ -18,7 +17,7 @@ class Vehicle:
         initial_location, initial_rotation = common.compute_initial_state(vehicle_dict["driving_actions"])
 
         # Extract the initial rotation. The rotation the first point of the trajectory
-        ## TODO rotation is extracted by first interpolating the points
+        # TODO rotation is extracted by first interpolating the points
 
         rot_quat = vehicle_dict["rot_quat"] if "rot_quat" in vehicle_dict else R.from_euler('z', initial_rotation,
                                                                                             degrees=True).as_quat()
@@ -44,49 +43,17 @@ class Vehicle:
                        vehicle_dict["distance_to_trigger"])
 
     # Rotation defined against NORTH = [0, 1]
-    def __init__(self, name, initial_location, initial_rotation, driving_actions, color, rot_quat,
-                 road_data,
-                 distance_to_trigger=-1):
+    def __init__(self, name, color, rot_quat,
+                 initial_location, initial_rotation, driving_actions,
+                 road_data, distance_to_trigger=-1):
         self.name = name
         self.initial_location = Point(initial_location[0], initial_location[1])
         self.initial_rotation = initial_rotation
-        self.driving_actions = driving_actions
+        self.movement = Movement(driving_actions)
         self.color = color
         self.rot_quat = rot_quat
         self.road_data = road_data
         self.distance_to_trigger = distance_to_trigger
-
-    def process_driving_actions(self):
-        driving_actions = []
-        for driving_action_dict in self.driving_actions:
-            trajectory_segments = []
-            # Iterate all the trajectory_list, i.e., list of poitns that define the segments
-            for trajectory_list in driving_action_dict["trajectory"]:
-                if len(trajectory_list) == 1:
-                    trajectory_segments.append(segment.Parking(
-                        Point(trajectory_list[0][0], trajectory_list[0][1])
-                    ))
-                elif len(trajectory_list) == 2:
-                    trajectory_segments.append(segment.Straight(
-                        Point(trajectory_list[0][0], trajectory_list[0][1]),
-                        Point(trajectory_list[1][0], trajectory_list[1][1])
-                    ))
-                elif len(trajectory_list) == 3:
-                    trajectory_segments.append(segment.Turn(
-                        Point(trajectory_list[0][0], trajectory_list[0][1]),
-                        Point(trajectory_list[1][0], trajectory_list[1][1]),
-                        Point(trajectory_list[2][0], trajectory_list[2][1])
-                    ))
-                else:
-                    raise Exception("Too many points in the trajectory_dict")
-
-            # TODO Refactor to class
-            driving_actions.append({
-                "name": driving_action_dict["name"],
-                "trajectory_segments": trajectory_segments,
-                "speed": driving_action_dict["speed"]
-            })
-        return driving_actions
 
     def generate_trajectory(self):
         # First generate the trajectory, then rotate it according to NORTH
@@ -97,11 +64,11 @@ class Vehicle:
 
         # Collect the trajectory segments from the driving actions
         segments = []
-        for driving_action in self.process_driving_actions():
+        for driving_action in self.movement.translate_to_segments():
             segments.extend(driving_action["trajectory_segments"])
 
         # Extract the initial location: the first point of the trajectory
-        self.initial_location, self.initial_rotation = common.compute_initial_state(self.driving_actions)
+        self.initial_location, self.initial_rotation = common.compute_initial_state(self.movement.driving_actions)
         self.initial_location = Point(self.initial_location[0], self.initial_location[1])
         last_location = self.initial_location
         last_rotation = self.initial_rotation
@@ -192,8 +159,8 @@ class Vehicle:
         for s in sl_coor:
             sls.append(LineString(trajectory_points[s[0]:s[1]]))
         speeds = []
-        for a in self.driving_actions:
-            speeds.append(a['speed'])
+        for speed in self.movement.get_speeds():
+            speeds.append(speed)
 
         trajectory_points = []
         for line, speed in zip(sls, speeds):
@@ -206,20 +173,7 @@ class Vehicle:
         return trajectory_points
 
     def get_speed(self):
-        speeds = [i["speed"] for i in self.driving_actions]
-        return numpy.mean(speeds)
-
-    def get_driving_actions(self):
-        segments = list()
-        for driving_action in self.driving_actions:
-            segments.append(driving_action["trajectory"][0])
-        return segments
-
-    def set_driving_actions(self, driving_actions):
-        target = driving_actions.copy()
-        for driving_action in self.driving_actions:
-            driving_action["trajectory"][0] = target[:len(driving_action["trajectory"][0])]
-            target = target[len(driving_action["trajectory"][0]):]
+        return self.movement.get_speed()
 
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
