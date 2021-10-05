@@ -2,6 +2,7 @@ import time
 import numpy as np
 from deap import tools, creator, base
 from models.ac3rp import CrashScenario
+from stats.thinkstats2 import Pmf
 
 FIRST = 0
 
@@ -36,6 +37,8 @@ class OpoEvolution:
         self.logfile = logfile
 
     def run(self):
+        # A list to record fitness scores to count probability of the score
+        distribution = list()
         pop = self.toolbox.population(n=1)
         pop[FIRST][FIRST] = self.orig_ind
         start_time = time.time()
@@ -43,7 +46,8 @@ class OpoEvolution:
         for ind, fit in zip(pop, fitnesses):
             ind.fitness.values = fit
 
-        # Write original scenario
+        # Write original scenario and record the fist score
+        distribution.append(pop[FIRST].fitness.values[0])
         self.logfile.write(f'{pop[FIRST][FIRST].vehicles[0].get_speed()},'
                            f'{pop[FIRST][FIRST].vehicles[1].get_speed()},'
                            f'{pop[FIRST].fitness.values[0]}\n')
@@ -63,7 +67,7 @@ class OpoEvolution:
         epoch = 1
         while epoch <= self.epochs:
             # A new generation
-            mutant = self.toolbox.mutate(best_ind)
+            mutant = self.toolbox.mutate(best_ind, distribution)
             pop[:] = [mutant]
 
             fitnesses = list(map(self.toolbox.evaluate, pop))
@@ -107,5 +111,10 @@ class OpoEvolution:
                                f'{s.vehicles[1].get_speed()},'
                                f'{best_ind.fitness.values[0]}\n')
 
+        print("Distribution of fitness score: ")
+        print('{0:10}  {1}'.format("Score", "Probability"))
+        pmf = Pmf(distribution)
+        for k, v in pmf.Items():
+            print('{0:10}  {1}'.format(k, round(v, 3)))
         print("Evolution time: ", time.time() - start_time)
         print("End of evolution")
