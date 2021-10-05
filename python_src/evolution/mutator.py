@@ -47,16 +47,27 @@ class Mutator:
     def mutate_from(mutate_speed_params, mutate_point_params, deap_inds, distribution):
         mutant = copy.deepcopy(deap_inds)
         individual: CrashScenario = mutant[0]  # deap_individual is a list
-        score = deap_inds.fitness.values
+        score = deap_inds.fitness.values[0]
         pmf = Pmf(distribution)
+
+        is_trigger_mutate_point = False
+        print(f'Probability old individual score {score}: {pmf[score]}')
+        print(distribution)
+        print("Distribution of fitness score: ")
+        print('{0:10}  {1}'.format("Score", "Probability"))
+        pmf = Pmf(distribution)
+        for k, v in pmf.Items():
+            print('{0:10}  {1}'.format(k, round(v, 3)))
+        if pmf[score] > 0.25:
+            print(f'P({score}): {pmf[score]} > 0.25, so triggering the _mutate_initial_point()')
+            is_trigger_mutate_point = True
 
         for vehicle in individual.vehicles:
             _mutate_speed(vehicle, mutate_speed_params)
-            if pmf[score] > 0.25:
-                print(f'P({score}): {pmf[score]} > 0.25, so triggering the _mutate_initial_point()')
+            if is_trigger_mutate_point:
                 _mutate_initial_point(vehicle, mutate_point_params)
-            else:
-                distribution.append(score[0])
 
-        print(distribution)
+        if not is_trigger_mutate_point:
+            distribution.append(score)
+
         return mutant  # return deap_individual
