@@ -64,10 +64,13 @@ class OpoEvolution:
         # Begin the evolution
         print("Start of evolution")
 
+        v1_initial_points = []
+        v2_initial_points = []
+
         epoch = 1
         while epoch <= self.epochs:
             # A new generation
-            mutant = self.toolbox.mutate(best_ind, distribution)
+            mutant = self.toolbox.mutate(best_ind, distribution, v1_initial_points, v2_initial_points)
             pop[:] = [mutant]
 
             fitnesses = list(map(self.toolbox.evaluate, pop))
@@ -116,5 +119,9 @@ class OpoEvolution:
         pmf = Pmf(distribution)
         for k, v in pmf.Items():
             print('{0:10}  {1}'.format(k, round(v, 3)))
+
+        print("V1 points: ", v1_initial_points)
+        print("V2 points: ", v2_initial_points)
+
         print("Evolution time: ", time.time() - start_time)
         print("End of evolution")
