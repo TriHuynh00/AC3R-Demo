@@ -36,7 +36,6 @@ class OpoEvolution:
         self.logfile = logfile
 
     def run(self):
-        # A list to record fitness scores to count probability of the score
         pop = self.toolbox.population(n=1)
         pop[FIRST][FIRST] = self.orig_ind
         start_time = time.time()
@@ -44,7 +43,7 @@ class OpoEvolution:
         for ind, fit in zip(pop, fitnesses):
             ind.fitness.values = fit
 
-        # Write original scenario and record the fist score
+        # Write original scenario
         self.logfile.write(f'{pop[FIRST][FIRST].vehicles[0].get_speed()},'
                            f'{pop[FIRST][FIRST].vehicles[1].get_speed()},'
                            f'{pop[FIRST].fitness.values[0]}\n')
