@@ -2,14 +2,13 @@ import time
 import numpy as np
 from deap import tools, creator, base
 from models.ac3rp import CrashScenario
-from stats.thinkstats2 import Pmf
 
 FIRST = 0
 
 
 class OpoEvolution:
-    def __init__(self, scenario, fitness, generate, generate_params, select, mutate, mutate_speed_params,
-                 mutate_point_params, logfile, epochs=1, fitness_repetitions=1, select_aggregate=None, log_data_file=None):
+    def __init__(self, scenario, fitness, generate, generate_params, select, mutate, mutators,
+                 logfile, epochs=1, fitness_repetitions=1, select_aggregate=None, log_data_file=None):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
@@ -19,7 +18,7 @@ class OpoEvolution:
         # Structure initializers
         self.toolbox.register("individual", tools.initRepeat, creator.Individual, self.toolbox.random_ind, 1)
         self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
-        self.toolbox.register("mutate", mutate, mutate_speed_params, mutate_point_params)
+        self.toolbox.register("mutate", mutate, mutators)
         self.toolbox.register("evaluate", fitness, fitness_repetitions, log_data_file)
         self.toolbox.register("select", select, select_aggregate)
 
@@ -38,7 +37,6 @@ class OpoEvolution:
 
     def run(self):
         # A list to record fitness scores to count probability of the score
-        distribution = list()
         pop = self.toolbox.population(n=1)
         pop[FIRST][FIRST] = self.orig_ind
         start_time = time.time()
@@ -47,7 +45,6 @@ class OpoEvolution:
             ind.fitness.values = fit
 
         # Write original scenario and record the fist score
-        distribution.append(pop[FIRST].fitness.values[0])
         self.logfile.write(f'{pop[FIRST][FIRST].vehicles[0].get_speed()},'
                            f'{pop[FIRST][FIRST].vehicles[1].get_speed()},'
                            f'{pop[FIRST].fitness.values[0]}\n')
@@ -64,13 +61,10 @@ class OpoEvolution:
         # Begin the evolution
         print("Start of evolution")
 
-        v1_initial_points = []
-        v2_initial_points = []
-
         epoch = 1
         while epoch <= self.epochs:
             # A new generation
-            mutant = self.toolbox.mutate(best_ind, distribution, v1_initial_points, v2_initial_points)
+            mutant = self.toolbox.mutate(best_ind)
             pop[:] = [mutant]
 
             fitnesses = list(map(self.toolbox.evaluate, pop))
@@ -113,15 +107,6 @@ class OpoEvolution:
             self.logfile.write(f'{s.vehicles[0].get_speed()},'
                                f'{s.vehicles[1].get_speed()},'
                                f'{best_ind.fitness.values[0]}\n')
-
-        print("Distribution of fitness score: ")
-        print('{0:10}  {1}'.format("Score", "Probability"))
-        pmf = Pmf(distribution)
-        for k, v in pmf.Items():
-            print('{0:10}  {1}'.format(k, round(v, 3)))
-
-        print("V1 points: ", v1_initial_points)
-        print("V2 points: ", v2_initial_points)
 
         print("Evolution time: ", time.time() - start_time)
         print("End of evolution")

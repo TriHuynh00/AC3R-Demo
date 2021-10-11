@@ -97,6 +97,7 @@ class Experiment:
         rev_logfile.close()
 
     def _run_opo(self):
+        mutators = list()
         for i in [10]:
             # Write data file
             opo_logfile = open(f'data/{self.simulation_name[0:5]}/opo_{i}/{self.simulation_name}.csv', "a")
@@ -111,8 +112,7 @@ class Experiment:
                 generate=Generator.generate_random_from,
                 generate_params={"min": 10, "max": 50},
                 mutate=Mutator.mutate_from,
-                mutate_speed_params={"mean": 0, "std": 15, "min": 10, "max": 50},
-                mutate_point_params={"mean": 0, "std": 1, "min": -10, "max": 10},
+                mutators=mutators,
                 select=Selector.by_fitness_value,
                 # select_aggregate=libs._VD_A,
                 epochs=10,
