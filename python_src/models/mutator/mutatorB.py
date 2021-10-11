@@ -10,13 +10,16 @@ class MutatorTypeB(Mutator):
     """
 
     def process(self, vehicle: Vehicle) -> Vehicle:
-        # Mutate an average speed of given vehicle
-        mutated_speed = self.mutate_value(vehicle.get_speed())  # 1 speed / 1 vehicle for all actions
-        # Assign new speed
-        vehicle.movement.set_speed(mutated_speed)
+        # Not working for parked car
+        if len(vehicle.movement.get_driving_actions() == 1):
+            return vehicle
+
+        # Define an expected distance to move an initial point
         expected_distance = self.mutate_value(0)
         vehicle_lst = LineString(vehicle.movement.get_driving_points())
         mutated_point = None
+
+        # Run until point staying the road
         while mutated_point is None:
             points = common.mutate_initial_point(lst=vehicle_lst,
                                                  delta=vehicle.road_data["mutate_equation"],
