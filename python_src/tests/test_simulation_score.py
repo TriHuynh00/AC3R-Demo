@@ -23,10 +23,10 @@ class TestSimScore(unittest.TestCase):
             data_target = data_targets[vehicle]
             creator = categorize_report(data_target)
             data_output = data_outputs[vehicle]
-            print(vehicle, creator.match(data_output, data_target))
+            # print(vehicle, creator.match(data_output, data_target))
             result = tuple(map(lambda x, y: x + y, result, creator.match(data_output, data_target)))
-            print(result)
-            print("=====")
+            # print(result)
+            # print("=====")
 
         self.assertTrue(True, True)
 
