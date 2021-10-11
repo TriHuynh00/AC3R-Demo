@@ -107,6 +107,11 @@ class Experiment:
                 "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
             },
             {
+                "type": CAT_B,
+                "probability": 0.5,
+                "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
+            },
+            {
                 "type": CAT_A,
                 "probability": 0.5,
                 "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
@@ -115,14 +120,10 @@ class Experiment:
                 "type": CAT_B,
                 "probability": 0.5,
                 "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
-            },
-            {
-                "type": CAT_B,
-                "probability": 0.5,
-                "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
             }
         ]
         for m in mutators_data:
+            # Orders: [Speed v1, Point v1, Speed v2, Point v2]
             mutators.append(categorize_mutator(m))
 
         for i in [10]:
