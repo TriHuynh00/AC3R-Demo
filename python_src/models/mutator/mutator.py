@@ -20,9 +20,16 @@ class MutatorCreator(ABC):
 
     @abstractmethod
     def create(self) -> Mutator:
+        """
+        Return the mutator with a probability and its appropriate type
+        """
         pass
 
     def mutate(self, vehicle: Vehicle) -> Vehicle:
+        """
+        Return the mutated vehicle after it is mutated
+        by a speed or an initial point mutator
+        """
         mutator = self.create()
         return mutator.process(vehicle)
 
@@ -66,14 +73,8 @@ class SpeedCreator(MutatorCreator):
     """
 
     def create(self) -> Mutator:
+        from models.mutator import MutatorTypeA
         return MutatorTypeA(self.params)
-
-
-class MutatorTypeA(Mutator):
-    def process(self, vehicle: Vehicle) -> Vehicle:
-        mutated_speed = self.mutate_value(vehicle.get_speed())  # 1 speed / 1 vehicle for all actions
-        vehicle.movement.set_speed(mutated_speed)
-        return vehicle
 
 
 def categorize_mutator(mutator_data: dict) -> MutatorCreator:
