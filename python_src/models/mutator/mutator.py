@@ -4,8 +4,8 @@ from abc import ABC, abstractmethod
 import numpy
 from models.ac3rp import Vehicle
 
-CAT_A = 0  # Mutator mutates a speed
-CAT_B = 1  # Mutator mutates an initial point
+CAT_A = 'A'  # Mutator mutates a speed
+CAT_B = 'B'  # Mutator mutates an initial point
 
 
 class MutatorCreator(ABC):
@@ -77,6 +77,17 @@ class SpeedCreator(MutatorCreator):
         return MutatorTypeA(self.params)
 
 
+class InitialPointCreator(MutatorCreator):
+    """
+    InitialPointCreator override the factory method in order to
+    mutate vehicle's initial point and its trajectory.
+    """
+
+    def create(self) -> Mutator:
+        from models.mutator import MutatorTypeB
+        return MutatorTypeB(self.params)
+
+
 def categorize_mutator(mutator_data: dict) -> MutatorCreator:
     """
     Categorizes the type of mutator
@@ -85,7 +96,9 @@ def categorize_mutator(mutator_data: dict) -> MutatorCreator:
     probability = mutator_data["probability"]
     params = mutator_data["params"]
 
-    if mt_type == CAT_A:
+    if mt_type is CAT_A:
         return SpeedCreator(probability, params)
+    if mt_type is CAT_B:
+        return InitialPointCreator(probability, params)
 
     raise Exception("Exception: Mutator Type not found!")
