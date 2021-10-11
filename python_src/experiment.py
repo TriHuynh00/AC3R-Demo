@@ -9,6 +9,8 @@ import time
 from evolution import LogBook, RandomEvolution, OpoEvolution, Mutator, Fitness, Generator, Selector
 from models import SimulationFactory, Simulation, SimulationScore
 from models.ac3rp import CrashScenario
+from models import categorize_mutator
+from models.mutator import CAT_A, CAT_B
 
 
 class Experiment:
@@ -98,6 +100,31 @@ class Experiment:
 
     def _run_opo(self):
         mutators = list()
+        mutators_data = [
+            {
+                "type": CAT_A,
+                "probability": 0.5,
+                "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
+            },
+            {
+                "type": CAT_A,
+                "probability": 0.5,
+                "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
+            },
+            {
+                "type": CAT_B,
+                "probability": 0.5,
+                "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
+            },
+            {
+                "type": CAT_B,
+                "probability": 0.5,
+                "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
+            }
+        ]
+        for m in mutators_data:
+            mutators.append(categorize_mutator(m))
+
         for i in [10]:
             # Write data file
             opo_logfile = open(f'data/{self.simulation_name[0:5]}/opo_{i}/{self.simulation_name}.csv', "a")
@@ -115,7 +142,7 @@ class Experiment:
                 mutators=mutators,
                 select=Selector.by_fitness_value,
                 # select_aggregate=libs._VD_A,
-                epochs=10,
+                epochs=1,
                 logfile=opo_logfile,
                 log_data_file=opo_log_data_file
             )
