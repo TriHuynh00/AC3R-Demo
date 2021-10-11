@@ -143,7 +143,7 @@ class Experiment:
                 mutators=mutators,
                 select=Selector.by_fitness_value,
                 # select_aggregate=libs._VD_A,
-                epochs=1,
+                epochs=10,
                 logfile=opo_logfile,
                 log_data_file=opo_log_data_file
             )
