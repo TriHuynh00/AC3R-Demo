@@ -2,3 +2,4 @@
 python_src/.idea/
 venv/
 *.pyc
+*.ipynb

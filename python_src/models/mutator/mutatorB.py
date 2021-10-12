@@ -11,7 +11,7 @@ class MutatorTypeB(Mutator):
 
     def process(self, vehicle: Vehicle) -> Vehicle:
         # Not working for parked car
-        if len(vehicle.movement.get_driving_actions() == 1):
+        if len(vehicle.movement.get_driving_actions()) == 1:
             return vehicle
 
         # Define an expected distance to move an initial point
