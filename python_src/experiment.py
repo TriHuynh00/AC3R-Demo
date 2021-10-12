@@ -99,34 +99,35 @@ class Experiment:
         rev_logfile.close()
 
     def _run_opo(self):
-        mutators = list()
-        mutators_data = [
-            {
-                "type": CAT_A,
-                "probability": 0.5,
-                "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
-            },
-            {
-                "type": CAT_B,
-                "probability": 0.5,
-                "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
-            },
-            {
-                "type": CAT_A,
-                "probability": 0.5,
-                "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
-            },
-            {
-                "type": CAT_B,
-                "probability": 0.5,
-                "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
-            }
-        ]
-        for m in mutators_data:
-            # Orders: [Speed v1, Point v1, Speed v2, Point v2]
-            mutators.append(categorize_mutator(m))
-
         for i in [10]:
+            # Generate mutators
+            mutators = list()
+            mutators_data = [
+                {
+                    "type": CAT_A,
+                    "probability": 0.5,
+                    "params": {"mean": 0, "std": i, "min": 10, "max": 50}
+                },
+                {
+                    "type": CAT_B,
+                    "probability": 0.5,
+                    "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
+                },
+                {
+                    "type": CAT_A,
+                    "probability": 0.5,
+                    "params": {"mean": 0, "std": i, "min": 10, "max": 50}
+                },
+                {
+                    "type": CAT_B,
+                    "probability": 0.5,
+                    "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
+                }
+            ]
+            for m in mutators_data:
+                # Orders: [Speed v1, Point v1, Speed v2, Point v2]
+                mutators.append(categorize_mutator(m))
+
             # Write data file
             opo_logfile = open(f'data/{self.simulation_name[0:5]}/opo_{i}/{self.simulation_name}.csv', "a")
             opo_logfile.write("v1,v2,score\n")
@@ -143,7 +144,7 @@ class Experiment:
                 mutators=mutators,
                 select=Selector.by_fitness_value,
                 # select_aggregate=libs._VD_A,
-                epochs=10,
+                epochs=5,
                 logfile=opo_logfile,
                 log_data_file=opo_log_data_file
             )
