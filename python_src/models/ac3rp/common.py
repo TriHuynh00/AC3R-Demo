@@ -318,9 +318,15 @@ def translate_ls_to_new_origin(lst: LineString, new_origin: Point):
 
     if math.isclose(lst.length, LineString(new_lst).length, rel_tol=1e-3) is False:
         # two values are approximately equal or “close” to each other, 3 digits after comma
-        raise Exception("Generated new line is not the same length!")
+        print(f'Exception: Generated new line is not the same length! lst: '
+              f'{lst.length} vs new_lst {LineString(new_lst).length}')
     if not is_parallel(lst.coords, new_lst):
-        raise Exception("Generated new line is not parallel to the old line!")
+        print(f'Exception: Generated new line is not parallel to the old line!')
+        print(f'Old line: ')
+        print(lst.coords)
+        print(f'New line: ')
+        print(new_lst)
+        print("====")
     return LineString(new_lst)
 
 

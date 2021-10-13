@@ -9,6 +9,8 @@ import time
 from evolution import LogBook, RandomEvolution, OpoEvolution, Mutator, Fitness, Generator, Selector
 from models import SimulationFactory, Simulation, SimulationScore
 from models.ac3rp import CrashScenario
+from models import categorize_mutator
+from models.mutator import CAT_A, CAT_B
 
 
 class Experiment:
@@ -97,7 +99,35 @@ class Experiment:
         rev_logfile.close()
 
     def _run_opo(self):
-        for i in [5, 10, 15, 20]:
+        for i in [10]:
+            # Generate mutators
+            mutators = list()
+            mutators_data = [
+                {
+                    "type": CAT_A,
+                    "probability": 0.5,
+                    "params": {"mean": 0, "std": i, "min": 10, "max": 50}
+                },
+                {
+                    "type": CAT_B,
+                    "probability": 0.5,
+                    "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
+                },
+                {
+                    "type": CAT_A,
+                    "probability": 0.5,
+                    "params": {"mean": 0, "std": i, "min": 10, "max": 50}
+                },
+                {
+                    "type": CAT_B,
+                    "probability": 0.5,
+                    "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
+                }
+            ]
+            for m in mutators_data:
+                # Orders: [Speed v1, Point v1, Speed v2, Point v2]
+                mutators.append(categorize_mutator(m))
+
             # Write data file
             opo_logfile = open(f'data/{self.simulation_name[0:5]}/opo_{i}/{self.simulation_name}.csv', "a")
             opo_logfile.write("v1,v2,score\n")
@@ -110,11 +140,11 @@ class Experiment:
                 # fitness_repetitions=5,
                 generate=Generator.generate_random_from,
                 generate_params={"min": 10, "max": 50},
-                mutate=Mutator.by_speed,
-                mutate_params={"mean": 0, "std": i, "min": 10, "max": 50},
+                mutate=Mutator.mutate_from,
+                mutators=mutators,
                 select=Selector.by_fitness_value,
                 # select_aggregate=libs._VD_A,
-                epochs=30,
+                epochs=10,
                 logfile=opo_logfile,
                 log_data_file=opo_log_data_file
             )

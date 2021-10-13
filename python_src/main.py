@@ -52,19 +52,22 @@ def evol_scenario(scenario_file):
 if __name__ == '__main__':
     # cli()
 
-    scenarios = ["data/Case4_data.json"]
+    scenarios = ["data/Case0_data.json", "data/Case1_data.json",
+                 "data/Case2_data.json", "data/Case3_data.json",
+                 "data/Case4_data.json", "data/Case5_data.json",
+                 "data/Case6_data.json"]
+
+    # for s in scenarios:
+    #     for i in np.arange(start=1, stop=6, step=1):
+    #         sim_name: str = s[5:11] + str(i)
+    #         print(f'Level {sim_name}...')
+    #         exp: Experiment = Experiment(file_path=s, simulation_name=sim_name)
+    #         exp.run(method_name="Random")
+    #     print(f'-------------------- End of {s} --------------------------------------------------------------')
+    #     print()
 
     for s in scenarios:
-        for i in np.arange(start=1, stop=6, step=1):
-            sim_name: str = s[5:11] + str(i)
-            print(f'Level {sim_name}...')
-            exp: Experiment = Experiment(file_path=s, simulation_name=sim_name)
-            exp.run(method_name="Random")
-        print(f'-------------------- End of {s} --------------------------------------------------------------')
-        print()
-
-    for s in scenarios:
-        for i in np.arange(start=1, stop=6, step=1):
+        for i in np.arange(start=1, stop=2, step=1):
             sim_name: str = s[5:11] + str(i)
             print(f'Level {sim_name}...')
             exp: Experiment = Experiment(file_path=s, simulation_name=sim_name)

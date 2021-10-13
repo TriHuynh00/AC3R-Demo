@@ -1,25 +1,42 @@
-import numpy
 import copy
-from numpy.random import default_rng
+import random
 from models.ac3rp import CrashScenario
+from typing import List
+from models.mutator import MutatorCreator
 
 
 class Mutator:
     @staticmethod
-    def by_speed(mutate_params, deap_inds):
+    def mutate_from(mutators: List[MutatorCreator], deap_inds):
         mutant = copy.deepcopy(deap_inds)
         individual: CrashScenario = mutant[0]  # deap_individual is a list
+        score = deap_inds.fitness.values[0]
 
-        def _mutate_val(value: float, params: dict):
-            value += numpy.random.normal(params["mean"], params["std"], 1)[0]
-            if value < params['min']:
-                value = params['min']
-            if value > params['max']:
-                value = params['max']
-            return value
+        # print("\n")
+        # for vehicle in individual.vehicles:
+        #     print("Speed: ", vehicle.get_speed())
+        #     print("Point 0: ", vehicle.movement.get_driving_points()[0])
+        # print("=====")
 
+        # Mutate an individual
+        # Mutators Order in List: [Speed v1, Point v1, Speed v2, Point v2]
+        mutators_index = 0
         for vehicle in individual.vehicles:
-            mutated_speed = _mutate_val(vehicle.get_speed(), mutate_params)  # 1 speed / 1 vehicle for all actions
-            vehicle.movement.set_speed(mutated_speed)
+            # Mutate Speed
+            probability = random.uniform(0, 1)
+            if probability <= mutators[mutators_index].probability:
+                mutators[mutators_index].mutate(vehicle)
+            mutators_index += 1
+
+            # Mutate Initial Point
+            probability = random.uniform(0, 1)
+            if probability <= mutators[mutators_index].probability:
+                mutators[mutators_index].mutate(vehicle)
+            mutators_index += 1
+
+        # for vehicle in individual.vehicles:
+        #     print("Speed: ", vehicle.get_speed())
+        #     print("Point 0: ", vehicle.movement.get_driving_points()[0])
+        # print("\n")
 
         return mutant  # return deap_individual

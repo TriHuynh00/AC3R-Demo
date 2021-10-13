@@ -89,7 +89,7 @@ class Movement:
         """
         target = driving_actions.copy()
         for driving_action in self.driving_actions:
-            driving_action["trajectory"][0] = target[:len(driving_action["trajectory"][0])]
+            driving_action["trajectory"][0] = [list(t) for t in target[:len(driving_action["trajectory"][0])]]
             target = target[len(driving_action["trajectory"][0]):]
 
     def set_speed(self, speed):
