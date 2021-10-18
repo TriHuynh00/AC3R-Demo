@@ -105,6 +105,8 @@ class RandomEvolution:
                   f'(Speed v1-{s.vehicles[0].get_speed()}) '
                   f'(Speed v2-{s.vehicles[1].get_speed()}) '
                   f'(Fitness Value-{best_ind.fitness.values[0]})')
+            if is_exceed_threshold:
+                print("Search Algorithm is stopped by threshold!")
             print("-----------------------------------------------------------------------------------------------")
             ##############################################################################
 
