@@ -36,9 +36,9 @@ def run_from_scenario(scenario_file):
         scenario_data = json.load(file)
     sim_factory = SimulationFactory(CrashScenario.from_json(scenario_data))
     simulation = Simulation(sim_factory=sim_factory, debug=True)
-    SimulationExec(simulation).execute_scenario(timeout=30)
-    print(f'Simulation Score: {SimulationScore(simulation).calculate(debug=True)} / '
-          f'{SimulationScore(simulation).get_expected_score(debug=True)}')
+    # SimulationExec(simulation).execute_scenario(timeout=30)
+    # print(f'Simulation Score: {SimulationScore(simulation).calculate(debug=True)}')
+    print(f'{SimulationScore(simulation).get_expected_score(debug=True)}')
 
 
 @cli.command()
@@ -52,7 +52,15 @@ def evol_scenario(scenario_file):
 if __name__ == '__main__':
     # cli()
 
-    scenarios = ["data/Case6_data.json"]
+    scenarios = [
+        {"name": "Case0", "path": "data/Case0_data.json", "threshold": 1.4, },
+        {"name": "Case1", "path": "data/Case1_data.json", "threshold": 1.7999999999999998,},
+        {"name": "Case2", "path": "data/Case2_data.json", "threshold": 1.4, },
+        {"name": "Case3", "path": "data/Case3_data.json", "threshold": 2.0,},
+        {"name": "Case4", "path": "data/Case4_data.json", "threshold": 2.0, },
+        {"name": "Case5", "path": "data/Case5_data.json", "threshold": 2.4000000000000004,},
+        {"name": "Case6", "path": "data/Case6_data.json", "threshold": 1.7, },
+    ]
 
     # for s in scenarios:
     #     for i in np.arange(start=1, stop=6, step=1):
