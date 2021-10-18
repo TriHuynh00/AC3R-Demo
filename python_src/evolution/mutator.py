@@ -12,5 +12,5 @@ class Mutator:
 
         # Mutate the individual
         mutant[0] = transformer.mutate_from(individual)
-
+        exit()
         return mutant  # return deap_individual
