@@ -62,20 +62,24 @@ if __name__ == '__main__':
         {"name": "Case6", "path": "data/Case6_data.json", "threshold": 1.7, },
     ]
 
-    # for s in scenarios:
-    #     for i in np.arange(start=1, stop=6, step=1):
-    #         sim_name: str = s[5:11] + str(i)
-    #         print(f'Level {sim_name}...')
-    #         exp: Experiment = Experiment(file_path=s, simulation_name=sim_name)
-    #         exp.run(method_name="Random")
-    #     print(f'-------------------- End of {s} --------------------------------------------------------------')
-    #     print()
-
-    for s in scenarios:
-        for i in np.arange(start=1, stop=2, step=1):
-            sim_name: str = s[5:11] + str(i)
+    for scenario in scenarios:
+        path = scenario["path"]
+        threshold = scenario["threshold"]
+        for i in np.arange(start=1, stop=5, step=1):
+            sim_name: str = path[5:11] + str(i)
             print(f'Level {sim_name}...')
-            exp: Experiment = Experiment(file_path=s, simulation_name=sim_name)
+            exp: Experiment = Experiment(file_path=path, simulation_name=sim_name, threshold=threshold)
+            exp.run(method_name="Random")
+        print(f'-------------------- End of {path} --------------------------------------------------------------')
+        print()
+
+    for scenario in scenarios:
+        path = scenario["path"]
+        threshold = scenario["threshold"]
+        for i in np.arange(start=1, stop=5, step=1):
+            sim_name: str = path[5:11] + str(i)
+            print(f'Level {sim_name}...')
+            exp: Experiment = Experiment(file_path=path, simulation_name=sim_name, threshold=threshold)
             exp.run(method_name="OpO")
-        print(f'-------------------- End of {s} --------------------------------------------------------------')
+        print(f'-------------------- End of {path} --------------------------------------------------------------')
         print()

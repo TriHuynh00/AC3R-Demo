@@ -13,10 +13,11 @@ from models.mutator import MUTATE_INITIAL_POINT_CLASS, MUTATE_SPEED_CLASS, Trans
 
 
 class Experiment:
-    def __init__(self, file_path: str, simulation_name: str = None):
+    def __init__(self, file_path: str, threshold: float, simulation_name: str = None):
         try:
             tmp_simulation_name = 'beamng_executor/sim_$(id)'.replace('$(id)', time.strftime('%Y-%m-%d--%H-%M-%S', time.localtime()))
             self.simulation_name = tmp_simulation_name if simulation_name is None else simulation_name
+            self.threshold = threshold
             with open(file_path) as file:
                 self.scenario = json.load(file)
         except Exception as ex:
@@ -142,7 +143,8 @@ class Experiment:
                 # select_aggregate=libs._VD_A,
                 epochs=30,
                 logfile=opo_logfile,
-                log_data_file=opo_log_data_file
+                log_data_file=opo_log_data_file,
+                threshold=self.threshold
             )
             oev.run()
 

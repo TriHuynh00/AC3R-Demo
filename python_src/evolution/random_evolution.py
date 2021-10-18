@@ -8,7 +8,7 @@ FIRST = 0
 
 class RandomEvolution:
     def __init__(self, scenario, fitness, generate, generate_params, select, logfile, epochs=1, fitness_repetitions=1,
-                 select_aggregate=None, log_data_file=None):
+                 threshold=None, select_aggregate=None, log_data_file=None):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
@@ -35,6 +35,7 @@ class RandomEvolution:
         self.orig_ind = scenario
         self.fitness_repetitions = fitness_repetitions
         self.logfile = logfile
+        self.threshold = threshold
 
     def run(self):
         pop = self.toolbox.population(n=1)
@@ -62,7 +63,8 @@ class RandomEvolution:
         print("Start of evolution")
 
         epoch = 1
-        while epoch <= self.epochs:
+        is_exceed_threshold = False
+        while epoch <= self.epochs and is_exceed_threshold is False:
             # A new generation
             pop = self.toolbox.population(n=1)
 
@@ -91,6 +93,10 @@ class RandomEvolution:
             record = self.mstats.compile(pop)
             self.logbook.record(gen=epoch, evals=epoch, **record)
             epoch = epoch + 1
+
+            # Check if the best individual exceeds given threshold
+            if self.threshold is not None and self.threshold <= best_ind.fitness.values[0]:
+                is_exceed_threshold = True
 
             # DEBUG - Compare 2 scenarios
             print("We select the best scenario: ")
