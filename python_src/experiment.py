@@ -91,7 +91,8 @@ class Experiment:
             # select_aggregate=numpy.mean,
             epochs=30,
             logfile=rev_logfile,
-            log_data_file=rev_log_data_file
+            log_data_file=rev_log_data_file,
+            threshold=self.threshold
         )
         rev.run()
 
