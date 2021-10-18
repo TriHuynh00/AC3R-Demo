@@ -15,13 +15,13 @@ class Transformer:
     def __init__(self, mutators: List[MutatorCreator]):
         self.mutators = mutators
 
-    def mutate_from(self, scenario: CrashScenario, is_test_mode: bool = False):
+    def mutate_from(self, scenario: CrashScenario, is_unit_test: bool = False):
         """
         Implement method to modify a given crash scenario object.
 
         Args:
             scenario (CrashScenario): a crash scenario is provided by AC3RPlus.
-            is_test_mode (Boolean): a parameter used for testing only
+            is_unit_test (Boolean): a parameter used for testing only
         """
 
         # Initialize configuration
@@ -32,7 +32,7 @@ class Transformer:
         for vehicle in mutated_scenario.vehicles:
             for mutator in self.mutators:
                 probability = random.uniform(0, 1)
-                if is_test_mode:  # Executing for unit test only
+                if is_unit_test:  # Executing for unit test only
                     mutator.mutate(vehicle)
                 else:
                     if probability <= mutator.probability:
