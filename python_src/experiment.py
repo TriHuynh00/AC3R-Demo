@@ -113,16 +113,6 @@ class Experiment:
                     "probability": 0.5,
                     "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
                 },
-                {
-                    "type": MUTATE_SPEED_CLASS,
-                    "probability": 0.5,
-                    "params": {"mean": 0, "std": i, "min": 10, "max": 50}
-                },
-                {
-                    "type": MUTATE_INITIAL_POINT_CLASS,
-                    "probability": 0.5,
-                    "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
-                }
             ]
             mutators = [categorize_mutator(m) for m in mutators_data]  # Orders: [Speed_v1,Point_v1,Speed_v2,Point_v2]
 
