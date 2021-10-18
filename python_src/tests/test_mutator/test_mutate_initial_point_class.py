@@ -3,7 +3,7 @@ import unittest
 
 import models.mutator.mutator
 from models import categorize_mutator
-from models.mutator import CAT_B
+from models.mutator import MUTATE_INITIAL_POINT_CLASS
 from models.ac3rp import Road, Vehicle
 
 
@@ -30,10 +30,10 @@ def get_test_vehicle():
     return vehicles[0]
 
 
-class TestMutatorTypeB(unittest.TestCase):
+class TestMutateInitialPointClass(unittest.TestCase):
     def test_probability_equal_10(self):
         mutator = categorize_mutator({
-            "type": CAT_B,
+            "type": MUTATE_INITIAL_POINT_CLASS,
             "probability": 10,
             "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
         })
@@ -42,7 +42,7 @@ class TestMutatorTypeB(unittest.TestCase):
 
     def test_mutator_is_speed_mutator(self):
         mutator = categorize_mutator({
-            "type": CAT_B,
+            "type": MUTATE_INITIAL_POINT_CLASS,
             "probability": 5,
             "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
         })
@@ -62,7 +62,7 @@ class TestMutatorTypeB(unittest.TestCase):
         old_intial_point = vehicle.movement.get_driving_points()[0]
 
         mutator = categorize_mutator({
-            "type": CAT_B,
+            "type": MUTATE_INITIAL_POINT_CLASS,
             "probability": 0.5,
             "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
         })

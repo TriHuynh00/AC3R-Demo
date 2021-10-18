@@ -3,7 +3,7 @@ import unittest
 
 import models.mutator.mutator
 from models import categorize_mutator
-from models.mutator import CAT_A
+from models.mutator import MUTATE_SPEED_CLASS
 from models.ac3rp import Road, Vehicle
 
 
@@ -30,10 +30,10 @@ def get_test_vehicle():
     return vehicles[0]
 
 
-class TestMutatorTypeA(unittest.TestCase):
+class TestMutateSpeedClass(unittest.TestCase):
     def test_probability_equal_5(self):
         mutator = categorize_mutator({
-            "type": CAT_A,
+            "type": MUTATE_SPEED_CLASS,
             "probability": 5,
             "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
         })
@@ -42,7 +42,7 @@ class TestMutatorTypeA(unittest.TestCase):
 
     def test_mutator_is_speed_mutator(self):
         mutator = categorize_mutator({
-            "type": CAT_A,
+            "type": MUTATE_SPEED_CLASS,
             "probability": 5,
             "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
         })
@@ -53,7 +53,7 @@ class TestMutatorTypeA(unittest.TestCase):
         old_speed = vehicle.get_speed()
 
         mutator = categorize_mutator({
-            "type": CAT_A,
+            "type": MUTATE_SPEED_CLASS,
             "probability": 0.5,
             "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
         })

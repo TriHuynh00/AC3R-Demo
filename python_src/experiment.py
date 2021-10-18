@@ -10,7 +10,7 @@ from evolution import LogBook, RandomEvolution, OpoEvolution, Mutator, Fitness, 
 from models import SimulationFactory, Simulation, SimulationScore
 from models.ac3rp import CrashScenario
 from models import categorize_mutator
-from models.mutator import CAT_A, CAT_B
+from models.mutator import MUTATE_INITIAL_POINT_CLASS, MUTATE_SPEED_CLASS
 
 
 class Experiment:
@@ -104,22 +104,22 @@ class Experiment:
             mutators = list()
             mutators_data = [
                 {
-                    "type": CAT_A,
+                    "type": MUTATE_SPEED_CLASS,
                     "probability": 0.5,
                     "params": {"mean": 0, "std": i, "min": 10, "max": 50}
                 },
                 {
-                    "type": CAT_B,
+                    "type": MUTATE_INITIAL_POINT_CLASS,
                     "probability": 0.5,
                     "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
                 },
                 {
-                    "type": CAT_A,
+                    "type": MUTATE_SPEED_CLASS,
                     "probability": 0.5,
                     "params": {"mean": 0, "std": i, "min": 10, "max": 50}
                 },
                 {
-                    "type": CAT_B,
+                    "type": MUTATE_INITIAL_POINT_CLASS,
                     "probability": 0.5,
                     "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
                 }
