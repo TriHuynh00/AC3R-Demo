@@ -7,10 +7,9 @@ import pandas as pd
 import time
 
 from evolution import LogBook, RandomEvolution, OpoEvolution, Mutator, Fitness, Generator, Selector
-from models import SimulationFactory, Simulation, SimulationScore
+from models import SimulationFactory, Simulation, SimulationScore, categorize_mutator
 from models.ac3rp import CrashScenario
-from models import categorize_mutator
-from models.mutator import MUTATE_INITIAL_POINT_CLASS, MUTATE_SPEED_CLASS
+from models.mutator import MUTATE_INITIAL_POINT_CLASS, MUTATE_SPEED_CLASS, Transformer
 
 
 class Experiment:
@@ -101,7 +100,6 @@ class Experiment:
     def _run_opo(self):
         for i in [10]:
             # Generate mutators
-            mutators = list()
             mutators_data = [
                 {
                     "type": MUTATE_SPEED_CLASS,
@@ -124,9 +122,7 @@ class Experiment:
                     "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
                 }
             ]
-            for m in mutators_data:
-                # Orders: [Speed v1, Point v1, Speed v2, Point v2]
-                mutators.append(categorize_mutator(m))
+            mutators = [categorize_mutator(m) for m in mutators_data]  # Orders: [Speed_v1,Point_v1,Speed_v2,Point_v2]
 
             # Write data file
             opo_logfile = open(f'data/{self.simulation_name[0:5]}/opo_{i}/{self.simulation_name}.csv', "a")
@@ -141,10 +137,10 @@ class Experiment:
                 generate=Generator.generate_random_from,
                 generate_params={"min": 10, "max": 50},
                 mutate=Mutator.mutate_from,
-                mutators=mutators,
+                mutate_params=Transformer(mutators),
                 select=Selector.by_fitness_value,
                 # select_aggregate=libs._VD_A,
-                epochs=10,
+                epochs=30,
                 logfile=opo_logfile,
                 log_data_file=opo_log_data_file
             )

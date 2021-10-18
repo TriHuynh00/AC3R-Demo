@@ -52,10 +52,7 @@ def evol_scenario(scenario_file):
 if __name__ == '__main__':
     # cli()
 
-    scenarios = ["data/Case0_data.json", "data/Case1_data.json",
-                 "data/Case2_data.json", "data/Case3_data.json",
-                 "data/Case4_data.json", "data/Case5_data.json",
-                 "data/Case6_data.json"]
+    scenarios = ["data/Case6_data.json"]
 
     # for s in scenarios:
     #     for i in np.arange(start=1, stop=6, step=1):
