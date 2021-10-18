@@ -15,13 +15,16 @@ class Transformer:
     def __init__(self, mutators: List[MutatorCreator]):
         self.mutators = mutators
 
-    def mutate_from(self, scenario: CrashScenario, is_unit_test: bool = False):
+    def mutate_from(self, scenario: CrashScenario, is_unit_test: bool = False) -> CrashScenario:
         """
         Implement method to modify a given crash scenario object.
 
         Args:
             scenario (CrashScenario): a crash scenario is provided by AC3RPlus.
-            is_unit_test (Boolean): a parameter used for testing only
+            is_unit_test (Boolean): a parameter used for testing only.
+
+        Return:
+            CrashScenario: a mutated crash scenario object.
         """
 
         # Initialize configuration
