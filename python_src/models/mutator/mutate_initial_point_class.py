@@ -4,7 +4,7 @@ from shapely.geometry import LineString, Point
 from models.ac3rp import common
 
 
-class MutatorTypeB(Mutator):
+class MutateInitialPointClass(Mutator):
     """
     Concrete Mutator provide an implementations of the Initial Point Mutator interface.
     """

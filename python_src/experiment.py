@@ -7,17 +7,17 @@ import pandas as pd
 import time
 
 from evolution import LogBook, RandomEvolution, OpoEvolution, Mutator, Fitness, Generator, Selector
-from models import SimulationFactory, Simulation, SimulationScore
+from models import SimulationFactory, Simulation, SimulationScore, categorize_mutator
 from models.ac3rp import CrashScenario
-from models import categorize_mutator
-from models.mutator import CAT_A, CAT_B
+from models.mutator import MUTATE_INITIAL_POINT_CLASS, MUTATE_SPEED_CLASS, Transformer
 
 
 class Experiment:
-    def __init__(self, file_path: str, simulation_name: str = None):
+    def __init__(self, file_path: str, threshold: float, simulation_name: str = None):
         try:
             tmp_simulation_name = 'beamng_executor/sim_$(id)'.replace('$(id)', time.strftime('%Y-%m-%d--%H-%M-%S', time.localtime()))
             self.simulation_name = tmp_simulation_name if simulation_name is None else simulation_name
+            self.threshold = threshold
             with open(file_path) as file:
                 self.scenario = json.load(file)
         except Exception as ex:
@@ -91,7 +91,8 @@ class Experiment:
             # select_aggregate=numpy.mean,
             epochs=30,
             logfile=rev_logfile,
-            log_data_file=rev_log_data_file
+            log_data_file=rev_log_data_file,
+            threshold=self.threshold
         )
         rev.run()
 
@@ -101,32 +102,19 @@ class Experiment:
     def _run_opo(self):
         for i in [10]:
             # Generate mutators
-            mutators = list()
             mutators_data = [
                 {
-                    "type": CAT_A,
+                    "type": MUTATE_SPEED_CLASS,
                     "probability": 0.5,
                     "params": {"mean": 0, "std": i, "min": 10, "max": 50}
                 },
                 {
-                    "type": CAT_B,
+                    "type": MUTATE_INITIAL_POINT_CLASS,
                     "probability": 0.5,
                     "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
                 },
-                {
-                    "type": CAT_A,
-                    "probability": 0.5,
-                    "params": {"mean": 0, "std": i, "min": 10, "max": 50}
-                },
-                {
-                    "type": CAT_B,
-                    "probability": 0.5,
-                    "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
-                }
             ]
-            for m in mutators_data:
-                # Orders: [Speed v1, Point v1, Speed v2, Point v2]
-                mutators.append(categorize_mutator(m))
+            mutators = [categorize_mutator(m) for m in mutators_data]  # Orders: [Speed_v1,Point_v1,Speed_v2,Point_v2]
 
             # Write data file
             opo_logfile = open(f'data/{self.simulation_name[0:5]}/opo_{i}/{self.simulation_name}.csv', "a")
@@ -141,12 +129,13 @@ class Experiment:
                 generate=Generator.generate_random_from,
                 generate_params={"min": 10, "max": 50},
                 mutate=Mutator.mutate_from,
-                mutators=mutators,
+                mutate_params=Transformer(mutators),
                 select=Selector.by_fitness_value,
                 # select_aggregate=libs._VD_A,
-                epochs=10,
+                epochs=30,
                 logfile=opo_logfile,
-                log_data_file=opo_log_data_file
+                log_data_file=opo_log_data_file,
+                threshold=self.threshold
             )
             oev.run()
 

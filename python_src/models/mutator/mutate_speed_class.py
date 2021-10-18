@@ -2,7 +2,7 @@ from models.mutator import Mutator
 from models.ac3rp import Vehicle
 
 
-class MutatorTypeA(Mutator):
+class MutateSpeedClass(Mutator):
     """
     Concrete Mutator provide an implementations of the Speed Mutator interface.
     """

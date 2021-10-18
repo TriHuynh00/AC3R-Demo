@@ -7,8 +7,8 @@ FIRST = 0
 
 
 class OpoEvolution:
-    def __init__(self, scenario, fitness, generate, generate_params, select, mutate, mutators,
-                 logfile, epochs=1, fitness_repetitions=1, select_aggregate=None, log_data_file=None):
+    def __init__(self, scenario, fitness, generate, generate_params, select, mutate, mutate_params,
+                 logfile, threshold=None, epochs=1, fitness_repetitions=1, select_aggregate=None, log_data_file=None):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
@@ -18,7 +18,7 @@ class OpoEvolution:
         # Structure initializers
         self.toolbox.register("individual", tools.initRepeat, creator.Individual, self.toolbox.random_ind, 1)
         self.toolbox.register("population", tools.initRepeat, list, self.toolbox.individual)
-        self.toolbox.register("mutate", mutate, mutators)
+        self.toolbox.register("mutate", mutate, mutate_params)
         self.toolbox.register("evaluate", fitness, fitness_repetitions, log_data_file)
         self.toolbox.register("select", select, select_aggregate)
 
@@ -34,6 +34,7 @@ class OpoEvolution:
         self.epochs = epochs
         self.orig_ind = scenario
         self.logfile = logfile
+        self.threshold = threshold
 
     def run(self):
         pop = self.toolbox.population(n=1)
@@ -61,7 +62,8 @@ class OpoEvolution:
         print("Start of evolution")
 
         epoch = 1
-        while epoch <= self.epochs:
+        is_exceed_threshold = False
+        while epoch <= self.epochs and is_exceed_threshold is False:
             # A new generation
             mutant = self.toolbox.mutate(best_ind)
             pop[:] = [mutant]
@@ -92,6 +94,10 @@ class OpoEvolution:
             self.logbook.record(gen=epoch, evals=epoch, **record)
             epoch = epoch + 1
 
+            # Check if the best individual exceeds given threshold
+            if self.threshold is not None and self.threshold <= best_ind.fitness.values[0]:
+                is_exceed_threshold = True
+
             # DEBUG - Compare 2 scenarios
             print("We select the best scenario: ")
             s: CrashScenario = best_ind[0]
@@ -99,6 +105,8 @@ class OpoEvolution:
                   f'(Speed v1-{s.vehicles[0].get_speed()}) '
                   f'(Speed v2-{s.vehicles[1].get_speed()}) '
                   f'(Fitness Value-{best_ind.fitness.values[0]})')
+            if is_exceed_threshold:
+                print("Search Algorithm is stopped by threshold!")
             print("-----------------------------------------------------------------------------------------------")
             ##############################################################################
 
