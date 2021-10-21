@@ -1,4 +1,4 @@
-from models.police_report import Report, CAT_A_DATA, CAT_D_DATA
+from models.police_report import Report
 from typing import Tuple
 
 """
@@ -11,11 +11,13 @@ class ReportTypeA(Report):
         pass
 
     def process(self, outputs: list, targets: list) -> Tuple[int, int, int]:
+        from models import CONST
+
         # Validate given output from simulation
         self._validate_output(outputs)
 
         # The maximum point a scenario can earn
-        point_target = len(CAT_A_DATA)
+        point_target = len(CONST.CAT_A_DATA)
         crash_points, non_crash_points = 0, 0
 
         # From Simulation:

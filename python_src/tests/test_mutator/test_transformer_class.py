@@ -1,7 +1,8 @@
 import json
 import unittest
+from models import CONST
 from models.ac3rp import CrashScenario
-from models.mutator import MUTATE_INITIAL_POINT_CLASS, MUTATE_SPEED_CLASS, categorize_mutator, Transformer
+from models.mutator import categorize_mutator, Transformer
 
 
 class TestTransformerClass(unittest.TestCase):
@@ -13,12 +14,12 @@ class TestTransformerClass(unittest.TestCase):
         # Generate mutators
         mutators_data = [
             {
-                "type": MUTATE_SPEED_CLASS,
+                "type": CONST.MUTATE_SPEED_CLASS,
                 "probability": 0.5,
                 "params": {"mean": 0, "std": 10, "min": 10, "max": 50}
             },
             {
-                "type": MUTATE_INITIAL_POINT_CLASS,
+                "type": CONST.MUTATE_INITIAL_POINT_CLASS,
                 "probability": 0.5,
                 "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
             }
@@ -38,12 +39,12 @@ class TestTransformerClass(unittest.TestCase):
         # Generate mutators
         mutators_data = [
             {
-                "type": MUTATE_SPEED_CLASS,
+                "type": CONST.MUTATE_SPEED_CLASS,
                 "probability": 0.5,
                 "params": {"mean": 0, "std": 10, "min": 10, "max": 50}
             },
             {
-                "type": MUTATE_INITIAL_POINT_CLASS,
+                "type": CONST.MUTATE_INITIAL_POINT_CLASS,
                 "probability": 0.5,
                 "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
             }

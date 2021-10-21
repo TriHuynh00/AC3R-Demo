@@ -2,10 +2,9 @@ import click
 import json
 import numpy as np
 from visualization import VehicleTrajectoryVisualizer
-from models import SimulationFactory, Simulation, SimulationScore, SimulationExec
+from models import SimulationFactory, Simulation, SimulationScore, SimulationExec, CONST
 from models.ac3rp import CrashScenario
 from experiment import Experiment
-
 
 @click.group()
 def cli():
@@ -53,13 +52,34 @@ if __name__ == '__main__':
     # cli()
 
     scenarios = [
-        {"name": "Case0", "path": "data/Case0_data.json", "threshold": 1.4, },
+        # {"name": "Case0", "path": "data/Case0_data.json", "threshold": 1.4, },
         {"name": "Case1", "path": "data/Case1_data.json", "threshold": 1.7999999999999998,},
-        {"name": "Case2", "path": "data/Case2_data.json", "threshold": 1.4, },
-        {"name": "Case3", "path": "data/Case3_data.json", "threshold": 2.0,},
+        # {"name": "Case2", "path": "data/Case2_data.json", "threshold": 1.4, },
+        # {"name": "Case3", "path": "data/Case3_data.json", "threshold": 2.0,},
         {"name": "Case4", "path": "data/Case4_data.json", "threshold": 2.0, },
         {"name": "Case5", "path": "data/Case5_data.json", "threshold": 2.4000000000000004,},
         {"name": "Case6", "path": "data/Case6_data.json", "threshold": 1.7, },
+    ]
+
+    single_mutator = [
+        {
+            "type": CONST.MUTATE_SPEED_CLASS,
+            "probability": 0.5,
+            "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
+        },
+    ]
+
+    multi_mutators = [
+        {
+            "type": CONST.MUTATE_SPEED_CLASS,
+            "probability": 0.5,
+            "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
+        },
+        {
+            "type": CONST.MUTATE_INITIAL_POINT_CLASS,
+            "probability": 0.5,
+            "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
+        },
     ]
 
     for scenario in scenarios:
@@ -69,7 +89,7 @@ if __name__ == '__main__':
             sim_name: str = path[5:11] + str(i)
             print(f'Level {sim_name}...')
             exp: Experiment = Experiment(file_path=path, simulation_name=sim_name, threshold=threshold)
-            exp.run(method_name="Random")
+            exp.run(method_name=CONST.RANDOM)
         print(f'-------------------- End of {path} --------------------------------------------------------------')
         print()
 
@@ -80,6 +100,6 @@ if __name__ == '__main__':
             sim_name: str = path[5:11] + str(i)
             print(f'Level {sim_name}...')
             exp: Experiment = Experiment(file_path=path, simulation_name=sim_name, threshold=threshold)
-            exp.run(method_name="OpO")
+            exp.run(method_name=CONST.OPO)
         print(f'-------------------- End of {path} --------------------------------------------------------------')
         print()

@@ -2,8 +2,7 @@ import json
 import unittest
 
 import models.mutator.mutator
-from models import categorize_mutator
-from models.mutator import MUTATE_INITIAL_POINT_CLASS
+from models import categorize_mutator, CONST
 from models.ac3rp import Road, Vehicle
 
 
@@ -33,7 +32,7 @@ def get_test_vehicle():
 class TestMutateInitialPointClass(unittest.TestCase):
     def test_probability_equal_10(self):
         mutator = categorize_mutator({
-            "type": MUTATE_INITIAL_POINT_CLASS,
+            "type": CONST.MUTATE_INITIAL_POINT_CLASS,
             "probability": 10,
             "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
         })
@@ -42,7 +41,7 @@ class TestMutateInitialPointClass(unittest.TestCase):
 
     def test_mutator_is_speed_mutator(self):
         mutator = categorize_mutator({
-            "type": MUTATE_INITIAL_POINT_CLASS,
+            "type": CONST.MUTATE_INITIAL_POINT_CLASS,
             "probability": 5,
             "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
         })
@@ -62,7 +61,7 @@ class TestMutateInitialPointClass(unittest.TestCase):
         old_intial_point = vehicle.movement.get_driving_points()[0]
 
         mutator = categorize_mutator({
-            "type": MUTATE_INITIAL_POINT_CLASS,
+            "type": CONST.MUTATE_INITIAL_POINT_CLASS,
             "probability": 0.5,
             "params": {"mean": 0, "std": 1, "min": -10, "max": 10}
         })

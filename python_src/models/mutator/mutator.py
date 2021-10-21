@@ -4,9 +4,6 @@ from abc import ABC, abstractmethod
 import numpy
 from models.ac3rp import Vehicle
 
-MUTATE_SPEED_CLASS = 'MUTATE_SPEED_CLASS'  # Mutator mutates a speed
-MUTATE_INITIAL_POINT_CLASS = 'MUTATE_INITIAL_POINT_CLASS'  # Mutator mutates an initial point
-
 
 class MutatorCreator(ABC):
     """
@@ -89,6 +86,7 @@ class InitialPointCreator(MutatorCreator):
 
 
 def categorize_mutator(mutator_data: dict) -> MutatorCreator:
+    from models import CONST  # fix a circular import
     """
     Categorizes the type of mutator
     """
@@ -96,9 +94,9 @@ def categorize_mutator(mutator_data: dict) -> MutatorCreator:
     probability = mutator_data["probability"]
     params = mutator_data["params"]
 
-    if mt_type is MUTATE_SPEED_CLASS:
+    if mt_type is CONST.MUTATE_SPEED_CLASS:
         return SpeedCreator(probability, params)
-    if mt_type is MUTATE_INITIAL_POINT_CLASS:
+    if mt_type is CONST.MUTATE_INITIAL_POINT_CLASS:
         return InitialPointCreator(probability, params)
 
     raise Exception("Exception: Mutator Type not found!")

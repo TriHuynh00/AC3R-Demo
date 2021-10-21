@@ -64,10 +64,11 @@ class OpoEvolution:
         epoch = 1
         is_exceed_threshold = False
         while epoch <= self.epochs and is_exceed_threshold is False:
-            # A new generation
+            # A new generation - by mutate the best individual
             mutant = self.toolbox.mutate(best_ind)
             pop[:] = [mutant]
 
+            # Calculate the fitness score for the new individual
             fitnesses = list(map(self.toolbox.evaluate, pop))
             for ind, fit in zip(pop, fitnesses):
                 ind.fitness.values = fit
