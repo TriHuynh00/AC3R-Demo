@@ -4,17 +4,20 @@ from models.simulation import Simulation
 from models.ac3rp import CrashScenario
 
 
-def _write_log_file(simulation: Simulation, simulation_score: SimulationScore, fn, ex_mes=None):
+def _write_log_file(simulation: Simulation, simulation_score: SimulationScore, fn,
+                    scenario: CrashScenario, ex_mes=None):
     toCSV = []
-    s = dict.fromkeys(["speeds", "vehicles_dam", "sim_dam",
+    s = dict.fromkeys(["speeds", "initial_position", "vehicles_dam", "sim_dam",
                        "crashed_happened", "sim_score", "expected_score", "exception",
                        "vehicles_damage_full", "sim_damage_full"])
-    s["speeds"], s["vehicles_damage_full"], s["vehicles_dam"], s["sim_dam"] = [], [], [], []
+    s["speeds"], s["vehicles_damage_full"], s["vehicles_dam"], s["sim_dam"], s["initial_position"] = [], [], [], [], []
     for player in simulation.players:
         s["speeds"].append({player.vehicle.vid: player.speed})
         s["vehicles_damage_full"].append({player.vehicle.vid: player.get_damage()})
         s["vehicles_dam"].append({player.vehicle.vid: [part["name"] for part in player.get_damage()]})
     s["sim_damage_full"] = simulation.get_data_outputs()
+    for vehicle in scenario.vehicles:
+        s["initial_position"].append({vehicle.name: vehicle.movement.get_driving_points()[0]})
     for key, value in simulation.get_data_outputs().items():
         s["sim_dam"].append({key: [part["name"] for part in value]})
     s["crashed_happened"] = simulation.status
@@ -52,13 +55,15 @@ class Fitness:
                 scores.append(simulation_score.calculate())
                 _write_log_file(fn=log_data_file,
                                 simulation=simulation,
-                                simulation_score=simulation_score)
+                                simulation_score=simulation_score,
+                                scenario=individual)
             except Exception as e:
                 print(f'Fitness Exception: {str(e)}')
                 _write_log_file(fn=log_data_file,
                                 simulation=simulation,
                                 simulation_score=simulation_score,
-                                ex_mes=str(e))
+                                ex_mes=str(e),
+                                scenario=individual)
                 scores.append(0)
         individual.scores = scores
         print(f'Scores: {scores}')
