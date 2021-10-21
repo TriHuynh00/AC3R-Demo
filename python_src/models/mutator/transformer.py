@@ -15,6 +15,25 @@ class Transformer:
     def __init__(self, mutators: List[MutatorCreator]):
         self.mutators = mutators
 
+    def mutate_random_from(self, scenario: CrashScenario) -> CrashScenario:
+        """
+        Implement method to generate a random scenario based on given crash scenario object.
+
+        Args:
+            scenario (CrashScenario): a crash scenario is provided by AC3RPlus.
+        Return:
+            CrashScenario: a mutated crash scenario object generated randomly.
+        """
+
+        # Initialize configuration
+        mutated_scenario = copy.deepcopy(scenario)
+
+        for vehicle in mutated_scenario.vehicles:
+            for mutator in self.mutators:
+                mutator.mutate(vehicle, is_random=True)
+
+        return mutated_scenario
+
     def mutate_from(self, scenario: CrashScenario, is_unit_test: bool = False) -> CrashScenario:
         """
         Implement method to modify a given crash scenario object.

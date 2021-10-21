@@ -1,17 +1,10 @@
 import copy
-import numpy
 from models.ac3rp import CrashScenario
+from models.mutator import Transformer
 
 
 class Generator:
     @staticmethod
-    def generate_random_from(scenario: CrashScenario, generate_params: [float, float]):
+    def generate_random_from(scenario: CrashScenario, transformer: Transformer):
         # Create a new crash scenario
-        randomScenario = copy.deepcopy(scenario)
-
-        # Assign a new average speed to all driving actions belong to random crash scenario
-        for vehicle in randomScenario.vehicles:
-            random_speed = numpy.random.choice(list(range(generate_params["min"], generate_params["max"])))
-            vehicle.movement.set_speed(random_speed)
-
-        return randomScenario
+        return transformer.mutate_random_from(copy.deepcopy(scenario))

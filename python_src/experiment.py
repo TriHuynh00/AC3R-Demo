@@ -4,11 +4,18 @@ from evolution import RandomEvolution, OpoEvolution, Mutator, Fitness, Generator
 from models import categorize_mutator, CONST
 from models.ac3rp import CrashScenario
 from models.mutator import Transformer
+from typing import List, Dict
 
 
 class Experiment:
-    def __init__(self, file_path: str, threshold: float, simulation_name: str = None):
-        self.mutators = []
+    def __init__(self, file_path: str, threshold: float, method_name: str, mutators: List[Dict], case_name: str,
+                 simulation_name: str = None):
+
+        self.method_name = method_name
+        self.case_name = case_name
+        # Generate mutators
+        self.mutators = [categorize_mutator(m) for m in mutators]
+
         try:
             tmp_simulation_name = 'beamng_executor/sim_$(id)'.replace('$(id)', time.strftime('%Y-%m-%d--%H-%M-%S',
                                                                                              time.localtime()))
@@ -19,25 +26,22 @@ class Experiment:
         except Exception as ex:
             print(f'Scenario is not found. Exception: {ex}')
 
-    def set_mutators(self, mutators):
-        self.mutators = mutators
-
-    def run(self, method_name: str):
+    def run(self):
         if self.scenario is None:
             print(f'Scenario is not found')
             return False
 
         # Run the experiment
-        if method_name == CONST.RANDOM:
+        if self.method_name == CONST.RANDOM:
             self._run_rev()
-        elif method_name == CONST.OPO:
+        elif self.method_name == CONST.OPO:
             self._run_opo()
 
     def _run_rev(self):
         # Write data file
-        rev_logfile = open(f'data/{self.simulation_name[0:5]}/{self.simulation_name}.csv', "a")
+        rev_logfile = open(f'data/{self.case_name}/{self.simulation_name}.csv', "a")
         rev_logfile.write("v1,v2,score\n")
-        rev_log_data_file = f'data/{self.simulation_name[0:5]}/log_{self.simulation_name}.csv'
+        rev_log_data_file = f'data/{self.case_name}/log_{self.simulation_name}.csv'
 
         # Experiment run
         rev = RandomEvolution(
@@ -45,7 +49,7 @@ class Experiment:
             fitness=Fitness.evaluate,
             # fitness_repetitions=5,
             generate=Generator.generate_random_from,
-            generate_params={"min": 10, "max": 50},
+            generate_params=Transformer(self.mutators),
             select=Selector.by_fitness_value,
             # select_aggregate=numpy.mean,
             epochs=30,
@@ -59,13 +63,10 @@ class Experiment:
         rev_logfile.close()
 
     def _run_opo(self):
-        # Generate mutators
-        mutators = [categorize_mutator(m) for m in self.mutators]
-
         # Write data file
-        opo_logfile = open(f'data/{self.simulation_name[0:5]}/{self.simulation_name}.csv', "a")
+        opo_logfile = open(f'data/{self.case_name}/{self.simulation_name}.csv', "a")
         opo_logfile.write("v1,v2,score\n")
-        opo_log_data_file = f'data/{self.simulation_name[0:5]}/log_{self.simulation_name}.csv'
+        opo_log_data_file = f'data/{self.case_name}/log_{self.simulation_name}.csv'
 
         # Experiment run
         oev = OpoEvolution(
@@ -73,9 +74,9 @@ class Experiment:
             fitness=Fitness.evaluate,
             # fitness_repetitions=5,
             generate=Generator.generate_random_from,
-            generate_params={"min": 10, "max": 50},
+            generate_params=Transformer(self.mutators),
             mutate=Mutator.mutate_from,
-            mutate_params=Transformer(mutators),
+            mutate_params=Transformer(self.mutators),
             select=Selector.by_fitness_value,
             # select_aggregate=libs._VD_A,
             epochs=30,
