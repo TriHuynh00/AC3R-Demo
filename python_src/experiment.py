@@ -41,7 +41,7 @@ class Experiment:
         # Write data file
         rev_logfile = open(f'data/{self.case_name}/{self.simulation_name}.csv', "a")
         rev_logfile.write("v1,v2,score\n")
-        rev_log_data_file = f'data/{self.case_name}/log_{self.simulation_name}.csv'
+        rev_log_data_file = f'data/{self.case_name}/log/{self.simulation_name}.csv'
 
         # Experiment run
         rev = RandomEvolution(
@@ -66,7 +66,7 @@ class Experiment:
         # Write data file
         opo_logfile = open(f'data/{self.case_name}/{self.simulation_name}.csv', "a")
         opo_logfile.write("v1,v2,score\n")
-        opo_log_data_file = f'data/{self.case_name}/log_{self.simulation_name}.csv'
+        opo_log_data_file = f'data/{self.case_name}/log/{self.simulation_name}.csv'
 
         # Experiment run
         oev = OpoEvolution(
