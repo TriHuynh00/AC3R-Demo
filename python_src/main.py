@@ -82,24 +82,24 @@ if __name__ == '__main__':
         },
     ]
 
-    for scenario in scenarios:
-        path = scenario["path"]
-        threshold = scenario["threshold"]
-        for i in np.arange(start=1, stop=6, step=1):
-            sim_name: str = path[5:11] + str(i)
-            print(f'Level {sim_name}...')
-            exp: Experiment = Experiment(file_path=path, simulation_name=sim_name, threshold=threshold)
-            exp.run(method_name=CONST.RANDOM)
-        print(f'-------------------- End of {path} --------------------------------------------------------------')
-        print()
+    for mutator_dict in [{"name": "single", "mutators": single_mutator},
+                         {"name": "multi", "mutators": multi_mutators}]:
+        for scenario in scenarios:
+            path = scenario["path"]
+            threshold = scenario["threshold"]
+            # Random Search
+            for i in np.arange(start=1, stop=11, step=1):
+                sim_name: str = f'{(mutator_dict["name"].title() + "_Random")}_{path[5:11]}{str(i)}'
+                print(f'Level {sim_name}...')
+                exp: Experiment = Experiment(file_path=path, simulation_name=sim_name, threshold=threshold)
+                # exp.run(method_name=CONST.RANDOM)
 
-    for scenario in scenarios:
-        path = scenario["path"]
-        threshold = scenario["threshold"]
-        for i in np.arange(start=1, stop=6, step=1):
-            sim_name: str = path[5:11] + str(i)
-            print(f'Level {sim_name}...')
-            exp: Experiment = Experiment(file_path=path, simulation_name=sim_name, threshold=threshold)
-            exp.run(method_name=CONST.OPO)
-        print(f'-------------------- End of {path} --------------------------------------------------------------')
-        print()
+            # OpO Search
+            for i in np.arange(start=1, stop=11, step=1):
+                sim_name: str = f'{(mutator_dict["name"].title() + "_OpO")}_{path[5:11]}{str(i)}'
+                print(f'Level {sim_name}...')
+                exp: Experiment = Experiment(file_path=path, simulation_name=sim_name, threshold=threshold)
+                exp.set_mutators(mutator_dict["mutators"])
+                # exp.run(method_name=CONST.OPO)
+            print("=========")
+
