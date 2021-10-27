@@ -1,4 +1,4 @@
-from models.police_report import Report, CAT_C_DATA
+from models.police_report import Report
 from typing import Tuple
 
 """
@@ -20,17 +20,19 @@ class ReportTypeC(Report):
             return [part[1]]
 
     def process(self, outputs: list, targets: list) -> Tuple[int, int, int]:
+        from models import CONST
+
         # Validate given output from simulation
         self._validate_output(outputs)
 
         # The maximum point a scenario can earn
-        point_target = len(CAT_C_DATA)
+        point_target = len(CONST.CAT_C_DATA)
 
         # From Police Report:
         # List crashes_from_police_report contains expected CRASHED side
         # List non_crashes_from_police_report contains expected NON-CRASHED side
         targets = [part["name"] for part in targets]
-        crashes_from_police_report, non_crashes_from_police_report = targets, list(set(CAT_C_DATA) - set(targets))
+        crashes_from_police_report, non_crashes_from_police_report = targets, list(set(CONST.CAT_C_DATA) - set(targets))
 
         # From Simulation:
         # List crashes_from_simulation contains CRASHED side
@@ -53,9 +55,9 @@ class ReportTypeC(Report):
         # Remove duplicates from a list outputs by dict.fromkeys
         outputs = list((dict.fromkeys(decode_parts)))
 
-        crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CAT_C_DATA) - set(outputs))
+        crashes_from_simulation, non_crashes_from_simulation = outputs, list(set(CONST.CAT_C_DATA) - set(outputs))
 
-        crash_points, non_crash_points = self._match(CAT_C_DATA,
+        crash_points, non_crash_points = self._match(CONST.CAT_C_DATA,
                                                      crashes_from_police_report, crashes_from_simulation,
                                                      non_crashes_from_police_report, non_crashes_from_simulation)
         return crash_points, non_crash_points, point_target

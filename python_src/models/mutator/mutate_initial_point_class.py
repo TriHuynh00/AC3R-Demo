@@ -9,13 +9,13 @@ class MutateInitialPointClass(Mutator):
     Concrete Mutator provide an implementations of the Initial Point Mutator interface.
     """
 
-    def process(self, vehicle: Vehicle) -> Vehicle:
+    def process(self, vehicle: Vehicle, is_random=False) -> Vehicle:
         # Not working for parked car
         if len(vehicle.movement.get_driving_actions()) == 1:
             return vehicle
 
         # Define an expected distance to move an initial point
-        expected_distance = self.mutate_value(0)
+        expected_distance = self.random_value() if is_random else self.mutate_value(0)
         vehicle_lst = LineString(vehicle.movement.get_driving_points())
         mutated_point = None
 

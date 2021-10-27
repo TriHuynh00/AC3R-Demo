@@ -2,10 +2,9 @@ import click
 import json
 import numpy as np
 from visualization import VehicleTrajectoryVisualizer
-from models import SimulationFactory, Simulation, SimulationScore, SimulationExec
+from models import SimulationFactory, Simulation, SimulationScore, SimulationExec, CONST
 from models.ac3rp import CrashScenario
 from experiment import Experiment
-
 
 @click.group()
 def cli():
@@ -53,33 +52,64 @@ if __name__ == '__main__':
     # cli()
 
     scenarios = [
-        {"name": "Case0", "path": "data/Case0_data.json", "threshold": 1.4, },
+        # {"name": "Case0", "path": "data/Case0_data.json", "threshold": 1.4, },
         {"name": "Case1", "path": "data/Case1_data.json", "threshold": 1.7999999999999998,},
-        {"name": "Case2", "path": "data/Case2_data.json", "threshold": 1.4, },
-        {"name": "Case3", "path": "data/Case3_data.json", "threshold": 2.0,},
-        {"name": "Case4", "path": "data/Case4_data.json", "threshold": 2.0, },
-        {"name": "Case5", "path": "data/Case5_data.json", "threshold": 2.4000000000000004,},
-        {"name": "Case6", "path": "data/Case6_data.json", "threshold": 1.7, },
+        # {"name": "Case2", "path": "data/Case2_data.json", "threshold": 1.4, },
+        # {"name": "Case3", "path": "data/Case3_data.json", "threshold": 2.0,},
+        # {"name": "Case4", "path": "data/Case4_data.json", "threshold": 2.0, },
+        # {"name": "Case5", "path": "data/Case5_data.json", "threshold": 2.4000000000000004,},
+        # {"name": "Case6", "path": "data/Case6_data.json", "threshold": 1.7, },
     ]
 
-    for scenario in scenarios:
-        path = scenario["path"]
-        threshold = scenario["threshold"]
-        for i in np.arange(start=1, stop=6, step=1):
-            sim_name: str = path[5:11] + str(i)
-            print(f'Level {sim_name}...')
-            exp: Experiment = Experiment(file_path=path, simulation_name=sim_name, threshold=threshold)
-            exp.run(method_name="Random")
-        print(f'-------------------- End of {path} --------------------------------------------------------------')
-        print()
+    single_mutator = [
+        {
+            "type": CONST.MUTATE_SPEED_CLASS,
+            "probability": 0.5,
+            "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
+        },
+    ]
 
-    for scenario in scenarios:
-        path = scenario["path"]
-        threshold = scenario["threshold"]
-        for i in np.arange(start=1, stop=6, step=1):
-            sim_name: str = path[5:11] + str(i)
-            print(f'Level {sim_name}...')
-            exp: Experiment = Experiment(file_path=path, simulation_name=sim_name, threshold=threshold)
-            exp.run(method_name="OpO")
-        print(f'-------------------- End of {path} --------------------------------------------------------------')
-        print()
+    multi_mutators = [
+        {
+            "type": CONST.MUTATE_SPEED_CLASS,
+            "probability": 0.5,
+            "params": {"mean": 0, "std": 15, "min": 10, "max": 50}
+        },
+        {
+            "type": CONST.MUTATE_INITIAL_POINT_CLASS,
+            "probability": 0.5,
+            "params": {"mean": 0, "std": 1, "min": -5, "max": 5}
+        },
+    ]
+
+    for mutator_dict in [{"name": "single", "mutators": single_mutator},
+                         {"name": "multi", "mutators": multi_mutators}]:
+        for scenario in scenarios:
+            case_name = scenario["name"]
+            path = scenario["path"]
+            threshold = scenario["threshold"]
+            # Random Search
+            for i in np.arange(start=1, stop=11, step=1):
+                sim_name: str = f'{(mutator_dict["name"].title() + "_Random")}_{path[5:11]}{str(i)}'
+                print(f'Level {sim_name}...')
+                exp: Experiment = Experiment(file_path=path,
+                                             case_name=case_name,
+                                             simulation_name=sim_name,
+                                             threshold=threshold,
+                                             mutators=mutator_dict["mutators"],
+                                             method_name=CONST.RANDOM)
+                exp.run()
+
+            # OpO Search
+            for i in np.arange(start=1, stop=11, step=1):
+                sim_name: str = f'{(mutator_dict["name"].title() + "_OpO")}_{path[5:11]}{str(i)}'
+                print(f'Level {sim_name}...')
+                exp: Experiment = Experiment(file_path=path,
+                                             case_name=case_name,
+                                             simulation_name=sim_name,
+                                             threshold=threshold,
+                                             mutators=mutator_dict["mutators"],
+                                             method_name=CONST.OPO)
+                exp.run()
+            print("=========")
+

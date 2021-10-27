@@ -2,24 +2,6 @@ from __future__ import annotations
 from typing import Tuple
 from abc import ABC, abstractmethod
 
-CAT_A = 'A'  # Report with a crashed scenario
-CAT_B = 'B'  # Report provides crashed components (front / middle / back)
-CAT_C = 'C'  # Report provides crashed sides (left / right)
-CAT_D = 'D'  # Report provides crashed part with its component and side (front left / front right)
-
-CAT_A_DATA = ["ANY"]
-CAT_B_DATA = ['F', 'M', 'B']
-CAT_C_DATA = ['L', 'R']
-CAT_D_DATA = ["FL", "FR", "ML", "MR", "BL", "BR"]
-CAT_BC_DATA = ['F', 'M', 'B', 'L', 'R']
-
-CATEGORIES = [{"type": CAT_A, "data": CAT_A_DATA},
-              {"type": CAT_B, "data": CAT_B_DATA},
-              {"type": CAT_C, "data": CAT_C_DATA},
-              {"type": CAT_D, "data": CAT_D_DATA}]
-
-EMPTY_CRASH = 0
-
 
 class ReportCreator(ABC):
     """
@@ -155,14 +137,15 @@ class Report(ABC):
 
     @staticmethod
     def _validate_output(outputs: list) -> True:
+        from models import CONST
         """
         Verify the validity of given output from simulation
         """
         # Invalid given outputs
-        if len(outputs) is EMPTY_CRASH:
+        if len(outputs) is CONST.EMPTY_CRASH:
             raise Exception("Exception: The simulator did not report any crashes!")
         # The vehicle's crash element should be on the car
-        parts = CAT_D_DATA + CAT_C_DATA + CAT_B_DATA + CAT_A_DATA
+        parts = CONST.CAT_D_DATA + CONST.CAT_C_DATA + CONST.CAT_B_DATA + CONST.CAT_A_DATA
         for item in [i["name"] for i in outputs]:
             if item not in parts:
                 raise Exception(f'Exception: The code {item} is not found in the part dictionary!')
@@ -170,26 +153,27 @@ class Report(ABC):
 
 
 def categorize_report(report_data: list) -> ReportCreator:
+    from models import CONST
     """
     Categorizes the type of police report
     """
     categories = []
     for part in report_data:
-        for category in CATEGORIES:
+        for category in CONST.CATEGORIES:
             if part["name"] in category["data"] and category["type"] not in categories:
                 categories.append(category["type"])
 
     if len(categories) == 1:
-        if CAT_A in categories:
+        if CONST.CAT_A in categories:
             return AnyCreator()
-        if CAT_B in categories:
+        if CONST.CAT_B in categories:
             return ComponentCreator()
-        if CAT_C in categories:
+        if CONST.CAT_C in categories:
             return SideCreator()
-        if CAT_D in categories:
+        if CONST.CAT_D in categories:
             return ComponentSideCreator()
     if len(categories) == 2:
-        if CAT_B in categories and CAT_C in categories:
+        if CONST.CAT_B in categories and CONST.CAT_C in categories:
             return ComponentSideShortCreator()
 
     raise Exception("Exception: Report Type not found!")

@@ -7,9 +7,10 @@ class MutateSpeedClass(Mutator):
     Concrete Mutator provide an implementations of the Speed Mutator interface.
     """
 
-    def process(self, vehicle: Vehicle) -> Vehicle:
+    def process(self, vehicle: Vehicle, is_random=False) -> Vehicle:
         # Mutate an average speed of given vehicle
-        mutated_speed = self.mutate_value(vehicle.get_speed())  # 1 speed / 1 vehicle for all actions
+        # 1 speed / 1 vehicle for all actions
+        mutated_speed = self.random_value() if is_random else self.mutate_value(vehicle.get_speed())
         # Assign new speed
         vehicle.movement.set_speed(mutated_speed)
         return vehicle

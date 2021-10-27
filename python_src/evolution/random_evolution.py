@@ -7,8 +7,8 @@ FIRST = 0
 
 
 class RandomEvolution:
-    def __init__(self, scenario, fitness, generate, generate_params, select, logfile, epochs=1, fitness_repetitions=1,
-                 threshold=None, select_aggregate=None, log_data_file=None):
+    def __init__(self, scenario, fitness, generate, generate_params, select, logfile,
+                 epochs=1, fitness_repetitions=1, threshold=None, select_aggregate=None, log_data_file=None):
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMax)
 
@@ -38,8 +38,11 @@ class RandomEvolution:
         self.threshold = threshold
 
     def run(self):
+        # Random generate first individual and 
+        # replace it by the original crash scenario
         pop = self.toolbox.population(n=1)
         pop[FIRST][FIRST] = self.orig_ind
+
         start_time = time.time()
         fitnesses = list(map(self.toolbox.evaluate, pop))
         for ind, fit in zip(pop, fitnesses):
@@ -65,9 +68,10 @@ class RandomEvolution:
         epoch = 1
         is_exceed_threshold = False
         while epoch <= self.epochs and is_exceed_threshold is False:
-            # A new generation
+            # A new generation - by random generation
             pop = self.toolbox.population(n=1)
 
+            # Calculate the fitness score for the new individual
             fitnesses = list(map(self.toolbox.evaluate, pop))
             for ind, fit in zip(pop, fitnesses):
                 ind.fitness.values = fit

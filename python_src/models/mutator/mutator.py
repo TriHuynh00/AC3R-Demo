@@ -2,10 +2,8 @@ from __future__ import annotations
 from typing import Tuple
 from abc import ABC, abstractmethod
 import numpy
+import random
 from models.ac3rp import Vehicle
-
-MUTATE_SPEED_CLASS = 'MUTATE_SPEED_CLASS'  # Mutator mutates a speed
-MUTATE_INITIAL_POINT_CLASS = 'MUTATE_INITIAL_POINT_CLASS'  # Mutator mutates an initial point
 
 
 class MutatorCreator(ABC):
@@ -25,13 +23,13 @@ class MutatorCreator(ABC):
         """
         pass
 
-    def mutate(self, vehicle: Vehicle) -> Vehicle:
+    def mutate(self, vehicle: Vehicle, is_random: bool = False) -> Vehicle:
         """
         Return the mutated vehicle after it is mutated
         by a speed or an initial point mutator
         """
         mutator = self.create()
-        return mutator.process(vehicle)
+        return mutator.process(vehicle, is_random)
 
 
 class Mutator(ABC):
@@ -51,8 +49,11 @@ class Mutator(ABC):
             value = self.params["max"]
         return value
 
+    def random_value(self):
+        return numpy.random.choice(list(range(self.params["min"], self.params["max"])))
+
     @abstractmethod
-    def process(self, vehicle: Vehicle) -> Vehicle:
+    def process(self, vehicle: Vehicle, is_random: bool = False) -> Vehicle:
         """
         Return the vehicle with a new speed
                the vehicle with a trajectory based on a new starting point
@@ -92,13 +93,15 @@ def categorize_mutator(mutator_data: dict) -> MutatorCreator:
     """
     Categorizes the type of mutator
     """
+    from models import CONST
+
     mt_type = mutator_data["type"]
     probability = mutator_data["probability"]
     params = mutator_data["params"]
 
-    if mt_type is MUTATE_SPEED_CLASS:
+    if mt_type is CONST.MUTATE_SPEED_CLASS:
         return SpeedCreator(probability, params)
-    if mt_type is MUTATE_INITIAL_POINT_CLASS:
+    if mt_type is CONST.MUTATE_INITIAL_POINT_CLASS:
         return InitialPointCreator(probability, params)
 
     raise Exception("Exception: Mutator Type not found!")
