@@ -70,7 +70,7 @@ class SimulationScore:
 
     def calculate(self, debug: bool = False):
         # If a crash doesn't occur, a score is distance between 2 vehicles' position
-        if self.simulation.status is NO_CRASH:
+        if self.simulation.status == NO_CRASH:
             if debug is True:
                 print("Log SimulationScore.calculate() - NO_CRASH: ")
                 for player in self.simulation.players:
