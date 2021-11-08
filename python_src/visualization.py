@@ -247,24 +247,34 @@ class ScenarioVisualizer:
         fig.savefig(f'data/{self.case}/Multiple.png', bbox_inches="tight")
 
     def visualize_confidence_interval(self):
+        def _confidence_interval(i, mean, std, ax=None, color=None):
+            x = i
+            y = mean
+            ci = 0.1 * std / mean
+            ax.plot(x, y, color=color)
+            ax.fill_between(x, (y - ci), (y + ci), color=color, alpha=0.3)
+            return ax
+
         df_rand_m1, df_opo_m1, df_rand_m2, df_opo_m2, df_rand_opo_m1, df_rand_opo_m2 = self.generate_dfs()
         fig, ax = plt.subplots(2, 2, figsize=(12, 12))
         axs = []
 
         ax[0, 0].title.set_text('Single Random')
-        sns.regplot(x="i", y="Random", data=df_rand_m1, ax=ax[0, 0], color="steelblue")
+        ax[0, 0] = _confidence_interval(df_rand_m1["i"], df_rand_m1["Random"], df_rand_m1["std"], ax[0, 0],
+                                        color="steelblue")
         axs.append(ax[0, 0])
 
         ax[0, 1].title.set_text('Multiple Random')
-        sns.regplot(x="i", y="Random", data=df_rand_m2, ax=ax[0, 1], color="orange")
+        ax[0, 1] = _confidence_interval(df_rand_m2["i"], df_rand_m2["Random"], df_rand_m2["std"], ax[0, 1],
+                                        color="orange")
         axs.append(ax[0, 1])
 
         ax[1, 0].title.set_text('Single OpO')
-        sns.regplot(x="i", y="OpO", data=df_opo_m1, ax=ax[1, 0], color="green")
+        ax[1, 0] = _confidence_interval(df_opo_m1["i"], df_opo_m1["OpO"], df_opo_m1["std"], ax[1, 0], color="green")
         axs.append(ax[1, 0])
 
         ax[1, 1].title.set_text('Multiple OpO')
-        sns.regplot(x="i", y="OpO", data=df_opo_m2, ax=ax[1, 1], color="red")
+        ax[1, 1] = _confidence_interval(df_opo_m2["i"], df_opo_m2["OpO"], df_opo_m2["std"], ax[1, 1], color="red")
         axs.append(ax[1, 1])
 
         for ax in axs:
