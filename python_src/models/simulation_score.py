@@ -33,12 +33,12 @@ class SimulationScore:
 
     @staticmethod
     def distance_between_two_players(players: List[models.Player]):
-        distance = np.PINF
+        distances = []
         for i in range(len(players[0].positions)):
             p0 = Point(players[0].positions[i][0], players[0].positions[i][1])
             p1 = Point(players[1].positions[i][0], players[1].positions[i][1])
-            distance = min(distance(p0.distance(p1)))
-        return -distance
+            distances.append(p0.distance(p1))
+        return -min(distances)
 
     def _compute(self, data_targets: {}, data_outputs: {},
                  debug: bool = False, debug_message: str = "Method Name"):
@@ -77,11 +77,8 @@ class SimulationScore:
                     print(player.vehicle.vid)
                     print(player.positions)
             self.simulation_score = self.distance_between_two_players(self.simulation.players)
-
-        # Else
-        self.simulation_score = self._compute(self.simulation.targets, self.simulation.get_data_outputs(),
-                                              debug=debug, debug_message="SimulationScore.calculate() - CRASH")
+        else:
+            self.simulation_score = self._compute(self.simulation.targets, self.simulation.get_data_outputs(),
+                                                  debug=debug, debug_message="SimulationScore.calculate() - CRASH")
 
         return self.simulation_score
-
-
