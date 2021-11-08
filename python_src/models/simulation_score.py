@@ -1,3 +1,5 @@
+import numpy as np
+
 import models
 from typing import Tuple, List
 from shapely.geometry import Point
@@ -31,9 +33,12 @@ class SimulationScore:
 
     @staticmethod
     def distance_between_two_players(players: List[models.Player]):
-        p0 = Point(players[0].positions[-1][0], players[0].positions[-1][1])
-        p1 = Point(players[1].positions[-1][0], players[1].positions[-1][1])
-        return round(-p0.distance(p1), 2)
+        distance = np.PINF
+        for i in range(len(players[0].positions)):
+            p0 = Point(players[0].positions[i][0], players[0].positions[i][1])
+            p1 = Point(players[1].positions[i][0], players[1].positions[i][1])
+            distance = min(distance(p0.distance(p1)))
+        return -distance
 
     def _compute(self, data_targets: {}, data_outputs: {},
                  debug: bool = False, debug_message: str = "Method Name"):
