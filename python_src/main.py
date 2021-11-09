@@ -49,7 +49,7 @@ def evol_scenario(scenario_file):
 
 # make sure we invoke cli
 if __name__ == '__main__':
-    # cli()
+    cli()
 
     scenarios = [
         # {"name": "Case0", "path": "data/Case0_data.json", "threshold": 1.4, },
@@ -60,7 +60,8 @@ if __name__ == '__main__':
         # {"name": "Case5", "path": "data/Case5_data.json", "threshold": 2.4000000000000004,},
         # {"name": "Case6", "path": "data/Case6_data.json", "threshold": 1.7, },
         # {"name": "Case7", "path": "data/Case7_data.json", "threshold": 1.4, },
-        {"name": "Case8", "path": "data/Case8_data.json", "threshold": 2.1, }
+        # {"name": "Case8", "path": "data/Case8_data.json", "threshold": 2.1, },
+        {"name": "Case9", "path": "data/Case9_data.json", "threshold": 1.7, },
     ]
 
     single_mutator = [
