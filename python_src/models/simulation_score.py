@@ -1,4 +1,5 @@
 import numpy as np
+import traceback
 
 import models
 from typing import Tuple, List
@@ -78,7 +79,11 @@ class SimulationScore:
                     print(player.positions)
             self.simulation_score = self.distance_between_two_players(self.simulation.players)
         else:
-            self.simulation_score = self._compute(self.simulation.targets, self.simulation.get_data_outputs(),
-                                                  debug=debug, debug_message="SimulationScore.calculate() - CRASH")
+            try:
+                self.simulation_score = self._compute(self.simulation.targets, self.simulation.get_data_outputs(),
+                                                      debug=debug, debug_message="SimulationScore.calculate() - CRASH")
+            except Exception as ex:
+                traceback.print_exception(type(ex), ex, ex.__traceback__)
+                self.simulation_score = self.distance_between_two_players(self.simulation.players)
 
         return self.simulation_score
