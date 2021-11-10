@@ -115,7 +115,6 @@ class SimulationExec:
             if not is_crash:
                 print("Timed out!")
             else:
-                self.simulation.status = CRASHED
                 for player in self.simulation.players:
                     vehicle = player.vehicle
                     sensor = bng_instance.poll_sensors(vehicle)['damage']
@@ -127,6 +126,7 @@ class SimulationExec:
                             self.simulation.status = NO_CRASH
                             print("Crash detected! But no broken component is specified!")
                         else:
+                            self.simulation.status = CRASHED
                             print("Crash detected!")
                             player.collect_damage(sensor['part_damage'])
 

@@ -1,3 +1,6 @@
+import numpy as np
+import traceback
+
 import models
 from typing import Tuple, List
 from shapely.geometry import Point
@@ -31,9 +34,12 @@ class SimulationScore:
 
     @staticmethod
     def distance_between_two_players(players: List[models.Player]):
-        p0 = Point(players[0].positions[-1][0], players[0].positions[-1][1])
-        p1 = Point(players[1].positions[-1][0], players[1].positions[-1][1])
-        return round(-p0.distance(p1), 2)
+        distances = []
+        for i in range(len(players[0].positions)):
+            p0 = Point(players[0].positions[i][0], players[0].positions[i][1])
+            p1 = Point(players[1].positions[i][0], players[1].positions[i][1])
+            distances.append(p0.distance(p1))
+        return -min(distances)
 
     def _compute(self, data_targets: {}, data_outputs: {},
                  debug: bool = False, debug_message: str = "Method Name"):
@@ -65,18 +71,19 @@ class SimulationScore:
 
     def calculate(self, debug: bool = False):
         # If a crash doesn't occur, a score is distance between 2 vehicles' position
-        if self.simulation.status is NO_CRASH:
+        if self.simulation.status == NO_CRASH:
             if debug is True:
                 print("Log SimulationScore.calculate() - NO_CRASH: ")
                 for player in self.simulation.players:
                     print(player.vehicle.vid)
                     print(player.positions)
             self.simulation_score = self.distance_between_two_players(self.simulation.players)
-
-        # Else
-        self.simulation_score = self._compute(self.simulation.targets, self.simulation.get_data_outputs(),
-                                              debug=debug, debug_message="SimulationScore.calculate() - CRASH")
+        else:
+            try:
+                self.simulation_score = self._compute(self.simulation.targets, self.simulation.get_data_outputs(),
+                                                      debug=debug, debug_message="SimulationScore.calculate() - CRASH")
+            except Exception as ex:
+                traceback.print_exception(type(ex), ex, ex.__traceback__)
+                self.simulation_score = self.distance_between_two_players(self.simulation.players)
 
         return self.simulation_score
-
-

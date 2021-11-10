@@ -49,22 +49,17 @@ class Fitness:
             sim_factory = SimulationFactory(individual)
             simulation = Simulation(sim_factory=sim_factory)
             simulation_score = SimulationScore(simulation)
+
+            # Execute scenario
+            SimulationExec(simulation).execute_scenario(timeout=40)
+            scores.append(simulation_score.calculate())  # get the score
+
+            # Logging
             simulation_score.get_expected_score()
-            try:
-                SimulationExec(simulation).execute_scenario(timeout=40)
-                scores.append(simulation_score.calculate())
-                _write_log_file(fn=log_data_file,
-                                simulation=simulation,
-                                simulation_score=simulation_score,
-                                scenario=individual)
-            except Exception as e:
-                print(f'Fitness Exception: {str(e)}')
-                _write_log_file(fn=log_data_file,
-                                simulation=simulation,
-                                simulation_score=simulation_score,
-                                ex_mes=str(e),
-                                scenario=individual)
-                scores.append(0)
+            _write_log_file(fn=log_data_file,
+                            simulation=simulation,
+                            simulation_score=simulation_score,
+                            scenario=individual)
         individual.scores = scores
         print(f'Scores: {scores}')
         return numpy.mean(scores),
