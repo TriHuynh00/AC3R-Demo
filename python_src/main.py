@@ -62,8 +62,12 @@ if __name__ == '__main__':
         # {"name": "Case7", "path": "data/Case7_data.json", "threshold": 1.4, },
         # {"name": "Case8", "path": "data/Case8_data.json", "threshold": 2.1, },
         # {"name": "Case9", "path": "data/Case9_data.json", "threshold": 1.7, },
+        {"name": "FI_8_2006009276225", "path": "data/FI_8_2006009276225_data.json", "threshold": 1.7999999999999998, },
+        {"name": "FI_12_2006078437504", "path": "data/FI_12_2006078437504_data.json", "threshold": 1.4, },
+        {"name": "FI_14_2007074433785", "path": "data/FI_14_2007074433785_data.json", "threshold": 1.7, },
         {"name": "SP_5_2005012695622", "path": "data/SP_5_2005012695622_data.json", "threshold": 1.7, },
         {"name": "SP_18_2005049602324", "path": "data/SP_18_2005049602324_data.json", "threshold": 1.7, },
+        {"name": "TIP_6_2005041508182", "path": "data/TIP_6_2005041508182_data.json", "threshold": 2.1, },
     ]
 
     single_mutator = [
