@@ -49,7 +49,7 @@ def evol_scenario(scenario_file):
 
 # make sure we invoke cli
 if __name__ == '__main__':
-    cli()
+    # cli()
 
     scenarios = [
         # {"name": "Case0", "path": "data/Case0_data.json", "threshold": 1.4, },

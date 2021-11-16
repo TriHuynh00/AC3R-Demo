@@ -72,6 +72,7 @@ class VehicleTrajectoryVisualizer:
             data = json.load(file)
         ac3r_scenario = ac3r.CrashScenario.from_json(data)
         colors = ["#ffdab9", "#b1c3de"]
+        fig = plt.gcf()
         for i, vehicle in enumerate(ac3r_scenario.vehicles):
             trajectory_points = vehicle.trajectory_points
             xs = [p[0] for p in trajectory_points]
@@ -79,10 +80,11 @@ class VehicleTrajectoryVisualizer:
             plt.plot(xs, ys, 'o-', label=vehicle.name, color=colors[i])
         plt.legend()
         plt.gca().set_aspect('equal')
-        # plt.xlim([-100, 100])
-        # plt.ylim([-100, 100])
+        plt.xlim([-100, 100])
+        plt.ylim([-100, 100])
         plt.title(f'AC3R {ac3r_scenario.name}')
         plt.show()
+        fig.savefig(f'data/{ac3r_scenario.name}_ac3r.png', bbox_inches="tight")
 
     @staticmethod
     def plot_ac3rp(scenario_file):
@@ -90,6 +92,7 @@ class VehicleTrajectoryVisualizer:
             data = json.load(file)
         ac3rp_scenario = ac3rp.CrashScenario.from_json(data)
         colors = ["#ff8c00", "#4069e1"]
+        fig = plt.gcf()
         for i, v in enumerate(ac3rp_scenario.vehicles):
             trajectory_points = v.generate_trajectory()
             xs = [p[0] for p in trajectory_points]
@@ -97,10 +100,11 @@ class VehicleTrajectoryVisualizer:
             plt.plot(xs, ys, 'o-', label=v.name, color=colors[i])
         plt.legend()
         plt.gca().set_aspect('equal')
-        # plt.xlim([-100, 100])
-        # plt.ylim([-100, 100])
+        plt.xlim([-100, 100])
+        plt.ylim([-100, 100])
         plt.title(f'AC3R Plus {ac3rp_scenario.name}')
         plt.show()
+        fig.savefig(f'data/{ac3rp_scenario.name}_ac3rp.png', bbox_inches="tight")
 
 
 class CrashScenarioVisualizer:
