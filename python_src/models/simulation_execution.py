@@ -115,7 +115,8 @@ class SimulationExec:
             if not is_crash:
                 print("Timed out!")
             else:
-                for player in self.simulation.players:
+                status_players = [NO_CRASH] * len(self.simulation.players)  # zeros list e.g [0, 0]
+                for i, player in enumerate(self.simulation.players):
                     vehicle = player.vehicle
                     sensor = bng_instance.poll_sensors(vehicle)['damage']
                     if sensor['damage'] != 0:
@@ -123,12 +124,15 @@ class SimulationExec:
                             # There is a case that a simulation reports a crash damage
                             # without any damaged components
                             # player.collect_damage({"etk800_any": {"name": "Any", "damage": 0}})
-                            self.simulation.status = NO_CRASH
+                            status_players[i] = NO_CRASH
                             print("Crash detected! But no broken component is specified!")
                         else:
-                            self.simulation.status = CRASHED
+                            status_players[i] = CRASHED
                             print("Crash detected!")
                             player.collect_damage(sensor['part_damage'])
+
+                if CRASHED in status_players:  # [1, 0] or [0, 1]
+                    self.simulation.status = CRASHED
 
             # Save the last position of vehicle
             for player in self.simulation.players:

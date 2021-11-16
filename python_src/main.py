@@ -36,7 +36,7 @@ def run_from_scenario(scenario_file):
     sim_factory = SimulationFactory(CrashScenario.from_json(scenario_data))
     simulation = Simulation(sim_factory=sim_factory, debug=True)
     # SimulationExec(simulation).execute_scenario(timeout=30)
-    # print(f'Simulation Score: {SimulationScore(simulation).calculate(debug=True)}')
+    print(f'Simulation Score: {SimulationScore(simulation).calculate(debug=True)}')
     print(f'{SimulationScore(simulation).get_expected_score(debug=True)}')
 
 
@@ -62,12 +62,12 @@ if __name__ == '__main__':
         # {"name": "Case7", "path": "data/Case7_data.json", "threshold": 1.4, },
         # {"name": "Case8", "path": "data/Case8_data.json", "threshold": 2.1, },
         # {"name": "Case9", "path": "data/Case9_data.json", "threshold": 1.7, },
-        {"name": "FI_8_2006009276225", "path": "data/FI_8_2006009276225_data.json", "threshold": 1.7999999999999998, },
-        {"name": "FI_12_2006078437504", "path": "data/FI_12_2006078437504_data.json", "threshold": 1.4, },
-        {"name": "FI_14_2007074433785", "path": "data/FI_14_2007074433785_data.json", "threshold": 1.7, },
-        {"name": "SP_5_2005012695622", "path": "data/SP_5_2005012695622_data.json", "threshold": 1.7, },
-        {"name": "SP_18_2005049602324", "path": "data/SP_18_2005049602324_data.json", "threshold": 1.7, },
-        {"name": "TIP_6_2005041508182", "path": "data/TIP_6_2005041508182_data.json", "threshold": 2.1, },
+        {"name": "FI_8", "path": "data/FI_8_data.json", "threshold": 1.7999999999999998, },
+        {"name": "FI_12", "path": "data/FI_12_data.json", "threshold": 1.4, },
+        {"name": "FI_14", "path": "data/FI_14_data.json", "threshold": 1.7, },
+        {"name": "SP_5", "path": "data/SP_5_data.json", "threshold": 1.7, },
+        {"name": "SP_18", "path": "data/SP_18_data.json", "threshold": 1.7, },
+        {"name": "TIP_6", "path": "data/TIP_6_data.json", "threshold": 2.1, },
     ]
 
     single_mutator = [
