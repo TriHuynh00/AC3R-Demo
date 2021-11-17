@@ -36,7 +36,7 @@ def run_from_scenario(scenario_file):
     sim_factory = SimulationFactory(CrashScenario.from_json(scenario_data))
     simulation = Simulation(sim_factory=sim_factory, debug=True)
     # SimulationExec(simulation).execute_scenario(timeout=30)
-    # print(f'Simulation Score: {SimulationScore(simulation).calculate(debug=True)}')
+    print(f'Simulation Score: {SimulationScore(simulation).calculate(debug=True)}')
     print(f'{SimulationScore(simulation).get_expected_score(debug=True)}')
 
 
@@ -49,7 +49,7 @@ def evol_scenario(scenario_file):
 
 # make sure we invoke cli
 if __name__ == '__main__':
-    cli()
+    # cli()
 
     scenarios = [
         # {"name": "Case0", "path": "data/Case0_data.json", "threshold": 1.4, },
@@ -61,7 +61,13 @@ if __name__ == '__main__':
         # {"name": "Case6", "path": "data/Case6_data.json", "threshold": 1.7, },
         # {"name": "Case7", "path": "data/Case7_data.json", "threshold": 1.4, },
         # {"name": "Case8", "path": "data/Case8_data.json", "threshold": 2.1, },
-        {"name": "Case9", "path": "data/Case9_data.json", "threshold": 1.7, },
+        # {"name": "Case9", "path": "data/Case9_data.json", "threshold": 1.7, },
+        {"name": "FI_8", "path": "data/FI_8_data.json", "threshold": 1.7999999999999998, },
+        {"name": "FI_12", "path": "data/FI_12_data.json", "threshold": 1.4, },
+        {"name": "FI_14", "path": "data/FI_14_data.json", "threshold": 1.7, },
+        {"name": "SP_5", "path": "data/SP_5_data.json", "threshold": 1.7, },
+        {"name": "SP_18", "path": "data/SP_18_data.json", "threshold": 1.7, },
+        {"name": "TIP_6", "path": "data/TIP_6_data.json", "threshold": 2.1, },
     ]
 
     single_mutator = [
