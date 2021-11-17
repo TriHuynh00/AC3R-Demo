@@ -65,13 +65,15 @@ class BeamNg:
 		bng.start_scenario() # Start scenario
 
 		accident_log = {}
+		vehicle_points = [[], []]
 		start_time = time.time()
-		while time.time() < (start_time + self.timeout):
+		while time.time() < (start_time + 25):
+			# Collects sensor data every 10 steps
+			bng.step(10, True)
+
 			empty = not bool(accident_log)
 			if empty:
-				# Collects sensor data every 30 steps
-				bng.step(30)
-				for car in self.cars:
+				for i, car in enumerate(self.cars):
 					vehicle = car.vehicle
 					sensor = bng.poll_sensors(vehicle)['damage']
 					if (sensor['damage'] != 0): # Crash detected
@@ -79,12 +81,29 @@ class BeamNg:
 						self.isCrash = True
 						accident_log.update( { vehicle.vid: sensor['part_damage'] } )
 						car.damage =  sensor['part_damage']
+					current_position = (vehicle.state['pos'][0], vehicle.state['pos'][1])
+					vehicle_points[i].append(current_position)
+
 			else:
 				self.write_log(accident_log) # Write log file
 				waiting_steps = 175
 				bng.step(waiting_steps, wait=True)
 				print("Within time!")
 				break
+
+		for i, points in enumerate(vehicle_points):
+			for i, p in enumerate(points):
+				if i+1 == len(points):
+					break
+				p1 = points[i]
+				p2 = points[i+1]
+				print('{')
+				print('\t"name":"follow",')
+				print(f'\t"trajectory":[[[{p1[0]}, {p1[1]}, 0.0], [{p2[0]}, {p2[1]}, 0.0]]],')
+				print('\t"speed":20')
+				print('},')
+
+			print("==============\n")
 
 		# Timeout
 # 		if not self.isCrash:
