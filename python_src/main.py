@@ -104,7 +104,7 @@ def execute_searching(scenario_files):
 
 # make sure we invoke cli
 if __name__ == '__main__':
-    # cli()
+    cli()
 
     scenarios = [
         # {"name": "Case0", "path": "data/Case0_data.json", "threshold": 1.4, },
@@ -126,8 +126,8 @@ if __name__ == '__main__':
         {"name": "NMVCCS01", "path": "data/NMVCCS01_data.json", "threshold": 2.3, },
         {"name": "NMVCCS02", "path": "data/NMVCCS02_data.json", "threshold": 2.3, },
         {"name": "NMVCCS03", "path": "data/NMVCCS03_data.json", "threshold": 2.3, },
-        {"name": "CIREN01", "path": "data/CIREN01_data.json", "threshold": 2.4000000000000004, },
-        {"name": "CIREN02", "path": "data/CIREN02_data.json", "threshold": 2.2, },
+        {"name": "CIREN01", "path": "data/CIREN01_data.json", "threshold": 2.3, },
+        {"name": "CIREN02", "path": "data/CIREN02_data.json", "threshold": 2.4, },
     ]
 
     execute_searching(scenarios)
