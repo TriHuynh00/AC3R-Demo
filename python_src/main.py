@@ -6,6 +6,7 @@ from models import SimulationFactory, Simulation, SimulationScore, SimulationExe
 from models.ac3rp import CrashScenario
 from experiment import Experiment
 
+
 @click.group()
 def cli():
     pass
@@ -36,8 +37,8 @@ def run_from_scenario(scenario_file):
     sim_factory = SimulationFactory(CrashScenario.from_json(scenario_data))
     simulation = Simulation(sim_factory=sim_factory, debug=True)
     # SimulationExec(simulation).execute_scenario(timeout=30)
-    print(f'Simulation Score: {SimulationScore(simulation).calculate(debug=True)}')
-    print(f'{SimulationScore(simulation).get_expected_score(debug=True)}')
+    # print(f'Simulation Score: {SimulationScore(simulation).calculate(debug=True)}')
+    print(f'{SimulationScore(simulation).get_expected_score(debug=False)}')
 
 
 @cli.command()
@@ -47,29 +48,7 @@ def evol_scenario(scenario_file):
     experiment.run()
 
 
-# make sure we invoke cli
-if __name__ == '__main__':
-    # cli()
-
-    scenarios = [
-        # {"name": "Case0", "path": "data/Case0_data.json", "threshold": 1.4, },
-        # {"name": "Case1", "path": "data/Case1_data.json", "threshold": 1.7999999999999998,},
-        # {"name": "Case2", "path": "data/Case2_data.json", "threshold": 1.4, },
-        # {"name": "Case3", "path": "data/Case3_data.json", "threshold": 2.0,},
-        # {"name": "Case4", "path": "data/Case4_data.json", "threshold": 2.0, },
-        # {"name": "Case5", "path": "data/Case5_data.json", "threshold": 2.4000000000000004,},
-        # {"name": "Case6", "path": "data/Case6_data.json", "threshold": 1.7, },
-        # {"name": "Case7", "path": "data/Case7_data.json", "threshold": 1.4, },
-        # {"name": "Case8", "path": "data/Case8_data.json", "threshold": 2.1, },
-        # {"name": "Case9", "path": "data/Case9_data.json", "threshold": 1.7, },
-        {"name": "FI_8", "path": "data/FI_8_data.json", "threshold": 1.7999999999999998, },
-        {"name": "FI_12", "path": "data/FI_12_data.json", "threshold": 1.4, },
-        {"name": "FI_14", "path": "data/FI_14_data.json", "threshold": 1.7, },
-        {"name": "SP_5", "path": "data/SP_5_data.json", "threshold": 1.7, },
-        {"name": "SP_18", "path": "data/SP_18_data.json", "threshold": 1.7, },
-        {"name": "TIP_6", "path": "data/TIP_6_data.json", "threshold": 2.1, },
-    ]
-
+def execute_searching(scenario_files):
     single_mutator = [
         {
             "type": CONST.MUTATE_SPEED_CLASS,
@@ -93,7 +72,7 @@ if __name__ == '__main__':
 
     for mutator_dict in [{"name": "single", "mutators": single_mutator},
                          {"name": "multi", "mutators": multi_mutators}]:
-        for scenario in scenarios:
+        for scenario in scenario_files:
             case_name = scenario["name"]
             path = scenario["path"]
             threshold = scenario["threshold"]
@@ -122,3 +101,29 @@ if __name__ == '__main__':
                 exp.run()
             print("=========")
 
+
+# make sure we invoke cli
+if __name__ == '__main__':
+    cli()
+
+    scenarios = [
+        # {"name": "Case0", "path": "data/Case0_data.json", "threshold": 1.4, },
+        # {"name": "Case1", "path": "data/Case1_data.json", "threshold": 1.7999999999999998,},
+        # {"name": "Case2", "path": "data/Case2_data.json", "threshold": 1.4, },
+        # {"name": "Case3", "path": "data/Case3_data.json", "threshold": 2.0,},
+        # {"name": "Case4", "path": "data/Case4_data.json", "threshold": 2.0, },
+        # {"name": "Case5", "path": "data/Case5_data.json", "threshold": 2.4000000000000004,},
+        # {"name": "Case6", "path": "data/Case6_data.json", "threshold": 1.7, },
+        # {"name": "Case7", "path": "data/Case7_data.json", "threshold": 1.4, },
+        # {"name": "Case8", "path": "data/Case8_data.json", "threshold": 2.1, },
+        # {"name": "Case9", "path": "data/Case9_data.json", "threshold": 1.7, },
+        # {"name": "FI_8", "path": "data/FI_8_data.json", "threshold": 1.7999999999999998, },
+        # {"name": "FI_12", "path": "data/FI_12_data.json", "threshold": 1.4, },
+        # {"name": "FI_14", "path": "data/FI_14_data.json", "threshold": 1.7, },
+        # {"name": "SP_5", "path": "data/SP_5_data.json", "threshold": 1.7, },
+        # {"name": "SP_18", "path": "data/SP_18_data.json", "threshold": 1.7, },
+        # {"name": "TIP_6", "path": "data/TIP_6_data.json", "threshold": 2.1, },
+        {"name": "2005002585724", "path": "data/2005002585724_data.json", "threshold": 2.3, },
+    ]
+
+    execute_searching(scenarios)
