@@ -123,11 +123,11 @@ if __name__ == '__main__':
         # {"name": "SP_5", "path": "data/SP_5_data.json", "threshold": 1.7, },
         # {"name": "SP_18", "path": "data/SP_18_data.json", "threshold": 1.7, },
         # {"name": "TIP_6", "path": "data/TIP_6_data.json", "threshold": 2.1, },
-        {"name": "2005002585724", "path": "data/2005002585724_data.json", "threshold": 2.3, },
-        {"name": "2005008586061a", "path": "data/2005008586061a_data.json", "threshold": 2.3, },
-        {"name": "2005008586061b", "path": "data/2005008586061b_data.json", "threshold": 2.3, },
-        {"name": "100343", "path": "data/100343_data.json", "threshold": 2.4000000000000004, },
-        {"name": "156722", "path": "data/156722_data.json", "threshold": 2.2, },
+        {"name": "NMVCCS01", "path": "data/NMVCCS01_data.json", "threshold": 2.3, },
+        {"name": "NMVCCS02", "path": "data/NMVCCS02_data.json", "threshold": 2.3, },
+        {"name": "NMVCCS03", "path": "data/NMVCCS03_data.json", "threshold": 2.3, },
+        {"name": "CIREN01", "path": "data/CIREN01_data.json", "threshold": 2.4000000000000004, },
+        {"name": "CIREN02", "path": "data/CIREN02_data.json", "threshold": 2.2, },
     ]
 
     execute_searching(scenarios)
