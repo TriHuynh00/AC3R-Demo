@@ -20,6 +20,7 @@ class MutateInitialPointClass(Mutator):
         mutated_point = None
 
         # Run until point staying the road
+        count_iteration = 0
         while mutated_point is None:
             points = common.mutate_initial_point(lst=vehicle_lst,
                                                  delta=vehicle.road_data["mutate_equation"],
@@ -29,6 +30,11 @@ class MutateInitialPointClass(Mutator):
             # Check if the new point stays in the vehicle road
             if common.is_inside_polygon(point, vehicle.road_data["road_poly"]):
                 mutated_point = point
+            count_iteration += 1
+            if count_iteration % 100 == 0:
+                expected_distance = self.random_value() if is_random else self.mutate_value(0)
+                print(f'MutateInitialPointClass object took {count_iteration} iterations to find the mutated point!')
+
 
         # With a new origin, we can compute a new mutated driving actions (LineString) for vehicle
         mutated_driving_action = common.translate_ls_to_new_origin(lst=vehicle_lst,
