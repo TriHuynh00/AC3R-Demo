@@ -101,16 +101,16 @@ def execute_searching(scenario_files):
 
 # make sure we invoke cli
 if __name__ == '__main__':
-    cli()
+    # cli()
 
     scenarios = [
-        # {"name": "Case0", "path": "data/Case0_data.json"},
-        # {"name": "Case1", "path": "data/Case1_data.json"},
-        # {"name": "Case2", "path": "data/Case2_data.json"},
-        # {"name": "Case3", "path": "data/Case3_data.json"},
-        # {"name": "Case4", "path": "data/Case4_data.json"},
-        # {"name": "Case5", "path": "data/Case5_data.json"},
-        # {"name": "Case6", "path": "data/Case6_data.json"},
+        {"name": "Case0", "path": "data/Case0.json"},
+        {"name": "Case1", "path": "data/Case1.json"},
+        {"name": "Case2", "path": "data/Case2.json"},
+        {"name": "Case3", "path": "data/Case3.json"},
+        {"name": "Case4", "path": "data/Case4.json"},
+        {"name": "Case5", "path": "data/Case5.json"},
+        {"name": "Case6", "path": "data/Case6.json"},
         {"name": "2005002585724", "path": "data/2005002585724.json"},
         {"name": "2005008586061a", "path": "data/2005008586061a.json"},
         {"name": "2005008586061b", "path": "data/2005008586061b.json"},
