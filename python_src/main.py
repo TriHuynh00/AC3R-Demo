@@ -75,27 +75,24 @@ def execute_searching(scenario_files):
         for scenario in scenario_files:
             case_name = scenario["name"]
             path = scenario["path"]
-            threshold = scenario["threshold"]
             # Random Search
             for i in np.arange(start=1, stop=11, step=1):
-                sim_name: str = f'{(mutator_dict["name"].title() + "_Random")}_{path[5:11]}{str(i)}'
+                sim_name: str = f'{(mutator_dict["name"].title() + "_Random")}_{str(i)}'
                 print(f'Level {sim_name}...')
                 exp: Experiment = Experiment(file_path=path,
                                              case_name=case_name,
                                              simulation_name=sim_name,
-                                             threshold=threshold,
                                              mutators=mutator_dict["mutators"],
                                              method_name=CONST.RANDOM)
                 exp.run()
 
             # OpO Search
             for i in np.arange(start=1, stop=11, step=1):
-                sim_name: str = f'{(mutator_dict["name"].title() + "_OpO")}_{path[5:11]}{str(i)}'
+                sim_name: str = f'{(mutator_dict["name"].title() + "_OpO")}_{str(i)}'
                 print(f'Level {sim_name}...')
                 exp: Experiment = Experiment(file_path=path,
                                              case_name=case_name,
                                              simulation_name=sim_name,
-                                             threshold=threshold,
                                              mutators=mutator_dict["mutators"],
                                              method_name=CONST.OPO)
                 exp.run()

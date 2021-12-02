@@ -6,27 +6,9 @@ from models import categorize_report
 data_targets_01 = json.loads('{"v1":[{"name":"FR","damage":1.4163608690724},{"name":"FL","damage":0.095952279865742}]}')
 data_targets_02 = json.loads('{"v1":[{"name":"FL","damage":0.053689561784267}, {"name":"FR","damage":0.053689561784267}, {"name":"ML","damage":0.053689561784267}]}')
 data_targets_03 = json.loads('{"v1":[{"name":"ML","damage":0.053689561784267}]}')
-data_targets_04 = json.loads('{"v1":[{"name":"MR","damage":1},{"name":"F","damage":1}]}')
-data_targets_05 = json.loads('{"v1":[{"name":"BL","damage":1},{"name":"L","damage":1}]}')
 
 
 class TestPoliceReportTypeD(unittest.TestCase):
-    def test_simulation_FR_MR_must_match_COMP_report_BL_L(self):
-        expected = (2, 4, 6)
-        data_outputs = [{"name": "FR", "damage": 1}, {"name": "MR", "damage": 1}]
-        for report in data_targets_04:
-            data_targets = data_targets_04[report]
-            creator = categorize_report(data_targets)
-            self.assertEqual(expected, creator.match(data_outputs, data_targets))
-
-    def test_simulation_FR_MR_must_match_COMP_report_MR_F(self):
-        expected = (2, 4, 6)
-        data_outputs = [{"name": "FR", "damage": 1}, {"name": "MR", "damage": 1}]
-        for report in data_targets_04:
-            data_targets = data_targets_04[report]
-            creator = categorize_report(data_targets)
-            self.assertEqual(expected, creator.match(data_outputs, data_targets))
-
     def test_simulation_FL_must_match_SIDECOMP_report_FR_FL(self):
         expected = (1, 4, 6)
         data_outputs = [{"name": "FL", "damage": 1}]
