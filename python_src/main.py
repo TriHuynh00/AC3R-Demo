@@ -101,7 +101,7 @@ def execute_searching(scenario_files):
 
 # make sure we invoke cli
 if __name__ == '__main__':
-    # cli()
+    cli()
 
     scenarios = [
         # {"name": "Case0", "path": "data/Case0_data.json"},
@@ -111,17 +111,11 @@ if __name__ == '__main__':
         # {"name": "Case4", "path": "data/Case4_data.json"},
         # {"name": "Case5", "path": "data/Case5_data.json"},
         # {"name": "Case6", "path": "data/Case6_data.json"},
-        # {"name": "FI_8", "path": "data/FI_8_data.json"},
-        # {"name": "FI_12", "path": "data/FI_12_data.json"},
-        # {"name": "FI_14", "path": "data/FI_14_data.json"},
-        # {"name": "SP_5", "path": "data/SP_5_data.json"},
-        # {"name": "SP_18", "path": "data/SP_18_data.json"},
-        # {"name": "TIP_6", "path": "data/TIP_6_data.json"},
-        {"name": "NMVCCS01", "path": "data/NMVCCS01_data.json"},
-        {"name": "NMVCCS02", "path": "data/NMVCCS02_data.json"},
-        {"name": "NMVCCS03", "path": "data/NMVCCS03_data.json"},
-        {"name": "CIREN01", "path": "data/CIREN01_data.json"},
-        {"name": "CIREN02", "path": "data/CIREN02_data.json"},
+        {"name": "2005002585724", "path": "data/2005002585724.json"},
+        {"name": "2005008586061a", "path": "data/2005008586061a.json"},
+        {"name": "2005008586061b", "path": "data/2005008586061b.json"},
+        {"name": "100343", "path": "data/100343.json"},
+        {"name": "156722", "path": "data/156722.json"},
     ]
 
     execute_searching(scenarios)
