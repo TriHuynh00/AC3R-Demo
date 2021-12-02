@@ -678,7 +678,7 @@
             ]
         }
     ],
-    "expected_crash_components":
+        "expected_crash_components":
     [
         {
             "name": "v1",
@@ -686,10 +686,6 @@
             [
                 {
                     "name": "front",
-                    "damage": 1
-                },
-                {
-                    "name": "middle right",
                     "damage": 1
                 }
             ]
@@ -699,11 +695,7 @@
             "parts":
             [
                 {
-                    "name": "rear right",
-                    "damage": 1
-                },
-                {
-                    "name": "middle right",
+                    "name": "right",
                     "damage": 1
                 }
             ]

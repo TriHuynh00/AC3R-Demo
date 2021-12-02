@@ -966,7 +966,7 @@
             "parts":
             [
                 {
-                    "name": "middle right",
+                    "name": "right",
                     "damage": 1
                 }
             ]
@@ -977,10 +977,6 @@
             [
                 {
                     "name": "front",
-                    "damage": 1
-                },
-                {
-                    "name": "middle right",
                     "damage": 1
                 }
             ]

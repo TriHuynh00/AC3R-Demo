@@ -842,14 +842,14 @@
             ]
         }
     ],
-    "expected_crash_components":
+        "expected_crash_components":
     [
         {
             "name": "v1",
             "parts":
             [
                 {
-                    "name": "middle right",
+                    "name": "left",
                     "damage": 1
                 }
             ]
@@ -859,7 +859,7 @@
             "parts":
             [
                 {
-                    "name": "middle right",
+                    "name": "right",
                     "damage": 1
                 }
             ]
