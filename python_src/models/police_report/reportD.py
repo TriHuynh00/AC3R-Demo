@@ -24,6 +24,13 @@ class ReportTypeD(Report):
 
     @staticmethod
     def _handle_compside_side_targets(targets: list) -> [str]:
+        """
+        Method to handle a report including COMPSIDE and COMP, then transform COMP to COMPSIDE
+        based on SIDE from former COMPSIDE.
+        E.g: MR, F -> MR, FR
+        TODO: we need unit tests before using this method
+        """
+
         # Find the side of received crash components: 'L' or 'R' or both
         target_sides = set()  # Prevent duplicates
         for target in targets:
@@ -52,9 +59,7 @@ class ReportTypeD(Report):
         # From Police Report:
         # List crashes_from_police_report contains expected CRASHED parts
         # List non_crashes_from_police_report contains expected NON-CRASHED parts
-        # TODO:
-        # We only handle cases including COMPSIDE and COMP. For COMPSIDE and SIDE cases, need a further discussion.
-        targets = self._handle_compside_side_targets([part["name"] for part in targets])
+        targets = [part["name"] for part in targets]
         crashes_from_police_report, non_crashes_from_police_report = targets, list(set(CONST.CAT_D_DATA) - set(targets))
 
         # From Simulation:

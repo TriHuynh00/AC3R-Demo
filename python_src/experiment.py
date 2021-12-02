@@ -5,10 +5,11 @@ from models import categorize_mutator, CONST
 from models.ac3rp import CrashScenario
 from models.mutator import Transformer
 from typing import List, Dict
+from models import SimulationFactory, Simulation, SimulationScore
 
 
 class Experiment:
-    def __init__(self, file_path: str, threshold: float, method_name: str, mutators: List[Dict], case_name: str,
+    def __init__(self, file_path: str, method_name: str, mutators: List[Dict], case_name: str,
                  simulation_name: str = None):
 
         self.method_name = method_name
@@ -20,11 +21,14 @@ class Experiment:
             tmp_simulation_name = 'beamng_executor/sim_$(id)'.replace('$(id)', time.strftime('%Y-%m-%d--%H-%M-%S',
                                                                                              time.localtime()))
             self.simulation_name = tmp_simulation_name if simulation_name is None else simulation_name
-            self.threshold = threshold
             with open(file_path) as file:
                 self.scenario = json.load(file)
+
+            sim_factory = SimulationFactory(CrashScenario.from_json(self.scenario))
+            simulation = Simulation(sim_factory=sim_factory)
+            self.threshold = SimulationScore(simulation).get_expected_score()
         except Exception as ex:
-            print(f'Scenario is not found. Exception: {ex}')
+            print(f'Scenario is not found. Exception: {ex}!')
 
     def run(self):
         if self.scenario is None:
@@ -88,3 +92,6 @@ class Experiment:
 
         # Close logfiles
         opo_logfile.close()
+
+    def __str__(self):
+        return str(self.__class__) + ": " + str(self.__dict__)
