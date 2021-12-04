@@ -76,25 +76,27 @@ def execute_searching(scenario_files):
             case_name = scenario["name"]
             path = scenario["path"]
             # Random Search
-            for i in np.arange(start=1, stop=11, step=1):
+            for i in np.arange(start=1, stop=4, step=1):
                 sim_name: str = f'{(mutator_dict["name"].title() + "_Random")}_{str(i)}'
-                print(f'Level {sim_name}...')
+                print(f'Case {case_name}: Level {sim_name}...')
                 exp: Experiment = Experiment(file_path=path,
                                              case_name=case_name,
                                              simulation_name=sim_name,
                                              mutators=mutator_dict["mutators"],
-                                             method_name=CONST.RANDOM)
+                                             method_name=CONST.RANDOM,
+                                             epochs=30)
                 exp.run()
 
             # OpO Search
-            for i in np.arange(start=1, stop=11, step=1):
+            for i in np.arange(start=1, stop=4, step=1):
                 sim_name: str = f'{(mutator_dict["name"].title() + "_OpO")}_{str(i)}'
-                print(f'Level {sim_name}...')
+                print(f'Case {case_name}: Level {sim_name}...')
                 exp: Experiment = Experiment(file_path=path,
                                              case_name=case_name,
                                              simulation_name=sim_name,
                                              mutators=mutator_dict["mutators"],
-                                             method_name=CONST.OPO)
+                                             method_name=CONST.OPO,
+                                             epochs=30)
                 exp.run()
             print("=========")
 
