@@ -145,7 +145,7 @@ class ScenarioVisualizer:
         sim_factory = SimulationFactory(crash_scenario)
         simulation = Simulation(sim_factory=sim_factory)
         self.target = SimulationScore(simulation).get_expected_score()
-        self.name = crash_scenario.name
+        self.case = crash_scenario.name
 
     def process_individual(self, path, col_name):
         df = pd.read_csv(path, usecols=["score"])
