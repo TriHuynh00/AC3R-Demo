@@ -10,10 +10,11 @@ from models import SimulationFactory, Simulation, SimulationScore
 
 class Experiment:
     def __init__(self, file_path: str, method_name: str, mutators: List[Dict], case_name: str,
-                 simulation_name: str = None):
+                 simulation_name: str = None, epochs: int = 30):
 
         self.method_name = method_name
         self.case_name = case_name
+        self.epochs = epochs
         # Generate mutators
         self.mutators = [categorize_mutator(m) for m in mutators]
 
@@ -56,7 +57,7 @@ class Experiment:
             generate_params=Transformer(self.mutators),
             select=Selector.by_fitness_value,
             # select_aggregate=numpy.mean,
-            epochs=30,
+            epochs=self.epochs,
             logfile=rev_logfile,
             log_data_file=rev_log_data_file,
             threshold=self.threshold
@@ -83,7 +84,7 @@ class Experiment:
             mutate_params=Transformer(self.mutators),
             select=Selector.by_fitness_value,
             # select_aggregate=libs._VD_A,
-            epochs=30,
+            epochs=self.epochs,
             logfile=opo_logfile,
             log_data_file=opo_log_data_file,
             threshold=self.threshold
