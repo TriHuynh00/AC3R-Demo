@@ -104,18 +104,10 @@ if __name__ == '__main__':
     # cli()
 
     scenarios = [
-        {"name": "Case0", "path": "data/Case0.json"},
-        {"name": "Case1", "path": "data/Case1.json"},
-        {"name": "Case2", "path": "data/Case2.json"},
-        {"name": "Case3", "path": "data/Case3.json"},
-        {"name": "Case4", "path": "data/Case4.json"},
-        {"name": "Case5", "path": "data/Case5.json"},
-        {"name": "Case6", "path": "data/Case6.json"},
-        {"name": "2005002585724", "path": "data/2005002585724.json"},
-        {"name": "2005008586061a", "path": "data/2005008586061a.json"},
-        {"name": "2005008586061b", "path": "data/2005008586061b.json"},
-        {"name": "100343", "path": "data/100343.json"},
-        {"name": "156722", "path": "data/156722.json"},
+        {"name": "2005012695622", "path": "data/2005012695622.json"},
+        {"name": "2005045587341", "path": "data/2005045587341.json"},
+        {"name": "2005048103904", "path": "data/2005048103904.json"},
+        {"name": "2006048103049", "path": "data/2006048103049.json"}
     ]
 
     execute_searching(scenarios)
