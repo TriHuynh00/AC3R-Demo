@@ -175,6 +175,5 @@ def categorize_report(report_data: list) -> ReportCreator:
     if len(categories) == 2:
         if CONST.CAT_B in categories and CONST.CAT_C in categories:
             return ComponentSideShortCreator()
-        else:
-            return ComponentSideCreator()
+
     raise Exception("Exception: Report Type not found!")
