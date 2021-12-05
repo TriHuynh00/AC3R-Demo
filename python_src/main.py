@@ -109,7 +109,11 @@ if __name__ == '__main__':
         {"name": "2005012695622", "path": "data/2005012695622.json"},
         {"name": "2005045587341", "path": "data/2005045587341.json"},
         {"name": "2005048103904", "path": "data/2005048103904.json"},
-        {"name": "2006048103049", "path": "data/2006048103049.json"}
+        {"name": "2006048103049", "path": "data/2006048103049.json"},
+        {"name": "curved_18", "path": "data/curved_18.json"},
+        {"name": "four_1", "path": "data/four_1.json"},
+        {"name": "four_4", "path": "data/four_4.json"},
+        {"name": "four_7", "path": "data/four_7.json"},
     ]
 
     execute_searching(scenarios)
