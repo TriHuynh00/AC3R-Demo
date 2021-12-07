@@ -7,6 +7,8 @@ import json
 import click
 import numpy as np
 from shapely.geometry import Point
+import logging as logger
+import sys
 
 CRISCE_IMPACT_MODEL = {
     "front_left": [
@@ -45,6 +47,20 @@ CRISCE_IMPACT_MODEL = {
 }
 
 
+def translate_damage_comp_crisce2ac3r(part):
+    impact_dict = {
+        "front_left": "front left",
+        "front_right": "front right",
+        "front_mid": "front",
+        "rear_mid": "rear",
+        "left_mid": "left",
+        "right_mid": "right",
+        "rear_left": "rear left",
+        "rear_right": "rear right"
+    }
+    return impact_dict[part]
+
+
 def pairs(lst):
     for i in range(1, len(lst)):
         yield lst[i - 1], lst[i]
@@ -67,13 +83,14 @@ def angle_to_quat(angle):
     return x, y, z, w
 
 
-def generate_expected_crash_components(vehicles):
+def generate_expected_crash_components(vehicles, dataset_name=None):
     expected_crash_components = []
+    external_or_internal = "internal_impact_side" if dataset_name == "SYNTH" else "external_impact_side"
     for i, v_color in enumerate(["red", "blue"]):
         # Extract expected broken parts from external.csv
-        external_parts = vehicles[v_color]["impact_point_details"]["external_impact_side"]
+        external_or_internal_parts = vehicles[v_color]["impact_point_details"][external_or_internal]
         parts = [{
-            "name": external_parts,
+            "name": translate_damage_comp_crisce2ac3r(external_or_internal_parts),
             "damage": 1
         }]
         crash_dict = {
@@ -97,16 +114,18 @@ def generate_roads(road_nodes):
     return roads
 
 
-def generate_vehicles(vehicles):
+def generate_vehicles(vehicles, dataset_name=None):
     vehicle_list = []
+    external_or_internal = "internal_impact_side" if dataset_name == "SYNTH" else "external_impact_side"
     for i, v_color in enumerate(["red", "blue"]):
         angle = vehicles[v_color]["vehicle_info"]["0"]["angle_of_car"]
+
         veh_dict = {
             "name": "v" + str(i + 1),
             "color": "1 0 0" if v_color == "red" else "0 0 1",
             "rot_quat": angle_to_quat((0, 0, -angle - 90)),
             "distance_to_trigger": -1.0,
-            "damage_components": vehicles[v_color]["impact_point_details"]["external_impact_side"]
+            "damage_components": vehicles[v_color]["impact_point_details"][external_or_internal]
         }
         driving_actions = []
         script_trajectory = vehicles[v_color]["trajectories"]["script_trajectory"]
@@ -136,27 +155,31 @@ def generate_vehicles(vehicles):
     return vehicle_list
 
 
-def exec_scenarion(scenario_file):
-    RED_CAR_BOUNDARY = np.array([[0, 190, 215],[179, 255, 255]])  # red external_0
-    BLUE_CAR_BOUNDARY = np.array([[85, 50, 60],[160, 255, 255]])
+def exec_scenarion(scenario_file, dataset_name=None, output_to=None):
     dir_path = scenario_file
     file = dir_path + "\\sketch.jpeg"
     road = dir_path + "\\road.jpeg"
-    external_csv = dir_path + "\\external.csv"
-    sketch_type_external = True
-    external_impact_points = None
 
-    if sketch_type_external:
-        df = pd.read_csv(external_csv)
-        external_impact_points = dict()
-        for i in df.index:
-            color = str.lower(df.vehicle_color[i])
-            impact = str.lower(df.impact_point[i])
-            external_impact_points[color] = dict()
-            external_impact_points[color] = impact
+    BLUE_CAR_BOUNDARY = np.array([[85, 50, 60], [160, 255, 255]])
 
-    RED_CAR_BOUNDARY = np.array([[0, 190, 215], [179, 255, 255]]) if sketch_type_external \
-        else np.array([[0, 200, 180], [110, 255, 255]])  # red external crash sketches
+    if dataset_name == "SYNTH":
+        sketch_type_external = False
+        RED_CAR_BOUNDARY = np.array([[0, 200, 180],  # red internal crash sketches
+                                     [110, 255, 255]])
+        external_impact_points = None
+    else:
+        RED_CAR_BOUNDARY = np.array([[0, 190, 215], [179, 255, 255]])  # red external_0
+        external_csv = dir_path + "\\external.csv"
+        sketch_type_external = True
+        external_impact_points = None
+        if sketch_type_external:
+            df = pd.read_csv(external_csv)
+            external_impact_points = dict()
+            for i in df.index:
+                color = str.lower(df.vehicle_color[i])
+                impact = str.lower(df.impact_point[i])
+                external_impact_points[color] = dict()
+                external_impact_points[color] = impact
 
     # --------- Main Logic Of the Code Starts Here ---------
     car = Car()
@@ -194,42 +217,95 @@ def exec_scenarion(scenario_file):
 
     # ------ Generate JSON data ------
     ac3r_plus = {
-        "name": scenario_file.split("\\")[3],
+        "name": scenario_file.split("\\")[-1],
         "roads": generate_roads(lane_nodes),
-        "vehicles": generate_vehicles(vehicles),
-        "expected_crash_components": generate_expected_crash_components(vehicles)
+        "vehicles": generate_vehicles(vehicles, dataset_name),
+        "expected_crash_components": generate_expected_crash_components(vehicles, dataset_name)
     }
 
     # ------ Write JSON to file ------
-    path_ac3rp = scenario_file.split("\\")[3] + "_data.json"
+    file_name = scenario_file.split("\\")[-1] + ".json"
+    path_ac3rp = file_name if output_to is None else output_to + '\\' + file_name
     with open(path_ac3rp, 'w') as fp:
         json.dump(ac3r_plus, fp)
 
+    print(f'Data file {file_name} is written to {path_ac3rp}!')
     print("END")
 
 
+def setup_logging(log_to, debug):
+    def log_exception(extype, value, trace):
+        logger.exception('Uncaught exception:', exc_info=(extype, value, trace))
+
+    # Disable annoyng messages from matplot lib.
+    # See: https://stackoverflow.com/questions/56618739/matplotlib-throws-warning-message-because-of-findfont-python
+    logger.getLogger('matplotlib.font_manager').disabled = True
+    # Disable annoyng messages from Pillow lib.
+    logger.getLogger('PIL').setLevel(logger.WARNING)
+
+    term_handler = logger.StreamHandler()
+    log_handlers = [term_handler]
+    start_msg = "Process Started"
+
+    if log_to is not None:
+        file_handler = logger.FileHandler(log_to, 'a', 'utf-8')
+        log_handlers.append(file_handler)
+        start_msg += " ".join(["writing to file: ", str(log_to)])
+
+    log_level = logger.DEBUG if debug else logger.INFO
+
+    logger.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s', level=log_level, handlers=log_handlers)
+
+    sys.excepthook = log_exception
+
+    logger.info(start_msg)
+
+
 @click.group()
-def cli():
-    pass
+@click.option('--log-to', required=False, type=click.Path(exists=False),
+              help="Location of the log file. If not specified logs appear on the console")
+@click.option('--debug', required=False, is_flag=True, default=False, show_default='Disabled',
+              help="Activate debugging (results in more logging)")
+@click.pass_context
+def cli(ctx, log_to, debug):
+    # Pass the context of the command down the line
+    ctx.ensure_object(dict)
+    # Setup logging
+    setup_logging(log_to, debug)
 
 
 @cli.command()
-@click.argument('scenario_file')
-def run_from_scenario(scenario_file):
-    exec_scenarion(scenario_file)
+@click.option('--accident-sketch', required=True, type=click.Path(exists=True), multiple=False,
+              help="Input accident sketch for generating the simulation")
+@click.option('--dataset-name', required=True, type=click.Choice(['CIREN', 'NMVCCS', 'SYNTH'], case_sensitive=False),
+              multiple=False,
+              help="Name of the dataset the accident comes from.")
+@click.option('--output-to', required=False, type=click.Path(exists=False), multiple=False,
+              help="Folder to store outputs. It will created if not present. If omitted we use the accident folder.")
+@click.pass_context
+def generate(ctx, accident_sketch, dataset_name, output_to):
+    # Pass the context of the command down the line
+    ctx.ensure_object(dict)
+    exec_scenarion(accident_sketch, dataset_name, output_to)
 
 
 if __name__ == '__main__':
+    cli()
     my_dict = {
-        0: '..\\Datasets\\NMVCCS\\2005002585724',
-        1: '..\\Datasets\\NMVCCS\\2005008586061a',
-        2: '..\\Datasets\\NMVCCS\\2005008586061b',
-        3: '..\\Datasets\\NMVCCS\\2005012695622',
-        4: '..\\Datasets\\NMVCCS\\2005045587341',
-        5: '..\\Datasets\\NMVCCS\\2005048103904',
-        6: '..\\Datasets\\NMVCCS\\2006048103049',
-        7: '..\\Datasets\\CIREN\\100343',
-        8: '..\\Datasets\\CIREN\\156722',
+        # 0: '..\\Datasets\\NMVCCS\\2005002585724',
+        # 1: '..\\Datasets\\NMVCCS\\2005008586061a',
+        # 2: '..\\Datasets\\NMVCCS\\2005008586061b',
+        # 3: '..\\Datasets\\NMVCCS\\2005012695622',
+        # 4: '..\\Datasets\\NMVCCS\\2005045587341',
+        # 5: '..\\Datasets\\NMVCCS\\2005048103904',
+        # 6: '..\\Datasets\\NMVCCS\\2006048103049',
+        # 7: '..\\Datasets\\CIREN\\100343',
+        # 8: '..\\Datasets\\CIREN\\156722',
+        # 9: '..\\Datasets\\SYNTH\\curved_18',
     }
+
     for k in my_dict:
-        exec_scenarion(my_dict[k])
+        if len(sys.argv) == 0:
+            exec_scenarion(my_dict[k])
+        else:
+            exec_scenarion(my_dict[k], "SYNTH")
