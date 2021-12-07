@@ -119,30 +119,26 @@ class ExperimentVisualizer:
         axs.append(ax[1, 1])
 
         ax[0, 2].title.set_text('Single vs Multiple: Random')
-        for m in d_mutators:
-            if m.family == "Random":
-                ax[0, 2].plot(m.xs, m.ys, label=m.get_label(use_short=True), color=m.color)
+        for m in [m for m in d_mutators if m.family == "Random"]:
+            ax[0, 2].plot(m.xs, m.ys, label=m.get_label(use_short=True), color=m.color)
         ax[0, 2].legend(loc='lower right')
         axs.append(ax[0, 2])
 
         ax[1, 2].title.set_text('Single vs Multiple: OpO')
-        for m in d_mutators:
-            if m.family == "OpO":
-                ax[1, 2].plot(m.xs, m.ys, label=m.get_label(use_short=True), color=m.color)
+        for m in [m for m in d_mutators if m.family == "OpO"]:
+            ax[1, 2].plot(m.xs, m.ys, label=m.get_label(use_short=True), color=m.color)
         ax[1, 2].legend(loc='lower right')
         axs.append(ax[1, 2])
 
         ax[2, 0].title.set_text('Single: Random vs OpO')
-        for m in d_mutators:
-            if m.short_name == "Single":
-                ax[2, 0].plot(m.xs, m.ys, label=m.get_label(use_family=True), color=m.color)
+        for m in [m for m in d_mutators if m.short_name == "Single"]:
+            ax[2, 0].plot(m.xs, m.ys, label=m.get_label(use_family=True), color=m.color)
         ax[2, 0].legend(loc='lower right')
         axs.append(ax[2, 0])
 
         ax[2, 1].title.set_text('Multiple: Random vs OpO')
-        for m in d_mutators:
-            if m.short_name == "Multiple":
-                ax[2, 1].plot(m.xs, m.ys, label=m.get_label(use_family=True), color=m.color)
+        for m in [m for m in d_mutators if m.short_name == "Multiple"]:
+            ax[2, 1].plot(m.xs, m.ys, label=m.get_label(use_family=True), color=m.color)
         ax[2, 1].legend(loc='lower right')
         axs.append(ax[2, 1])
 
