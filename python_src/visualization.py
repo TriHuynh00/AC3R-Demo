@@ -74,6 +74,17 @@ class VehicleTrajectoryVisualizer:
         with open(scenario_file) as file:
             data = json.load(file)
         ac3r_scenario = ac3r.CrashScenario.from_json(data)
+        dist_x, dist_y = 0, 0
+        for i, road in enumerate(ac3rp.CrashScenario.from_json(data).roads):
+            road_nodes = road.road_nodes
+            road_poly = LineString([(t[0] + dist_x, t[1] + dist_y) for t in road_nodes]).buffer(road.road_width,
+                                                                                                cap_style=2,
+                                                                                                join_style=2)
+            road_patch = PolygonPatch(road_poly, fc='gray', ec='dimgray')  # ec='#555555', alpha=0.5, zorder=4)
+            plt.gca().add_patch(road_patch)
+            xs = [p[0] + dist_x for p in road_nodes]
+            ys = [p[1] + dist_y for p in road_nodes]
+            plt.plot(xs, ys, '-', color="#9c9c9c")
         colors = ["#ffdab9", "#b1c3de"]
         fig = plt.gcf()
         for i, vehicle in enumerate(ac3r_scenario.vehicles):
@@ -139,7 +150,7 @@ class CrashScenarioVisualizer:
         # Visualize the road
 
 
-class ScenarioVisualizer:
+class ExperimentVisualizer:
     def __init__(self, file_path, ylim=None, bp_ylim=None):
         self.ylim = [5, 5] if ylim is None else ylim
         self.bp_ylim = [5, 5] if bp_ylim is None else bp_ylim
