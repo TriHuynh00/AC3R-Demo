@@ -12,6 +12,7 @@ import pandas as pd
 from models import SimulationFactory, Simulation, SimulationScore
 from models.ac3rp import CrashScenario
 
+
 #
 # # https://stackoverflow.com/questions/34764535/why-cant-matplotlib-plot-in-a-different-thread
 # class RoadTestVisualizer:
@@ -74,6 +75,7 @@ class VehicleTrajectoryVisualizer:
             data = json.load(file)
         ac3r_scenario = ac3r.CrashScenario.from_json(data)
         colors = ["#ffdab9", "#b1c3de"]
+        fig = plt.gcf()
         for i, vehicle in enumerate(ac3r_scenario.vehicles):
             trajectory_points = vehicle.trajectory_points
             xs = [p[0] for p in trajectory_points]
@@ -81,10 +83,11 @@ class VehicleTrajectoryVisualizer:
             plt.plot(xs, ys, 'o-', label=vehicle.name, color=colors[i])
         plt.legend()
         plt.gca().set_aspect('equal')
-        # plt.xlim([-100, 100])
-        # plt.ylim([-100, 100])
+        plt.xlim([-100, 100])
+        plt.ylim([-100, 100])
         plt.title(f'AC3R {ac3r_scenario.name}')
         plt.show()
+        fig.savefig(f'data/{ac3r_scenario.name}_ac3r.png', bbox_inches="tight")
 
     @staticmethod
     def plot_ac3rp(scenario_file):
@@ -92,6 +95,7 @@ class VehicleTrajectoryVisualizer:
             data = json.load(file)
         ac3rp_scenario = ac3rp.CrashScenario.from_json(data)
         colors = ["#ff8c00", "#4069e1"]
+        fig = plt.gcf()
         for i, v in enumerate(ac3rp_scenario.vehicles):
             trajectory_points = v.generate_trajectory()
             xs = [p[0] for p in trajectory_points]
@@ -99,10 +103,11 @@ class VehicleTrajectoryVisualizer:
             plt.plot(xs, ys, 'o-', label=v.name, color=colors[i])
         plt.legend()
         plt.gca().set_aspect('equal')
-        # plt.xlim([-100, 100])
-        # plt.ylim([-100, 100])
+        plt.xlim([-100, 100])
+        plt.ylim([-100, 100])
         plt.title(f'AC3R Plus {ac3rp_scenario.name}')
         plt.show()
+        fig.savefig(f'data/{ac3rp_scenario.name}_ac3rp.png', bbox_inches="tight")
 
 
 class CrashScenarioVisualizer:
@@ -170,7 +175,7 @@ class ScenarioVisualizer:
         df["std"] = df.std(numeric_only=True, axis=1)
         df["i"] = np.arange(start=0, stop=31, step=1)
         return df
-    
+
     def transform_df_boxplot(self, original_df):
         df = original_df.copy()
         dfn = pd.DataFrame([], columns=["Epoch", "Score"])
@@ -202,106 +207,108 @@ class ScenarioVisualizer:
             y = mean
             ci = 0.1 * std / mean
             ax.plot(x, y, color=color)
-            ax.fill_between(x, (y-ci), (y+ci), color=color, alpha=0.3)
+            ax.fill_between(x, (y - ci), (y + ci), color=color, alpha=0.3)
             return ax
 
         df_rand_m1, df_opo_m1, df_rand_m2, df_opo_m2, df_rand_opo_m1, df_rand_opo_m2 = self.generate_dfs()
-        fig, ax = plt.subplots(3, 3, figsize=(15,15))
+        fig, ax = plt.subplots(3, 3, figsize=(15, 15))
         axs = []
-        
-        ax[0,0].title.set_text('Single Random')
-        ax[0,0] = _confidence_interval(df_rand_m1["i"], df_rand_m1["Random"], df_rand_m1["std"], ax[0,0], color="steelblue")
-        ax[0,0].plot(df_rand_m1["i"], [self.target for x in df_rand_m1["i"]], label="Single", color="#0d1487")
-        axs.append(ax[0,0])
 
-        ax[0,1].title.set_text('Multiple Random')
-        ax[0,1] = _confidence_interval(df_rand_m2["i"], df_rand_m2["Random"], df_rand_m2["std"], ax[0,1], color="orange")
-        ax[0,1].plot(df_rand_m1["i"], [self.target for x in df_rand_m1["i"]], label="Single", color="#0d1487")
-        axs.append(ax[0,1])
+        ax[0, 0].title.set_text('Single Random')
+        ax[0, 0] = _confidence_interval(df_rand_m1["i"], df_rand_m1["Random"], df_rand_m1["std"], ax[0, 0],
+                                        color="steelblue")
+        ax[0, 0].plot(df_rand_m1["i"], [self.target for x in df_rand_m1["i"]], label="Single", color="#0d1487")
+        axs.append(ax[0, 0])
 
-        ax[1,0].title.set_text('Single OpO')
-        ax[1,0] = _confidence_interval(df_opo_m1["i"], df_opo_m1["OpO"], df_opo_m1["std"], ax[1,0], color="green")
-        ax[1,0].plot(df_rand_m1["i"], [self.target for x in df_rand_m1["i"]], label="Single", color="#0d1487")
-        axs.append(ax[1,0])
+        ax[0, 1].title.set_text('Multiple Random')
+        ax[0, 1] = _confidence_interval(df_rand_m2["i"], df_rand_m2["Random"], df_rand_m2["std"], ax[0, 1],
+                                        color="orange")
+        ax[0, 1].plot(df_rand_m1["i"], [self.target for x in df_rand_m1["i"]], label="Single", color="#0d1487")
+        axs.append(ax[0, 1])
 
-        ax[1,1].title.set_text('Multiple OpO')
-        ax[1,1] = _confidence_interval(df_opo_m2["i"], df_opo_m2["OpO"], df_opo_m2["std"], ax[1,1], color="red")
-        ax[1,1].plot(df_rand_m1["i"], [self.target for x in df_rand_m1["i"]], label="Single", color="#0d1487")
-        axs.append(ax[1,1])
+        ax[1, 0].title.set_text('Single OpO')
+        ax[1, 0] = _confidence_interval(df_opo_m1["i"], df_opo_m1["OpO"], df_opo_m1["std"], ax[1, 0], color="green")
+        ax[1, 0].plot(df_rand_m1["i"], [self.target for x in df_rand_m1["i"]], label="Single", color="#0d1487")
+        axs.append(ax[1, 0])
 
-        ax[0,2].title.set_text('Single vs Multiple: Random')
-        ax[0,2].plot(df_rand_opo_m1["i"], df_rand_opo_m1["Random"], label="Single", color="steelblue")
-        ax[0,2].plot(df_rand_opo_m2["i"], df_rand_opo_m2["Random"], label="Multi", color="orange")
-        ax[0,2].legend(loc='lower right')
-        axs.append(ax[0,2])
+        ax[1, 1].title.set_text('Multiple OpO')
+        ax[1, 1] = _confidence_interval(df_opo_m2["i"], df_opo_m2["OpO"], df_opo_m2["std"], ax[1, 1], color="red")
+        ax[1, 1].plot(df_rand_m1["i"], [self.target for x in df_rand_m1["i"]], label="Single", color="#0d1487")
+        axs.append(ax[1, 1])
 
-        ax[1,2].title.set_text('Single vs Multiple: OpO')
-        ax[1,2].plot(df_rand_opo_m1["i"], df_rand_opo_m1["OpO"], label="Single", color="green")
-        ax[1,2].plot(df_rand_opo_m2["i"], df_rand_opo_m2["OpO"], label="Multi", color="red")
-        ax[1,2].legend(loc='lower right')
-        axs.append(ax[1,2])
+        ax[0, 2].title.set_text('Single vs Multiple: Random')
+        ax[0, 2].plot(df_rand_opo_m1["i"], df_rand_opo_m1["Random"], label="Single", color="steelblue")
+        ax[0, 2].plot(df_rand_opo_m2["i"], df_rand_opo_m2["Random"], label="Multi", color="orange")
+        ax[0, 2].legend(loc='lower right')
+        axs.append(ax[0, 2])
 
-        ax[2,0].title.set_text('Single: Random vs OpO')
-        ax[2,0].plot(df_rand_m1["i"], df_rand_m1["Random"], label="Random", color="steelblue")
-        ax[2,0].plot(df_opo_m1["i"], df_opo_m1["OpO"], label="OpO", color="green")
-        ax[2,0].legend(loc='lower right')
-        axs.append(ax[2,0])
+        ax[1, 2].title.set_text('Single vs Multiple: OpO')
+        ax[1, 2].plot(df_rand_opo_m1["i"], df_rand_opo_m1["OpO"], label="Single", color="green")
+        ax[1, 2].plot(df_rand_opo_m2["i"], df_rand_opo_m2["OpO"], label="Multi", color="red")
+        ax[1, 2].legend(loc='lower right')
+        axs.append(ax[1, 2])
 
-        ax[2,1].title.set_text('Multiple: Random vs OpO')
-        ax[2,1].plot(df_rand_m2["i"], df_rand_m2["Random"], label="Random", color="orange")
-        ax[2,1].plot(df_opo_m2["i"], df_opo_m2["OpO"], label="OpO", color="red")
-        ax[2,1].legend(loc='lower right')
-        axs.append(ax[2,1])
+        ax[2, 0].title.set_text('Single: Random vs OpO')
+        ax[2, 0].plot(df_rand_m1["i"], df_rand_m1["Random"], label="Random", color="steelblue")
+        ax[2, 0].plot(df_opo_m1["i"], df_opo_m1["OpO"], label="OpO", color="green")
+        ax[2, 0].legend(loc='lower right')
+        axs.append(ax[2, 0])
 
-        ax[2,2].title.set_text('Random vs OpO')
-        ax[2,2].plot(df_rand_m1["i"], df_rand_m1["Random"], label="S.Rand", color="steelblue")
-        ax[2,2].plot(df_rand_m2["i"], df_rand_m2["Random"], label="M.Rand", color="orange")
-        ax[2,2].plot(df_opo_m1["i"], df_opo_m1["OpO"], label="S.OpO", color="green")
-        ax[2,2].plot(df_opo_m2["i"], df_opo_m2["OpO"], label="M.OpO", color="red")
-        ax[2,2].legend(loc='lower right')
-        axs.append(ax[2,2])
-        
+        ax[2, 1].title.set_text('Multiple: Random vs OpO')
+        ax[2, 1].plot(df_rand_m2["i"], df_rand_m2["Random"], label="Random", color="orange")
+        ax[2, 1].plot(df_opo_m2["i"], df_opo_m2["OpO"], label="OpO", color="red")
+        ax[2, 1].legend(loc='lower right')
+        axs.append(ax[2, 1])
+
+        ax[2, 2].title.set_text('Random vs OpO')
+        ax[2, 2].plot(df_rand_m1["i"], df_rand_m1["Random"], label="S.Rand", color="steelblue")
+        ax[2, 2].plot(df_rand_m2["i"], df_rand_m2["Random"], label="M.Rand", color="orange")
+        ax[2, 2].plot(df_opo_m1["i"], df_opo_m1["OpO"], label="S.OpO", color="green")
+        ax[2, 2].plot(df_opo_m2["i"], df_opo_m2["OpO"], label="M.OpO", color="red")
+        ax[2, 2].legend(loc='lower right')
+        axs.append(ax[2, 2])
+
         for ax in axs:
             ax.set_ylim(self.ylim)
-        
+
         plt.show()
         fig.savefig(f'data/{self.case}/Plot - Multiple.png', bbox_inches="tight")
-        
+
     def visualize_box_plot(self):
         df_rand_m1, df_opo_m1, df_rand_m2, df_opo_m2, df_rand_opo_m1, df_rand_opo_m2 = self.generate_dfs()
-        
+
         df_rand_m1 = self.transform_df_boxplot(df_rand_m1)
         df_opo_m1 = self.transform_df_boxplot(df_opo_m1)
         df_rand_m2 = self.transform_df_boxplot(df_rand_m2)
         df_opo_m2 = self.transform_df_boxplot(df_opo_m2)
-        
-        fig, ax = plt.subplots(4, 1, figsize=(16,24))
+
+        fig, ax = plt.subplots(4, 1, figsize=(16, 24))
         axs = []
 
         ax[0].title.set_text('Single Random')
         sns.violinplot(x='Epoch', y='Score', data=df_rand_m1, color="0.95", ax=ax[0])
         sns.swarmplot(x='Epoch', y='Score', data=df_rand_m1, color="k", ax=ax[0])
         axs.append(ax[0])
-        
+
         ax[1].title.set_text('Multiple Random')
         sns.violinplot(x='Epoch', y='Score', data=df_rand_m2, color="0.95", ax=ax[1])
         sns.swarmplot(x='Epoch', y='Score', data=df_rand_m2, color="k", ax=ax[1])
         axs.append(ax[1])
-        
+
         ax[2].title.set_text('Single OpO')
         sns.violinplot(x='Epoch', y='Score', data=df_opo_m1, color="0.95", ax=ax[2])
         sns.swarmplot(x='Epoch', y='Score', data=df_opo_m1, color="k", ax=ax[2])
         axs.append(ax[2])
-        
+
         ax[3].title.set_text('Multiple OpO')
         sns.violinplot(x='Epoch', y='Score', data=df_opo_m2, color="0.95", ax=ax[3])
         sns.swarmplot(x='Epoch', y='Score', data=df_opo_m2, color="k", ax=ax[3])
         axs.append(ax[3])
-        
+
         for ax in axs:
             ax.set_ylim(self.bp_ylim)
             ax.xaxis.label.set_visible(False)
             ax.yaxis.label.set_visible(False)
-    
+
         plt.show()
         fig.savefig(f'data/{self.case}/Plot - BoxPlot.png', bbox_inches="tight")
