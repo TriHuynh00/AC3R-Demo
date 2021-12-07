@@ -22,31 +22,6 @@ class ReportTypeD(Report):
         else:
             return [part]
 
-    @staticmethod
-    def _handle_compside_side_targets(targets: list) -> [str]:
-        """
-        Method to handle a report including COMPSIDE and COMP, then transform COMP to COMPSIDE
-        based on SIDE from former COMPSIDE.
-        E.g: MR, F -> MR, FR
-        TODO: we need unit tests before using this method
-        """
-
-        # Find the side of received crash components: 'L' or 'R' or both
-        target_sides = set()  # Prevent duplicates
-        for target in targets:
-            if len(target) == 2:  # Focus on "FL", "FR", "ML", "MR", "BL", "BR"
-                target_sides.add(target[1])  # e.g MR add 'R' or FL add 'L'
-        # Replace old component ('F', 'M', 'B') by a component and its side ('F{side}', 'M{side}', 'B{side}')
-        for target in targets:  # Take 'F', 'M', 'B' out of targets
-            if target in ['F', 'M', 'B']:  # Check if expected crash components contain 'F', 'M', 'B'
-                component = target  # There is 'F', 'M', 'B' in a police report
-                targets.remove(target)  # Remove it
-                for side in target_sides:  # And replace it with a component and its side
-                    targets.append(f'{component}{side}')
-        # Remove any duplicates from a List.
-        # Ref: https://www.w3schools.com/python/python_howto_remove_duplicates.asp
-        return list(dict.fromkeys(targets))
-
     def process(self, outputs: list, targets: list) -> Tuple[int, int, int]:
         from models import CONST
 
