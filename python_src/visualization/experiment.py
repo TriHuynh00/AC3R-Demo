@@ -81,18 +81,18 @@ class ExperimentVisualizer:
             return ax
 
         df_rand_m1, df_opo_m1, df_rand_m2, df_opo_m2, df_rand_opo_m1, df_rand_opo_m2 = self.generate_dfs()
-        d_mutators = {
-            "single_random": Mutation(xs=df_rand_m1["i"], ys=df_rand_m1["Random"], method="simp", color="steelblue",
-                                      name="S.Rand", short_name="Single", family="Random"),
-            "multiple_random": Mutation(xs=df_rand_m2["i"], ys=df_rand_m2["Random"], method="simp", color="orange",
-                                        name="M.Rand", short_name="Multiple", family="Random"),
-            "single_opo": Mutation(xs=df_opo_m1["i"], ys=df_opo_m1["OpO"], method="simp", color="green", name="S.OpO",
-                                   short_name="Single", family="OpO"),
-            "multiple_opo": Mutation(xs=df_opo_m2["i"], ys=df_opo_m2["OpO"], method="simp", color="red", name="M.OpO",
-                                     short_name="Multiple", family="OpO"),
-        }
-        sorted(d_mutators, key=lambda x: (d_mutators[x].auc))
+        d_mutators = [
+            Mutation(xs=df_rand_m1["i"], ys=df_rand_m1["Random"], method="simp", color="steelblue",
+                     name="S.Rand", short_name="Single", family="Random"),
+            Mutation(xs=df_rand_m2["i"], ys=df_rand_m2["Random"], method="simp", color="orange",
+                     name="M.Rand", short_name="Multiple", family="Random"),
+            Mutation(xs=df_opo_m1["i"], ys=df_opo_m1["OpO"], method="simp", color="green", name="S.OpO",
+                     short_name="Single", family="OpO"),
+            Mutation(xs=df_opo_m2["i"], ys=df_opo_m2["OpO"], method="simp", color="red", name="M.OpO",
+                     short_name="Multiple", family="OpO"),
+        ]
 
+        d_mutators = sorted(d_mutators, key=lambda x: x.auc, reverse=True)
         fig, ax = plt.subplots(3, 3, figsize=(15, 15))
         axs = []
 
@@ -119,41 +119,36 @@ class ExperimentVisualizer:
         axs.append(ax[1, 1])
 
         ax[0, 2].title.set_text('Single vs Multiple: Random')
-        for k in d_mutators:
-            if d_mutators[k].family == "Random":
-                ax[0, 2].plot(d_mutators[k].xs, d_mutators[k].ys, label=d_mutators[k].get_label(use_short=True),
-                              color=d_mutators[k].color)
+        for m in d_mutators:
+            if m.family == "Random":
+                ax[0, 2].plot(m.xs, m.ys, label=m.get_label(use_short=True), color=m.color)
         ax[0, 2].legend(loc='lower right')
         axs.append(ax[0, 2])
 
         ax[1, 2].title.set_text('Single vs Multiple: OpO')
-        for k in d_mutators:
-            if d_mutators[k].family == "OpO":
-                ax[1, 2].plot(d_mutators[k].xs, d_mutators[k].ys, label=d_mutators[k].get_label(use_short=True),
-                              color=d_mutators[k].color)
+        for m in d_mutators:
+            if m.family == "OpO":
+                ax[1, 2].plot(m.xs, m.ys, label=m.get_label(use_short=True), color=m.color)
         ax[1, 2].legend(loc='lower right')
         axs.append(ax[1, 2])
 
         ax[2, 0].title.set_text('Single: Random vs OpO')
-        for k in d_mutators:
-            if d_mutators[k].short_name == "Single":
-                ax[2, 0].plot(d_mutators[k].xs, d_mutators[k].ys, label=d_mutators[k].get_label(use_family=True),
-                              color=d_mutators[k].color)
+        for m in d_mutators:
+            if m.short_name == "Single":
+                ax[2, 0].plot(m.xs, m.ys, label=m.get_label(use_family=True), color=m.color)
         ax[2, 0].legend(loc='lower right')
         axs.append(ax[2, 0])
 
         ax[2, 1].title.set_text('Multiple: Random vs OpO')
-        for k in d_mutators:
-            if d_mutators[k].short_name == "Multiple":
-                ax[2, 1].plot(d_mutators[k].xs, d_mutators[k].ys, label=d_mutators[k].get_label(use_family=True),
-                              color=d_mutators[k].color)
+        for m in d_mutators:
+            if m.short_name == "Multiple":
+                ax[2, 1].plot(m.xs, m.ys, label=m.get_label(use_family=True), color=m.color)
         ax[2, 1].legend(loc='lower right')
         axs.append(ax[2, 1])
 
         ax[2, 2].title.set_text('Random vs OpO')
-        for k in d_mutators:
-            ax[2, 2].plot(d_mutators[k].xs, d_mutators[k].ys, label=d_mutators[k].get_label(),
-                          color=d_mutators[k].color)
+        for m in d_mutators:
+            ax[2, 2].plot(m.xs, m.ys, label=m.get_label(), color=m.color)
         ax[2, 2].legend(loc='lower right')
         axs.append(ax[2, 2])
 
