@@ -114,6 +114,13 @@ if __name__ == '__main__':
         {"name": "four_1", "path": "data/four_1.json"},
         {"name": "four_4", "path": "data/four_4.json"},
         {"name": "four_7", "path": "data/four_7.json"},
+        {"name": "Tsec_3", "path": "data/Tsec_3.json"},
+        {"name": "Tsec_9", "path": "data/Tsec_9.json"},
+        {"name": "Tsec_10", "path": "data/Tsec_10.json"},
+        {"name": "Tsec_11", "path": "data/Tsec_11.json"},
+        {"name": "merge_3", "path": "data/merge_3.json"},
+        {"name": "merge_4", "path": "data/merge_4.json"},
+        {"name": "straight_1", "path": "data/straight_1.json"},
     ]
 
     execute_searching(scenarios)
