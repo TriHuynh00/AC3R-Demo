@@ -1,7 +1,7 @@
 import click
 import json
 import numpy as np
-from visualization import scenario as VehicleTrajectoryVisualizer
+from visualization import Scenario as VehicleTrajectoryVisualizer
 from models import SimulationFactory, Simulation, SimulationScore, SimulationExec, CONST
 from models.ac3rp import CrashScenario
 from experiment import Experiment
