@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import javax.swing.*;
 
 //import org.jdom2.Element;
+import org.msgpack.util.json.JSON;
 import org.saarland.accidentdevelopmentanalyzer.CrashDevAnalyzer;
 import org.saarland.accidentelementmodel.ActionDescription;
 import org.saarland.accidentelementmodel.NavigationDictionary;
@@ -32,7 +33,7 @@ import org.saarland.nlptools.Stemmer;
 import org.saarland.ontologyparser.AccidentConcept;
 import org.saarland.ontologyparser.OntologyHandler;
 import org.saarland.xmlmodules.XMLAccidentCaseParser;
-
+import org.json.simple.JSONObject;
 import com.lexicalscope.jewel.cli.ArgumentValidationException;
 import com.lexicalscope.jewel.cli.CliFactory;
 import com.lexicalscope.jewel.cli.Option;
@@ -96,6 +97,12 @@ public class AccidentConstructor {
         @Option(defaultToNull = true, longName = "path", description = "Path of scenario data will be generated.")
         String getScenarioDataPath();
 
+        @Option(defaultToNull = true, longName = "is_extract", description = "Extract road data for the report.")
+        String extractRoad();
+
+        @Option(defaultToNull = true, longName = "target_name", description = "Name of JSON road data file.")
+        String targetName();
+
         @Option(helpRequest = true, description = "Usage details on command-line arguments")
         boolean getHelp();
     }
@@ -104,6 +111,8 @@ public class AccidentConstructor {
         int databaseType = 1; // 0 - MMUCC ; 1 - plain textual crash description
         // Parsing of input parameters
         boolean useGUI = true;
+        String extractRoad = "false";
+        String targetName = "untitled";
         File[] selectedFiles = null;
         String scenarioDataPath = "";
 
@@ -153,6 +162,12 @@ public class AccidentConstructor {
                 if (!scenarioDataPath.endsWith("\\")) {
                     scenarioDataPath = scenarioDataPath + "\\";
                 }
+            }
+            if (result.extractRoad() != null && !result.extractRoad().isEmpty()) {
+                extractRoad = result.extractRoad();
+            }
+            if (result.targetName() != null && !result.targetName().isEmpty()) {
+                targetName = result.targetName();
             }
         } catch (ArgumentValidationException e) {
             e.printStackTrace();
@@ -348,6 +363,41 @@ public class AccidentConstructor {
                             street.getStreetPropertyValue("is_single_road_piece"),
                             street.getStreetPropertyValue("road_type"), street.getStreetPropertyValue("lane_num"),
                             street.getStreetPropertyValue("road_direction")));
+                }
+
+                if (extractRoad.equals("true")) {
+                    System.out.println("Generate road data");
+                    System.out.println(extractRoad);
+
+                    List<JSONObject> listOfRoads = new ArrayList<JSONObject>();
+                    for (Street street : accidentConstructor.testCase.getStreetList()) {
+                        JSONObject road = new JSONObject();
+                        road.put("road_ID", street.getStreetPropertyValue("road_ID"));
+                        road.put("road_navigation", street.getStreetPropertyValue("road_navigation"));
+                        road.put("is_single_road_piece", street.getStreetPropertyValue("is_single_road_piece"));
+                        road.put("road_type", street.getStreetPropertyValue("road_type"));
+                        road.put("lane_num", street.getStreetPropertyValue("lane_num"));
+                        road.put("road_direction", street.getStreetPropertyValue("road_direction"));
+                        listOfRoads.add(road);
+                    }
+
+                    //Creating a JSONObject object
+                    JSONObject scenario = new JSONObject();
+                    //Inserting key-value pairs into the json object
+                    targetName = scenarioName;
+                    scenario.put("case", targetName);
+                    scenario.put("roads", listOfRoads);
+                    try {
+                        String fn = targetName.concat(".json");
+                        FileWriter file = new FileWriter(fn);
+                        file.write(scenario.toJSONString());
+                        file.close();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    System.out.println("JSON file created: " + scenario);
+                    System.exit(0);
                 }
 
                 RoadConstructor baseRoadConstructor = new RoadConstructor(accidentConstructor.vehicleList,
@@ -711,8 +761,8 @@ public class AccidentConstructor {
                             "vehicle " + vehicle.getVehicleId() +
                                     " action & coord = " + accidentConstructor.mapActionToRoadSegment(vehicle));
                 }
-//                accidentConstructor.generateScenarioJSONData(scenarioDataPath, scenarioName);
-//                System.exit(0);
+                accidentConstructor.generateScenarioJSONData(scenarioDataPath, scenarioName);
+                System.exit(0);
 //                accidentConstructor.controlBeamNgAlgorithm(scenarioName);
 
                 /************ END SCENARIO DATA FILE ***********/
@@ -2891,21 +2941,7 @@ public class AccidentConstructor {
             String damageComponentData = vehicle.getDamagedComponents().size() == 0  ?
                     "any" : vehicle.getDamagedComponents().get(0);
             String vDamage = formatJSONKey("damage_components") + formatJSONValueString(damageComponentData);
-            String vDriving = formatJSONKey("driving_actions") + "[ ";
-            HashMap<String, LinkedList> vehicleActionAndCoord = mapActionToRoadSegment(vehicle);
-            VehicleTrajectoryFactory vtf = new VehicleTrajectoryFactory(vehicle, vehicleActionAndCoord);
-            ArrayList<VehicleTrajectory> vehicleTrajectories = vtf.generateVehicleTrajectories();
-            if (vehicleTrajectories.size() > 1 && !testCase.getCrashType().contains("turn into")) {
-                vehicleTrajectories = new Player(vehicleTrajectories).getTrajectories();
-            }
-            for (VehicleTrajectory v :vehicleTrajectories) {
-                vDriving += '{';
-                vDriving += formatJSONKey("name") + formatJSONValueString(v.getAction());
-                vDriving += formatJSONKey("trajectory") + "[" + v.getTrajectory().toString() + "],";
-                vDriving += formatJSONKey("speed") + vehicle.getVelocity();
-                vDriving += "},";
-            }
-            vDriving = removeLastChar(vDriving) + "]";
+            String vDriving = formatJSONKey("driving_actions_vuong") + vehicle.getVelocity();
 
             vehicleData += vName + vColor + vRotQuat + vDistanceToTrigger + vDamage + vDriving;
             vehicleData += "},";

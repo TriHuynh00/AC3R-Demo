@@ -20,7 +20,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,7 +53,7 @@ public class XMLAccidentCaseParser {
 //        removeSpecialCharsInXMLFile(inputFile);
 
         String xmlDatabase = "CIREN";
-        //String xmlDatabase = "NMVCCS";
+        // String xmlDatabase = "NMVCCS";
 
         HashMap<String, String> xmlTagCrashDB = new HashMap<String, String>();
 
@@ -297,19 +299,26 @@ public class XMLAccidentCaseParser {
 
         storyline = normalizeSpecialChars(storyline);
 
-        String[] paragraphs = storyline.split("\n\n");
+        List<String> paragraphs = new ArrayList<String>(Arrays.asList(storyline.split("\n\n")));
+        System.out.println(paragraphs);
+        System.out.println(paragraphs.get(0));
 
-        ConsoleLogger.print('d', "Para Len " + paragraphs.length);
+        if (xmlDatabase.equals(AccidentParam.DB_CRASH_CIREN)) {
+            String extraPara = new String(paragraphs.get(0));
+            paragraphs.add(extraPara);
+        }
 
-        ConsoleLogger.print('d', "Para 0: " + paragraphs[0]);
+        ConsoleLogger.print('d', "Para Len " + paragraphs.size());
+
+        ConsoleLogger.print('d', "Para 0: " + paragraphs.get(0));
 
         // Replace Vehicle Model Name with Vehicle[ID]
-        ConsoleLogger.print('d', "Before: " + paragraphs[1]);
+        ConsoleLogger.print('d', "Before: " + paragraphs.get(0));
 
         for (VehicleAttr vehicleAttr : accidentConstructor.getVehicleList()) {
             ConsoleLogger.print('d', "vehicleAttr: " + vehicleAttr.getVehicleId());
-            String replacedModelNameStr = paragraphs[1].toLowerCase().replace(vehicleAttr.getYearMakeModel(), "vehicle" + vehicleAttr.getVehicleId() + " ");
-            if (replacedModelNameStr.equals(paragraphs[1].toLowerCase())) {
+            String replacedModelNameStr = paragraphs.get(1).toLowerCase().replace(vehicleAttr.getYearMakeModel(), "vehicle" + vehicleAttr.getVehicleId() + " ");
+            if (replacedModelNameStr.equals(paragraphs.get(1).toLowerCase())) {
                 String makeYear = vehicleAttr.getYearMakeModel().split(" ")[0];
                 ConsoleLogger.print('d', "Make year extraction " + makeYear);
                 replacedModelNameStr = replacedModelNameStr.replace(vehicleAttr.getYearMakeModel().replace(makeYear, "").trim(), "vehicle" + (vehicleAttr.getVehicleId())).trim();
@@ -325,52 +334,52 @@ public class XMLAccidentCaseParser {
                 }
 
             }
-            paragraphs[1] = replacedModelNameStr;
-//            paragraphs[1].replace(paragraphs[1].substring())
+            paragraphs.set(1, replacedModelNameStr);
+//            paragraphs.get(1).replace(paragraphs.get(1).substring())
 
         }
 
-        paragraphs[1] = paragraphs[1].replace("vehicle #", "vehicle");
-        paragraphs[1] = paragraphs[1].replace("Vehicle #", "vehicle");
+        paragraphs.set(1, paragraphs.get(1).replace("vehicle #", "vehicle"));
+        paragraphs.set(1, paragraphs.get(1).replace("Vehicle #", "vehicle"));
 
 
-//        paragraphs[1] = paragraphs[1].replaceAll(",\\w", ", ");
+//        paragraphs.set(1, paragraphs.get(1).replaceAll(",\\w", ", "));
         // Fix "vehicle [ID]" typo
         Pattern vehicleSpaceNumberPattern = Pattern.compile("((vehicle)|(Vehicle)) \\d");
         Pattern commaWordPattern = Pattern.compile(",[A-Za-z0-9]");
         Pattern vAsVehiclePattern = Pattern.compile("v\\d");
 
-        Matcher matcherVehicleSpaceNumber = vehicleSpaceNumberPattern.matcher(paragraphs[1]);
-        Matcher matcherCommaWord = commaWordPattern.matcher(paragraphs[1]);
-        Matcher matcherVAsVehicle = vAsVehiclePattern.matcher(paragraphs[1]);
+        Matcher matcherVehicleSpaceNumber = vehicleSpaceNumberPattern.matcher(paragraphs.get(1));
+        Matcher matcherCommaWord = commaWordPattern.matcher(paragraphs.get(1));
+        Matcher matcherVAsVehicle = vAsVehiclePattern.matcher(paragraphs.get(1));
 
         while (matcherVehicleSpaceNumber.find()) {
             String typoString = matcherVehicleSpaceNumber.group();
-            paragraphs[1] = paragraphs[1].replace(typoString, typoString.replace(" ", "") + " ");
+            paragraphs.set(1, paragraphs.get(1).replace(typoString, typoString.replace(" ", "") + " "));
         }
 
         while (matcherCommaWord.find()) {
             String typoString = matcherCommaWord.group();
-            paragraphs[1] = paragraphs[1].replace(typoString, typoString.replace(",", ", "));
+            paragraphs.set(1, paragraphs.get(1).replace(typoString, typoString.replace(",", ", ")));
         }
 
         while (matcherVAsVehicle.find()) {
             String typoString = matcherVAsVehicle.group();
-            paragraphs[1] = paragraphs[1].replace(typoString, typoString.replace("v", "vehicle"));
+            paragraphs.set(1, paragraphs.get(1).replace(typoString, typoString.replace("v", "vehicle")));
         }
 
 //        Pattern vehicleSpaceWithoutNumberPattern = Pattern.compile(" ((vehicle)|(Vehicle)) ");
-//        Matcher matcherVehicleSpaceWithoutNumberPattern = vehicleSpaceWithoutNumberPattern.matcher(paragraphs[1]);
+//        Matcher matcherVehicleSpaceWithoutNumberPattern = vehicleSpaceWithoutNumberPattern.matcher(paragraphs.get(1));
         // We can surely infer the ID of the other vehicle, if there are up to 2 vehicles involved in the scenario
 //        int involvedVehiclesNum = accidentConstructor.getVehicleList().size();
 //        if (involvedVehiclesNum <= 2)
 //        {
-//            paragraphs[1] = paragraphs[1].replace(" vehicle ", " vehicle" + involvedVehiclesNum + " ");
+//            paragraphs.set(1, paragraphs.get(1).replace(" vehicle ", " vehicle" + involvedVehiclesNum + " "));
 //        }
-        paragraphs[1] = paragraphs[1].replace("  ", " ").replace(" ,", ",");
-        ConsoleLogger.print('d', "After: " + paragraphs[1]);
+        paragraphs.set(1, paragraphs.get(1).replace("  ", " ").replace(" ,", ","));
+        ConsoleLogger.print('d', "After: " + paragraphs.get(1));
 
-        String[] accidentContext = {paragraphs[0], paragraphs[1]};
+        String[] accidentContext = {paragraphs.get(0), paragraphs.get(1)};
         return accidentContext;
 
     }

@@ -1,1 +1,1 @@
-java -Xms2048m -Xmx6000m -d64 -jar -DdefaultCarModel=true AC3R.jar 
+java -Xms2048m -Xmx6000m -d64 -jar -DdefaultCarModel=true AC3R-1.0-jar-with-dependencies.jar --is_extract true --reports C:\Users\harve\Documents\AC3RGithub\demo\accidentCases\Case5.xml
