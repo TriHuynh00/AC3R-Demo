@@ -143,7 +143,6 @@ class Report(ABC):
         """
         # Invalid given outputs
         if len(outputs) == CONST.EMPTY_CRASH:
-            print("Exception _validate_output():", outputs)
             raise Exception("Exception: The simulator did not report any crashes!")
         # The vehicle's crash element should be on the car
         parts = CONST.CAT_D_DATA + CONST.CAT_C_DATA + CONST.CAT_B_DATA + CONST.CAT_A_DATA

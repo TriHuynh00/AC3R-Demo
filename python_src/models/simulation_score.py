@@ -53,6 +53,11 @@ class SimulationScore:
             data_target = data_targets[vehicle]
             creator = models.categorize_report(data_target)
             data_output = data_outputs[vehicle]
+            # Fix the issue when one of v1_damage or v2_damage is empty while other is not.
+            # Without if, an exception will be triggered and the damage info will be lost, which
+            # leads to a wrong simulation score.
+            if len(data_output) == NO_CRASH:
+                continue
             result = tuple(map(lambda x, y: x + y, result, creator.match(data_output, data_target)))
             if debug is True:
                 print(f'{vehicle} target: {data_target}')
