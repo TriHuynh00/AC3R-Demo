@@ -1,6 +1,6 @@
 import beamngpy
 import matplotlib.colors as colors
-from typing import List
+from typing import List, Tuple
 from models import RoadProfiler, Player
 from models.ac3rp import CrashScenario
 
@@ -13,6 +13,28 @@ class SimulationFactory:
 
     def set_scenario(self, scenario: CrashScenario):
         self.scenario = scenario
+
+    def get_center_scenario(self) -> Tuple:
+        min_x, min_y, max_x, max_y = None, None, None, None
+        for seg in self.scenario.roads:
+            lines = [seg.road_nodes, seg.left_line.nodes, seg.right_line.nodes]
+            lines.extend([l.nodes for l in seg.middle_lines])
+
+            for line in lines:
+                for p in line:
+                    x, y = p[0], p[1]
+                    if min_x is None and min_y is None and max_x is None and max_y is None:
+                        min_x = x
+                        max_x = x
+                        min_y = y
+                        max_y = y
+                    else:
+                        min_x = x if x < min_x else min_x
+                        max_x = x if x > max_x else max_x
+                        min_y = y if y < min_y else min_y
+                        max_y = y if y > max_y else max_y
+
+        return (max_x - min_x) / 2, (max_y - min_y) / 2, max(max_x, max_y)
 
     def generate_roads(self) -> List[beamngpy.Road]:
         for segment in self.scenario.roads:

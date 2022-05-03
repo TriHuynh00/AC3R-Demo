@@ -50,7 +50,7 @@ class Vehicle:
     def __init__(self, name, initial_location, initial_rotation,
                  color, road_data, trajectory=[], distance_to_trigger=-1, speed=0):
         self.name = name
-        self.initial_location = Point(initial_location[0], initial_location[1])
+        self.initial_location = Point(initial_location[0], initial_location[1], initial_location[2])
         self.initial_rotation = initial_rotation
         self.color = color
         self.road_data = road_data

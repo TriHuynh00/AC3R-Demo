@@ -10,8 +10,9 @@ NO_CRASH = 0
 
 
 class SimulationExec:
-    def __init__(self, simulation: Simulation):
+    def __init__(self, simulation: Simulation, is_birdview: bool = False):
         self.simulation = simulation
+        self.is_birdview: bool = is_birdview
 
     def execute_scenario(self, timeout: int = 60):
         start_time = 0
@@ -22,7 +23,7 @@ class SimulationExec:
         vehicleId_to_trigger = 0
         # Init BeamNG simulation
         bng_instance = self.simulation.init_simulation()
-        scenario = Scenario("smallgrid", "test_01")
+        scenario = Scenario("smallgrid", self.simulation.name)
 
         # Import roads from scenario obj to beamNG instance
         for road in self.simulation.roads:
@@ -57,6 +58,10 @@ class SimulationExec:
         try:
             bng_instance.load_scenario(scenario)
             bng_instance.start_scenario()
+
+            # Enable bird view
+            if self.is_birdview:
+                self.simulation.enable_free_cam(bng_instance)
 
             # Drawing debug line and forcing vehicle moving by given trajectory
             idx = 0
