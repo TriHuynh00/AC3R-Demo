@@ -38,13 +38,13 @@ class Vehicle:
             item = (x, y, speed)
             trajectory.append(item)
 
-        return Vehicle(key,
-                       initial_location,
-                       initial_rotation,
-                       vehicle_dict["color_code"],
-                       road_data,
-                       trajectory,
-                       vehicle_dict["speed"])
+        return Vehicle(name=key,
+                       initial_location=initial_location,
+                       initial_rotation=initial_rotation,
+                       color=vehicle_dict["color_code"],
+                       road_data=road_data,
+                       trajectory=trajectory,
+                       speed=vehicle_dict["speed"])
 
     # Rotation defined against NORTH = [0, 1]
     def __init__(self, name, initial_location, initial_rotation,
