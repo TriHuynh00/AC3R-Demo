@@ -15,9 +15,22 @@ class SimulationFactory:
         self.scenario = scenario
 
     def generate_roads(self) -> List[beamngpy.Road]:
-        for road in self.scenario.roads:
-            sim_road = beamngpy.Road('road_asphalt_2lane', rid=road.name)
-            sim_road.nodes.extend(road.road_nodes)
+        for segment in self.scenario.roads:
+            left_marking = beamngpy.Road("line_white", rid=segment.left_line.name)
+            left_marking.nodes.extend(segment.left_line.nodes)
+            self.roads.append(left_marking)
+
+            right_marking = beamngpy.Road("line_white", rid=segment.right_line.name)
+            right_marking.nodes.extend(segment.right_line.nodes)
+            self.roads.append(right_marking)
+
+            for m in segment.middle_lines:
+                marking = beamngpy.Road("line_yellow", rid=m.name)
+                marking.nodes.extend(m.nodes)
+                self.roads.append(marking)
+
+            sim_road = beamngpy.Road('road_asphalt_2lane', rid=segment.name)
+            sim_road.nodes.extend(segment.road_nodes)
             self.roads.append(sim_road)
         return self.roads
 
