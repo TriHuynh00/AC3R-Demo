@@ -1,6 +1,5 @@
 .idea/
 python_src/.idea/
-python_src/data/
 venv/
 *.pyc
 *.ipynb
