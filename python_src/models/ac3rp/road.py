@@ -4,7 +4,8 @@ from models.ac3rp import common
 
 class Road:
     @staticmethod
-    def from_dict(road_dict):
+    def from_dict(key, road_dict):
+        center = road_dict["center"]
         #     {
         #       "name" : "road1",
         #       "road_type": "roadway",
@@ -15,14 +16,14 @@ class Road:
         #       ]
         #     },
         dist_x, dist_y = 0, 0
-        road_width = max([t[3] for t in road_dict["road_node_list"]])
-        road_nodes = common.interpolate(road_dict["road_node_list"])
+        road_width = max([t[3] for t in center["points"]])
+        road_nodes = common.interpolate(center["points"])
         road_lst = LineString([(t[0] + dist_x, t[1] + dist_y) for t in road_nodes])
         first, last = road_lst.boundary
         return Road(
-            road_dict["name"],
-            road_dict["road_type"],
-            road_dict["road_shape"],
+            key,
+            "roadway",
+            'I',
             road_nodes,
             road_width,
             road_poly=road_lst.buffer(road_width, cap_style=2, join_style=2),

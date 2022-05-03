@@ -1,4 +1,5 @@
 import beamngpy
+import matplotlib.colors as colors
 from typing import List
 from models import RoadProfiler, Player
 from models.ac3rp import CrashScenario
@@ -22,13 +23,13 @@ class SimulationFactory:
 
     def generate_players(self) -> List[Player]:
         for vehicle in self.scenario.vehicles:
-            trajectory = vehicle.generate_trajectory()
+            trajectory = vehicle.trajectory
             initial_position = (trajectory[0][0], trajectory[0][1], 0)
             # Create BeamNG Vehicle for simulation
             sim_vehicle = beamngpy.Vehicle(str(vehicle.name),
                                            model="etk800",
                                            licence=vehicle.name,
-                                           color=vehicle.color)
+                                           color=' '.join([str(x) for x in colors.to_rgb(vehicle.color)]))
             sim_vehicle.attach_sensor('damage', beamngpy.sensors.Damage())
 
             # Create road profiler to drive BeamNG vehicle
@@ -39,10 +40,10 @@ class SimulationFactory:
             self.players.append(Player(vehicle=sim_vehicle,
                                        road_pf=road_pf,
                                        pos=initial_position,
-                                       rot=None,
-                                       rot_quat=vehicle.rot_quat,
+                                       rot=vehicle.initial_rotation,
+                                       rot_quat=None,
                                        distance_to_trigger=vehicle.distance_to_trigger,
-                                       speed=vehicle.get_speed()))
+                                       speed=vehicle.speed))
         return self.players
 
     def generate_targets(self) -> {}:
