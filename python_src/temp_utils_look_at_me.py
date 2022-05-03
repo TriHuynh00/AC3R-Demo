@@ -3,7 +3,7 @@ import sys
 import numpy as np
 from beamngpy import Scenario, Road, Vehicle
 # from road_factory import RoadFactory
-from libs import read_json_data, path_generator
+from libraries.libs import read_json_data
 
 # --------------------------------------------------------------------------
 # Define json data file

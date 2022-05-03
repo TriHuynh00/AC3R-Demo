@@ -6,8 +6,8 @@ import scipy.stats as stats
 from bisect import bisect_left
 
 ROOT: Path = Path(os.path.abspath(os.path.join(os.path.dirname(__file__))))
-PATH_TEST = str(ROOT.joinpath("tests"))
-PATH_DATA = str(ROOT.joinpath("data"))
+PATH_TEST = str(ROOT.joinpath("../tests"))
+PATH_DATA = str(ROOT.joinpath("../data"))
 
 
 def _collect_police_report(path):
