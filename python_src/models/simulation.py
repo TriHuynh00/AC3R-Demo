@@ -13,7 +13,9 @@ LOW, MED, HIGH = "LOW", "MED", "HIGH"
 
 
 class Simulation:
-    def __init__(self, sim_factory: SimulationFactory, debug: bool = False):
+    def __init__(self, name, sim_factory: SimulationFactory, debug: bool = False):
+        self.sim_factory = sim_factory
+        self.name = name
         self.roads: List[beamngpy.Road] = sim_factory.generate_roads()
         self.players: List[models.Player] = sim_factory.generate_players()
         self.targets: {} = sim_factory.generate_targets()
@@ -103,3 +105,8 @@ class Simulation:
             else:
                 data_outputs[player.vehicle.vid] = player.get_damage()
         return data_outputs
+
+    def enable_free_cam(self, bng: BeamNGpy):
+        cam_pos = self.sim_factory.get_center_scenario()
+        cam_dir = (0, 1, -60)
+        bng.set_free_camera(cam_pos, cam_dir)

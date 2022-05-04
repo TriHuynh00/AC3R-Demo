@@ -1,5 +1,6 @@
 import json
 import time
+import pathlib
 from evolution import RandomEvolution, OpoEvolution, Mutator, Fitness, Generator, Selector
 from models import categorize_mutator, CONST
 from models.ac3rp import CrashScenario
@@ -44,9 +45,10 @@ class Experiment:
 
     def _run_rev(self):
         # Write data file
-        rev_logfile = open(f'data/{self.case_name}/{self.simulation_name}.csv', "a")
+        pathlib.Path(f'outputs/{self.case_name}/').mkdir(parents=True, exist_ok=True)
+        rev_logfile = open(f'outputs/{self.case_name}/{self.simulation_name}.csv', "a")
         rev_logfile.write("v1,v2,score\n")
-        rev_log_data_file = f'data/{self.case_name}/log/{self.simulation_name}.csv'
+        rev_log_data_file = f'outputs/{self.case_name}/log/{self.simulation_name}.csv'
 
         # Experiment run
         rev = RandomEvolution(
@@ -69,9 +71,9 @@ class Experiment:
 
     def _run_opo(self):
         # Write data file
-        opo_logfile = open(f'data/{self.case_name}/{self.simulation_name}.csv', "a")
+        opo_logfile = open(f'outputs/{self.case_name}/{self.simulation_name}.csv', "a")
         opo_logfile.write("v1,v2,score\n")
-        opo_log_data_file = f'data/{self.case_name}/log/{self.simulation_name}.csv'
+        opo_log_data_file = f'outputs/{self.case_name}/log/{self.simulation_name}.csv'
 
         # Experiment run
         oev = OpoEvolution(

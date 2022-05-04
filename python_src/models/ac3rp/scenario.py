@@ -16,16 +16,18 @@ class CrashScenario:
         # if three points are given, that's an arc
 
         roads = []
-        for road_dict in ac3r_json_data["roads"]:
-            roads.append(Road.from_dict(road_dict))
+        for i, road_dict in enumerate(ac3r_json_data["roads"]):
+            key = f'road_{i}'
+            roads.append(Road.from_dict(key, road_dict))
 
         vehicles = []
-        for vehicle_dict in ac3r_json_data["vehicles"]:
-            vehicles.append(Vehicle.from_dict(vehicle_dict, roads))
+        for i, vehicle_dict in enumerate(ac3r_json_data["vehicles"]):
+            key = f'V{i}'
+            vehicles.append(Vehicle.from_dict(key, vehicle_dict, roads))
 
         reports = []
-        for report_dict in ac3r_json_data["expected_crash_components"]:
-            reports.append(Report.from_dict(report_dict))
+        # for report_dict in ac3r_json_data["expected_crash_components"]:
+        #     reports.append(Report.from_dict(report_dict))
 
         return CrashScenario(ac3r_json_data["name"], roads, vehicles, reports)
 

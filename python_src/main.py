@@ -35,8 +35,8 @@ def run_from_scenario(scenario_file):
     with open(scenario_file) as file:
         scenario_data = json.load(file)
     sim_factory = SimulationFactory(CrashScenario.from_json(scenario_data))
-    simulation = Simulation(sim_factory=sim_factory, debug=True)
-    # SimulationExec(simulation).execute_scenario(timeout=30)
+    simulation = Simulation(sim_factory=sim_factory, name="test00", debug=True)
+    SimulationExec(simulation=simulation, is_birdview=True).execute_scenario(timeout=30)
     # print(f'Simulation Score: {SimulationScore(simulation).calculate(debug=True)}')
     print(f'{SimulationScore(simulation).get_expected_score(debug=False)}')
 
@@ -103,24 +103,10 @@ def execute_searching(scenario_files):
 
 # make sure we invoke cli
 if __name__ == '__main__':
-    # cli()
-
+    cli()
+    exit()
     scenarios = [
-        {"name": "2005012695622", "path": "data/2005012695622.json"},
-        {"name": "2005045587341", "path": "data/2005045587341.json"},
-        {"name": "2005048103904", "path": "data/2005048103904.json"},
-        {"name": "2006048103049", "path": "data/2006048103049.json"},
-        {"name": "curved_18", "path": "data/curved_18.json"},
-        {"name": "four_1", "path": "data/four_1.json"},
-        {"name": "four_4", "path": "data/four_4.json"},
-        {"name": "four_7", "path": "data/four_7.json"},
-        {"name": "Tsec_3", "path": "data/Tsec_3.json"},
-        {"name": "Tsec_9", "path": "data/Tsec_9.json"},
-        {"name": "Tsec_10", "path": "data/Tsec_10.json"},
-        {"name": "Tsec_11", "path": "data/Tsec_11.json"},
-        {"name": "merge_3", "path": "data/merge_3.json"},
-        {"name": "merge_4", "path": "data/merge_4.json"},
-        {"name": "straight_1", "path": "data/straight_1.json"},
+        {"name": "129224", "path": "ciren/129224/data.json"},
     ]
 
     execute_searching(scenarios)
